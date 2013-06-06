@@ -1,16 +1,20 @@
 #!/bin/bash
 
-# Author Chuck Boecking
-# aws_idempiere_install_script_master.sh
+# Author
+#   Chuck Boecking
+#   chuck@chuboe.com
+#   http://chuckboecking.com
+# idempiere_install_script_master_linux.sh
 # 1.0 initial release
 
+# function to help the user better understand how the script works
 usage()
 {
 cat << EOF
 
 usage: $0
 
-This script helps you launch the approapriate
+This script helps you launch the appropriate
 iDempiere components on a given server
 
 OPTIONS:
@@ -27,10 +31,23 @@ OPTIONS:
 	-P	DB password
 	-l	launch iDempiere with nohup
 
+Outstanding actions:
+* Add better error checking
+* Remove some of the hardcoded variables
+* Change wget to the upcoming stable release (when it comes out). Currently points to the development head.
+* Default iDempiere to port 80
+* Default iDempiere admin to 443
+* Default phppgadmin to port to 80 if DB only install, 8080 otherwise if iDempiere is installed
+* Make sure phppgadmin is running after the script executes (not just installed)
+* Add support for -s option to suppress services.
+  - Doing so will require a code change to AdempiereServerMgr.java (in iDempiere).
+  - This option will allow you to run multiple WebUI servers behind a load balancer.
+* Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
+
 EOF
 }
 
-#initialize variables
+#initialize variables with default values - these values might be overwritten during the next section based on command options
 IS_INSTALL_DB="Y"
 IS_INSTALL_SERVICE="Y"
 IS_MOVE_DB="N"
@@ -40,7 +57,7 @@ PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
 
-
+# process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
 do
 	case $OPTION in
@@ -73,6 +90,7 @@ do
 	esac
 done
 
+# show variables to the user (debug)
 echo "Install DB=" $IS_INSTALL_DB
 echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
@@ -82,16 +100,24 @@ echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup"=$IS_LAUNCH_ID
 
-#Check error conditions
+#Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
 	echo "Must set DB Password if installing DB!!"
 	exit 1
 fi
 
+# update apt package manager
 sudo apt-get --yes update
+
+# update locate database
+sudo updatedb
+
+
+# install useful utilities
 sudo apt-get --yes install unzip htop
 
+# install database
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
       echo "Installing DB because IS_INSTALL_DB == Y"
@@ -101,12 +127,15 @@ then
 	  #ACTION - need to configure phppgadmin to run on a specific port and make sure it is running when this script completes
 fi #end if IS_INSTALL_DB==Y
 
-
+# Move postgresql files to a separate device.
+# This is incredibly useful if you are running in aws where if the server dies, you lose your work.
+# By moving the DB files to an EBS drive, you help ensure you data will survive a server crash or shutdown.
+# Make note that Ubuntu renames the device from s.. to xv.. For example, device sdh will get renamed to xvdh.
+# The below code makes the mapping persist after a reboot by creating the fstab entry.
 if [[ $IS_MOVE_DB == "Y" ]]
 then
 	echo "Moving DB because IS_MOVE_DB == Y"
 	sudo apt-get update
-	sudo updatedb
 	sudo apt-get install -y xfsprogs
 	#sudo apt-get install -y postgresql #uncomment if you need the script to install the db
 	sudo mkfs.ext4 /dev/$DEVNAME
@@ -134,6 +163,7 @@ then
 
 fi #end if IS_MOVE_DB==Y
 
+# Install iDempiere
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
 	echo "Installing iDemipere because IS_INSTALL_ID == Y"
@@ -178,8 +208,10 @@ cd utils; sh RUN_ImportIdempiere.sh <<!
 
 fi #end if $IS_INSTALL_ID == "Y"
 
+# Run iDempiere
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "launching iDempiere with nohup"
 	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/; nohup ./idempiere-server.sh &
 fi
+
