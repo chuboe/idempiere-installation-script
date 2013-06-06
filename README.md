@@ -21,5 +21,7 @@ Use the -h option to learn more about the parameters.
 Do not hesitate to contact me if I can help you learn, configure, audit and launch iDempiere.
 
 Chuck Boecking
+
 chuck@chuboe.com
+
 http://www.chuckboecking.com
