@@ -9,7 +9,7 @@ however, it is very important to keep the script readable to Linux newbies.
 There is as much value in understanding the script is there is utility in using it.
 
 # To install iDempiere 
-To isntall all iDempiere components on a single machine, issue the command:
+To install all iDempiere components on a single machine, issue the command:
 
 ./idempiere_install_script_master_linux.sh -P s1llyw1lly -l  &>output.txt
 
