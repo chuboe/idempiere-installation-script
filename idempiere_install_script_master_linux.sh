@@ -171,7 +171,7 @@ then
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
 		#install postgresql client tools
-		sudo apt-get install postgresql-client
+		sudo apt-get -y install postgresql-client
 	fi
 	mkdir /home/ubuntu/installer_`date +%Y%m%d`
 	wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
