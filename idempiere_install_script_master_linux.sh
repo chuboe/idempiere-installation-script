@@ -128,8 +128,13 @@ then
 	echo "Installing DB because IS_INSTALL_DB == Y"
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+
+	# The following commands update postgresql to listen for all
+	# connections (not just localhost). Make sure your firewall
+	# prevents outsiders for connecting to your server.
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
+
 	sudo -u postgres service postgresql restart
 fi #end if IS_INSTALL_DB==Y
 
