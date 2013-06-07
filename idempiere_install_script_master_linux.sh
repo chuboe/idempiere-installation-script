@@ -83,7 +83,7 @@ do
 
 		b)	#specify s3 bucket for backup
 			IS_S3BACKUP="Y"
-			S3BUCKET=$OPTARG;;
+			S3BUCKET=$OPTARG
 			echo "NOTE: -b option not implemented yet!!";;
 
 		P)	#database password
@@ -99,10 +99,12 @@ echo "Install DB=" $IS_INSTALL_DB
 echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
 echo "Install iDempiere Services="$IS_INSTALL_SERVICE
+echo "Backup to S3="$IS_S3BACKUP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup"=$IS_LAUNCH_ID
+echo "S3 Bucket name="=$S3BUCKET
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
