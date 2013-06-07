@@ -123,8 +123,9 @@ then
       echo "Installing DB because IS_INSTALL_DB == Y"
 	  sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	  sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
-	  #ACTION - need to open up DB to outside world
-	  #ACTION - need to configure phppgadmin to run on a specific port and make sure it is running when this script completes
+	  sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
+	  sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
+	  sudo -u postgres service postgresql restart
 fi #end if IS_INSTALL_DB==Y
 
 # Move postgresql files to a separate device.
