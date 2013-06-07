@@ -113,19 +113,18 @@ sudo apt-get --yes update
 # update locate database
 sudo updatedb
 
-
 # install useful utilities
 sudo apt-get --yes install unzip htop
 
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
-      echo "Installing DB because IS_INSTALL_DB == Y"
-	  sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
-	  sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
-	  sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
-	  sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
-	  sudo -u postgres service postgresql restart
+	echo "Installing DB because IS_INSTALL_DB == Y"
+	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
+	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
+	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
+	sudo -u postgres service postgresql restart
 fi #end if IS_INSTALL_DB==Y
 
 # Move postgresql files to a separate device.
@@ -169,6 +168,11 @@ if [[ $IS_INSTALL_ID == "Y" ]]
 then
 	echo "Installing iDemipere because IS_INSTALL_ID == Y"
 	sudo apt-get --yes install openjdk-6-jdk
+	if [[ $IS_INSTALL_DB == "N" ]]
+	then
+		#install postgresql client tools
+		sudo apt-get install postgresql-client
+	fi
 	mkdir /home/ubuntu/installer_`date +%Y%m%d`
 	wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
 	unzip /home/ubuntu/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/ubuntu/installer_`date +%Y%m%d`
