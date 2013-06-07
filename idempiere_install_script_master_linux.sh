@@ -53,9 +53,11 @@ IS_INSTALL_SERVICE="Y"
 IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
+IS_S3BACKUP="N"
 PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
+S3BUCKET="NONE"
 
 # process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
@@ -80,6 +82,8 @@ do
 			IS_INSTALL_ID="N";;
 
 		b)	#specify s3 bucket for backup
+			IS_S3BACKUP="Y"
+			S3BUCKET=$OPTARG;;
 			echo "NOTE: -b option not implemented yet!!";;
 
 		P)	#database password
@@ -114,7 +118,7 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop
+sudo apt-get --yes install unzip htop s3cmd
 
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
@@ -220,3 +224,7 @@ then
 	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/; nohup ./idempiere-server.sh &
 fi
 
+# TODO: Need section for S3 backup
+# Consider modifying the existing backup script
+# to issue the s3cmd command to push the newly
+# create file the desired s3 bucket
