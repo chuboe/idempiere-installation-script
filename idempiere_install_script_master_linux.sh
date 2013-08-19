@@ -222,7 +222,8 @@ mail.dummy.com
 
 
 !
-cd utils; sh RUN_ImportIdempiere.sh <<!
+cd utils
+sudo sh RUN_ImportIdempiere.sh <<!
 
 !
 #end of file input
