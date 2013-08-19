@@ -59,6 +59,7 @@ DEVNAME="NONE"
 DBPASS="NONE"
 S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
+IDEMPIEREUSER="ubuntu"
 
 # process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
@@ -234,9 +235,23 @@ fi #end if $IS_INSTALL_ID == "Y"
 # Run iDempiere
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
-	echo "launching iDempiere with nohup"
-	cd $INSTALLPATH
-	nohup ./idempiere-server.sh &
+	echo "setting iDempiere to start on boot"
+	cd $INSTALLPATH/utils/unix
+	cp idempiere_Debian.sh idempiere.sh
+	sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' idempiere.sh
+	sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME=$INSTALLPATH/' idempiere.sh
+	sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' idempiere.sh
+	sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER=$IDEMPIEREUSER' idempiere.sh
+
+	sudo cp idempiere.sh /etc/init.d/
+	sudo chmod +x /etc/init.d/idempiere.sh
+	sudo update-rc.d idempiere.sh defaults
+
+	sudo /etc/init.d/idempiere start
+
+	#echo "launching iDempiere with nohup"
+	#cd $INSTALLPATH
+	#nohup ./idempiere-server.sh &
 fi
 
 # TODO: Need section for S3 backup
