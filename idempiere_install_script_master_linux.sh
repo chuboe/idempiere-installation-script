@@ -58,6 +58,7 @@ PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
 S3BUCKET="NONE"
+INSTALLPATH="/opt/idempiere-server/"
 
 # process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
@@ -105,6 +106,7 @@ echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup"=$IS_LAUNCH_ID
 echo "S3 Bucket name="=$S3BUCKET
+echo "Install Path="=$INSTALLPATH
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
@@ -120,7 +122,7 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop s3cmd
+sudo apt-get --yes install unzip htop s3cmd expect
 
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
@@ -185,12 +187,15 @@ then
 		sudo apt-get -y install postgresql-client
 	fi
 	mkdir /home/ubuntu/installer_`date +%Y%m%d`
+	sudo mkdir $INSTALLPATH
 	wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
 	unzip /home/ubuntu/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/ubuntu/installer_`date +%Y%m%d`
 	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
+	cp -r * $INSTALLPATH
+	cd $INSTALLPATH
 
 #not indented because of file input
-sh console-setup.sh <<!
+sudo sh console-setup.sh <<!
 
 
 
@@ -228,7 +233,8 @@ fi #end if $IS_INSTALL_ID == "Y"
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "launching iDempiere with nohup"
-	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/; nohup ./idempiere-server.sh &
+	cd $INSTALLPATH
+	sudo nohup ./idempiere-server.sh &
 fi
 
 # TODO: Need section for S3 backup
