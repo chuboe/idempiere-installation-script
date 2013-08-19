@@ -188,14 +188,15 @@ then
 	fi
 	mkdir /home/ubuntu/installer_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
+	sudo chown ubuntu:ubuntu $INSTALLPATH
 	wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
 	unzip /home/ubuntu/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/ubuntu/installer_`date +%Y%m%d`
 	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
-	sudo cp -r * $INSTALLPATH
+	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
 
 #not indented because of file input
-sudo sh console-setup.sh <<!
+sh console-setup.sh <<!
 
 
 
@@ -223,7 +224,7 @@ mail.dummy.com
 
 !
 cd utils
-sudo sh RUN_ImportIdempiere.sh <<!
+sh RUN_ImportIdempiere.sh <<!
 
 !
 #end of file input
@@ -235,7 +236,7 @@ if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "launching iDempiere with nohup"
 	cd $INSTALLPATH
-	sudo nohup ./idempiere-server.sh &
+	nohup ./idempiere-server.sh &
 fi
 
 # TODO: Need section for S3 backup
