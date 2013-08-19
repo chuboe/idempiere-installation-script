@@ -239,9 +239,9 @@ then
 	cd $INSTALLPATH/utils/unix
 	cp idempiere_Debian.sh idempiere.sh
 	sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' idempiere.sh
-	sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME=$INSTALLPATH/' idempiere.sh
+	sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME='$INSTALLPATH idempiere.sh
 	sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' idempiere.sh
-	sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER=$IDEMPIEREUSER' idempiere.sh
+	sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER idempiere.sh
 
 	sudo cp idempiere.sh /etc/init.d/
 	sudo chmod +x /etc/init.d/idempiere.sh
