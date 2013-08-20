@@ -61,7 +61,8 @@ S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
 IDEMPIEREUSER="ubuntu"
 INITDNAME="idempiere"
-BASEDIR=$(dirname $0)
+SCRIPTNAME=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPTNAME")
 
 # process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
@@ -112,7 +113,7 @@ echo "S3 Bucket name="$S3BUCKET
 echo "Install Path="$INSTALLPATH
 echo "User="$IDEMPIEREUSER
 echo "InitDName="$INITDNAME
-echo "BaseDir="$BASEDIR
+echo "ScriptPath="$SCRIPTPATH
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
@@ -250,8 +251,8 @@ then
 	#sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' $INITDNAME
 	#sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER $INITDNAME
 
-	sudo cp $BASEDIR/stopServer.sh $INSTALLPATH/utils
-	sudo cp $BASEDIR/$INITDNAME /etc/init.d/
+	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
+	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
 
