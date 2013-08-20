@@ -242,24 +242,19 @@ fi #end if $IS_INSTALL_ID == "Y"
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "setting iDempiere to start on boot"
-	cd $INSTALLPATH/utils/unix
-	cp idempiere_Debian.sh $INITDNAME
-	sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' $INITDNAME
-	sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME='$INSTALLPATH $INITDNAME
-	sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' $INITDNAME
-	sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER $INITDNAME
+	#cd $INSTALLPATH/utils/unix
+	#cp idempiere_Debian.sh $INITDNAME
+	#sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' $INITDNAME
+	#sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME='$INSTALLPATH $INITDNAME
+	#sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' $INITDNAME
+	#sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER $INITDNAME
 
-	sudo cp $INITDNAME /etc/init.d/
+	sudo cp $BASEDIR/stopServer.sh $INSTALLPATH/utils
+	sudo cp $BASEDIR/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
 
 	sudo /etc/init.d/$INITDNAME start
-
-	sudo cp $BASEDIR/stopServer.sh $INSTALLPATH/utils
-
-	#echo "launching iDempiere with nohup"
-	#cd $INSTALLPATH
-	#nohup ./idempiere-server.sh &
 fi
 
 # TODO: Need section for S3 backup
