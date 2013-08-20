@@ -60,6 +60,7 @@ DBPASS="NONE"
 S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
 IDEMPIEREUSER="ubuntu"
+INITDNAME="idempiere"
 
 # process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
@@ -105,9 +106,11 @@ echo "Backup to S3="$IS_S3BACKUP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
-echo "Launch iDempiere with nohup"=$IS_LAUNCH_ID
-echo "S3 Bucket name="=$S3BUCKET
-echo "Install Path="=$INSTALLPATH
+echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
+echo "S3 Bucket name="$S3BUCKET
+echo "Install Path="$INSTALLPATH
+echo "User="$IDEMPIEREUSER
+echo "InitDName="$INITDNAME
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
@@ -195,6 +198,7 @@ then
 	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
+	mkdir log
 
 #not indented because of file input
 sh console-setup.sh <<!
@@ -237,17 +241,17 @@ if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "setting iDempiere to start on boot"
 	cd $INSTALLPATH/utils/unix
-	cp idempiere_Debian.sh idempiere.sh
-	sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' idempiere.sh
-	sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME='$INSTALLPATH idempiere.sh
-	sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' idempiere.sh
-	sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER idempiere.sh
+	cp idempiere_Debian.sh $INITDNAME
+	sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' $INITDNAME
+	sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME='$INSTALLPATH $INITDNAME
+	sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' $INITDNAME
+	sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER $INITDNAME
 
-	sudo cp idempiere.sh /etc/init.d/
-	sudo chmod +x /etc/init.d/idempiere.sh
-	sudo update-rc.d idempiere.sh defaults
+	sudo cp $INITDNAME /etc/init.d/
+	sudo chmod +x /etc/init.d/$INITDNAME
+	sudo update-rc.d $INITDNAME defaults
 
-	sudo /etc/init.d/idempiere start
+	sudo /etc/init.d/$INITDNAME start
 
 	#echo "launching iDempiere with nohup"
 	#cd $INSTALLPATH
