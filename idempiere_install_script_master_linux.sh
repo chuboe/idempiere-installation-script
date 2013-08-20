@@ -61,6 +61,7 @@ S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
 IDEMPIEREUSER="ubuntu"
 INITDNAME="idempiere"
+BASEDIR=$(dirname $0)
 
 # process the specified options
 while getopts "hsp:e:ib:P:l" OPTION
@@ -111,6 +112,7 @@ echo "S3 Bucket name="$S3BUCKET
 echo "Install Path="$INSTALLPATH
 echo "User="$IDEMPIEREUSER
 echo "InitDName="$INITDNAME
+echo "BaseDir="$BASEDIR
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
@@ -252,6 +254,8 @@ then
 	sudo update-rc.d $INITDNAME defaults
 
 	sudo /etc/init.d/$INITDNAME start
+
+	sudo cp $BASEDIR/stopServer.sh $INSTALLPATH/utils
 
 	#echo "launching iDempiere with nohup"
 	#cd $INSTALLPATH
