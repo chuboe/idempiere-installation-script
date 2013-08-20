@@ -44,4 +44,4 @@ Note:
 - updated script to install and launch idempiere as a service
 -- use "sudo /etc/init.d/idempiere start" to start the server
 -- use "sudo /etc/init.d/idempiere stop" to stop the server
-
+- iDempiere now starts when the server is rebooted
