@@ -32,10 +32,11 @@ designed to help you learn how to perform wholesale distribution
 and manufacturing in iDempiere.
 
 #Contact Me
-'Chuck Boecking'_
+Chuck Boecking
 
 chuck@chuboe.com
 
+<http://www.chuckboecking.com>
 
 Note:
 20130820
@@ -44,5 +45,3 @@ Note:
 -- use "sudo /etc/init.d/idempiere start" to start the server
 -- use "sudo /etc/init.d/idempiere stop" to stop the server
 
-.. _`Django`: http://djangoproject.com/
-.. _'Chuck Boecking': http://www.chuckboecking.com/
