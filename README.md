@@ -36,7 +36,7 @@ Chuck Boecking
 
 chuck@chuboe.com
 
-"www.chuckboecking.com http://www.chuckboecking.com"
+'www.chuckboecking.com <http://www.chuckboecking.com>'_
 
 Note:
 20130820
