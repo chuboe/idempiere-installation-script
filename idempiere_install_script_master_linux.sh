@@ -195,7 +195,8 @@ then
 	mkdir /home/ubuntu/installer_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
 	sudo chown ubuntu:ubuntu $INSTALLPATH
-	wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
+	wget http://sourceforge.net/projects/idempiere/files/v1.0c/server/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
+	#wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
 	unzip /home/ubuntu/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/ubuntu/installer_`date +%Y%m%d`
 	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
