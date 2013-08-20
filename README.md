@@ -21,18 +21,22 @@ Use the -h option to learn more about the parameters.
 Do not hesitate to contact me if I can help you learn, configure, audit and 
 launch iDempiere. If you are intimidated by this script, adn you want 
 help installing it:
+
  1: Create an AWS account
+
  2: Reach out to me. I can execute the script in a couple of minutes.
 
+# Want to learn more?
 Once you get iDempiere up and running, check out my blog. There are many tutorials 
 designed to help you learn how to perform wholesale distribution
 and manufacturing in iDempiere.
 
+#Contact Me
 Chuck Boecking
 
 chuck@chuboe.com
 
-{{"www.chuckboecking.com http://www.chuckboecking.com"|urlize}}
+'www.chuckboecking.com http://www.chuckboecking.com'
 
 Note:
 20130820
