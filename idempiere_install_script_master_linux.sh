@@ -145,6 +145,12 @@ then
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
 
 	sudo -u postgres service postgresql restart
+
+	# The following commands update phppgadmin to allow all ips to connect.
+	# Make sure your firewall prevents outsiders from connecting to your server.
+	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
+	sudo service apache2 restart
+
 fi #end if IS_INSTALL_DB==Y
 
 # Move postgresql files to a separate device.
