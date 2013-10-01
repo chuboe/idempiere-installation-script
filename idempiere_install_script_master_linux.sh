@@ -6,6 +6,9 @@
 #   http://chuckboecking.com
 # idempiere_install_script_master_linux.sh
 # 1.0 initial release
+# 1.1 run iDempiere as service
+# 1.2 added remote desktop development environment
+# 1.3 added better error checking and user handling
 
 # function to help the user better understand how the script works
 usage()
@@ -147,7 +150,7 @@ RESULT=$(id -u $OSUSER)
 if [ $RESULT -ge 0 ]; then
 	echo "HERE: OSUser exists"
 else
-	echo "HERE: OSUser does not exist"
+	echo "HERE: OSUser does not exist. Stopping script!"
 	exit 1
 fi
 
@@ -193,7 +196,8 @@ then
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 
 	# ACTION: download eclipse and source directory
-	# ACTION: add eclipse shortcut to the desktop if possible
+	mkdir /home/$OSUSER/dev
+	# wget link_to_s3 -> send to dev folder
 
 fi #end if IS_INSTALL_DESKTOP = Y
 
@@ -248,6 +252,16 @@ then
 	sudo mkdir $INSTALLPATH
 	sudo chown $OSUSER:$OSUSER $INSTALLPATH
 	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
+
+	# check if file downloaded
+	RESULT=$(ls -l /home/$OSUSER/installer_`date +%Y%m%d`/*64.zip | wc -l)
+	if [ $RESULT -ge 1 ]; then
+        	echo "HERE: file exists"
+	else
+        	echo "HERE: file does not exist. Stopping script!"
+	        exit 1
+	fi
+
 	unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`
 	cd /home/$OSUSER/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
