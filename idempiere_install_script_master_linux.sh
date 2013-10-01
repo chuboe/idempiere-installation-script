@@ -187,6 +187,7 @@ then
 	sudo apt-get install lxde chromium-browser leafpad epdfview xarchiver vnc4server
 	vncserver
 	vncserver -kill :1
+	#ACTION add vnc config file cat statements
 
 fi #end if IS_INSTALL_DESKTOP = Y
 
