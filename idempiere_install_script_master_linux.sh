@@ -29,16 +29,18 @@ OPTIONS:
 	-i	No install iDempiere (DB only)
 	-b	Name of s3 bucket for backups (not implemented yet)
 	-P	DB password
-	-l	launch iDempiere with nohup
+	-l	Launch iDempiere with nohup
+	-u	Specify a username other than ubuntu
+	-B	Use bleeding edge copy of iDempiere
+	-D	Install desktop development tools
 
 Outstanding actions:
 * Add better error checking
 * Remove some of the hardcoded variables
 * Change wget to the upcoming stable release (when it comes out). Currently points to the development head.
-* Default iDempiere to port 80
+* Default iDempiere to port 80 and set pgadmin to 8080
 * Default iDempiere admin to 443
 * Default phppgadmin to port to 80 if DB only install, 8080 otherwise if iDempiere is installed
-* Make sure phppgadmin is running after the script executes (not just installed)
 * Add support for -s option to suppress services.
   - Doing so will require a code change to AdempiereServerMgr.java (in iDempiere).
   - This option will allow you to run multiple WebUI servers behind a load balancer.
@@ -54,18 +56,22 @@ IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
 IS_S3BACKUP="N"
+IS_INSTALL_DESKTOP="N"
 PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
 S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
-IDEMPIEREUSER="ubuntu"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
+IDEMPIERESOURCEPATH="http://sourceforge.net/projects/idempiere/files/v1.0c/server/idempiereServer.gtk.linux.x86_64.zip"
+OSUSER="ubuntu"
+
 
 # process the specified options
-while getopts "hsp:e:ib:P:l" OPTION
+# the colon before the letter specifies
+while getopts "hsp:e:ib:P:lu:BD" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -96,10 +102,21 @@ do
 
 		l)	#launch iDempiere
 			IS_LAUNCH_ID="Y";;
+
+		u)	#user
+			OSUSER=$OPTARG;;
+
+		B)	#use bleeding edge copy of iDempiere
+			IDEMPIERESOURCEPATH="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip";;
+
+		D)	#install desktop components
+			IS_INSTALL_DESKTOP="Y";;
 	esac
 done
 
 # show variables to the user (debug)
+# if you want to find for echoed values, search for 'HERE'
+echo "HERE print variables"
 echo "Install DB=" $IS_INSTALL_DB
 echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
@@ -111,14 +128,25 @@ echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
 echo "S3 Bucket name="$S3BUCKET
 echo "Install Path="$INSTALLPATH
-echo "User="$IDEMPIEREUSER
 echo "InitDName="$INITDNAME
+echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
+echo "OSUser="$OSUSER
+echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
-	echo "Must set DB Password if installing DB!!"
+	echo "HERE Must set DB Password if installing DB!!"
+	exit 1
+fi
+
+#Check if user exists
+RESULT=$(id -u $OSUSER)
+if [ $RESULT -ge 0 ]; then
+	echo "HERE OSUser exists"
+else
+	echo "HERE OSUser does not exist"
 	exit 1
 fi
 
@@ -134,7 +162,7 @@ sudo apt-get --yes install unzip htop s3cmd expect
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
-	echo "Installing DB because IS_INSTALL_DB == Y"
+	echo "HERE Installing DB because IS_INSTALL_DB == Y"
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 
@@ -153,6 +181,16 @@ then
 
 fi #end if IS_INSTALL_DB==Y
 
+# install desktop components
+if [[ $IS_INSTALL_DESKTOP == "Y" ]]
+then
+	sudo apt-get install lxde chromium-browser leafpad epdfview xarchiver vnc4server
+	vncserver
+	vncserver -kill :1
+
+fi #end if IS_INSTALL_DESKTOP = Y
+
+
 # Move postgresql files to a separate device.
 # This is incredibly useful if you are running in aws where if the server dies, you lose your work.
 # By moving the DB files to an EBS drive, you help ensure you data will survive a server crash or shutdown.
@@ -160,7 +198,7 @@ fi #end if IS_INSTALL_DB==Y
 # The below code makes the mapping persist after a reboot by creating the fstab entry.
 if [[ $IS_MOVE_DB == "Y" ]]
 then
-	echo "Moving DB because IS_MOVE_DB == Y"
+	echo "HERE Moving DB because IS_MOVE_DB == Y"
 	sudo apt-get update
 	sudo apt-get install -y xfsprogs
 	#sudo apt-get install -y postgresql #uncomment if you need the script to install the db
@@ -192,20 +230,19 @@ fi #end if IS_MOVE_DB==Y
 # Install iDempiere
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-	echo "Installing iDemipere because IS_INSTALL_ID == Y"
+	echo "HERE Installing iDemipere because IS_INSTALL_ID == Y"
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
 		#install postgresql client tools
 		sudo apt-get -y install postgresql-client
 	fi
-	mkdir /home/ubuntu/installer_`date +%Y%m%d`
+	mkdir /home/$OSUSER/installer_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
-	sudo chown ubuntu:ubuntu $INSTALLPATH
-	wget http://sourceforge.net/projects/idempiere/files/v1.0c/server/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
-	#wget http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip -P /home/ubuntu/installer_`date +%Y%m%d`
-	unzip /home/ubuntu/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/ubuntu/installer_`date +%Y%m%d`
-	cd /home/ubuntu/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
+	sudo chown $OSUSER:$OSUSER $INSTALLPATH
+	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
+	unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`
+	cd /home/$OSUSER/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
 	mkdir log
@@ -249,14 +286,7 @@ fi #end if $IS_INSTALL_ID == "Y"
 # Run iDempiere
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
-	echo "setting iDempiere to start on boot"
-	#cd $INSTALLPATH/utils/unix
-	#cp idempiere_Debian.sh $INITDNAME
-	#sed -i 's/IDEMPIERE_HOME=/#IDEMPIERE_HOME=/' $INITDNAME
-	#sed -i '/IDEMPIERE_HOME=/a \IDEMPIERE_HOME='$INSTALLPATH $INITDNAME
-	#sed -i 's/IDEMPIEREUSER=/#IDEMPIEREUSER=/' $INITDNAME
-	#sed -i '/IDEMPIEREUSER=/a \IDEMPIEREUSER='$IDEMPIEREUSER $INITDNAME
-
+	echo "HERE setting iDempiere to start on boot"
 	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
 	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
