@@ -115,8 +115,8 @@ do
 done
 
 # show variables to the user (debug)
-# if you want to find for echoed values, search for 'HERE'
-echo "HERE print variables"
+echo "if you want to find for echoed values, search for HERE:"
+echo "HERE: print variables"
 echo "Install DB=" $IS_INSTALL_DB
 echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
@@ -138,16 +138,16 @@ echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
-	echo "HERE Must set DB Password if installing DB!!"
+	echo "HERE: Must set DB Password if installing DB!!"
 	exit 1
 fi
 
 #Check if user exists
 RESULT=$(id -u $OSUSER)
 if [ $RESULT -ge 0 ]; then
-	echo "HERE OSUser exists"
+	echo "HERE: OSUser exists"
 else
-	echo "HERE OSUser does not exist"
+	echo "HERE: OSUser does not exist"
 	exit 1
 fi
 
@@ -163,7 +163,7 @@ sudo apt-get --yes install unzip htop s3cmd expect
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
-	echo "HERE Installing DB because IS_INSTALL_DB == Y"
+	echo "HERE: Installing DB because IS_INSTALL_DB == Y"
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 
@@ -185,6 +185,7 @@ fi #end if IS_INSTALL_DB==Y
 # install desktop components
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
+	echo "HERE: Install desktop components"
 	sudo apt-get install lxde chromium-browser leafpad epdfview xarchiver vnc4server
 	vncserver
 	vncserver -kill :1
@@ -200,7 +201,7 @@ fi #end if IS_INSTALL_DESKTOP = Y
 # The below code makes the mapping persist after a reboot by creating the fstab entry.
 if [[ $IS_MOVE_DB == "Y" ]]
 then
-	echo "HERE Moving DB because IS_MOVE_DB == Y"
+	echo "HERE: Moving DB because IS_MOVE_DB == Y"
 	sudo apt-get update
 	sudo apt-get install -y xfsprogs
 	#sudo apt-get install -y postgresql #uncomment if you need the script to install the db
@@ -232,7 +233,7 @@ fi #end if IS_MOVE_DB==Y
 # Install iDempiere
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-	echo "HERE Installing iDemipere because IS_INSTALL_ID == Y"
+	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
@@ -288,7 +289,7 @@ fi #end if $IS_INSTALL_ID == "Y"
 # Run iDempiere
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
-	echo "HERE setting iDempiere to start on boot"
+	echo "HERE: setting iDempiere to start on boot"
 	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
 	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
