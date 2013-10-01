@@ -187,8 +187,9 @@ if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
 	echo "HERE: Install desktop components"
 	sudo apt-get install -y lubuntu-desktop xrdp
-	sudo sed -i 's/. /etc/X11/Xsession/#. /etc/X11/Xsession/' /etc/xrdp/startwm.sh
-	sudo sed -i '$ a\startlubuntu' /etc/postgresql/9.1/main/pg_hba.conf
+	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
+	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
+	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 
 fi #end if IS_INSTALL_DESKTOP = Y
