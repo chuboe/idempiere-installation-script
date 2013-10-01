@@ -186,10 +186,10 @@ fi #end if IS_INSTALL_DB==Y
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
 	echo "HERE: Install desktop components"
-	sudo apt-get install -y lxde chromium-browser leafpad epdfview xarchiver vnc4server
-	vncserver
-	vncserver -kill :1
-	#ACTION add vnc config file cat statements
+	sudo apt-get install -y lubuntu-desktop xrdp
+	sudo sed -i 's/. /etc/X11/Xsession/#. /etc/X11/Xsession/' /etc/xrdp/startwm.sh
+	sudo sed -i '$ a\startlubuntu' /etc/postgresql/9.1/main/pg_hba.conf
+	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 
 fi #end if IS_INSTALL_DESKTOP = Y
 
