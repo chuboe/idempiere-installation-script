@@ -192,6 +192,9 @@ then
 	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 
+	# ACTION: download eclipse and source directory
+	# ACTION: add eclipse shortcut to the desktop if possible
+
 fi #end if IS_INSTALL_DESKTOP = Y
 
 
