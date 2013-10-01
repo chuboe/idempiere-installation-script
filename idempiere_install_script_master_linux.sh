@@ -305,6 +305,7 @@ sh RUN_ImportIdempiere.sh <<!
 fi #end if $IS_INSTALL_ID == "Y"
 
 # Run iDempiere
+echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "HERE: setting iDempiere to start on boot"
