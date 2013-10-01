@@ -121,6 +121,7 @@ echo "Install DB=" $IS_INSTALL_DB
 echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
 echo "Install iDempiere Services="$IS_INSTALL_SERVICE
+echo "Install Desktop="$IS_INSTALL_DESKTOP
 echo "Backup to S3="$IS_S3BACKUP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
