@@ -69,11 +69,13 @@ INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 IDEMPIERESOURCEPATH="http://sourceforge.net/projects/idempiere/files/v1.0c/server/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip";;
+ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 
 
 # process the specified options
-# the colon before the letter specifies
+# the colon after the letter specifies there should be text with the option
 while getopts "hsp:e:ib:P:lu:BD" OPTION
 do
 	case $OPTION in
@@ -110,9 +112,9 @@ do
 			OSUSER=$OPTARG;;
 
 		B)	#use bleeding edge copy of iDempiere
-			IDEMPIERESOURCEPATH="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip";;
+			IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
 
-		D)	#install desktop components
+		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
 	esac
 done
@@ -137,6 +139,7 @@ echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
 echo "OSUser="$OSUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
+echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
@@ -191,13 +194,32 @@ then
 	echo "HERE: Install desktop components"
 	sudo apt-get install -y lubuntu-desktop xrdp
 	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
+	# set is a tool to add or replace text in a file
 	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
 	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 
-	# ACTION: download eclipse and source directory
 	mkdir /home/$OSUSER/dev
-	# wget link_to_s3 -> send to dev folder
+	mkdir /home/$OSUSER/dev/eclipse
+	mkdir /home/$OSUSER/dev/downloads
+
+	# get eclipse IDE
+	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads
+	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/eclipse
+
+	# get idempiere code
+	cd /home/$OSUSER/dev
+	hg clone https://bitbucket.org/idempiere/idempiere
+	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (prestine)
+	hg clone idempiere myexperiment
+	cd
+
+	echo "HERE: when the script finishes, log in and open eclipse."
+	echo "HERE: choose the myexperiment folder as your workspace."
+	echo "HERE: add the mercurial and buckminster plugins."
+	echo "HERE: create your target platform."
+	echo "HERE: materialize the project."
+
 
 fi #end if IS_INSTALL_DESKTOP = Y
 
