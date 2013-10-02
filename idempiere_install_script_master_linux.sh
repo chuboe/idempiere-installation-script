@@ -200,18 +200,24 @@ then
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 
 	mkdir /home/$OSUSER/dev
-	mkdir /home/$OSUSER/dev/eclipse
 	mkdir /home/$OSUSER/dev/downloads
 
 	# get eclipse IDE
 	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads
-	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/eclipse
+	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/
+	# Create shortcut with appropriate command arguments in base eclipse directory
+	echo "/home/ubuntu/dev/eclipse/eclipse/eclipse -vmargs -Xmx512M">/home/$OSUSER/dev/launchEclipse.sh
+	chmod 766 /home/$OSUSER/dev/launchEclipse.sh
 
 	# get idempiere code
 	cd /home/$OSUSER/dev
 	hg clone https://bitbucket.org/idempiere/idempiere
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (prestine)
 	hg clone idempiere myexperiment
+	# create a targetPlatform directory for eclipse - used when materializing the proejct
+	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
+
+	# go back to home directory
 	cd
 
 	echo "HERE: when the script finishes, log in and open eclipse."
