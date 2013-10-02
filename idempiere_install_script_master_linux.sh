@@ -281,7 +281,7 @@ then
         	echo "HERE: file exists"
 	else
         	echo "HERE: file does not exist. Stopping script!"
-		echo "HERE: check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed"
+		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed"
 	        exit 1
 	fi
 
