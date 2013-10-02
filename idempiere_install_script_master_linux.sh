@@ -69,7 +69,7 @@ INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 IDEMPIERESOURCEPATH="http://sourceforge.net/projects/idempiere/files/v1.0c/server/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip";;
+IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 
@@ -112,7 +112,7 @@ do
 			OSUSER=$OPTARG;;
 
 		B)	#use bleeding edge copy of iDempiere
-			IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
+			IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED;;
 
 		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
