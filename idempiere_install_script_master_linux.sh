@@ -220,11 +220,19 @@ then
 	# go back to home directory
 	cd
 
-	echo "HERE: when the script finishes, log in and open eclipse."
-	echo "HERE: choose the myexperiment folder as your workspace."
-	echo "HERE: add the mercurial and buckminster plugins."
-	echo "HERE: create your target platform."
-	echo "HERE: materialize the project."
+	echo "HERE: When the script finishes, log in and open eclipse using the launch file in home/<user>/dev."
+	echo "HERE: Choose the myexperiment folder as your workspace."
+	echo "HERE: Add the mercurial and buckminster plugins."
+	echo " --> Mercurial"
+	echo " ------> http://cbes.javaforge.com/update"
+	echo " ------> choose mercurial but not windows binaries"
+	echo " --> Buckminster"
+	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3"
+	echo " ------> choose Core, Maven, and PDE"
+	echo "HERE: Create your target platform."
+	echo "HERE: Materialize the project. If you use CQUERY (instead of MSPEC),"
+	echo " --> it seems to automatically build the workspace"
+	echo "HERE: If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean"
 
 
 fi #end if IS_INSTALL_DESKTOP = Y
