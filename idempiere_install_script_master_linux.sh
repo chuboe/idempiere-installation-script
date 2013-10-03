@@ -208,9 +208,17 @@ then
 	# get eclipse IDE
 	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads
 	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/
-	# Create shortcut with appropriate command arguments in base eclipse directory
-	echo "/home/ubuntu/dev/eclipse/eclipse/eclipse -vmargs -Xmx512M">/home/$OSUSER/dev/launchEclipse.sh
-	chmod 766 /home/$OSUSER/dev/launchEclipse.sh
+
+	# Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
+	echo "">/home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\[Desktop Entry]' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Encoding=UTF-8' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Type=Application' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Name=eclipse' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Name[en_US]=eclipse' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Icon=/home/ubuntu/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Exec=/home/ubuntu/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse
+	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse
 
 	# get idempiere code
 	cd /home/$OSUSER/dev
