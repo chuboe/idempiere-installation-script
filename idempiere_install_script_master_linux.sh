@@ -201,6 +201,7 @@ then
 
 	mkdir /home/$OSUSER/dev
 	mkdir /home/$OSUSER/dev/downloads
+	mkdir /home/$OSUSER/dev/plugins
 
 	# get eclipse IDE
 	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads
@@ -212,7 +213,7 @@ then
 	# get idempiere code
 	cd /home/$OSUSER/dev
 	hg clone https://bitbucket.org/idempiere/idempiere
-	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (prestine)
+	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
 	hg clone idempiere myexperiment
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
