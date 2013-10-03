@@ -140,6 +140,8 @@ echo "ScriptPath="$SCRIPTPATH
 echo "OSUser="$OSUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
+echo "Distro details:"
+cat /etc/*-release
 
 #Check for known error conditions
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
