@@ -8,7 +8,7 @@
 # 1.0 initial release
 # 1.1 run iDempiere as service
 # 1.2 added remote desktop development environment
-# 1.3 added better error checking and user handling (branch test)
+# 1.3 added better error checking and user handling (branch test - almost done)
 
 # function to help the user better understand how the script works
 usage()
