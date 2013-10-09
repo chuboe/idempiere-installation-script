@@ -74,7 +74,6 @@
 /instance/org.eclipse.pde.core/workspace_target_handle=local\:1363968227721.target
 /instance/org.eclipse.ui.editors/writeOccurrenceIndicationColor=0,0,0
 /instance/org.eclipse.core.resources/version=1
-/instance/com.vectrace.MercurialEclipse/repo_C\:\\Users\\chuck\\robco_codeV1\\robco_customization342=d51 https\://bitbucket.org/bma_robco/robco_customization 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 7 default|
 /instance/org.codehaus.groovy.eclipse.ui/semanticHighlighting.annotation.color=255,255,255
 /instance/org.python.pydev/DECORATOR_COLOR=216,216,216
 /instance/org.eclipse.php.ui/semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting.color=\#BED6FF
@@ -144,7 +143,6 @@
 /instance/org.eclipse.php.ui/editorColorString=\#FFC600 | null | false | false | false | false
 /instance/org.eclipse.ui.editors/AbstractTextEditor.Color.SelectionBackground=255,255,255
 /instance/org.eclipse.jdt.ui/useQuickDiffPrefPage=true
-/instance/com.vectrace.MercurialEclipse/def_repo_repo_C\:\\Users\\chuck\\robco_codeV1\\robco_zkcustomization=https\://bitbucket.org/bma_robco/robco_zkcustomization
 /instance/org.eclipse.ui.editors/lineNumberColor=208,208,208
 /instance/org.python.pydev/NUMBER_COLOR=127,179,71
 /instance/org.eclipse.jdt.ui/semanticHighlighting.methodDeclarationName.enabled=true
@@ -153,7 +151,6 @@
 /instance/org.eclipse.jdt.ui/semanticHighlighting.methodDeclarationName.color=255,255,255
 /instance/org.python.pydev/CODE_COLOR=216,216,216
 /instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
-/instance/com.vectrace.MercurialEclipse/repo_=d47 https\://bitbucket.org/bma_robco/adempiere371lts 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 0  7 default|d53 https\://bitbucket.org/bma_robco/robco_zkcustomization 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 0 |d51 https\://bitbucket.org/bma_robco/robco_customization 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 7 default|d67 http\://adempiere.hg.sourceforge.net\:8000/hgroot/adempiere/adempiere 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 7 default|d59 https\://bitbucket.org/bma_robco/robco_zkcustomization371lts 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 0 |d57 https\://bitbucket.org/bma_robco/robco_customization371lts 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 0 |
 /instance/org.codehaus.groovy.eclipse.ui/semanticHighlighting.localVariableDeclaration.enabled=true
 /instance/org.eclipse.jdt.ui/semanticHighlighting.inheritedMethodInvocation.enabled=true
 /instance/org.codehaus.groovy.eclipse.ui/groovy.editor.highlight.javatypes.color=210,82,82
@@ -184,13 +181,11 @@
 /instance/org.eclipse.jdt.ui/spelling_ignore_mixed=true
 /instance/org.eclipse.wst.sse.ui/hoverModifiers=combinationHover|true|0;problemHover|false|0;documentationHover|false|0;annotationHover|true|Shift;
 /instance/org.eclipse.jdt.ui/spelling_ignore_upper=true
-/instance/org.eclipse.ui.trace/tracingFilePath=C\:\\Users\\chuck\\robco_codeV1\\.metadata\\trace.log
 /instance/org.eclipse.jdt.ui/content_assist_proposals_foreground=0,0,0
 /instance/org.eclipse.wst.xml.ui/commentBorder=\#C7DD0C | null | false | false | false | false
 /instance/org.eclipse.cdt.ui/semanticHighlighting.enum.enabled=true
 /instance/org.epic.perleditor/AbstractTextEditor.Color.Background=30,30,30
 @org.eclipse.ui.editors=3.8.0.v20120523-1540
-/instance/com.vectrace.MercurialEclipse/repo_C\:\\Users\\chuck\\robco_codeV1\\adempiereTrunk=d47 https\://bitbucket.org/bma_robco/adempiere371lts 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 0  7 default|
 /instance/org.eclipse.jst.j2ee.webservice.ui/areThereWebServices=false
 /instance/org.eclipse.jdt.ui/sourceHoverBackgroundColor=0,0,0
 /instance/org.eclipse.wst.xml.ui/declBorder=\#FFFFFF | null | false | false | false | false
@@ -277,7 +272,6 @@
 /instance/org.codehaus.groovy.eclipse.ui/semanticHighlighting.enum.color=127,179,71
 /instance/org.eclipse.wst.html.ui/tagName=\#BED6FF | null | false | false | false | false
 /instance/org.eclipse.jdt.ui/semanticHighlighting.staticFinalField.color=239,192,144
-/instance/com.vectrace.MercurialEclipse/def_repo_repo_C\:\\Users\\chuck\\robco_codeV1\\robco_zkcustomization371lts=https\://bitbucket.org/bma_robco/robco_zkcustomization371lts
 /instance/org.epic.perleditor/errorIndicationColorBold=false
 /configuration/org.eclipse.ui.ide/SHOW_WORKSPACE_SELECTION_DIALOG=true
 /instance/com.adobe.flexide.as.core/asClassBold=false
@@ -370,7 +364,6 @@
 /instance/org.eclipse.jdt.ui/semanticHighlighting.typeArgument.color=191,164,164
 /instance/org.eclipse.cdt.ui/semanticHighlighting.class.underline=false
 /instance/org.eclipse.cdt.ui/semanticHighlighting.staticMethod.color=190,214,255
-/instance/com.vectrace.MercurialEclipse/def_repo_repo_C\:\\robco_temp\\adempiere371lts=http\://adempiere.hg.sourceforge.net\:8000/hgroot/adempiere/adempiere
 /instance/org.eclipse.cdt.ui/pp_header=255,198,0
 /instance/org.eclipse.wst.jsdt.ui/java_doc_tag=217,229,119
 @org.eclipse.search=3.8.0.v20120523-1540
@@ -394,7 +387,6 @@
 /instance/org.eclipse.wst.css.ui/CURLY_BRACE=\#D8D8D8 | null | false | false | false | false
 /instance/org.eclipse.wst.jsdt.ui/tabWidthPropagated=true
 /instance/org.eclipse.cdt.ui/c_multi_line_comment=199,221,12
-/instance/com.vectrace.MercurialEclipse/repo_C\:\\Users\\chuck\\robco_codeV1\\robco_zkcustomization371lts=d59 https\://bitbucket.org/bma_robco/robco_zkcustomization371lts 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 0 |
 /instance/org.eclipse.php.ui/semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting.color=\#FFFFFF
 /instance/org.eclipse.jdt.ui/semanticHighlighting.localVariableDeclaration.color=190,214,255
 /instance/org.eclipse.cdt.ui/semanticHighlighting.field.enabled=true
@@ -404,7 +396,6 @@
 /instance/org.eclipse.php.ui/editorColorHeredoc=\#CCDF32 | null | false | false | false | false
 /instance/org.eclipse.wst.css.ui/UNIVERSAL=\#FFFFFF | null | false | false | false | false
 /instance/org.eclipse.wst.ws.service.policy/org.eclipse.wst.ws.service.policy.ui.servicepols.wsiprofilecomp.wsiap.defaultProtocol=http\://schemas.xmlsoap.org/wsdl/soap/
-/instance/org.eclipse.wst.sse.core/task-tag-projects-already-scanned=adempiereTrunkV2,RemoteSystemsTempFiles,robco_customization371lts,robco_zkcustomization371lts
 /instance/org.eclipse.php.ui/semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.MethodHighlighting.color=\#FFFFFF
 /instance/org.eclipse.wst.xml.ui/doctypeName=\#FFFFFF | null | false | false | false | false
 /instance/org.eclipse.jdt.ui/semanticHighlighting.annotation.color=255,255,255
@@ -413,7 +404,6 @@ file_export_version=3.0
 /instance/org.eclipse.pde.core/platform_path=C\:\\eclipse
 /instance/org.eclipse.ant.ui/org.eclipse.ant.ui.commentsColor=199,221,12
 /instance/org.epic.perleditor/othersIndicationColor=216,216,216
-/instance/com.vectrace.MercurialEclipse/repo_C\:\\Users\\chuck\\robco_codeV1\\robco_zkcustomization=d53 https\://bitbucket.org/bma_robco/robco_zkcustomization 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 0 |
 /instance/org.eclipse.ui.trace/tracingEnabled=false
 /instance/org.eclipse.php.ui/semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.bold=false
 /instance/org.eclipse.wst.xml.ui/tagName=\#BED6FF | null | false | false | false | false
@@ -427,7 +417,6 @@ file_export_version=3.0
 /instance/org.eclipse.jst.jsp.ui/jsp_content=\#D8D8D8 | null | false | false | false | false
 /instance/org.eclipse.cdt.ui/pp_directive=255,255,255
 /instance/org.eclipse.cdt.ui/semanticHighlighting.enumerator.enabled=true
-/configuration/org.eclipse.ui.ide/RECENT_WORKSPACES=C\:\\Users\\chuck\\robco_codeV1\nC\:\\Users\\chuck\\robco\nC\:\\Users\\chuck\\robco3\nC\:\\Users\\chuck\\robco2\nC\:\\Users\\chuck\\workspace
 /instance/org.eclipse.cdt.ui/semanticHighlighting.method.enabled=true
 /instance/org.epic.perleditor/comment1Color=199,221,12
 /instance/com.vectrace.MercurialEclipse/hg=C\:\\eclipse\\plugins\\com.intland.hgbinary.win32_2.3.2\\os\\win32\\hg.exe
@@ -481,12 +470,10 @@ file_export_version=3.0
 /instance/org.eclipse.ui.editors/AbstractTextEditor.Color.SelectionForeground=64,0,64
 /instance/org.eclipse.ui.editors/occurrenceIndicationColor=0,132,132
 @org.eclipse.jdt.launching=3.6.100.v20120523-1953
-/instance/com.vectrace.MercurialEclipse/repo_C\:\\Users\\chuck\\robco_codeV1\\robco_customization371lts=d57 https\://bitbucket.org/bma_robco/robco_customization371lts 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 0 |
 /instance/org.eclipse.wst.css.ui/ID=\#FFFFFF | null | false | false | false | false
 /instance/org.eclipse.cdt.ui/semanticHighlighting.typedef.enabled=true
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.compliance=1.6
 /instance/org.eclipse.jdt.ui/pf_coloring_comment=199,221,12
-/instance/com.vectrace.MercurialEclipse/repo_C\:\\robco_temp\\adempiere371lts=d67 http\://adempiere.hg.sourceforge.net\:8000/hgroot/adempiere/adempiere 26 e PLa9ACW71uYmC8ZV0zd98Q\=\= 14 e IMT/XffzyUU\= 7 default|
 /instance/org.eclipse.search/org.eclipse.search.potentialMatch.fgColor=0,255,0
 /instance/org.eclipse.cdt.ui/org.eclipse.cdt.internal.ui.text.doctools.recognizedTag=217,229,119
 /instance/org.eclipse.wst.html.ui/doctypeExtrenalSysref=\#FFFFFF | null | false | false | false | false
@@ -511,7 +498,6 @@ file_export_version=3.0
 /instance/com.adobe.flexide.css.core/cssMediaColor=\#FFFFFF
 /instance/org.eclipse.wst.xml.ui/cdataBorder=\#FFFFFF | null | false | false | false | false
 /instance/org.eclipse.jdt.ui/semanticHighlighting.staticFinalField.enabled=true
-/instance/com.vectrace.MercurialEclipse/def_repo_repo_C\:\\Users\\chuck\\robco_codeV1\\robco_customization371lts=https\://bitbucket.org/bma_robco/robco_customization371lts
 /instance/org.epic.perleditor/bookmarkIndicationColor=217,229,119
 /instance/org.eclipse.ui.workbench/editors=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<editors>\r\n<descriptor class\="org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor" id\="org.eclipse.jdt.ui.ClassFileEditorNoSource" image\="$nl$/icons/full/obj16/classf_obj.gif" internal\="true" label\="Class File Viewer" openMode\="1" open_in_place\="false" plugin\="org.eclipse.jdt.ui"/>\r\n<descriptor class\="org.eclipse.datatools.sqltools.internal.sqlscrapbook.editor.SQLScrapbookEditor" id\="org.eclipse.datatools.sqltools.sqlscrapbook.SQLScrapbookEditor" image\="images/qrydoc.gif" internal\="true" label\="SQL File Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.datatools.sqltools.sqlscrapbook"/>\r\n<descriptor class\="org.eclipse.datatools.sqltools.sqlbuilder.SQLBuilderEditor" id\="org.eclipse.datatools.sqltools.sqlbuilder" image\="images/qrydoc.gif" internal\="true" label\="SQL Query Builder" openMode\="1" open_in_place\="false" plugin\="org.eclipse.datatools.sqltools.sqlbuilder"/>\r\n<descriptor class\="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor" id\="org.eclipse.wst.xsl.ui.XSLEditor" image\="$nl$/icons/full/xslt_file.gif" internal\="true" label\="XSL Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.wst.xsl.ui"/>\r\n<descriptor class\="org.eclipse.buckminster.ui.dependency.visualizer.DependencyVisualizer" id\="org.eclipse.buckminster.dependency.visualizer.editor1" internal\="true" label\="Dependency Visualizer" openMode\="1" open_in_place\="false" plugin\="org.eclipse.buckminster.ui.dependency.visualizer"/>\r\n<descriptor class\="org.eclipse.wst.sse.ui.StructuredTextEditor" id\="org.eclipse.jst.jsp.core.jspsource.source" image\="$nl$/icons//full/obj16/sourceEditor.gif" internal\="true" label\="JSP Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.jst.jsp.ui"/>\r\n<descriptor class\="org.eclipse.jdt.internal.debug.ui.snippeteditor.JavaSnippetEditor" id\="org.eclipse.jdt.debug.ui.SnippetEditor" image\="$nl$/icons/full/obj16/jsbook_obj.gif" internal\="true" label\="Scrapbook" openMode\="1" open_in_place\="false" plugin\="org.eclipse.jdt.debug.ui"/>\r\n<descriptor class\="org.eclipse.buckminster.mspec.presentation.MspecEditor" id\="org.eclipse.buckminster.mspec.presentation.MspecEditorID" image\="icons/full/obj16/MspecModelFile.gif" internal\="true" label\="Materialization Spec. Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.buckminster.mspec.editor"/>\r\n<descriptor id\="org.eclipse.ui.browser.editorSupport" image\="$nl$/icons/obj16/internal_browser.gif" internal\="false" label\="Web Browser" launcher\="org.eclipse.ui.internal.browser.BrowserLauncher" openMode\="4" open_in_place\="false" plugin\="org.eclipse.ui.browser"/>\r\n<descriptor class\="org.eclipse.buckminster.ui.editor.cspec.CSpecEditor" id\="org.eclipse.buckminster.ui.editors.CSPECEditor" image\="icons/cspec.png" internal\="true" label\="Buckminster CSPEC Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.buckminster.ui"/>\r\n<descriptor class\="org.eclipse.jst.pagedesigner.editors.HTMLEditor" id\="org.eclipse.jst.pagedesigner.PageDesignerEditor" image\="icons/PD_Plugin.gif" internal\="true" label\="Web Page Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.jst.pagedesigner"/>\r\n<descriptor class\="org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor" id\="org.eclipse.wst.jsdt.ui.CompilationUnitEditor" image\="$nl$/icons/full/obj16/jcu_obj.gif" internal\="true" label\="JavaScript Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.wst.jsdt.ui"/>\r\n<descriptor class\="org.eclipse.buckminster.rmap.presentation.RmapEditor" id\="org.eclipse.buckminster.rmap.presentation.RmapEditorID" image\="icons/full/obj16/rmap.png" internal\="true" label\="Resource Map Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.buckminster.rmap.editor"/>\r\n<descriptor class\="org.eclipse.pde.internal.ui.samples.SampleEditor" id\="org.eclipse.pde.ui.sampleEditor" image\="$nl$/icons/obj16/build_exec.gif" internal\="true" label\="Code Sample Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.pde.ui"/>\r\n<descriptor class\="org.eclipse.buckminster.ui.editor.query.QueryEditor" id\="org.eclipse.buckminster.ui.editor.QueryEditor" image\="icons/cquery.png" internal\="true" label\="Component Query Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.buckminster.ui"/>\r\n<descriptor id\="org.eclipse.jdt.ui.JARDescEditor" image\="$nl$/icons/full/obj16/jar_desc_obj.gif" internal\="false" label\="JAR Export Wizard" launcher\="org.eclipse.jdt.internal.ui.jarpackager.OpenJarExportWizardEditorLauncher" openMode\="4" open_in_place\="false" plugin\="org.eclipse.jdt.ui"/>\r\n<descriptor class\="org.eclipse.wst.server.ui.internal.editor.ServerEditor" id\="org.eclipse.wst.server.ui.editor" image\="icons/obj16/server.gif" internal\="true" label\="Server Editor" openMode\="1" open_in_place\="false" plugin\="org.eclipse.wst.server.ui"/>\r\n</editors>
 /instance/org.python.pydev/SELF_COLOR=216,216,216
@@ -556,7 +542,6 @@ file_export_version=3.0
 /instance/org.eclipse.jdt.ui/java_doc_default=204,223,50
 /instance/org.eclipse.cdt.ui/semanticHighlighting.method.color=255,255,255
 /instance/org.codehaus.groovy.eclipse.ui/semanticHighlighting.class.bold=false
-/instance/com.vectrace.MercurialEclipse/def_repo_repo_C\:\\Users\\chuck\\robco_codeV1\\robco_customization342=https\://bitbucket.org/bma_robco/robco_customization
 @org.eclipse.jdt.ui=3.8.1.v20120814-144251
 /instance/org.eclipse.jdt.ui/semanticHighlighting.number.color=127,179,71
 /instance/com.adobe.flexide.as.core/asTraceColor=\#D8D8D8
