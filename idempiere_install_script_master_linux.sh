@@ -210,6 +210,11 @@ then
 	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
 	sudo service apache2 restart
 
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "SECURITY NOTICE: phppgadmin has been installed on port 80.">>/home/$OSUSER/$README
+	echo "Make sure this port is blocked from external traffic as a security mesaure.">>/home/$OSUSER/$README
+
 fi #end if IS_INSTALL_DB==Y
 
 # install desktop components
