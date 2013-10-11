@@ -33,7 +33,7 @@ OPTIONS:
 	-i	No install iDempiere (DB only)
 	-b	Name of s3 bucket for backups
 	-P	DB password
-	-l	Launch iDempiere with nohup
+	-l	Launch iDempiere as service
 	-u	Specify a username other than ubuntu
 	-B	Use bleeding edge copy of iDempiere
 	-D	Install desktop development tools
@@ -96,7 +96,7 @@ do
 
 		b)	#specify s3 bucket for backup
 			IS_S3BACKUP="Y"
-			S3BUCKET=$OPTARG
+			S3BUCKET=$OPTARG;;
 
 		P)	#database password
 			DBPASS=$OPTARG;;
