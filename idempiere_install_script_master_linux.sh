@@ -39,7 +39,6 @@ OPTIONS:
 	-D	Install desktop development tools
 
 Outstanding actions:
-* Capture when a parameter begins with '-' - in other words, the user did not add the argument modifier
 * Add better error checking
 * Remove some of the hardcoded variables
 * Add support for -s option to suppress services.
@@ -71,7 +70,6 @@ IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buc
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 README="idempiere_installer_feedback.txt"
-OUTPUT="output.txt"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -118,37 +116,36 @@ do
 done
 
 # show variables to the user (debug)
-echo "if you want to find for echoed values, search for HERE:"&>>/home/$OSUSER/$OUTPUT
-echo "HERE: print variables"&>>/home/$OSUSER/$OUTPUT
-echo "Install DB=" $IS_INSTALL_DB&>>/home/$OSUSER/$OUTPUT
-echo "Move DB="$IS_MOVE_DB&>>/home/$OSUSER/$OUTPUT
-echo "Install iDempiere="$IS_INSTALL_ID&>>/home/$OSUSER/$OUTPUT
-echo "Install iDempiere Scheduled Services (not implemented)="$IS_INSTALL_SERVICE&>>/home/$OSUSER/$OUTPUT
-echo "Install Desktop="$IS_INSTALL_DESKTOP&>>/home/$OSUSER/$OUTPUT
-echo "Backup to S3="$IS_S3BACKUP&>>/home/$OSUSER/$OUTPUT
-echo "Database IP="$PIP&>>/home/$OSUSER/$OUTPUT
-echo "MoveDB Device Name="$DEVNAME&>>/home/$OSUSER/$OUTPUT
-echo "DB Password="$DBPASS&>>/home/$OSUSER/$OUTPUT
-echo "Launch iDempiere as a service="$IS_LAUNCH_ID&>>/home/$OSUSER/$OUTPUT
-echo "S3 Bucket name="$S3BUCKET&>>/home/$OSUSER/$OUTPUT
-echo "Install Path="$INSTALLPATH&>>/home/$OSUSER/$OUTPUT
-echo "InitDName="$INITDNAME&>>/home/$OSUSER/$OUTPUT
-echo "ScriptName="$SCRIPTNAME&>>/home/$OSUSER/$OUTPUT
-echo "ScriptPath="$SCRIPTPATH&>>/home/$OSUSER/$OUTPUT
-echo "OSUser="$OSUSER&>>/home/$OSUSER/$OUTPUT
-echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH&>>/home/$OSUSER/$OUTPUT
-echo "EclipseSourcePath="$ECLIPSESOURCEPATH&>>/home/$OSUSER/$OUTPUT
-echo "Distro details:"&>>/home/$OSUSER/$OUTPUT
-cat /etc/*-release&>>/home/$OSUSER/$OUTPUT
+echo "if you want to find for echoed values, search for HERE:"
+echo "HERE: print variables"
+echo "Install DB=" $IS_INSTALL_DB
+echo "Move DB="$IS_MOVE_DB
+echo "Install iDempiere="$IS_INSTALL_ID
+echo "Install iDempiere Services="$IS_INSTALL_SERVICE
+echo "Install Desktop="$IS_INSTALL_DESKTOP
+echo "Backup to S3="$IS_S3BACKUP
+echo "Database IP="$PIP
+echo "MoveDB Device Name="$DEVNAME
+echo "DB Password="$DBPASS
+echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
+echo "S3 Bucket name="$S3BUCKET
+echo "Install Path="$INSTALLPATH
+echo "InitDName="$INITDNAME
+echo "ScriptName="$SCRIPTNAME
+echo "ScriptPath="$SCRIPTPATH
+echo "OSUser="$OSUSER
+echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
+echo "EclipseSourcePath="$ECLIPSESOURCEPATH
+echo "Distro details:"
+cat /etc/*-release
 
 # Create file to give user feedback about installation
 echo "">/home/$OSUSER/$README
-echo "">/home/$OSUSER/$OUTPUT
 
 # Check to ensure DB password is set
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
-	echo "HERE: Must set DB Password if installing DB!!"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: Must set DB Password if installing DB!!"
 	echo "Must set DB Password if installing DB!! Stopping script!">>/home/$OSUSER/$README
 	nano /home/$OSUSER/$README
 	exit 1
@@ -157,7 +154,7 @@ fi
 # Check to see if S3 Bucket is specified when $IS_S3BACKUP == Y
 if [[ $S3BUCKET == "NONE" && $IS_S3BACKUP == "Y"  ]]
 then
-	echo "HERE: Must specify S3 Bucket when setting backup argument!!"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: Must specify S3 Bucket when setting backup argument!!"
 	echo "Must specify S3 Bucket when setting backup argument!! Stopping script!">>/home/$OSUSER/$README
 	nano /home/$OSUSER/$README
 	exit 1
@@ -166,7 +163,7 @@ fi
 # You can only perform the backup if you are installing idempiere
 if [[ $IS_INSTALL_ID == "N" && $IS_S3BACKUP == "Y"  ]]
 then
-	echo "HERE: The backup script must be installed with iDempiere!!"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: The backup script must be installed with iDempiere!!"
 	echo "The backup script must be installed with iDempiere!! Stopping script!">>/home/$OSUSER/$README
 	nano /home/$OSUSER/$README
 	exit 1
@@ -175,43 +172,43 @@ fi
 # Check if user exists
 RESULT=$(id -u $OSUSER)
 if [ $RESULT -ge 0 ]; then
-	echo "HERE: OSUser exists">>/home/$OSUSER/$OUTPUT
+	echo "HERE: OSUser exists"
 else
-	echo "HERE: OSUser does not exist. Stopping script!"">>/home/$OSUSER/$OUTPUT
+	echo "HERE: OSUser does not exist. Stopping script!"
 	echo "OSUser does not exist. Stopping script!">>/home/$OSUSER/$README
 	nano /home/$OSUSER/$README
 	exit 1
 fi
 
 # update apt package manager
-sudo apt-get --yes update&>>/home/$OSUSER/$OUTPUT
+sudo apt-get --yes update
 
 # update locate database
-sudo updatedb&>>/home/$OSUSER/$OUTPUT
+sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop s3cmd expect&>>/home/$OSUSER/$OUTPUT
+sudo apt-get --yes install unzip htop s3cmd expect
 
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
-	echo "HERE: Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$OUTPUT
+	echo "HERE: Installing DB because IS_INSTALL_DB == Y"
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
-	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin&>>/home/$OSUSER/$OUTPUT
-	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"&>>/home/$OSUSER/$OUTPUT
+	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
+	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
 	# prevents outsiders for connecting to your server.
-	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf&>>/home/$OSUSER/$OUTPUT
-	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf&>>/home/$OSUSER/$OUTPUT
+	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
+	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
 
-	sudo -u postgres service postgresql restart&>>/home/$OSUSER/$OUTPUT
+	sudo -u postgres service postgresql restart
 
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
-	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin&>>/home/$OSUSER/$OUTPUT
-	sudo service apache2 restart&>>/home/$OSUSER/$OUTPUT
+	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
+	sudo service apache2 restart
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
@@ -223,28 +220,28 @@ fi #end if IS_INSTALL_DB==Y
 # install desktop components
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
-	echo "HERE: Install desktop components because IS_INSTALL_DESKTOP == Y"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: Install desktop components because IS_INSTALL_DESKTOP == Y"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
-	sudo apt-get install -y lubuntu-desktop xrdp&>>/home/$OSUSER/$OUTPUT
+	sudo apt-get install -y lubuntu-desktop xrdp
 	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
 	# set is a tool to add or replace text in a file
-	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh&>>/home/$OSUSER/$OUTPUT
-	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh&>>/home/$OSUSER/$OUTPUT
-	echo "HERE: set the ubuntu password using passwd command to log in remotely"&>>/home/$OSUSER/$OUTPUT
+	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
+	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
+	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "ACTION REQUIRED: set the ubuntu password using 'passwd' command to log in remotely">>/home/$OSUSER/$README
 	echo "--------> to set the password for the ubuntu user: 'sudo passwd ubuntu'">>/home/$OSUSER/$README
 	echo "--------> the script installed 'xrdp' with allows you to use Windows Remote Desktop to connect.">>/home/$OSUSER/$README
-	mkdir /home/$OSUSER/dev&>>/home/$OSUSER/$OUTPUT
-	mkdir /home/$OSUSER/dev/downloads&>>/home/$OSUSER/$OUTPUT
-	mkdir /home/$OSUSER/dev/plugins&>>/home/$OSUSER/$OUTPUT
+	mkdir /home/$OSUSER/dev
+	mkdir /home/$OSUSER/dev/downloads
+	mkdir /home/$OSUSER/dev/plugins
 
 	# get eclipse IDE
-	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads&>>/home/$OSUSER/$OUTPUT
-	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/&>>/home/$OSUSER/$OUTPUT
+	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads
+	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/
 
 	# Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
 	echo "">/home/$OSUSER/dev/launchEclipse
@@ -261,15 +258,15 @@ then
 	echo "SUGGESTION: copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>/home/$OSUSER/$README
 
 	# get idempiere code
-	cd /home/$OSUSER/dev&>>/home/$OSUSER/$OUTPUT
-	hg clone https://bitbucket.org/idempiere/idempiere&>>/home/$OSUSER/$OUTPUT
+	cd /home/$OSUSER/dev
+	hg clone https://bitbucket.org/idempiere/idempiere
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
-	hg clone idempiere myexperiment&>>/home/$OSUSER/$OUTPUT
+	hg clone idempiere myexperiment
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
-	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform&>>/home/$OSUSER/$OUTPUT
+	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
 	# go back to home directory
-	cd&>>/home/$OSUSER/$OUTPUT
+	cd
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
@@ -284,7 +281,7 @@ then
 	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>/home/$OSUSER/$README
 	echo " ------> choose Core, Maven, and PDE">>/home/$OSUSER/$README
 	echo "Create your target platform.">>/home/$OSUSER/$README
-	echo "Materialize the project. If you use CQUERY -instead of MSPEC-,">>/home/$OSUSER/$README
+	echo "Materialize the project. If you use CQUERY (instead of MSPEC),">>/home/$OSUSER/$README
 	echo " --> it seems to automatically build the workspace">>/home/$OSUSER/$README
 	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
@@ -303,64 +300,64 @@ fi #end if IS_INSTALL_DESKTOP = Y
 # The below code makes the mapping persist after a reboot by creating the fstab entry.
 if [[ $IS_MOVE_DB == "Y" ]]
 then
-	echo "HERE: Moving DB because IS_MOVE_DB == Y"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: Moving DB because IS_MOVE_DB == Y"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Moving DB because IS_MOVE_DB == Y">>/home/$OSUSER/$README
-	sudo apt-get update&>>/home/$OSUSER/$OUTPUT
-	sudo apt-get install -y xfsprogs&>>/home/$OSUSER/$OUTPUT
+	sudo apt-get update
+	sudo apt-get install -y xfsprogs
 	#sudo apt-get install -y postgresql #uncomment if you need the script to install the db
-	sudo mkfs.ext4 /dev/$DEVNAME&>>/home/$OSUSER/$OUTPUT
-	echo "/dev/"$DEVNAME" /vol ext4 noatime 0 0" | sudo tee -a /etc/fstab&>>/home/$OSUSER/$OUTPUT
-	sudo mkdir -m 000 /vol&>>/home/$OSUSER/$OUTPUT
-	sudo mount /vol&>>/home/$OSUSER/$OUTPUT
+	sudo mkfs.ext4 /dev/$DEVNAME
+	echo "/dev/"$DEVNAME" /vol ext4 noatime 0 0" | sudo tee -a /etc/fstab
+	sudo mkdir -m 000 /vol
+	sudo mount /vol
 
-	sudo -u postgres service postgresql stop&>>/home/$OSUSER/$OUTPUT
+	sudo -u postgres service postgresql stop
 
 	#map the data direcory
-	sudo mkdir /vol/var&>>/home/$OSUSER/$OUTPUT
-	sudo mv /var/lib/postgresql/9.1/main /vol/var&>>/home/$OSUSER/$OUTPUT
-	sudo mkdir /var/lib/postgresql/9.1/main&>>/home/$OSUSER/$OUTPUT
-	echo "/vol/var/main /var/lib/postgresql/9.1/main     none bind" | sudo tee -a /etc/fstab&>>/home/$OSUSER/$OUTPUT
-	sudo mount /var/lib/postgresql/9.1/main&>>/home/$OSUSER/$OUTPUT
+	sudo mkdir /vol/var
+	sudo mv /var/lib/postgresql/9.1/main /vol/var
+	sudo mkdir /var/lib/postgresql/9.1/main
+	echo "/vol/var/main /var/lib/postgresql/9.1/main     none bind" | sudo tee -a /etc/fstab
+	sudo mount /var/lib/postgresql/9.1/main
 
 	#map the conf directory
-	sudo mkdir /vol/etc&>>/home/$OSUSER/$OUTPUT
-	sudo mv /etc/postgresql/9.1/main /vol/etc&>>/home/$OSUSER/$OUTPUT
-	sudo mkdir /etc/postgresql/9.1/main&>>/home/$OSUSER/$OUTPUT
-	echo "/vol/etc/main /etc/postgresql/9.1/main     none bind" | sudo tee -a /etc/fstab&>>/home/$OSUSER/$OUTPUT
-	sudo mount /etc/postgresql/9.1/main&>>/home/$OSUSER/$OUTPUT
+	sudo mkdir /vol/etc
+	sudo mv /etc/postgresql/9.1/main /vol/etc
+	sudo mkdir /etc/postgresql/9.1/main
+	echo "/vol/etc/main /etc/postgresql/9.1/main     none bind" | sudo tee -a /etc/fstab
+	sudo mount /etc/postgresql/9.1/main
 
-	sudo -u postgres service postgresql start&>>/home/$OSUSER/$OUTPUT
+	sudo -u postgres service postgresql start
 
 fi #end if IS_MOVE_DB==Y
 
 # Install iDempiere
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Installing iDemipere because IS_INSTALL_ID == Y">>/home/$OSUSER/$README
-	sudo apt-get --yes install openjdk-6-jdk&>>/home/$OSUSER/$OUTPUT
+	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
 		#install postgresql client tools
-		sudo apt-get -y install postgresql-client&>>/home/$OSUSER/$OUTPUT
+		sudo apt-get -y install postgresql-client
 	fi
 
-	mkdir /home/$OSUSER/installer_`date +%Y%m%d`&>>/home/$OSUSER/$OUTPUT
-	sudo mkdir $INSTALLPATH&>>/home/$OSUSER/$OUTPUT
-	sudo chown $OSUSER:$OSUSER $INSTALLPATH&>>/home/$OSUSER/$OUTPUT
-	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`&>>/home/$OSUSER/$OUTPUT
+	mkdir /home/$OSUSER/installer_`date +%Y%m%d`
+	sudo mkdir $INSTALLPATH
+	sudo chown $OSUSER:$OSUSER $INSTALLPATH
+	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
 
 	# check if file downloaded
 	RESULT=$(ls -l /home/$OSUSER/installer_`date +%Y%m%d`/*64.zip | wc -l)
 	if [ $RESULT -ge 1 ]; then
-        	echo "HERE: file exists"&>>/home/$OSUSER/$OUTPUT
+        	echo "HERE: file exists"
 	else
-        	echo "HERE: file does not exist. Stopping script!"&>>/home/$OSUSER/$OUTPUT
-		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed"&>>/home/$OSUSER/$OUTPUT
+        	echo "HERE: file does not exist. Stopping script!"
+		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed"
 		echo "">>/home/$OSUSER/$README
 		echo "">>/home/$OSUSER/$README
         	echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
@@ -369,16 +366,16 @@ then
 	        exit 1
 	fi
 
-	unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`&>>/home/$OSUSER/$OUTPUT
-	cd /home/$OSUSER/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/&>>/home/$OSUSER/$OUTPUT
-	cp -r * $INSTALLPATH&>>/home/$OSUSER/$OUTPUT
-	cd $INSTALLPATH&>>/home/$OSUSER/$OUTPUT
-	mkdir log&>>/home/$OSUSER/$OUTPUT
+	unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`
+	cd /home/$OSUSER/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
+	cp -r * $INSTALLPATH
+	cd $INSTALLPATH
+	mkdir log
 
 	# install S3 backup script
 	if [[ $IS_S3BACKUP == "Y" ]]
 	then
-		echo "HERE: Updating iDempiere backup because IS_S3BACKUP == Y"&>>/home/$OSUSER/$OUTPUT
+		echo "HERE: Updating iDempiere backup because IS_S3BACKUP == Y"
 		echo "Updating iDempiere backup because IS_S3BACKUP == Y">>/home/$OSUSER/$README
 		# add the s3cmd command as the last step to the existing backup script
 		sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://$S3BUCKET=' /$INSTALLPATH/utils/myDBcopy.sh
@@ -439,19 +436,19 @@ sh RUN_ImportIdempiere.sh <<!
 fi #end if $IS_INSTALL_ID == "Y"
 
 # Run iDempiere
-echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID&>>/home/$OSUSER/$OUTPUT
+echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
-	echo "HERE: setting iDempiere to start on boot"&>>/home/$OSUSER/$OUTPUT
+	echo "HERE: setting iDempiere to start on boot"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "iDempiere set to start on boot">>/home/$OSUSER/$README
-	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils&>>/home/$OSUSER/$OUTPUT
-	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/&>>/home/$OSUSER/$OUTPUT
-	sudo chmod +x /etc/init.d/$INITDNAME&>>/home/$OSUSER/$OUTPUT
-	sudo update-rc.d $INITDNAME defaults&>>/home/$OSUSER/$OUTPUT
+	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
+	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
+	sudo chmod +x /etc/init.d/$INITDNAME
+	sudo update-rc.d $INITDNAME defaults
 
-	sudo /etc/init.d/$INITDNAME start&>>/home/$OSUSER/$OUTPUT
+	sudo /etc/init.d/$INITDNAME start
 fi
 
 # show results to user
