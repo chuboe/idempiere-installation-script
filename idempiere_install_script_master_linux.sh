@@ -147,7 +147,7 @@ if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
 	echo "HERE: Must set DB Password if installing DB!!"
 	echo "Must set DB Password if installing DB!! Stopping script!">>/home/$OSUSER/$README
-	nano /home/$OSUSER/$README
+	# nano /home/$OSUSER/$README
 	exit 1
 fi
 
@@ -156,7 +156,7 @@ if [[ $S3BUCKET == "NONE" && $IS_S3BACKUP == "Y"  ]]
 then
 	echo "HERE: Must specify S3 Bucket when setting backup argument!!"
 	echo "Must specify S3 Bucket when setting backup argument!! Stopping script!">>/home/$OSUSER/$README
-	nano /home/$OSUSER/$README
+	# nano /home/$OSUSER/$README
 	exit 1
 fi
 
@@ -165,7 +165,7 @@ if [[ $IS_INSTALL_ID == "N" && $IS_S3BACKUP == "Y"  ]]
 then
 	echo "HERE: The backup script must be installed with iDempiere!!"
 	echo "The backup script must be installed with iDempiere!! Stopping script!">>/home/$OSUSER/$README
-	nano /home/$OSUSER/$README
+	# nano /home/$OSUSER/$README
 	exit 1
 fi
 
@@ -176,7 +176,7 @@ if [ $RESULT -ge 0 ]; then
 else
 	echo "HERE: OSUser does not exist. Stopping script!"
 	echo "OSUser does not exist. Stopping script!">>/home/$OSUSER/$README
-	nano /home/$OSUSER/$README
+	# nano /home/$OSUSER/$README
 	exit 1
 fi
 
@@ -362,7 +362,7 @@ then
 		echo "">>/home/$OSUSER/$README
         	echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
         	echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed">>/home/$OSUSER/$README
-		nano /home/$OSUSER/$README
+		# nano /home/$OSUSER/$README
 	        exit 1
 	fi
 
@@ -452,7 +452,7 @@ then
 fi
 
 # show results to user
-nano /home/$OSUSER/$README
+# nano /home/$OSUSER/$README
 
 # TODO: Need section for S3 backup
 # Consider modifying the existing backup script
