@@ -118,28 +118,28 @@ do
 done
 
 # show variables to the user (debug)
-echo "if you want to find for echoed values, search for HERE:"
-echo "HERE: print variables"
-echo "Install DB=" $IS_INSTALL_DB
-echo "Move DB="$IS_MOVE_DB
-echo "Install iDempiere="$IS_INSTALL_ID
-echo "Install iDempiere Scheduled Services (not implemented)="$IS_INSTALL_SERVICE
-echo "Install Desktop="$IS_INSTALL_DESKTOP
-echo "Backup to S3="$IS_S3BACKUP
-echo "Database IP="$PIP
-echo "MoveDB Device Name="$DEVNAME
-echo "DB Password="$DBPASS
-echo "Launch iDempiere as a service="$IS_LAUNCH_ID
-echo "S3 Bucket name="$S3BUCKET
-echo "Install Path="$INSTALLPATH
-echo "InitDName="$INITDNAME
-echo "ScriptName="$SCRIPTNAME
-echo "ScriptPath="$SCRIPTPATH
-echo "OSUser="$OSUSER
-echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
-echo "EclipseSourcePath="$ECLIPSESOURCEPATH
-echo "Distro details:"
-cat /etc/*-release
+echo "if you want to find for echoed values, search for HERE:"&>>/home/$OSUSER/$OUTPUT
+echo "HERE: print variables"&>>/home/$OSUSER/$OUTPUT
+echo "Install DB=" $IS_INSTALL_DB&>>/home/$OSUSER/$OUTPUT
+echo "Move DB="$IS_MOVE_DB&>>/home/$OSUSER/$OUTPUT
+echo "Install iDempiere="$IS_INSTALL_ID&>>/home/$OSUSER/$OUTPUT
+echo "Install iDempiere Scheduled Services (not implemented)="$IS_INSTALL_SERVICE&>>/home/$OSUSER/$OUTPUT
+echo "Install Desktop="$IS_INSTALL_DESKTOP&>>/home/$OSUSER/$OUTPUT
+echo "Backup to S3="$IS_S3BACKUP&>>/home/$OSUSER/$OUTPUT
+echo "Database IP="$PIP&>>/home/$OSUSER/$OUTPUT
+echo "MoveDB Device Name="$DEVNAME&>>/home/$OSUSER/$OUTPUT
+echo "DB Password="$DBPASS&>>/home/$OSUSER/$OUTPUT
+echo "Launch iDempiere as a service="$IS_LAUNCH_ID&>>/home/$OSUSER/$OUTPUT
+echo "S3 Bucket name="$S3BUCKET&>>/home/$OSUSER/$OUTPUT
+echo "Install Path="$INSTALLPATH&>>/home/$OSUSER/$OUTPUT
+echo "InitDName="$INITDNAME&>>/home/$OSUSER/$OUTPUT
+echo "ScriptName="$SCRIPTNAME&>>/home/$OSUSER/$OUTPUT
+echo "ScriptPath="$SCRIPTPATH&>>/home/$OSUSER/$OUTPUT
+echo "OSUser="$OSUSER&>>/home/$OSUSER/$OUTPUT
+echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH&>>/home/$OSUSER/$OUTPUT
+echo "EclipseSourcePath="$ECLIPSESOURCEPATH&>>/home/$OSUSER/$OUTPUT
+echo "Distro details:"&>>/home/$OSUSER/$OUTPUT
+cat /etc/*-release&>>/home/$OSUSER/$OUTPUT
 
 # Create file to give user feedback about installation
 echo "">/home/$OSUSER/$README
