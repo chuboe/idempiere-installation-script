@@ -55,12 +55,10 @@ IS_INSTALL_SERVICE="Y"
 IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
-IS_S3BACKUP="N"
 IS_INSTALL_DESKTOP="N"
 PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
-S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
@@ -94,10 +92,6 @@ do
 		i)	#no install iDempiere
 			IS_INSTALL_ID="N";;
 
-		b)	#specify s3 bucket for backup
-			IS_S3BACKUP="Y"
-			S3BUCKET=$OPTARG;;
-
 		P)	#database password
 			DBPASS=$OPTARG;;
 
@@ -123,12 +117,10 @@ echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
 echo "Install iDempiere Services="$IS_INSTALL_SERVICE
 echo "Install Desktop="$IS_INSTALL_DESKTOP
-echo "Backup to S3="$IS_S3BACKUP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
-echo "S3 Bucket name="$S3BUCKET
 echo "Install Path="$INSTALLPATH
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
@@ -147,24 +139,6 @@ if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
 	echo "HERE: Must set DB Password if installing DB!!"
 	echo "Must set DB Password if installing DB!! Stopping script!">>/home/$OSUSER/$README
-	# nano /home/$OSUSER/$README
-	exit 1
-fi
-
-# Check to see if S3 Bucket is specified when $IS_S3BACKUP == Y
-if [[ $S3BUCKET == "NONE" && $IS_S3BACKUP == "Y"  ]]
-then
-	echo "HERE: Must specify S3 Bucket when setting backup argument!!"
-	echo "Must specify S3 Bucket when setting backup argument!! Stopping script!">>/home/$OSUSER/$README
-	# nano /home/$OSUSER/$README
-	exit 1
-fi
-
-# You can only perform the backup if you are installing idempiere
-if [[ $IS_INSTALL_ID == "N" && $IS_S3BACKUP == "Y"  ]]
-then
-	echo "HERE: The backup script must be installed with iDempiere!!"
-	echo "The backup script must be installed with iDempiere!! Stopping script!">>/home/$OSUSER/$README
 	# nano /home/$OSUSER/$README
 	exit 1
 fi
@@ -372,34 +346,23 @@ then
 	cd $INSTALLPATH
 	mkdir log
 
-	# install S3 backup script
-	if [[ $IS_S3BACKUP == "Y" ]]
-	then
-		echo "HERE: Updating iDempiere backup because IS_S3BACKUP == Y"
-		echo "Updating iDempiere backup because IS_S3BACKUP == Y">>/home/$OSUSER/$README
-		# add the s3cmd command as the last step to the existing backup script
-		echo "s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://$S3BUCKET"
-		echo /$INSTALLPATH/utils/myDBcopy.sh
-		sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://$S3BUCKET=' /$INSTALLPATH/utils/myDBcopy.sh
-		sudo sed -i '$ a\sleep 20' /$INSTALLPATH/utils/myDBcopy.sh
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Issue the following commands to push your backups to S3">>/home/$OSUSER/$README
+	# add the s3cmd command as the last step to the existing backup script
+        echo "--> s3cmd --configure">>/home/$OSUSER/$README
+	echo "----> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
+	echo "--> s3cmd mb s3://iDempiere_backup">>/home/$OSUSER/$README
+	echo "--> sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://iDempiere_backup=' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
+	echo "--> sudo sed -i '$ a\sleep 20' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
 
-		#write out current crontab - schedule backups
-		crontab -l > mycron
-		#echo new cron into cron file - 0 minute, 2nd hour, every day, every month, every day of the week
-		echo "00 02 * * * /$INSTALLPATH/utils/RUN_DBExport.sh" >> mycron
-		#install new cron file
-		crontab mycron
-		rm mycron
-
-		# give instructions to configure s3cmd
-		echo "">>/home/$OSUSER/$README
-                echo "">>/home/$OSUSER/$README
-                echo "ACTION REQUIRED: To use S3 backup via s3cmd, you need to perform the following:">>/home/$OSUSER/$README
-                echo "--> issue command: s3cmd --configure">>/home/$OSUSER/$README
-		echo "----> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
-		echo "--> issue command to create your S3 bucket: s3cmd mb s3://$S3BUCKET">>/home/$OSUSER/$README
-                echo "">>/home/$OSUSER/$README
-	fi #end if ISBACKUP == Y
+	#write out current crontab - schedule backups
+	crontab -l > mycron
+	#echo new cron into cron file - 0 minute, 2nd hour, every day, every month, every day of the week
+	echo "00 02 * * * /$INSTALLPATH/utils/RUN_DBExport.sh" >> mycron
+	#install new cron file
+	crontab mycron
+	rm mycron
 
 #not indented because of file input
 sh console-setup.sh <<!
