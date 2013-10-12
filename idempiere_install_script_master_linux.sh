@@ -378,8 +378,10 @@ then
 		echo "HERE: Updating iDempiere backup because IS_S3BACKUP == Y"
 		echo "Updating iDempiere backup because IS_S3BACKUP == Y">>/home/$OSUSER/$README
 		# add the s3cmd command as the last step to the existing backup script
-		sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://$S3BUCKET=' /$INSTALLPATH/utils/myDBcopy.sh
-		echo "sleep 20">>/$INSTALLPATH/utils/myDBcopy.sh
+		echo "s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://$S3BUCKET"
+		echo /$INSTALLPATH/utils/myDBcopy.sh
+		sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://$S3BUCKET=' /$INSTALLPATH/utils/myDBcopy.sh
+		sudo sed -i '$ a\sleep 20' /$INSTALLPATH/utils/myDBcopy.sh
 
 		#write out current crontab - schedule backups
 		crontab -l > mycron
