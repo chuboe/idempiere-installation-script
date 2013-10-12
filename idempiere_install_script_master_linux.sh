@@ -352,9 +352,12 @@ then
 	# add the s3cmd command as the last step to the existing backup script
         echo "--> s3cmd --configure">>/home/$OSUSER/$README
 	echo "----> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
+	echo "----> enter a password. Chose something different than your AWS password. Write it down!!">>/home/$OSUSER/$README
+	echo "----> Accept the default path to GPG">>/home/$OSUSER/$README
+	echo "----> Answer yes to HTTPS">>/home/$OSUSER/$README
 	echo "--> s3cmd mb s3://iDempiere_backup">>/home/$OSUSER/$README
 	echo "--> sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://iDempiere_backup=' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
-	echo "--> sudo sed -i '$ a\sleep 20' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
+	echo "--> sudo sed -i '$ a\sleep 10' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
 
 	#write out current crontab - schedule backups
 	crontab -l > mycron
