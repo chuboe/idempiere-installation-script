@@ -284,7 +284,7 @@ then
 	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>/home/$OSUSER/$README
 	echo " ------> choose Core, Maven, and PDE">>/home/$OSUSER/$README
 	echo "Create your target platform.">>/home/$OSUSER/$README
-	echo "Materialize the project. If you use CQUERY (instead of MSPEC),">>/home/$OSUSER/$README
+	echo "Materialize the project. If you use CQUERY -instead of MSPEC-,">>/home/$OSUSER/$README
 	echo " --> it seems to automatically build the workspace">>/home/$OSUSER/$README
 	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
