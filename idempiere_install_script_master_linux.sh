@@ -9,7 +9,7 @@
 # 1.1 run iDempiere as service
 # 1.2 added remote desktop development environment
 # 1.3 added better error checking and user handling
-# 1.4 added better user instruction and added support for -b (s3 backup)
+# 1.4 added better user instruction (specifically for s3 backup)
 
 # function to help the user better understand how the script works
 usage()
