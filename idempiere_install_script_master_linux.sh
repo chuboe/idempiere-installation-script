@@ -9,6 +9,7 @@
 # 1.1 run iDempiere as service
 # 1.2 added remote desktop development environment
 # 1.3 added better error checking and user handling
+# 1.4 added better user instruction (specifically for s3 backup)
 
 # function to help the user better understand how the script works
 usage()
@@ -30,9 +31,9 @@ OPTIONS:
 	-e	Move the postgresql files
 		to EBS - provide the drive name
 	-i	No install iDempiere (DB only)
-	-b	Name of s3 bucket for backups (not implemented yet)
+	-b	Name of s3 bucket for backups
 	-P	DB password
-	-l	Launch iDempiere with nohup
+	-l	Launch iDempiere as service
 	-u	Specify a username other than ubuntu
 	-B	Use bleeding edge copy of iDempiere
 	-D	Install desktop development tools
@@ -40,10 +41,6 @@ OPTIONS:
 Outstanding actions:
 * Add better error checking
 * Remove some of the hardcoded variables
-* Change wget to the upcoming stable release (when it comes out). Currently points to the development head.
-* Default iDempiere to port 80 and set pgadmin to 8080
-* Default iDempiere admin to 443
-* Default phppgadmin to port to 80 if DB only install, 8080 otherwise if iDempiere is installed
 * Add support for -s option to suppress services.
   - Doing so will require a code change to AdempiereServerMgr.java (in iDempiere).
   - This option will allow you to run multiple WebUI servers behind a load balancer.
@@ -58,21 +55,19 @@ IS_INSTALL_SERVICE="Y"
 IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
-IS_S3BACKUP="N"
 IS_INSTALL_DESKTOP="N"
 PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
-S3BUCKET="NONE"
 INSTALLPATH="/opt/idempiere-server/"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 IDEMPIERESOURCEPATH="http://sourceforge.net/projects/idempiere/files/v1.0c/server/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
-
+README="idempiere_installer_feedback.txt"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -96,11 +91,6 @@ do
 
 		i)	#no install iDempiere
 			IS_INSTALL_ID="N";;
-
-		b)	#specify s3 bucket for backup
-			IS_S3BACKUP="Y"
-			S3BUCKET=$OPTARG
-			echo "NOTE: -b option not implemented yet!!";;
 
 		P)	#database password
 			DBPASS=$OPTARG;;
@@ -127,12 +117,10 @@ echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
 echo "Install iDempiere Services="$IS_INSTALL_SERVICE
 echo "Install Desktop="$IS_INSTALL_DESKTOP
-echo "Backup to S3="$IS_S3BACKUP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
-echo "S3 Bucket name="$S3BUCKET
 echo "Install Path="$INSTALLPATH
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
@@ -143,19 +131,26 @@ echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "Distro details:"
 cat /etc/*-release
 
-#Check for known error conditions
+# Create file to give user feedback about installation
+echo "">/home/$OSUSER/$README
+
+# Check to ensure DB password is set
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
 	echo "HERE: Must set DB Password if installing DB!!"
+	echo "Must set DB Password if installing DB!! Stopping script!">>/home/$OSUSER/$README
+	# nano /home/$OSUSER/$README
 	exit 1
 fi
 
-#Check if user exists
+# Check if user exists
 RESULT=$(id -u $OSUSER)
 if [ $RESULT -ge 0 ]; then
 	echo "HERE: OSUser exists"
 else
 	echo "HERE: OSUser does not exist. Stopping script!"
+	echo "OSUser does not exist. Stopping script!">>/home/$OSUSER/$README
+	# nano /home/$OSUSER/$README
 	exit 1
 fi
 
@@ -172,6 +167,7 @@ sudo apt-get --yes install unzip htop s3cmd expect
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
 	echo "HERE: Installing DB because IS_INSTALL_DB == Y"
+	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 
@@ -183,24 +179,36 @@ then
 
 	sudo -u postgres service postgresql restart
 
-	# The following commands update phppgadmin to allow all ips to connect.
+	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
 	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
 	sudo service apache2 restart
+
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "SECURITY NOTICE: phppgadmin has been installed on port 80.">>/home/$OSUSER/$README
+	echo "Make sure this port is blocked from external traffic as a security mesaure.">>/home/$OSUSER/$README
 
 fi #end if IS_INSTALL_DB==Y
 
 # install desktop components
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
-	echo "HERE: Install desktop components"
+	echo "HERE: Install desktop components because IS_INSTALL_DESKTOP == Y"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
 	sudo apt-get install -y lubuntu-desktop xrdp
 	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
 	# set is a tool to add or replace text in a file
 	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
 	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
-
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "ACTION REQUIRED: set the ubuntu password using 'passwd' command to log in remotely">>/home/$OSUSER/$README
+	echo "--------> to set the password for the ubuntu user: 'sudo passwd ubuntu'">>/home/$OSUSER/$README
+	echo "--------> the script installed 'xrdp' with allows you to use Windows Remote Desktop to connect.">>/home/$OSUSER/$README
 	mkdir /home/$OSUSER/dev
 	mkdir /home/$OSUSER/dev/downloads
 	mkdir /home/$OSUSER/dev/plugins
@@ -219,6 +227,9 @@ then
 	sudo sed -i '$ a\Icon=/home/ubuntu/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse
 	sudo sed -i '$ a\Exec=/home/ubuntu/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse
 	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "SUGGESTION: copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>/home/$OSUSER/$README
 
 	# get idempiere code
 	cd /home/$OSUSER/dev
@@ -231,19 +242,26 @@ then
 	# go back to home directory
 	cd
 
-	echo "HERE: When the script finishes, log in and open eclipse using the launch file in home/<user>/dev."
-	echo "HERE: Choose the myexperiment folder as your workspace."
-	echo "HERE: Add the mercurial and buckminster plugins."
-	echo " --> Mercurial"
-	echo " ------> http://cbes.javaforge.com/update"
-	echo " ------> choose mercurial but not windows binaries"
-	echo " --> Buckminster"
-	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3"
-	echo " ------> choose Core, Maven, and PDE"
-	echo "HERE: Create your target platform."
-	echo "HERE: Materialize the project. If you use CQUERY (instead of MSPEC),"
-	echo " --> it seems to automatically build the workspace"
-	echo "HERE: If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "When the script finishes, log in via remote desktop and open launchEclipse.">>/home/$OSUSER/$README
+	echo "Choose the myexperiment folder as your workspace.">>/home/$OSUSER/$README
+	echo "Add the mercurial and buckminster plugins.">>/home/$OSUSER/$README
+	echo "More detailed instructions for the following can be found at http://www.globalqss.com/wiki/index.php/IDempiere/Install_Prerequisites_on_Ubuntu">>/home/$OSUSER/$README
+	echo " --> Mercurial">>/home/$OSUSER/$README
+	echo " ------> http://cbes.javaforge.com/update">>/home/$OSUSER/$README
+	echo " ------> choose mercurial but not windows binaries">>/home/$OSUSER/$README
+	echo " --> Buckminster">>/home/$OSUSER/$README
+	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>/home/$OSUSER/$README
+	echo " ------> choose Core, Maven, and PDE">>/home/$OSUSER/$README
+	echo "Create your target platform.">>/home/$OSUSER/$README
+	echo "Materialize the project. If you use CQUERY (instead of MSPEC),">>/home/$OSUSER/$README
+	echo " --> it seems to automatically build the workspace">>/home/$OSUSER/$README
+	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Please note that iDempiere is installed twice: first as a service, and second in eclipse.">>/home/$OSUSER/$README
+	echo "If you run the iDempiere server through eclipse, make sure you stop the iDempiere service using 'sudo service idempiere stop' first.">>/home/$OSUSER/$README
 
 
 fi #end if IS_INSTALL_DESKTOP = Y
@@ -257,6 +275,9 @@ fi #end if IS_INSTALL_DESKTOP = Y
 if [[ $IS_MOVE_DB == "Y" ]]
 then
 	echo "HERE: Moving DB because IS_MOVE_DB == Y"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Moving DB because IS_MOVE_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get update
 	sudo apt-get install -y xfsprogs
 	#sudo apt-get install -y postgresql #uncomment if you need the script to install the db
@@ -289,12 +310,16 @@ fi #end if IS_MOVE_DB==Y
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
 	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Installing iDemipere because IS_INSTALL_ID == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
 		#install postgresql client tools
 		sudo apt-get -y install postgresql-client
 	fi
+
 	mkdir /home/$OSUSER/installer_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
 	sudo chown $OSUSER:$OSUSER $INSTALLPATH
@@ -307,6 +332,11 @@ then
 	else
         	echo "HERE: file does not exist. Stopping script!"
 		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed"
+		echo "">>/home/$OSUSER/$README
+		echo "">>/home/$OSUSER/$README
+        	echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
+        	echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiereDaily/ to see if the daily build failed">>/home/$OSUSER/$README
+		# nano /home/$OSUSER/$README
 	        exit 1
 	fi
 
@@ -315,6 +345,27 @@ then
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
 	mkdir log
+
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Issue the following commands to push your backups to S3">>/home/$OSUSER/$README
+	# add the s3cmd command as the last step to the existing backup script
+        echo "--> s3cmd --configure">>/home/$OSUSER/$README
+	echo "----> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
+	echo "----> enter a password. Chose something different than your AWS password. Write it down!!">>/home/$OSUSER/$README
+	echo "----> Accept the default path to GPG">>/home/$OSUSER/$README
+	echo "----> Answer yes to HTTPS">>/home/$OSUSER/$README
+	echo "--> s3cmd mb s3://iDempiere_backup">>/home/$OSUSER/$README
+	echo "--> sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://iDempiere_backup=' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
+	echo "--> sudo sed -i '$ a\sleep 10' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
+
+	#write out current crontab - schedule backups
+	crontab -l > mycron
+	#echo new cron into cron file - 0 minute, 2nd hour, every day, every month, every day of the week
+	echo "00 02 * * * /$INSTALLPATH/utils/RUN_DBExport.sh" >> mycron
+	#install new cron file
+	crontab mycron
+	rm mycron
 
 #not indented because of file input
 sh console-setup.sh <<!
@@ -357,6 +408,9 @@ echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
 	echo "HERE: setting iDempiere to start on boot"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "iDempiere set to start on boot">>/home/$OSUSER/$README
 	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
 	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
@@ -364,6 +418,9 @@ then
 
 	sudo /etc/init.d/$INITDNAME start
 fi
+
+# show results to user
+# nano /home/$OSUSER/$README
 
 # TODO: Need section for S3 backup
 # Consider modifying the existing backup script
