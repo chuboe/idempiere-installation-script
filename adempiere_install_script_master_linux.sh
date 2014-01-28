@@ -89,4 +89,10 @@ wget http://sourceforge.net/projects/adempiere/files/Adempiere%20Packages/Libero
 mv download liberozkMFG.jar
 cp liberoMFG.jar ../Adempiere/packages/liberoMFG/lib/
 cp liberozkMFG.jar ../Adempiere/zkpackages/liberoMFG/lib/
+cd ../Adempiere/utils
+#Stop the server is still running
+./RUN_Server2Stop.sh
 cd ..
+./RUN_silentsetup.sh
+cd utils
+nohup ./RUN_Server2.sh &
