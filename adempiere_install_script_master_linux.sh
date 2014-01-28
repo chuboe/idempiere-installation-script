@@ -2,9 +2,7 @@
 #It is currently a collection of commands for ubuntu to install ADempiere. 
 #Eventually, it will look like the iDempiere installer script in this repository.
 #You simply copy and paste each command to the command prompt.
-#This scripts assumes the following:
-# * You are using AWS. 
-# * You are using ubuntu.
+#This scripts assumes you are using ubuntu 12.04 LTS. 
 
 sudo apt-get --yes update
 sudo updatedb
