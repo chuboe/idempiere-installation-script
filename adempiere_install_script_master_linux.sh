@@ -78,3 +78,15 @@ cd ..
 #Nohup allows you to run the server and disconnect your ssh session without killing the application server.
 cd utils
 nohup ./RUN_Server2.sh &
+
+#The below section helps you install the latest version of Libero manufacturing
+#For more information visit: http://www.adempiere.com/Libero_Manufacturing_Official_Extension
+cd ../..
+cd Downloads
+wget http://sourceforge.net/projects/adempiere/files/Adempiere%20Packages/Libero%20Manufacturing/liberoMFG.jar/download
+mv download liberoMFG.jar
+wget http://sourceforge.net/projects/adempiere/files/Adempiere%20Packages/Libero%20Manufacturing/liberozkMFG.jar/download
+mv download liberozkMFG.jar
+cp liberoMFG.jar ../Adempiere/packages/liberoMFG/lib/
+cp liberozkMFG.jar ../Adempiere/zkpackages/liberoMFG/lib/
+cd ..
