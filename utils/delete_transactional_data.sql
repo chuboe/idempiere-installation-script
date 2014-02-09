@@ -121,3 +121,5 @@ delete from i_invoice;
 delete from i_payment;
 delete from I_Inventory;
 delete from I_GLJournal;
+delete from m_distributionrunline;
+delete from c_rfqline;
