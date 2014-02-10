@@ -359,14 +359,6 @@ then
 	echo "--> sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://iDempiere_backup=' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
 	echo "--> sudo sed -i '$ a\sleep 10' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
 
-	#write out current crontab - schedule backups
-	crontab -l > mycron
-	#echo new cron into cron file - 0 minute, 2nd hour, every day, every month, every day of the week
-	echo "00 02 * * * /$INSTALLPATH/utils/RUN_DBExport.sh" >> mycron
-	#install new cron file
-	crontab mycron
-	rm mycron
-
 #not indented because of file input
 sh console-setup.sh <<!
 
