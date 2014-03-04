@@ -5,6 +5,7 @@
 # This file is dangerous. It will overwrite your database.
 # This script should only be executed from a development instance - NOT PRODUCTION.
 # ACTION: update the file to test for the existance of a .chuboe_dev file to confirm this is a dev instance.
+# ACTION: consider performing a local backup before restoring just in case someone accidentally performs this task
 ######################################
 
 LOGFILE="/var/log/ex_restore.log"
