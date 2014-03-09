@@ -259,8 +259,8 @@ then
 	echo "Click on Window > Preferences > Plug-in Development > Target Platform.">>/home/$OSUSER/$README
 	echo "Create your target platform.">>/home/$OSUSER/$README
 	echo "Click on File > Import > Buckminster > Materialize from Buckminster MSPEC, CQUERY or BOM.">>/home/$OSUSER/$README
-	echo "Materialize the project. If you use CQUERY (instead of MSPEC),">>/home/$OSUSER/$README
-	echo " --> it seems to automatically build the workspace">>/home/$OSUSER/$README
+	echo "Materialize the project. If you browse to org.adempiere.sdk-feature/adempiere.cquery (instead of MSPEC),">>/home/$OSUSER/$README
+	echo " --> eclipse will automatically build the workspace">>/home/$OSUSER/$README
 	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
