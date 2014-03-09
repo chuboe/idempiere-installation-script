@@ -244,8 +244,10 @@ then
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
+	echo "NOTE: If the remote desktop seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
 	echo "When the script finishes, log in via remote desktop and open launchEclipse.">>/home/$OSUSER/$README
-	echo "Choose the myexperiment folder as your workspace.">>/home/$OSUSER/$README
+	echo "Choose the myexperiment folder as your workspace when eclipse launches.">>/home/$OSUSER/$README
+	echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>/home/$OSUSER/$README
 	echo "Add the mercurial and buckminster plugins.">>/home/$OSUSER/$README
 	echo "More detailed instructions for the following can be found at http://www.globalqss.com/wiki/index.php/IDempiere/Install_Prerequisites_on_Ubuntu">>/home/$OSUSER/$README
 	echo " --> Mercurial">>/home/$OSUSER/$README
@@ -254,7 +256,9 @@ then
 	echo " --> Buckminster">>/home/$OSUSER/$README
 	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>/home/$OSUSER/$README
 	echo " ------> choose Core, Maven, and PDE">>/home/$OSUSER/$README
+	echo "Click on Window > Preferences > Plug-in Development > Target Platform.">>/home/$OSUSER/$README
 	echo "Create your target platform.">>/home/$OSUSER/$README
+	echo "Click on File > Import > Buckminster > Materialize from Buckminster MSPEC, CQUERY or BOM.">>/home/$OSUSER/$README
 	echo "Materialize the project. If you use CQUERY (instead of MSPEC),">>/home/$OSUSER/$README
 	echo " --> it seems to automatically build the workspace">>/home/$OSUSER/$README
 	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>/home/$OSUSER/$README
