@@ -235,6 +235,7 @@ file_export_version=3.0
 /instance/org.eclipse.jdt.ui/semanticHighlighting.typeParameter.color=191,164,164
 /instance/org.eclipse.jdt.ui/semanticHighlighting.typeParameter.enabled=true
 /instance/org.eclipse.jdt.ui/sourceHoverBackgroundColor=0,0,0
+/instance/org.eclipse.jdt.ui/hoverModifiers=org.eclipse.jdt.ui.BestMatchHover;Ctrl + Shift;org.eclipse.jdt.internal.debug.ui.JavaDebugHover;\!0;org.eclipse.jdt.ui.ProblemHover;\!0;org.eclipse.jdt.ui.NLSStringHover;Ctrl+Alt;org.eclipse.jdt.ui.JavadocHover;\!Ctrl+Shift;org.eclipse.jdt.ui.AnnotationHover;\!0;org.eclipse.jdt.ui.JavaSourceHover;Shift;
 /instance/org.eclipse.jst.jsp.ui/commentBorder=#C7DD0C | null | false | false | false | false
 /instance/org.eclipse.jst.jsp.ui/commentText=#C7DD0C | null | false | false | false | false
 /instance/org.eclipse.jst.jsp.ui/jsp_content=#D8D8D8 | null | false | false | false | false
