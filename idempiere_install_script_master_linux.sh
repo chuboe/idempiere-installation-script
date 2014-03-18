@@ -256,6 +256,9 @@ then
 	echo " --> Buckminster">>/home/$OSUSER/$README
 	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>/home/$OSUSER/$README
 	echo " ------> choose Core, Maven, and PDE">>/home/$OSUSER/$README
+	echo " --> JasperStudio (Optional for Jasper Reports)">>/home/$OSUSER/$README
+	echo " ------> http://jasperstudio.sf.net/updates">>/home/$OSUSER/$README
+	echo " ------> note: use Report Design perspective when ready to create reports.">>/home/$OSUSER/$README
 	echo "Click on Window > Preferences > Plug-in Development > Target Platform.">>/home/$OSUSER/$README
 	echo "Create your target platform.">>/home/$OSUSER/$README
 	echo "Click on File > Import > Buckminster > Materialize from Buckminster MSPEC, CQUERY or BOM.">>/home/$OSUSER/$README
