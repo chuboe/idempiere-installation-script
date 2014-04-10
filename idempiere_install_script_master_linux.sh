@@ -332,9 +332,11 @@ then
 	fi
 
 	mkdir /home/$OSUSER/installer_`date +%Y%m%d`
+	mkdir /home/$OSUSER/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
 	sudo chown $OSUSER:$OSUSER $INSTALLPATH
 	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
+	wget $IDEMPIERECLIENTPATH -P /home/$OSUSER/installer_client_`date +%Y%m%d`
 
 	# check if file downloaded
 	RESULT=$(ls -l /home/$OSUSER/installer_`date +%Y%m%d`/*64.zip | wc -l)
