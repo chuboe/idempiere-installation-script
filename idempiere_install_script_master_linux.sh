@@ -104,7 +104,8 @@ do
 			OSUSER=$OPTARG;;
 
 		B)	#use bleeding edge copy of iDempiere
-			IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED;;
+			IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
+			IDEMPIERECLIENTPATH=$IDEMPIERECLIENTPATHBLEED;;
 
 		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
@@ -129,6 +130,7 @@ echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
 echo "OSUser="$OSUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
+echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "Distro details:"
 cat /etc/*-release
