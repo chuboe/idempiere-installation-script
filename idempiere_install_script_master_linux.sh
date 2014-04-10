@@ -361,6 +361,7 @@ then
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
+	echo "To use the swing client, issue the command: unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`">>/home/$OSUSER/$README
 	echo "Issue the following commands to push your backups to S3">>/home/$OSUSER/$README
 	# add the s3cmd command as the last step to the existing backup script
         echo "--> s3cmd --configure">>/home/$OSUSER/$README
