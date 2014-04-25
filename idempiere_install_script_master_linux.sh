@@ -202,10 +202,13 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
-	cd
-	sudo apt-get install -y xfce4 xrdp
-	echo xfce4-session >~/.xsession
-	sudo service xrdp restart
+
+	sudo apt-get install -y lubuntu-desktop xrdp
+	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
+	# set is a tool to add or replace text in a file
+	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
+	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
+
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
