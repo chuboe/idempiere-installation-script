@@ -208,6 +208,13 @@ then
 	# set is a tool to add or replace text in a file
 	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
 	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
+	
+	# give xrdp the ability to resume a connected session
+	# edit this file: sudo gedit /etc/xrdp/xrdp.ini
+	# to swap:
+	#   port=-1
+	#   with the line
+	#   port=ask-1
 
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>/home/$OSUSER/$README
