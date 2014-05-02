@@ -296,6 +296,7 @@ file_export_version=3.0
 /instance/org.eclipse.ui.editors/AbstractTextEditor.Color.SelectionBackground=255,255,255
 /instance/org.eclipse.ui.editors/AbstractTextEditor.Color.SelectionForeground=64,0,64
 /instance/org.eclipse.ui.editors/currentLineColor=74,74,74
+/instance/org.eclipse.ui.editors/currentIPColor=120,140,80
 /instance/org.eclipse.ui.editors/deletionIndicationColor=210,82,82
 /instance/org.eclipse.ui.editors/filteredSearchResultIndicationColor=0,0,0
 /instance/org.eclipse.ui.editors/javaScriptOccurrenceIndicationColor=0,0,0
