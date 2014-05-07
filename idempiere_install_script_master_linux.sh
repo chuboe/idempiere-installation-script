@@ -367,6 +367,7 @@ then
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
 	mkdir log
+	mkdir backup
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
