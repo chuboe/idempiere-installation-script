@@ -1,9 +1,10 @@
 #!/bin/bash
 # Version 1 Mike Stroven - created
 # Version 2 Sandy Corsillo - enhanced to use s3cmd
+# Version 3 Chuck Boecking - added more variables
 LOGFILE="/var/log/chuboe_db_export.log"
 ADEMROOTDIR="/opt/idempiere-server"
-LOCALBACKDIR="ex_backups"
+LOCALBACKDIR="backup"
 S3BUCKET="iDempiere_backup"
 
 echo LOGFILE="$LOGFILE" >> "$LOGFILE"
@@ -15,15 +16,15 @@ echo edembak: -------          STARTING iDempiere Daily Backup            ------
 echo adembak: ------------------------------------------------------------------- >> "$LOGFILE"
 echo adembak: Executing RUN_DBExport.sh local backup utility. >> "$LOGFILE"
 if "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$LOGFILE"
-mv "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$ADEMROOTDIR"/data/"$LOCALBACKDIR"/
+mv "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$ADEMROOTDIR"/"$LOCALBACKDIR"/
 then
     echo adembak: Local Backup Succeeded.  Copying to cloudshare server. >> "$LOGFILE"
-    if s3cmd sync "$ADEMROOTDIR"/data/"$LOCALBACKDIR"/ s3://"$S3BUCKET"/
-       s3cmd sync --delete "$ADEMROOTDIR"/data/"$LOCALBACKDIR"/ s3://"$S3BUCKET"/latest/
+    if s3cmd sync "$ADEMROOTDIR"/"$LOCALBACKDIR"/ s3://"$S3BUCKET"/
+       s3cmd sync --delete "$ADEMROOTDIR"/"$LOCALBACKDIR"/ s3://"$S3BUCKET"/latest/
     then
         echo adembak: Copy of backup file succeeded.  Deleting local copy. >> "$LOGFILE"
-        cd "$ADEMROOTDIR"/data/"$LOCALBACKDIR"
-        rm "$ADEMROOTDIR"/data/"$LOCALBACKDIR"/ExpDat????????_??????.jar >> "$LOGFILE"
+        cd "$ADEMROOTDIR"/"$LOCALBACKDIR"
+        rm "$ADEMROOTDIR"/"$LOCALBACKDIR"/ExpDat????????_??????.jar >> "$LOGFILE"
         echo adembak: Local copy deleted. >> "$LOGFILE"
     else
         echo adembak: ------------------------------------------------------------------- >> "$LOGFILE"
