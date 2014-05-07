@@ -18,7 +18,7 @@ echo adembak: Executing RUN_DBExport.sh local backup utility. >> "$LOGFILE"
 if "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$LOGFILE"
 mv "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$ADEMROOTDIR"/"$LOCALBACKDIR"/
 then
-    echo adembak: Local Backup Succeeded.  Copying to cloudshare server. >> "$LOGFILE"
+    echo adembak: Local Backup Succeeded.  Copying to S3 bucket. >> "$LOGFILE"
     if s3cmd sync "$ADEMROOTDIR"/"$LOCALBACKDIR"/ s3://"$S3BUCKET"/
        s3cmd sync --delete "$ADEMROOTDIR"/"$LOCALBACKDIR"/ s3://"$S3BUCKET"/latest/
     then
