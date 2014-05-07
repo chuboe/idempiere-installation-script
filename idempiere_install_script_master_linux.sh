@@ -384,8 +384,6 @@ then
 	echo "----> Accept the default path to GPG">>/home/$OSUSER/$README
 	echo "----> Answer yes to HTTPS">>/home/$OSUSER/$README
 	echo "--> s3cmd mb s3://iDempiere_backup">>/home/$OSUSER/$README
-	echo "--> sudo sed -i 's=sleep 30=s3cmd put \$IDEMPIERE_HOME/data/ExpDat\$DATE.jar s3://iDempiere_backup=' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
-	echo "--> sudo sed -i '$ a\sleep 10' /$INSTALLPATH/utils/myDBcopy.sh">>/home/$OSUSER/$README
 
 #not indented because of file input
 sh console-setup.sh <<!
