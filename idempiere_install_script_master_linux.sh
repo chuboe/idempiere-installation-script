@@ -376,7 +376,7 @@ then
 	echo "To install swing clients for other OS's, go to:">>/home/$OSUSER/$README
 	echo "----> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>/home/$OSUSER/$README
 	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v2.0/swing-client/">>/home/$OSUSER/$README
-	echo "Issue the following commands to push your backups to S3">>/home/$OSUSER/$README
+	echo "Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.">>/home/$OSUSER/$README
 	# add the s3cmd command as the last step to the existing backup script
         echo "--> s3cmd --configure">>/home/$OSUSER/$README
 	echo "----> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
