@@ -424,6 +424,13 @@ fi #end if $IS_INSTALL_ID == "Y"
 echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
+
+	echo "HERE: copying over chuboe_utils"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	mkdir $INSTALLPATH/chuboe_utils
+	sudo cp -r $SCRIPTPATH/utils/* $INSTALLPATH/chuboe_utils
+
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
