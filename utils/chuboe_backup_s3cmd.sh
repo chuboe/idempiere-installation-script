@@ -4,7 +4,7 @@
 # Version 3 Chuck Boecking - added more variables
 LOGFILE="/log/chuboe_db_export.log"
 ADEMROOTDIR="/opt/idempiere-server"
-LOCALBACKDIR="backup"
+LOCALBACKDIR="chuboe_backup"
 S3BUCKET="iDempiere_backup"
 
 echo LOGFILE="$ADEMROOTDIR"/"$LOGFILE" >> "$ADEMROOTDIR"/"$LOGFILE"
