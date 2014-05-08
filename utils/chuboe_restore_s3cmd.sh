@@ -22,53 +22,53 @@ echo ademres: -------          STARTING iDempiere Daily Restore           ------
 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
 if sudo service idempiere stop >> "$ADEMROOTDIR"/"$LOGFILE"
 then
-    echo ademres: Idempiere Stopped >> "$ADEMROOTDIR"/"$LOGFILE"
-    if s3cmd sync --delete s3://iDempiere_backup2/latest/ "$ADEMROOTDIR"/data/ex_restore_backups/ >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: iDempiere Stopped >> "$ADEMROOTDIR"/"$LOGFILE"
+    if s3cmd sync --delete s3://"$S3BUCKET"/latest/ "$ADEMROOTDIR"/"$LOCALBACKDIR"/ >> "$ADEMROOTDIR"/"$LOGFILE"
     then
         cd "$ADEMROOTDIR"/data
         rm ExpDat.dmp
-        jar xf "$ADEMROOTDIR"/data/ex_restore_backups/*.jar
+        jar xf "$ADEMROOTDIR"/"$LOCALBACKDIR"/*.jar
         cd "$ADEMROOTDIR"/utils
         if ./RUN_DBRestore.sh #>> "$ADEMROOTDIR"/"$LOGFILE"
         then
             if sudo service idempiere start >> "$ADEMROOTDIR"/"$LOGFILE"
             then
-                echo ademres: Idempiere Started Back Up >> "$ADEMROOTDIR"/"$LOGFILE"
+                echo ademres: iDempiere Started Back Up >> "$ADEMROOTDIR"/"$LOGFILE"
             else
                 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
                 echo ademres: -------         Remote iDempiere Backup FAILED!             ------- >> "$ADEMROOTDIR"/"$LOGFILE"
                 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-                sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
-                sudo cp /dev/null /var/log/ex_restore.log
+                #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
+                #sudo cp /dev/null /var/log/ex_restore.log
                 exit 1
             fi
         else
             echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
             echo ademres: -------          Idempiere Restore FAILED!                  ------- >> "$ADEMROOTDIR"/"$LOGFILE"
             echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-            sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
-            sudo cp /dev/null /var/log/ex_restore.log
+            #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
+            #sudo cp /dev/null /var/log/ex_restore.log
             exit 1
         fi
     else
         echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
         echo ademres: -------         iDempiere Sync From Remote S3 FAILED!       ------- >> "$ADEMROOTDIR"/"$LOGFILE"
         echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-        sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
-        sudo cp /dev/null /var/log/ex_restore.log
+        #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
+        #sudo cp /dev/null /var/log/ex_restore.log
         exit 1
     fi
 else
     echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
     echo ademres: -------         iDempiere Stop Service FAILED!              ------- >> "$ADEMROOTDIR"/"$LOGFILE"
     echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
-    sudo cp /dev/null /var/log/ex_restore.log
+    #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
+    #sudo cp /dev/null /var/log/ex_restore.log
     exit 1 
 fi
 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
 echo ademres: -------         COMPLETED iDempiere Daily Restore           ------- >> "$ADEMROOTDIR"/"$LOGFILE"
 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
-sudo cp /dev/null /var/log/ex_restore.log
+#sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
+#sudo cp /dev/null /var/log/ex_restore.log
 exit 0
