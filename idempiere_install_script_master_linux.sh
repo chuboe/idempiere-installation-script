@@ -367,7 +367,8 @@ then
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
 	mkdir log
-	mkdir backup
+	mkdir chuboe_backup
+	mkdir chuboe_restore
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
