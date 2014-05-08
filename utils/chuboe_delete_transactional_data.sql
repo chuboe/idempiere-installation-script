@@ -6,6 +6,10 @@
 --   http://www.chuckboecking.com/blog/bid/196810/Data-Migration-in-PostgreSQL-and-ADemipere-Open-Source-ERP
 -- This script is designed for iDempiere. Be aware that ADempiere and iDempiere differ slightly. You may need to make small changes to accomodate ADempiere. 
 
+-- To run this script from the command line, use this command:
+-- sudo -u postgres psql -f chuboe_delete_transactional_data.sql -d idempiere
+
+set search_path to adempiere;
 
 delete from ad_changelog;
 delete from c_allocationline;
