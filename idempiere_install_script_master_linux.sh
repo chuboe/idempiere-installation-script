@@ -179,6 +179,7 @@ then
 	# connections (not just localhost). Make sure your firewall
 	# prevents outsiders for connecting to your server.
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
+	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/9.1/main/pg_hba.conf
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
 
 	sudo -u postgres service postgresql restart
