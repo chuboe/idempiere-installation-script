@@ -112,7 +112,7 @@ echo "contents of sed statement: sudo sed -i 's|$PG_HOST_NORM|$PG_HOST_TEMP|' $P
 echo "-------------------------------"
 echo "$(sudo cat $PG_HBA)"
 echo "-------------------------------"
-sudo sed -i 's|$PG_HOST_NORM|$PG_HOST_TEMP|' $PG_HBA
+sudo sed -i "s|$PG_HOST_NORM|$PG_HOST_TEMP|" $PG_HBA
 sudo service postgresql restart
 
 cd $SERVER_DIR/chuboe_utils/
@@ -138,7 +138,7 @@ echo "contents of sed statement: sudo sed -i 's|$PG_HOST_TEMP|$PG_HOST_NORM|' $P
 echo "-------------------------------"
 echo "$(sudo cat $PG_HBA)"
 echo "-------------------------------"
-sudo sed -i 's|$PG_HOST_TEMP|$PG_HOST_NORM|' $PG_HBA
+sudo sed -i "s|$PG_HOST_TEMP|$PG_HOST_NORM|" $PG_HBA
 sudo service postgresql restart
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
