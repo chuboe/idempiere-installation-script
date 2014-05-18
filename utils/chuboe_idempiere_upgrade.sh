@@ -86,10 +86,12 @@ echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 # Get migration scripts if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
 then
-	# ACTION: Create chuboe_temp directory in main installation script
 	cd $SERVER_DIR/chuboe_temp
-	# ACTION: check to see if previous migration zip exists, if so delete
-	# ACTION: check to see if previous migration directory exists, if so delete
+	RESULT=$(ls -l migration.zip | wc -l)
+	if [ $RESULT -ge 1 ]; then
+		echo "HERE: migration.zip already exists"
+		rm -r migration*
+	fi #end if migration.zip exists
 	wget $MIGRATION_DOWNLOAD
 	unzip migration.zip
 fi #end if IS_GET_MIGRATION = Y
