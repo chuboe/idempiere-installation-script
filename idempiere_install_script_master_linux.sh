@@ -371,8 +371,6 @@ then
 	mkdir chuboe_backup
 	mkdir chuboe_restore
 	mkdir chuboe_temp
-	sudo chown -R $OSUSER:$OSUSER $INSTALLPATH
-	chmod +x $INSTALLPATH/chuboe_utils/*.sh
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
@@ -434,7 +432,9 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	mkdir $INSTALLPATH/chuboe_utils
-	sudo cp -r $SCRIPTPATH/utils/* $INSTALLPATH/chuboe_utils
+	cp -r $SCRIPTPATH/utils/* $INSTALLPATH/chuboe_utils
+	sudo chown -R $OSUSER:$OSUSER $INSTALLPATH
+	chmod +x $INSTALLPATH/chuboe_utils/*.sh
 
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>/home/$OSUSER/$README
