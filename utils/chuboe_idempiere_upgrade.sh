@@ -83,7 +83,7 @@ echo "MIGRATION_DOWNLOAD="$MIGRATION_DOWNLOAD
 echo "IS_RESTART_SERVER="$IS_RESTART_SERVER
 echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 
-# Get migration scripts if none specified
+# Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
 then
 	cd $SERVER_DIR/chuboe_temp
@@ -101,17 +101,15 @@ then
 	sudo service idempiere stop
 fi #end if IS_RESTART_SERVER = Y
 
+# update iDempiere binaries
 cd $SERVER_DIR
 ./update.sh $P2
 
+# create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
 sh RUN_DBExport.sh
 
-echo "chuboe - debug following section"
-echo "contents of sed statement: sudo sed -i 's|$PG_HOST_NORM|$PG_HOST_TEMP|' $PG_HBA"
-echo "-------------------------------"
-echo "$(sudo cat $PG_HBA)"
-echo "-------------------------------"
+# temporarily make the database accessible to local connections without requiring a password
 sudo sed -i "s|$PG_HOST_NORM|$PG_HOST_TEMP|" $PG_HBA
 sudo service postgresql restart
 
@@ -120,7 +118,7 @@ cd $SERVER_DIR/chuboe_utils/
 # ACTION: see if Carlos recommends a hg pull instead of a wget for syncApplied.sh
 
 # Get Carlos Ruiz syncApplied.sh script
-# check to see if syncApplied.sh exists
+# First, check to see if syncApplied.sh exists
 RESULT=$(ls -l syncApplied.sh | wc -l)
 if [ $RESULT -ge 1 ]; then
 	echo "HERE: syncApplied.sh already exists"
@@ -131,13 +129,10 @@ else
 	chmod 766 syncApplied.sh
 fi #end if syncApplied.sh exists
 
+# run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
 
-echo "chuboe - debug following section"
-echo "contents of sed statement: sudo sed -i 's|$PG_HOST_TEMP|$PG_HOST_NORM|' $PG_HBA"
-echo "-------------------------------"
-echo "$(sudo cat $PG_HBA)"
-echo "-------------------------------"
+# return database permissions back to normal
 sudo sed -i "s|$PG_HOST_TEMP|$PG_HOST_NORM|" $PG_HBA
 sudo service postgresql restart
 
