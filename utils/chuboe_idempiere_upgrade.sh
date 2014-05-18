@@ -105,6 +105,7 @@ cd $SERVER_DIR
 cd $SERVER_DIR/utils/
 sh RUN_DBExport.sh
 
+echo "'s|$PG_HOST_NORM|$PG_HOST_TEMP|' $PG_HBA"
 sudo sed -i 's|$PG_HOST_NORM|$PG_HOST_TEMP|' $PG_HBA
 sudo service postgresql restart
 
