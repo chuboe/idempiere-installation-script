@@ -109,7 +109,9 @@ sh RUN_DBExport.sh
 
 echo "chuboe - debug following section"
 echo "contents of sed statement: sudo sed -i 's|$PG_HOST_NORM|$PG_HOST_TEMP|' $PG_HBA"
-echo "'sudo cat $PG_HBA'"
+echo "-------------------------------"
+echo "$(sudo cat $PG_HBA)"
+echo "-------------------------------"
 sudo sed -i 's|$PG_HOST_NORM|$PG_HOST_TEMP|' $PG_HBA
 sudo service postgresql restart
 
@@ -133,7 +135,9 @@ fi #end if syncApplied.sh exists
 
 echo "chuboe - debug following section"
 echo "contents of sed statement: sudo sed -i 's|$PG_HOST_TEMP|$PG_HOST_NORM|' $PG_HBA"
-echo "'sudo cat $PG_HBA'"
+echo "-------------------------------"
+echo "$(sudo cat $PG_HBA)"
+echo "-------------------------------"
 sudo sed -i 's|$PG_HOST_TEMP|$PG_HOST_NORM|' $PG_HBA
 sudo service postgresql restart
 
