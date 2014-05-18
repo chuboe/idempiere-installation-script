@@ -371,6 +371,9 @@ then
 	mkdir chuboe_backup
 	mkdir chuboe_restore
 	mkdir chuboe_temp
+	sudo chown -R $OSUSER:$OSUSER $INSTALLPATH
+	chmod +x $INSTALLPATH/chuboe_utils/*.sh
+	
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
