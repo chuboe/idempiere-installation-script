@@ -4,7 +4,7 @@
 #   Chuck Boecking
 #   chuck@chuboe.com
 #   http://chuckboecking.com
-# chuboe_upgrade.sh
+# chuboe_idempiere_upgrade.sh
 # 1.0 initial release
 
 # function to help the user better understand how the script works
@@ -39,7 +39,7 @@ SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/scr
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
 MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
-MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/iDempiereDaily/ws/migration/*zip*/migration.zip"
+MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/iDempiere/ws/migration/*zip*/migration.zip"
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 
