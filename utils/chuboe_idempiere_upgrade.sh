@@ -124,7 +124,7 @@ else
 	chmod 766 syncApplied.sh
 fi #end if syncApplied.sh exists
 
-./syncApplied.sh $ID_DB_NAME $PG_CONNECT $MIGRATION_DIR
+./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
 
 sudo sed -i 's|$PG_HOST_TEMP|$PG_HOST_NORM|' $PG_HBA
 sudo service postgresql restart
