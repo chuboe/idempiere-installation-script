@@ -19,9 +19,9 @@ This script helps you upgrade your iDempiere server
 OPTIONS:
 	-h	Help
 	-c	Specify connection options
-	-m 	Specify path to migration scripts
-	-u  Upgrade URL
-	-r  Do not restart server
+	-m	Specify path to migration scripts
+	-u	Upgrade URL
+	-r	Do not restart server
 
 Outstanding actions:
 * add issues here
