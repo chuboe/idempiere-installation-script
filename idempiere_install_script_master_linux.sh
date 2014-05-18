@@ -370,6 +370,7 @@ then
 	mkdir log
 	mkdir chuboe_backup
 	mkdir chuboe_restore
+	mkdir chuboe_temp
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
