@@ -209,7 +209,7 @@ then
 	# set is a tool to add or replace text in a file
 	sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
 	sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
-	
+
 	# give xrdp the ability to resume a connected session
 	# edit this file: sudo gedit /etc/xrdp/xrdp.ini
 	# to swap:
@@ -373,7 +373,6 @@ then
 	mkdir chuboe_temp
 	sudo chown -R $OSUSER:$OSUSER $INSTALLPATH
 	chmod +x $INSTALLPATH/chuboe_utils/*.sh
-	
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
