@@ -115,8 +115,6 @@ sudo service postgresql restart
 
 cd $SERVER_DIR/chuboe_utils/
 
-# ACTION: see if Carlos recommends a hg pull instead of a wget for syncApplied.sh
-
 # Get Carlos Ruiz syncApplied.sh script
 # First, check to see if syncApplied.sh exists
 RESULT=$(ls -l syncApplied.sh | wc -l)
