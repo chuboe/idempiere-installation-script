@@ -29,7 +29,9 @@ then
         rm ExpDat.dmp
         jar xf "$ADEMROOTDIR"/"$LOCALBACKDIR"/*.jar
         cd "$ADEMROOTDIR"/utils
-        if ./RUN_DBRestore.sh #>> "$ADEMROOTDIR"/"$LOGFILE"
+        if ./RUN_DBRestore.sh <<!
+
+!
         then
             if sudo service idempiere start >> "$ADEMROOTDIR"/"$LOGFILE"
             then
