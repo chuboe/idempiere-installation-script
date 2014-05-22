@@ -2,7 +2,7 @@
 # Version 1 Mike Stroven - created
 # Version 2 Sandy Corsillo - enhanced to use s3cmd
 # Version 3 Chuck Boecking - added more variables
-LOGFILE="/log/chuboe_db_export.log"
+LOGFILE="/log/chuboe_db_backup.log"
 ADEMROOTDIR="/opt/idempiere-server"
 LOCALBACKDIR="chuboe_backup"
 S3BUCKET="iDempiere_backup"
