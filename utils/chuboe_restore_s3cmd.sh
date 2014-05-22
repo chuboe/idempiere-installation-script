@@ -8,7 +8,7 @@
 # ACTION: consider performing a local backup before restoring just in case someone accidentally performs this task
 ######################################
 
-LOGFILE="/log/chuboe_db_export.log"
+LOGFILE="/log/chuboe_db_restore.log"
 ADEMROOTDIR="/opt/idempiere-server"
 LOCALBACKDIR="chuboe_restore"
 S3BUCKET="iDempiere_backup"
