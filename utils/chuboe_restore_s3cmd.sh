@@ -10,6 +10,7 @@
 
 LOGFILE="/log/chuboe_db_restore.log"
 ADEMROOTDIR="/opt/idempiere-server"
+UTILSDIR="chuboe_utils"
 LOCALBACKDIR="chuboe_restore"
 S3BUCKET="iDempiere_backup"
 
@@ -20,6 +21,19 @@ cd "$ADEMROOTDIR"/utils
 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
 echo ademres: -------          STARTING iDempiere Daily Restore           ------- >> "$ADEMROOTDIR"/"$LOGFILE"
 echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+
+RESULT=$(ls -l $ADEMROOTDIR/$UTILSDIR/properties/CHUBOE_TEST_ENV_YES.txt | wc -l)
+if [ $RESULT -ge 1 ]; then
+    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: -------              This is a Dev Envrionment              ------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+else
+    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: -------            STOPPING Not a Dev Envrionment           ------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    exit 1
+fi #end if dev environment check
+
 if sudo service idempiere stop >> "$ADEMROOTDIR"/"$LOGFILE"
 then
     echo ademres: iDempiere Stopped >> "$ADEMROOTDIR"/"$LOGFILE"
