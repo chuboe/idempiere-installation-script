@@ -1,0 +1,13 @@
+# This file contains many of the cron jobs you will need to support iDempiere.
+# Uncomment the ones you want to use, and execute the following command:
+#   "crontab /opt/idempiere-server/chuboe_utils/cronJobs.txt"
+
+# Perform an offsite backup at 7:30AM UTC every day.
+# Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
+# 30 07 * * * /opt/idempiere-server/chuboe_utils/chuboe_backup_s3cmd.sh
+
+# Perform an offsite restore at 8:30AM UTC every day. (DANGEROUS!!!!)
+#   This will drop your existing database and replace it with the offsite backup!!
+#   Only run this on a test or backup server.
+# Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
+# 30 08 * * * /opt/idempiere-server/chuboe_utils/chuboe_restore_s3cmd.sh
