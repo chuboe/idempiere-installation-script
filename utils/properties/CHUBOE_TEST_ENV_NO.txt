@@ -1,0 +1,5 @@
+This file is used to determine if this server is used as a test server/environment. 
+
+By default, the answer is no. To change to yes, rename this file to:
+
+CHUBOE_TEST_ENV_YES.txt
