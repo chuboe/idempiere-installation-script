@@ -110,8 +110,9 @@ cd $SERVER_DIR/utils/
 sh RUN_DBExport.sh
 
 # temporarily make the database accessible to local connections without requiring a password
-sudo sed -i "s|$PG_HOST_NORM|$PG_HOST_TEMP|" $PG_HBA
-sudo service postgresql restart
+# no longer needed because of .pgpass file
+# sudo sed -i "s|$PG_HOST_NORM|$PG_HOST_TEMP|" $PG_HBA
+# sudo service postgresql restart
 
 cd $SERVER_DIR/chuboe_utils/
 
@@ -131,8 +132,9 @@ fi #end if syncApplied.sh exists
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
 
 # return database permissions back to normal
-sudo sed -i "s|$PG_HOST_TEMP|$PG_HOST_NORM|" $PG_HBA
-sudo service postgresql restart
+# no longer needed because of .pgpass file
+# sudo sed -i "s|$PG_HOST_TEMP|$PG_HOST_NORM|" $PG_HBA
+# sudo service postgresql restart
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
