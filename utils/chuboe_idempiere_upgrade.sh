@@ -7,6 +7,10 @@
 # chuboe_idempiere_upgrade.sh
 # 1.0 initial release
 
+# NOTE: be aware that this script does not make a backup of the /opt/idempiere-server directory. 
+# If the upgrade goes badly, you will need to have a way to restore your previous directory.
+# Said another way, always perform this upgrade on a test server before executing on a production server.
+
 # function to help the user better understand how the script works
 usage()
 {
