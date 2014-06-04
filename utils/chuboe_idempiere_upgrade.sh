@@ -71,6 +71,7 @@ do
 			IS_RESTART_SERVER="N";;
 
 		s)	#Do not upgrade binaries
+			IS_RESTART_SERVER="N"
 			IS_SKIP_BIN_UPGRADE="Y";;
 	esac
 done
