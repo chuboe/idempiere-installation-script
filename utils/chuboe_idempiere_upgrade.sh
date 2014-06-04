@@ -69,7 +69,7 @@ do
 
 		r)	#Do not restart server
 			IS_RESTART_SERVER="N";;
-		
+
 		s)	#Do not upgrade binaries
 			IS_SKIP_BIN_UPGRADE="Y";;
 	esac
