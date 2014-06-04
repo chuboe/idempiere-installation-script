@@ -111,12 +111,12 @@ then
 	sudo service idempiere stop
 fi #end if IS_RESTART_SERVER = Y
 
-if [[ $IS_SKIP_BIN_UPGRADE == "Y" ]]
+if [[ $IS_SKIP_BIN_UPGRADE == "N" ]]
 then
 	# update iDempiere binaries
 	cd $SERVER_DIR
 	./update.sh $P2
-fi #end if IS_SKIP_BIN_UPGRADE = Y
+fi #end if IS_SKIP_BIN_UPGRADE = N
 
 # create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
