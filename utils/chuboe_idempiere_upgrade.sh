@@ -26,7 +26,7 @@ OPTIONS:
 	-m	Specify path to migration scripts
 	-u	Upgrade URL
 	-r	Do not restart server
-	-s  Skip upgrade
+	-s	Skip upgrade
 
 Outstanding actions:
 * add issues here
