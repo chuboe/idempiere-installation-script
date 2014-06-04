@@ -26,6 +26,7 @@ OPTIONS:
 	-m	Specify path to migration scripts
 	-u	Upgrade URL
 	-r	Do not restart server
+	-s  Skip upgrade
 
 Outstanding actions:
 * add issues here
@@ -46,10 +47,11 @@ MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
 MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/iDempiere/ws/migration/*zip*/migration.zip"
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
+IS_SKIP_BIN_UPGRADE="N"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hc:m:u:r" OPTION
+while getopts "hc:m:u:rs" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -67,6 +69,9 @@ do
 
 		r)	#Do not restart server
 			IS_RESTART_SERVER="N";;
+		
+		s)	#Do not upgrade binaries
+			IS_SKIP_BIN_UPGRADE="Y";;
 	esac
 done
 
@@ -86,6 +91,7 @@ echo "MIGRATION_DIR="$MIGRATION_DIR
 echo "MIGRATION_DOWNLOAD="$MIGRATION_DOWNLOAD
 echo "IS_RESTART_SERVER="$IS_RESTART_SERVER
 echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
+echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
 
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
@@ -105,9 +111,12 @@ then
 	sudo service idempiere stop
 fi #end if IS_RESTART_SERVER = Y
 
-# update iDempiere binaries
-cd $SERVER_DIR
-./update.sh $P2
+if [[ $IS_SKIP_BIN_UPGRADE == "Y" ]]
+then
+	# update iDempiere binaries
+	cd $SERVER_DIR
+	./update.sh $P2
+fi #end if IS_SKIP_BIN_UPGRADE = Y
 
 # create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
