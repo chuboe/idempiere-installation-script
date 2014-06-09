@@ -195,7 +195,7 @@ then
 	echo "Make sure this port is blocked from external traffic as a security mesaure.">>/home/$OSUSER/$README
 	
 	echo "localhost:*:*:adempiere:$DBPASS">>/home/$OSUSER/.pgpass
-	sudo -u ubuntu chmod 600 .pgpass
+	sudo -u $OSUSER chmod 600 .pgpass
 
 fi #end if IS_INSTALL_DB==Y
 
