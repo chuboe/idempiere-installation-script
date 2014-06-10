@@ -189,7 +189,7 @@ then
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
 	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
-	# the next command is needed for ubuntu 14.04
+	# the next command is needed for ubuntu 14.04 - http://askubuntu.com/questions/451378/phppgadmin-not-working-in-ubuntu-14-04
 	sudo cp /etc/apache2/conf.d/phppgadmin /etc/apache2/conf-enabled/phppgadmin.conf
 	sudo service apache2 restart
 
