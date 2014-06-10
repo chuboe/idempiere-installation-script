@@ -219,9 +219,8 @@ then
 	# sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	
 	# new desktop installation (compatible with 14.04)
-	cd
 	sudo apt-get install -y xfce4 xrdp
-	echo xfce4-session >~/.xsession
+	echo xfce4-session >/home/$OSUSER/.xsession
 	sudo service xrdp restart
 
 	# give xrdp the ability to resume a connected session
