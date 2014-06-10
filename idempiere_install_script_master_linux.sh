@@ -379,16 +379,22 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "To use the swing client, unzip it by issuing the command:">>/home/$OSUSER/$README
 	echo "----> unzip /home/$OSUSER/installer_client_`date +%Y%m%d`/idempiereClient.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_client_`date +%Y%m%d`">>/home/$OSUSER/$README
+	echo "----> change directory to your adempiere-client directory in your new unzipped folder.">>/home/$OSUSER/$README
+	echo "----> Launch the client using ./adempiere-client.sh">>/home/$OSUSER/$README
+	echo "----> At the login screen, click on the server field.">>/home/$OSUSER/$README
+	echo "----> In the server dialog, set the Application Host (for example: localhost) to your web server,">>/home/$OSUSER/$README
+	echo "--------> and set the Application Port to 8443.">>/home/$OSUSER/$README
+	echo "--------> Test the application server and database then click the green check.">>/home/$OSUSER/$README
 	echo "To install swing clients for other OS's, go to:">>/home/$OSUSER/$README
 	echo "----> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>/home/$OSUSER/$README
 	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v2.0/swing-client/">>/home/$OSUSER/$README
 	echo "Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.">>/home/$OSUSER/$README
-        echo "--> s3cmd --configure">>/home/$OSUSER/$README
-	echo "----> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
-	echo "----> enter a password. Chose something different than your AWS password. Write it down!!">>/home/$OSUSER/$README
-	echo "----> Accept the default path to GPG">>/home/$OSUSER/$README
-	echo "----> Answer yes to HTTPS">>/home/$OSUSER/$README
-	echo "--> s3cmd mb s3://iDempiere_backup">>/home/$OSUSER/$README
+	echo "----> s3cmd --configure">>/home/$OSUSER/$README
+	echo "--------> get your access key and secred key by logging into your AWS account">>/home/$OSUSER/$README
+	echo "--------> enter a password. Chose something different than your AWS password. Write it down!!">>/home/$OSUSER/$README
+	echo "--------> Accept the default path to GPG">>/home/$OSUSER/$README
+	echo "--------> Answer yes to HTTPS">>/home/$OSUSER/$README
+	echo "----> s3cmd mb s3://iDempiere_backup">>/home/$OSUSER/$README
 
 #not indented because of file input
 sh console-setup.sh <<!
