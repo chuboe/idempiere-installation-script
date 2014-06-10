@@ -70,7 +70,7 @@ IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buc
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 README="idempiere_installer_feedback.txt"
-PGVERSION="9.1"
+PGVERSION="9.3"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
