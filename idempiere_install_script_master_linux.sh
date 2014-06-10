@@ -219,7 +219,7 @@ then
 	# sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	
 	# new desktop installation (compatible with 14.04)
-	sudo apt-get install -y xubuntu-desktop xrdp
+	sudo apt-get install -y xfce4 xrdp
 	echo xfce4-session >/home/$OSUSER/.xsession
 	sudo service xrdp restart
 
