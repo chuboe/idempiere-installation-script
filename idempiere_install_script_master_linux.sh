@@ -70,6 +70,7 @@ IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buc
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 README="idempiere_installer_feedback.txt"
+PGVERSION="9.1"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -132,6 +133,7 @@ echo "OSUser="$OSUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
+echo "PG Version="$PGVERSION
 echo "Distro details:"
 cat /etc/*-release
 
@@ -178,15 +180,17 @@ then
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
 	# prevents outsiders for connecting to your server.
-	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/9.1/main/pg_hba.conf
-	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/9.1/main/pg_hba.conf
-	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/9.1/main/postgresql.conf
+	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
+	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
+	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
 
 	sudo -u postgres service postgresql restart
 
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
 	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
+	# the next command is needed for ubuntu 14.04
+	sudo cp /etc/apache2/conf.d/phppgadmin /etc/apache2/conf-enabled/phppgadmin.conf
 	sudo service apache2 restart
 
 	echo "">>/home/$OSUSER/$README
@@ -321,17 +325,17 @@ then
 
 	#map the data direcory
 	sudo mkdir /vol/var
-	sudo mv /var/lib/postgresql/9.1/main /vol/var
-	sudo mkdir /var/lib/postgresql/9.1/main
-	echo "/vol/var/main /var/lib/postgresql/9.1/main     none bind" | sudo tee -a /etc/fstab
-	sudo mount /var/lib/postgresql/9.1/main
+	sudo mv /var/lib/postgresql/$PGVERSION/main /vol/var
+	sudo mkdir /var/lib/postgresql/$PGVERSION/main
+	echo "/vol/var/main /var/lib/postgresql/$PGVERSION/main     none bind" | sudo tee -a /etc/fstab
+	sudo mount /var/lib/postgresql/$PGVERSION/main
 
 	#map the conf directory
 	sudo mkdir /vol/etc
-	sudo mv /etc/postgresql/9.1/main /vol/etc
-	sudo mkdir /etc/postgresql/9.1/main
-	echo "/vol/etc/main /etc/postgresql/9.1/main     none bind" | sudo tee -a /etc/fstab
-	sudo mount /etc/postgresql/9.1/main
+	sudo mv /etc/postgresql/$PGVERSION/main /vol/etc
+	sudo mkdir /etc/postgresql/$PGVERSION/main
+	echo "/vol/etc/main /etc/postgresql/$PGVERSION/main     none bind" | sudo tee -a /etc/fstab
+	sudo mount /etc/postgresql/$PGVERSION/main
 
 	sudo -u postgres service postgresql start
 
