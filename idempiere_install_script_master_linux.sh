@@ -220,6 +220,7 @@ then
 	
 	# new desktop installation (compatible with 14.04)
 	sudo apt-get install -y xfce4 xrdp
+	sudo apt-get install -y chromium-browser leafpad xarchiver
 	echo xfce4-session >/home/$OSUSER/.xsession
 	sudo service xrdp restart
 
@@ -254,9 +255,6 @@ then
 	sudo sed -i '$ a\Icon=/home/ubuntu/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Exec=/home/ubuntu/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse.desktop
-	echo "">>/home/$OSUSER/$README
-	echo "">>/home/$OSUSER/$README
-	echo "SUGGESTION: copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>/home/$OSUSER/$README
 
 	# get idempiere code
 	cd /home/$OSUSER/dev
@@ -271,8 +269,16 @@ then
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
-	echo "NOTE: If the remote desktop seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
-	echo "When the script finishes, log in via remote desktop and open launchEclipse.">>/home/$OSUSER/$README
+	echo "When the script finishes, log in via remote desktop.">>/home/$OSUSER/$README
+	echo "NOTE: if your icons are missing, do the following:">>/home/$OSUSER/$README
+	echo "--> Click on Application Menu -> Settings -> Appearance">>/home/$OSUSER/$README
+	echo "--> On the style tab, click on Xfce-4.6. This is my favorite.">>/home/$OSUSER/$README
+	echo "--> On the icon tab, click on Tango. This will magically make your icons appear.">>/home/$OSUSER/$README
+	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	echo "Copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>/home/$OSUSER/$README
+	echo "Open Eclipse.">>/home/$OSUSER/$README
 	echo "Choose the myexperiment folder as your workspace when eclipse launches.">>/home/$OSUSER/$README
 	echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>/home/$OSUSER/$README
 	echo "Add the mercurial and buckminster plugins.">>/home/$OSUSER/$README
