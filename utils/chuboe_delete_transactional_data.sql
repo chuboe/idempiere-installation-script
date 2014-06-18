@@ -9,16 +9,18 @@
 -- To run this script from the command line, use this command:
 -- sudo -u postgres psql -f chuboe_delete_transactional_data.sql -d idempiere
 
+-- thanks to Rumman to improving the script!!
+
 set search_path to adempiere;
 
 delete from ad_changelog;
 delete from c_allocationline;
 delete from c_allocationhdr;
 Update C_BankAccount Set CurrentBalance = 0;
+delete from m_costdetail;
 delete from m_matchinv;
 delete from m_matchpo;
 delete from m_costhistory;
-delete from m_costdetail;
 delete from c_payselectionline;
 delete from c_payselectioncheck;
 delete from c_payselection;
@@ -45,6 +47,9 @@ delete from c_bankstatementline;
 delete from c_bankstatement;
 Update c_invoice set c_Payment_ID = null;
 Update c_order set c_Payment_ID= null;
+delete from c_depositbatchline;
+delete from c_depositbatch;
+delete from c_orderpayschedule;
 delete from c_payment ;
 delete from c_paymentbatch ;
 Update M_INOUTLINE Set C_Orderline_ID = null, M_RMALine_ID=null ;
