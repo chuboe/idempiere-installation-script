@@ -32,7 +32,7 @@ else
     echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
     exit 1
 fi #end if dev environment check
-if "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$ADEMROOTDIR"/"$LOGFILE"
+if "$ADEMROOTDIR"/utils/RUN_DBExport.sh &>> "$ADEMROOTDIR"/"$LOGFILE"
 then
     echo adembak: Local Backup Succeeded.  >> "$ADEMROOTDIR"/"$LOGFILE"
 else
@@ -43,7 +43,7 @@ else
     exit 1
 fi
 
-psql -d $DATABASE -U $USER $ADDPG -f "$ADEMROOTDIR"/"$UTILSDIR"/chuboe_delete_transactional_data.sql >> "$ADEMROOTDIR"/"$LOGFILE"
+psql -d $DATABASE -U $USER $ADDPG -f "$ADEMROOTDIR"/"$UTILSDIR"/chuboe_delete_transactional_data.sql &>> "$ADEMROOTDIR"/"$LOGFILE"
     echo adembak: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
     echo edembak: -------         FINISHED iDempiere Delete Trx!              ------- >> "$ADEMROOTDIR"/"$LOGFILE"
     echo adembak: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
