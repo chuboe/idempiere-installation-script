@@ -220,7 +220,7 @@ then
 	
 	# new desktop installation (compatible with 14.04)
 	sudo apt-get install -y xfce4 xrdp
-	sudo apt-get install -y chromium-browser leafpad xarchiver xfce4-terminal
+	sudo apt-get install -y chromium-browser leafpad xarchiver xfce4-terminal xfce4-screenshooter xfce4-screenshooter-plugin
 	echo xfce4-session >/home/$OSUSER/.xsession
 	# the below command enables terminal right-click copy/paste - http://askubuntu.com/questions/352121/bash-auto-completion-with-xubuntu-and-xrdp-from-windows
 	sudo sed -i 's/switch_window_key/empty/' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
