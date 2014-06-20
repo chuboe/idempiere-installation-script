@@ -286,7 +286,7 @@ then
 	echo "Add the mercurial and buckminster plugins.">>/home/$OSUSER/$README
 	echo "More detailed instructions for the following can be found at http://www.globalqss.com/wiki/index.php/IDempiere/Install_Prerequisites_on_Ubuntu">>/home/$OSUSER/$README
 	echo " --> Mercurial">>/home/$OSUSER/$README
-	echo " ------> http://cbes.javaforge.com/update">>/home/$OSUSER/$README
+	echo " ------> http://mercurialeclipse.eclipselabs.org.codespot.com/hg.wiki/update_site/stable">>/home/$OSUSER/$README
 	echo " ------> choose mercurial but not windows binaries">>/home/$OSUSER/$README
 	echo " --> Buckminster">>/home/$OSUSER/$README
 	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>/home/$OSUSER/$README
