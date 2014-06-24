@@ -211,27 +211,28 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
 
-	# Old Desktop Config - get rid of soon
+	# Old Desktop Config - get rid of this section soon
 	# sudo apt-get install -y lubuntu-desktop xrdp
 	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
 	# set is a tool to add or replace text in a file
 	# sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
 	# sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
 	
-	# new desktop installation (compatible with 14.04)
-	sudo apt-get install -y xfce4 xrdp
-	sudo apt-get install -y chromium-browser leafpad xarchiver xfce4-terminal xfce4-screenshooter xfce4-screenshooter-plugin gimp
-	echo xfce4-session >/home/$OSUSER/.xsession
+	# new desktop installation (compatible with 14.04) - DID NOT LIKE XFCE!!! - get rid of this section soon
+	#sudo apt-get install -y xfce4 xrdp
+	#sudo apt-get install -y chromium-browser leafpad xarchiver xfce4-terminal xfce4-screenshooter xfce4-screenshooter-plugin gimp
+	#echo xfce4-session >/home/$OSUSER/.xsession
 	# the below command enables terminal right-click copy/paste - http://askubuntu.com/questions/352121/bash-auto-completion-with-xubuntu-and-xrdp-from-windows
-	sudo sed -i 's/switch_window_key/empty/' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
-	sudo service xrdp restart
+	#sudo sed -i 's/switch_window_key/empty/' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
+	#sudo service xrdp restart
 
-	# give xrdp the ability to resume a connected session
-	# edit this file: sudo gedit /etc/xrdp/xrdp.ini
-	# to swap:
-	#   port=-1
-	#   with the line
-	#   port=ask-1
+	#new desktop installation (compatible with 14.04)
+	sudo apt-get install -y xrdp lxde
+	sudo apt-get install -y chromium-browser leafpad xarchiver gimp
+	echo lxsession -s LXDE -e LXDE >/home/$OSUSER/.xsession
+	#gives you the ability to reconnect to a port - usually 3350
+	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
+	sudo service xrdp restart
 
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>/home/$OSUSER/$README
@@ -272,10 +273,9 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "When the script finishes, log in via remote desktop.">>/home/$OSUSER/$README
-	echo "NOTE: if your icons are missing, do the following:">>/home/$OSUSER/$README
-	echo "--> Click on Application Menu -> Settings -> Appearance">>/home/$OSUSER/$README
-	echo "--> On the style tab, click on Xfce-4.6. This is my favorite.">>/home/$OSUSER/$README
-	echo "--> On the icon tab, click on Tango. This will magically make your icons appear.">>/home/$OSUSER/$README
+	echo "NOTE: If you have a big X for a mouse cursor, do the following:">>/home/$OSUSER/$README
+	echo "--> Click on Application Menu -> Preferences -> Customize Look and Feel">>/home/$OSUSER/$README
+	echo "--> This simple task should magically fix it.">>/home/$OSUSER/$README
 	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
