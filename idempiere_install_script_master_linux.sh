@@ -211,28 +211,24 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
 
-	#new desktop installation (compatible with 14.04)
-	sudo apt-get install -y xrdp lxde
-	sudo apt-get install -y chromium-browser leafpad xarchiver gimp
-	echo lxsession -s LXDE -e LXDE >/home/$OSUSER/.xsession
-	#gives you the ability to reconnect to a port - usually 3350
+	#nice MATE desktop installation (compatible with 14.04)
+	sudo apt-get install xrdp -y
+	sudo add-apt-repository "deb http://repo.mate-desktop.org/archive/1.8/ubuntu $(lsb_release -cs) main"
+	wget -q http://mirror1.mate-desktop.org/debian/mate-archive-keyring.gpg -O- | sudo apt-key add -
+	sudo apt-get update
+	sudo apt-get install -y --force-yes mate-core mate-desktop-environment mate-notification-daemon
+	echo mate-session> ~/.xsession
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
+	sudo apt-get install -y chromium-browser gimp xarchiver
 	sudo service xrdp restart
 
-	#nice MATE desktop installation (compatible with 14.04) - comment out above and uncomment below if you want this desktop
-	#sudo apt-get install xrdp -y
-	#sudo add-apt-repository "deb http://repo.mate-desktop.org/archive/1.8/ubuntu $(lsb_release -cs) main"
-	#wget -q http://mirror1.mate-desktop.org/debian/mate-archive-keyring.gpg -O- | sudo apt-key add -
-	#sudo apt-get update
-	#sudo apt-get install -y --force-yes mate-core mate-desktop-environment mate-notification-daemon
-	#echo mate-session> ~/.xsession
+	#new desktop installation (compatible with 14.04) - alternative to Mate Desktop
+	#sudo apt-get install -y xrdp lxde
+	#sudo apt-get install -y chromium-browser leafpad xarchiver gimp
+	#echo lxsession -s LXDE -e LXDE >/home/$OSUSER/.xsession
+	#gives you the ability to reconnect to a port - usually 3350
 	#sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
-	#sudo apt-get install -y chromium-browser gimp xarchiver
 	#sudo service xrdp restart
-	#Note: nicities - right-click on dekstop -> change desktop background
-	#Note: --> set desktop wallpaper to top-left gradient
-	#Note: --> set theme to menta
-	#Note: --> set fixed width font to monospace
 
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>/home/$OSUSER/$README
@@ -273,9 +269,10 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "When the script finishes, log in via remote desktop.">>/home/$OSUSER/$README
-	echo "NOTE: If you have a big X for a mouse cursor, do the following:">>/home/$OSUSER/$README
-	echo "--> Click on Application Menu -> Preferences -> Customize Look and Feel">>/home/$OSUSER/$README
-	echo "--> This simple task should magically fix it.">>/home/$OSUSER/$README
+	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>/home/$OSUSER/$README
+	echo "--> set desktop wallpaper to top-left gradient">>/home/$OSUSER/$README
+	echo "--> set theme to menta">>/home/$OSUSER/$README
+	echo "--> set fixed width font to monospace">>/home/$OSUSER/$README
 	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
