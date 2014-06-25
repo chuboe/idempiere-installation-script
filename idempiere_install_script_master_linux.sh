@@ -219,7 +219,7 @@ then
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
 	sudo service xrdp restart
 
-	#nice desktop installation (compatible with 14.04) - comment out above and uncomment below if you want this desktop
+	#nice MATE desktop installation (compatible with 14.04) - comment out above and uncomment below if you want this desktop
 	#sudo apt-get install xrdp -y
 	#sudo add-apt-repository "deb http://repo.mate-desktop.org/archive/1.8/ubuntu $(lsb_release -cs) main"
 	#wget -q http://mirror1.mate-desktop.org/debian/mate-archive-keyring.gpg -O- | sudo apt-key add -
