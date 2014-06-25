@@ -197,7 +197,7 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "SECURITY NOTICE: phppgadmin has been installed on port 80.">>/home/$OSUSER/$README
 	echo "Make sure this port is blocked from external traffic as a security mesaure.">>/home/$OSUSER/$README
-	
+
 	echo "localhost:*:*:adempiere:$DBPASS">>/home/$OSUSER/.pgpass
 	sudo -u $OSUSER chmod 600 .pgpass
 
@@ -211,21 +211,6 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
 
-	# Old Desktop Config - get rid of this section soon
-	# sudo apt-get install -y lubuntu-desktop xrdp
-	# note that sed can use any delimiting character. Here I use the '=' instead of the slash
-	# set is a tool to add or replace text in a file
-	# sudo sed -i 's=. /etc/X11/Xsession=#. /etc/X11/Xsession=' /etc/xrdp/startwm.sh
-	# sudo sed -i '$ a\startlubuntu' /etc/xrdp/startwm.sh
-	
-	# new desktop installation (compatible with 14.04) - DID NOT LIKE XFCE!!! - get rid of this section soon
-	#sudo apt-get install -y xfce4 xrdp
-	#sudo apt-get install -y chromium-browser leafpad xarchiver xfce4-terminal xfce4-screenshooter xfce4-screenshooter-plugin gimp
-	#echo xfce4-session >/home/$OSUSER/.xsession
-	# the below command enables terminal right-click copy/paste - http://askubuntu.com/questions/352121/bash-auto-completion-with-xubuntu-and-xrdp-from-windows
-	#sudo sed -i 's/switch_window_key/empty/' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
-	#sudo service xrdp restart
-
 	#new desktop installation (compatible with 14.04)
 	sudo apt-get install -y xrdp lxde
 	sudo apt-get install -y chromium-browser leafpad xarchiver gimp
@@ -233,6 +218,21 @@ then
 	#gives you the ability to reconnect to a port - usually 3350
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
 	sudo service xrdp restart
+
+	#nice desktop installation (compatible with 14.04) - comment out above and uncomment below if you want this desktop
+	#sudo apt-get install xrdp -y
+	#sudo add-apt-repository "deb http://repo.mate-desktop.org/archive/1.8/ubuntu $(lsb_release -cs) main"
+	#wget -q http://mirror1.mate-desktop.org/debian/mate-archive-keyring.gpg -O- | sudo apt-key add -
+	#sudo apt-get update
+	#sudo apt-get install -y --force-yes mate-core mate-desktop-environment mate-notification-daemon
+	#echo mate-session> ~/.xsession
+	#sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
+	#sudo apt-get install -y chromium-browser gimp xarchiver
+	#sudo service xrdp restart
+	#Note: nicities - right-click on dekstop -> change desktop background
+	#Note: --> set desktop wallpaper to top-left gradient
+	#Note: --> set theme to menta
+	#Note: --> set fixed width font to monospace
 
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>/home/$OSUSER/$README
