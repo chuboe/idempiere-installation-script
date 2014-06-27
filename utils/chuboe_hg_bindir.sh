@@ -39,7 +39,6 @@ fi #end if migration.zip exists
 cd $INSTALLPATH
 hg init
 hg add
-hg status >~/FilesToCommit_Deleteme.txt
 hg commit -m "Initial Commit"
 
 # (4) offer a script to commit and push changed/added/removed files off-machine
