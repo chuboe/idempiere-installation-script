@@ -38,6 +38,7 @@ fi #end if migration.zip exists
 # (3) commit the repository
 cd $INSTALLPATH
 hg init
+hg add
 hg commit -m "Initial Commit"
 
 # (4) offer a script to commit and push changed/added/removed files off-machine
