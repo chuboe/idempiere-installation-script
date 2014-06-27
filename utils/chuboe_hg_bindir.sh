@@ -43,3 +43,7 @@ hg commit -m "Initial Commit"
 
 # (4) offer a script to commit and push changed/added/removed files off-machine
 # coming soon.... for now just issue: hg push 'path to remote repo'
+
+# if you ever want to undo a change that has not been committed, you can issue: hg revert --all
+# if you want to revert to a previous commit, you can use: hg revert --all --rev [xxx]
+# for more information, here is a great summary: http://stackoverflow.com/questions/2540454/mercurial-revert-back-to-old-version-and-continue-from-there
