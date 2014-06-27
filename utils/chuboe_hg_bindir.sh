@@ -44,10 +44,3 @@ hg commit -m "Initial Commit"
 
 # (4) offer a script to commit and push changed/added/removed files off-machine
 # coming soon.... for now just issue: hg push 'path to remote repo'
-
-
-
-
-
-echo LOGFILE="$ADEMROOTDIR"/"$LOGFILE" >> "$ADEMROOTDIR"/"$LOGFILE"
-echo ADEMROOTDIR="$ADEMROOTDIR" >> "$ADEMROOTDIR"/"$LOGFILE"
