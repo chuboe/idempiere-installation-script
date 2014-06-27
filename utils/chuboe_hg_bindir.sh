@@ -31,7 +31,7 @@ then
 else
 	echo "HERE: creating .hgrc file"
 	echo "">$HGNAME
-	sudo sed -i '$ a\s[ui]' $HGNAME
+	sudo sed -i '$ a\[ui]' $HGNAME
 	sudo sed -i '$ a\username = iDempiere Master' $HGNAME
 fi #end if migration.zip exists
 
