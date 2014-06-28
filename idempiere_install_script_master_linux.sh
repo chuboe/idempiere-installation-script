@@ -256,6 +256,9 @@ then
 	sudo sed -i '$ a\Icon=/home/ubuntu/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Exec=/home/ubuntu/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse.desktop
+	
+	# create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
+	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" /home/$OSUSER/.bashrc
 
 	# get idempiere code
 	cd /home/$OSUSER/dev
@@ -272,7 +275,7 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "When the script finishes, log in via remote desktop.">>/home/$OSUSER/$README
 	echo "NOTE: Use the following command to see what XRDP/VNC sessions are open:">>/home/$OSUSER/$README
-	echo "--> sudo netstat -tulpn | grep Xvnc">>/home/$OSUSER/$README
+	echo "--> wvnc -> which is short for: sudo netstat -tulpn | grep Xvnc">>/home/$OSUSER/$README
 	echo "--> It is usually 5910 the first time you connect.">>/home/$OSUSER/$README
 	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>/home/$OSUSER/$README
 	echo "--> set desktop wallpaper to top-left gradient">>/home/$OSUSER/$README
