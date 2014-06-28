@@ -269,6 +269,8 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "When the script finishes, log in via remote desktop.">>/home/$OSUSER/$README
+	echo "NOTE: Use the following command to see what XRDP/VNC sessions are open:">>/home/$OSUSER/$README
+	echo "--> sudo netstat -tulpn | grep Xvnc">>/home/$OSUSER/$README
 	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>/home/$OSUSER/$README
 	echo "--> set desktop wallpaper to top-left gradient">>/home/$OSUSER/$README
 	echo "--> set theme to menta">>/home/$OSUSER/$README
