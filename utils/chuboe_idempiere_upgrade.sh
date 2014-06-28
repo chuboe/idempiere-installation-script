@@ -36,7 +36,7 @@ EOF
 
 LOG_FILE="/log/chuboe_app_upgrade.log"
 SERVER_DIR="/opt/idempiere-server"
-P2="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
+P2="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
 PG_HOST_NORM="host    all             all             127.0.0.1/32            md5"
 PG_HOST_TEMP="host    all             all             127.0.0.1/32            trust"
 PG_HBA="/etc/postgresql/9.1/main/pg_hba.conf"
@@ -44,7 +44,7 @@ SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/scr
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
 MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
-MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/iDempiereDaily/ws/migration/*zip*/migration.zip"
+MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/migration/*zip*/migration.zip"
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
