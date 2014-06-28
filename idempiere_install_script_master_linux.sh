@@ -64,9 +64,9 @@ INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 IDEMPIERECLIENTPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/swing-client/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERECLIENTPATHBLEED="http://ci.idempiere.org/job/iDempiereDaily/ws/buckminster.output/org.adempiere.ui.swing_2.0.0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
+IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.org/job/iDempiere2.0Daily/ws/buckminster.output/org.adempiere.ui.swing_2.0.0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/server/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiereDaily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 README="idempiere_installer_feedback.txt"
@@ -265,6 +265,8 @@ then
 	hg clone https://bitbucket.org/idempiere/idempiere
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
 	hg clone idempiere myexperiment
+	cd /home/$OSUSER/dev/myexperiment
+	hg update release-2.0 --clean
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
