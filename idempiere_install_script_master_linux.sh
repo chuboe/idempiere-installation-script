@@ -273,6 +273,9 @@ then
 	echo "--> set desktop wallpaper to top-left gradient">>/home/$OSUSER/$README
 	echo "--> set theme to menta">>/home/$OSUSER/$README
 	echo "--> set fixed width font to monospace">>/home/$OSUSER/$README
+	echo "NOTE: Command/Terminal niceties - edit -> Profile Preferences:">>/home/$OSUSER/$README
+	echo "--> General Tab -> turn off the terminal bell">>/home/$OSUSER/$README
+	echo "--> Colors tab -> Choose White on Black">>/home/$OSUSER/$README
 	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
