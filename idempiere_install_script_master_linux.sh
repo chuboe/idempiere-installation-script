@@ -218,7 +218,10 @@ then
 	sudo apt-get update
 	sudo apt-get install -y --force-yes mate-core mate-desktop-environment mate-notification-daemon
 	echo mate-session> ~/.xsession
+	
+	#gives you the ability to reconnect to a port - usually 5910
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
+	
 	sudo apt-get install -y chromium-browser gimp xarchiver
 	sudo service xrdp restart
 
@@ -226,7 +229,6 @@ then
 	#sudo apt-get install -y xrdp lxde
 	#sudo apt-get install -y chromium-browser leafpad xarchiver gimp
 	#echo lxsession -s LXDE -e LXDE >/home/$OSUSER/.xsession
-	#gives you the ability to reconnect to a port - usually 3350
 	#sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
 	#sudo service xrdp restart
 
@@ -271,6 +273,7 @@ then
 	echo "When the script finishes, log in via remote desktop.">>/home/$OSUSER/$README
 	echo "NOTE: Use the following command to see what XRDP/VNC sessions are open:">>/home/$OSUSER/$README
 	echo "--> sudo netstat -tulpn | grep Xvnc">>/home/$OSUSER/$README
+	echo "--> It is usually 5910 the first time you connect.">>/home/$OSUSER/$README
 	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>/home/$OSUSER/$README
 	echo "--> set desktop wallpaper to top-left gradient">>/home/$OSUSER/$README
 	echo "--> set theme to menta">>/home/$OSUSER/$README
