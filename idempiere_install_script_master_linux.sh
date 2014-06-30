@@ -379,6 +379,9 @@ then
 	sudo chown $OSUSER:$OSUSER $INSTALLPATH
 	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
 	wget $IDEMPIERECLIENTPATH -P /home/$OSUSER/installer_client_`date +%Y%m%d`
+	# ACTION - check if bleeding edge, if so - get current version for future reference
+	# make below variable IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/iDempiere2.0Daily/changes"
+	# wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P /home/$OSUSER/installer_`date +%Y%m%d` -O iDempiere_Version.html
 
 	# check if file downloaded
 	RESULT=$(ls -l /home/$OSUSER/installer_`date +%Y%m%d`/*64.zip | wc -l)
