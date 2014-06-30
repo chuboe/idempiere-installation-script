@@ -259,6 +259,7 @@ then
 	
 	# create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
 	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" /home/$OSUSER/.bashrc
+	sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" /home/$OSUSER/.bashrc
 
 	# get idempiere code
 	cd /home/$OSUSER/dev
