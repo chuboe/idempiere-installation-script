@@ -27,6 +27,7 @@ OPTIONS:
 	-u	Upgrade URL
 	-r	Do not restart server
 	-s	Skip iDempiere binary upgrade
+	-j	Specify specific Jenkins project
 
 Outstanding actions:
 * add issues here
@@ -44,14 +45,14 @@ SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/scr
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
 MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
-MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/migration/*zip*/migration.zip"
+JENKINSPROJECT="iDempiere2.0Daily"
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hc:m:u:rs" OPTION
+while getopts "hc:m:u:rsj:" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -73,8 +74,13 @@ do
 		s)	#Do not upgrade binaries
 			IS_RESTART_SERVER="N"
 			IS_SKIP_BIN_UPGRADE="Y";;
+
+		j)	#jenkins project
+			JENKINSPROJECT=$OPTARG;;
 	esac
 done
+
+MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
@@ -93,6 +99,7 @@ echo "MIGRATION_DOWNLOAD="$MIGRATION_DOWNLOAD
 echo "IS_RESTART_SERVER="$IS_RESTART_SERVER
 echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
+echo "JENKINSPROJECT="$JENKINSPROJECT
 
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
