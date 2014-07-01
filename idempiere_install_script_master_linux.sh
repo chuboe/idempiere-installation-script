@@ -175,6 +175,11 @@ else
 	exit 1
 fi
 
+# update the hosts file for ubuntu in AWS VPC - see the script for more details.
+# If you are not running in AWS VPC, you can comment these lines out.
+sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
+sudo $SCRIPTPATH/utils/setHostName.sh
+
 # update apt package manager
 sudo apt-get --yes update
 
