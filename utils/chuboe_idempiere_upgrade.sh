@@ -37,7 +37,6 @@ EOF
 
 LOG_FILE="/log/chuboe_app_upgrade.log"
 SERVER_DIR="/opt/idempiere-server"
-P2="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
 PG_HOST_NORM="host    all             all             127.0.0.1/32            md5"
 PG_HOST_TEMP="host    all             all             127.0.0.1/32            trust"
 PG_HBA="/etc/postgresql/9.1/main/pg_hba.conf"
@@ -81,6 +80,7 @@ do
 done
 
 MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
+P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
