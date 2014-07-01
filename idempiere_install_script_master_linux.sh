@@ -31,12 +31,12 @@ OPTIONS:
 	-e	Move the postgresql files
 		to EBS - provide the drive name
 	-i	No install iDempiere (DB only)
-	-b	Name of s3 bucket for backups
 	-P	DB password
 	-l	Launch iDempiere as service
 	-u	Specify a username other than ubuntu
 	-B	Use bleeding edge copy of iDempiere
 	-D	Install desktop development tools
+	-j	Specify specific Jenkins build
 
 Outstanding actions:
 * Add better error checking
@@ -56,6 +56,7 @@ IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
 IS_INSTALL_DESKTOP="N"
+IS_BLEED_EDGE="N"
 PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
@@ -63,10 +64,12 @@ INSTALLPATH="/opt/idempiere-server/"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
+JENKINSPROJECT="iDempiere2.0Daily"
 IDEMPIERECLIENTPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/swing-client/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/buckminster.output/org.adempiere.ui.swing_2.0.0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
+IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_2.0.0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/server/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/iDempiere2.0Daily/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 README="idempiere_installer_feedback.txt"
@@ -74,7 +77,7 @@ PGVERSION="9.3"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BD" OPTION
+while getopts "hsp:e:ib:P:lu:BDj:" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -105,13 +108,22 @@ do
 			OSUSER=$OPTARG;;
 
 		B)	#use bleeding edge copy of iDempiere
-			IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
-			IDEMPIERECLIENTPATH=$IDEMPIERECLIENTPATHBLEED;;
+			IS_BLEED_EDGE="Y";;
 
 		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
+
+		j)	#jenkins project
+			JENKINSPROJECT=$OPTARG;;
 	esac
 done
+
+#if bleeding edge
+if [[ $IS_BLEED_EDGE == "Y" ]]
+then
+	IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
+	IDEMPIERECLIENTPATH=$IDEMPIERECLIENTPATHBLEED
+fi
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
@@ -130,10 +142,12 @@ echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
 echo "OSUser="$OSUSER
+echo "Use bleeding edge="$IS_BLEED_EDGE
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
+echo "Jenkins Project="$JENKINSPROJECT
 echo "Distro details:"
 cat /etc/*-release
 
@@ -267,7 +281,6 @@ then
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
 	hg clone idempiere myexperiment
 	cd /home/$OSUSER/dev/myexperiment
-	hg update release-2.0 --clean
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
@@ -290,6 +303,9 @@ then
 	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
+	echo "NOTE: By default, the script downloaded binaries from the jenkins build: $JENKINSPROJECT">>/home/$OSUSER/$README
+	echo "--> Make sure you update your code set the correct branch to match your binaries: hg update -r [BranchName]">>/home/$OSUSER/$README
+	echo "--> Doing so helps ensure your code matches the database that was installed/initialized.">>/home/$OSUSER/$README
 	echo "Copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>/home/$OSUSER/$README
 	echo "Open Eclipse.">>/home/$OSUSER/$README
 	echo "Choose the myexperiment folder as your workspace when eclipse launches.">>/home/$OSUSER/$README
@@ -379,9 +395,10 @@ then
 	sudo chown $OSUSER:$OSUSER $INSTALLPATH
 	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
 	wget $IDEMPIERECLIENTPATH -P /home/$OSUSER/installer_client_`date +%Y%m%d`
-	# ACTION - check if bleeding edge, if so - get current version for future reference
-	# make below variable IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/iDempiere2.0Daily/changes"
-	# wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P /home/$OSUSER/installer_`date +%Y%m%d` -O iDempiere_Version.html
+	if [[ $IS_BLEED_EDGE == "Y" ]]
+	then
+		wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P /home/$OSUSER/installer_`date +%Y%m%d` -O iDempiere_Version.html
+	fi
 
 	# check if file downloaded
 	RESULT=$(ls -l /home/$OSUSER/installer_`date +%Y%m%d`/*64.zip | wc -l)
