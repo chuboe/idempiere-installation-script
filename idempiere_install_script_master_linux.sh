@@ -65,11 +65,6 @@ INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 JENKINSPROJECT="iDempiere2.0Daily"
-IDEMPIERECLIENTPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/swing-client/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_2.0.0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/server/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 README="idempiere_installer_feedback.txt"
@@ -117,6 +112,12 @@ do
 			JENKINSPROJECT=$OPTARG;;
 	esac
 done
+
+IDEMPIERECLIENTPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/swing-client/idempiereClient.gtk.linux.x86_64.zip"
+IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_2.0.0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/server/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
 
 #if bleeding edge
 if [[ $IS_BLEED_EDGE == "Y" ]]
