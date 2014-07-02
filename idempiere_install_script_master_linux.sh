@@ -238,10 +238,10 @@ then
 	sudo apt-get update
 	sudo apt-get install -y --force-yes mate-core mate-desktop-environment mate-notification-daemon
 	echo mate-session> ~/.xsession
-	
+
 	#gives you the ability to reconnect to a port - usually 5910
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
-	
+
 	sudo apt-get install -y chromium-browser gimp xarchiver
 	sudo service xrdp restart
 
