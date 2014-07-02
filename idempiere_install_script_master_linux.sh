@@ -109,6 +109,7 @@ do
 			IS_INSTALL_DESKTOP="Y";;
 
 		j)	#jenkins project
+			IS_BLEED_EDGE="Y"
 			JENKINSPROJECT=$OPTARG;;
 	esac
 done
