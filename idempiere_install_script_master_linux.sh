@@ -39,11 +39,12 @@ OPTIONS:
 	-j	Specify specific Jenkins build
 
 Outstanding actions:
-* Add better error checking
-* Remove some of the hardcoded variables
-* Add support for -s option to suppress services.
-  - Doing so will require a code change to AdempiereServerMgr.java (in iDempiere).
-  - This option will allow you to run multiple WebUI servers behind a load balancer.
+* Add an option to set the java max heap size when starting iDempiere. 
+	- The default heap size for this java on 64-bit linux is 1GB (1035993088) - assuming I did the math correctly.
+	- 1GB is good if you are using a machine with 2GB of memory and it is also running a database.
+	- 1GB is not good if you are running the iDempiere server on a dedicated server with 4GB of RAM or more.
+	- If you wish to make the max heap size larger, modify the file named "idempiere" to add "-Xmx2g" to the end of the line that starts the iDempiere server.
+	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
 
 EOF
