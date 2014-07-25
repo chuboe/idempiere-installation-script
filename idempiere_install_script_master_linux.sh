@@ -291,6 +291,12 @@ then
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
+	#if not bleeding edge
+	if [[ $IS_BLEED_EDGE == "N" ]]
+	then
+		hg update -r release-2.0
+	fi
+
 	# go back to home directory
 	cd
 
