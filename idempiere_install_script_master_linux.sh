@@ -278,7 +278,7 @@ then
 	sudo sed -i '$ a\Icon=/home/ubuntu/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Exec=/home/ubuntu/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse.desktop
-	
+
 	# create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
 	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" /home/$OSUSER/.bashrc
 	sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" /home/$OSUSER/.bashrc
@@ -293,7 +293,7 @@ then
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
 	#if not bleeding edge
-	if [[ $JENKINSPROJECT=="iDempiere2.0Daily" ]]
+	if [[ $JENKINSPROJECT == "iDempiere2.0Daily" ]]
 	then
 		hg update -r release-2.0
 	fi
