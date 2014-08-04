@@ -293,7 +293,7 @@ then
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
 	#if not bleeding edge
-	if [[ $IS_BLEED_EDGE == "N" ]]
+	if [[ $JENKINSPROJECT=="iDempiere2.0Daily" ]]
 	then
 		hg update -r release-2.0
 	fi
