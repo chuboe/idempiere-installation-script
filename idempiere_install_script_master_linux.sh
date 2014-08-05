@@ -261,7 +261,7 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "ACTION REQUIRED: set the ubuntu password using 'passwd' command to log in remotely">>/home/$OSUSER/$README
-	echo "--------> to set the password for the ubuntu user: 'sudo passwd ubuntu'">>/home/$OSUSER/$README
+	echo "--------> to set the password for the ubuntu user: 'sudo passwd $OSUSER'">>/home/$OSUSER/$README
 	echo "--------> the script installed 'xrdp' with allows you to use Windows Remote Desktop to connect.">>/home/$OSUSER/$README
 	mkdir /home/$OSUSER/dev
 	mkdir /home/$OSUSER/dev/downloads
