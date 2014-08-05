@@ -20,18 +20,17 @@
 # adjust these variables to your environment
 #IDEMPIERE_HOME=/home/idempiere/idempiere-server
 IDEMPIERE_HOME=/opt/idempiere-server/
-#IDEMPIEREUSER=idempiere
-IDEMPIEREUSER=ubuntu
+IDEMPIEREUSER=idempiere
 # Instead of using ENVFILE you can set JAVA_HOME, IDEMPIERE_HOME and add JAVA_HOME/bin to PATH
 # in this case you can comment the source lines for ENVFILE below
 # detected some problems with Hardy Heron ubuntu using the bash source command
 ENVFILE=$IDEMPIERE_HOME/utils/myEnvironment.sh
 
 . /lib/lsb/init-functions
- 
+
 RETVAL=0
 IDEMPIERESTATUS=
-MAXITERATIONS=60 
+MAXITERATIONS=60
 
 getidempierestatus() {
     IDEMPIERESTATUSSTRING=$(ps ax | grep -v grep | grep $IDEMPIERE_HOME)
@@ -49,8 +48,8 @@ start () {
     cd $IDEMPIERE_HOME/utils
     . $ENVFILE 
     export LOGFILE=$IDEMPIERE_HOME/log/idempiere_`date +%Y%m%d%H%M%S`.log
-    su $IDEMPIEREUSER -c "mkdir -p IDEMPIERE_HOME/log"
-    su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
+    sudo su $IDEMPIEREUSER -c "mkdir -p IDEMPIERE_HOME/log"
+    sudo su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
     RETVAL=$?
     if [ $RETVAL -eq 0 ] ; then
         # wait for server to be confirmed as started in logfile

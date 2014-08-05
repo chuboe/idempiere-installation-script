@@ -68,6 +68,7 @@ SCRIPTPATH=$(dirname "$SCRIPTNAME")
 JENKINSPROJECT="iDempiere2.0Daily"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
+IDEMPIEREUSER="idempiere"
 README="idempiere_installer_feedback.txt"
 PGVERSION="9.3"
 
@@ -145,6 +146,7 @@ echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
 echo "OSUser="$OSUSER
+echo "iDempiere User="$IDEMPIEREUSER
 echo "Use bleeding edge="$IS_BLEED_EDGE
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
@@ -396,6 +398,16 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Installing iDemipere because IS_INSTALL_ID == Y">>/home/$OSUSER/$README
+
+	# create IDEMPIEREUSER user and group
+	sudo useradd $IDEMPIEREUSER
+
+	# add OSUSER to IDEMPIEREUSER group
+	sudo usermod -a -G $IDEMPIEREUSER $OSUSER
+
+	# Recommended to execute the below command if you want no other user to see your home directory
+	# sudo chmod -R o-rx /home/$OSUSER
+
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
@@ -511,7 +523,7 @@ then
 	echo "">>/home/$OSUSER/$README
 	mkdir $INSTALLPATH/chuboe_utils
 	cp -r $SCRIPTPATH/utils/* $INSTALLPATH/chuboe_utils
-	sudo chown -R $OSUSER:$OSUSER $INSTALLPATH
+	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 	chmod +x $INSTALLPATH/chuboe_utils/*.sh
 
 	echo "HERE: setting iDempiere to start on boot"
