@@ -10,6 +10,7 @@
 # 1.2 added remote desktop development environment
 # 1.3 added better error checking and user handling
 # 1.4 added better user instruction (specifically for s3 backup)
+# 1.5 run iDempiere service as idempiere user
 
 # function to help the user better understand how the script works
 usage()
@@ -277,8 +278,8 @@ then
 	sudo sed -i '$ a\Type=Application' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Name=eclipse' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Name[en_US]=eclipse' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Icon=/home/ubuntu/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Exec=/home/ubuntu/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse.desktop
+	sudo sed -i '$ a\Icon=/home/$OSUSER/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse.desktop
+	sudo sed -i '$ a\Exec=/home/$OSUSER/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse.desktop
 	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse.desktop
 
 	# create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
@@ -398,15 +399,14 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Installing iDemipere because IS_INSTALL_ID == Y">>/home/$OSUSER/$README
+	echo "SECURITY NOTICE: Execute the below command if you want no other user to see your home directory">>/home/$OSUSER/$README
+	echo "  sudo chmod -R o-rx /home/$OSUSER">>/home/$OSUSER/$README
 
 	# create IDEMPIEREUSER user and group
 	sudo useradd $IDEMPIEREUSER
 
 	# add OSUSER to IDEMPIEREUSER group
 	sudo usermod -a -G $IDEMPIEREUSER $OSUSER
-
-	# Recommended to execute the below command if you want no other user to see your home directory
-	# sudo chmod -R o-rx /home/$OSUSER
 
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
