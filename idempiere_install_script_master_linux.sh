@@ -526,6 +526,9 @@ then
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 	chmod +x $INSTALLPATH/chuboe_utils/*.sh
 
+	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
+	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
+
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
