@@ -14,6 +14,10 @@ sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources
 sudo apt-get update
 sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd
 
+## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
+##    /etc/init.d/jenkins
+##    https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu (search google for "install jenkins")
+
 #####clone a local repository of iDempiere
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
 #  FYI - jenkins will create yet another clone for its build purposes
@@ -59,6 +63,7 @@ sudo nano /etc/apache2/sites-available/000-default.conf
 sudo /etc/init.d/apache2 restart
 
 #####Install Jenkins plugins (performed in jenkins UI)
+# www.YourURL.com:8080
 # (1) buckminster
 # (2) mercurial
 
