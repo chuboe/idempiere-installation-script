@@ -69,15 +69,16 @@ sudo /etc/init.d/apache2 restart
 # (1) buckminster
 # (2) mercurial
 
-#####Create New Item (job)
+#####Create New Item (new job in jenkins UI)
 # Menu => New Item "iDempiere Build" of type "Build a freestyle Software Project" => OK
 # Configuration
 #  Source Code Management
 #    URL: /home/ubuntu/source/id/idempiere
 #    Revision Type: Branch
 #    Revision: release-2.0
+#  Add below build steps
 
-#####Jenkins Job Commands (performed in jenkins UI)
+#####Jenkins Build Steps (performed in jenkins UI)
 #1 Shell - clear workspace
 rm -rf ${WORKSPACE}/buckminster.output/ ${WORKSPACE}/buckminster.temp/ ${WORKSPACE}/targetPlatform/
 
