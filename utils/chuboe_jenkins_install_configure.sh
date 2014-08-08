@@ -81,7 +81,7 @@ sudo /etc/init.d/apache2 restart
 # Jenkins Menu => New Item "iDempiere-2.0" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
-#  Source Code Management
+#  Source Code Management => Mercurial
 #    URL: /home/ubuntu/source/id/idempiere
 #    Revision Type: Branch
 #    Revision: release-2.0
