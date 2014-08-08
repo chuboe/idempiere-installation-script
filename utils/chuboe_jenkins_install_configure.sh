@@ -87,7 +87,13 @@ importtargetdefinition -A '${WORKSPACE}/org.adempiere.sdk-feature/build-target-p
 import '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
 build -t
 perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*   -D target.ws=*   -D target.arch=* -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   'org.adempiere.server:eclipse.feature#site.p2'
+perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.buildTimestamp.format='v'yyyyMMdd-HHmm"  -D 'target.os=linux'   -D 'target.ws=gtk'   -D 'target.arch=x86_64'  -D product.features=org.idempiere.eclipse.platform.feature.group   -D product.profile=DefaultProfile  -D product.id=org.adempiere.server.product   'org.adempiere.server:eclipse.feature#create.product.zip'
+
+## NOTE: regarding the two above "perform" statements
+# The first builds the p2 site
+# The second builds the product and zips it
 
 #3 Shell - copy results (site.ps) to webserver
 rm -rf /opt/idempiere-builds/idempiere.p2/*
-cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_1.0.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
+cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
+# s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/ s3://YourBucket/idempiere/build/
