@@ -46,7 +46,7 @@ sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.p2
 cd /var/www
 sudo ln -s /opt/idempiere-builds/idempiere.p2
 
-sudo nano /etc/apache2/sites-available/default
+sudo nano /etc/apache2/sites-available/000-default.conf
 
 	#Somewhere in your VirtualHost, add the following:
 		<Directory /var/www/idempiere.p2>
