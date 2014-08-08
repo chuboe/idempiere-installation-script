@@ -104,4 +104,16 @@ perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.bui
 #3 Shell - copy results (site.ps) to webserver
 rm -rf /opt/idempiere-builds/idempiere.p2/*
 cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
-# s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/ s3://YourBucket/idempiere/build/
+# s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/ s3://YourBucket/iDempiere_backup/build/
+
+#####Build Now
+# See if she works!!
+
+## NOTE: Here are the steps to configure s3cmd - push to Amazon's AWS S3
+## Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.
+## ----> s3cmd --configure
+## --------> get your access key and secred key by logging into your AWS account
+## --------> enter a password. Chose something different than your AWS password. Write it down!!
+## --------> Accept the default path to GPG
+## --------> Answer yes to HTTPS
+## ----> s3cmd mb s3://iDempiere_backup
