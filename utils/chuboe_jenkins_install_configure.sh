@@ -29,7 +29,7 @@ sudo chown -R ubuntu:ubuntu /opt/buckminster-headless-4.2
 cd /opt/buckminster-headless-4.2
 wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
 sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
-sudo chmod +x -R /opt/buckminster-headless-4.2/
+sudo chmod +x -R /opt/buckminster-headless-4.2/*.sh
 cd /opt/buckminster-headless-4.2/director
 
 sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.2/ -d /opt/buckminster-headless-4.2/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
