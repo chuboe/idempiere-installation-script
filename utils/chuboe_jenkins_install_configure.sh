@@ -1,6 +1,10 @@
 ## NOTE: this is not an automated isntall script (not yet)
 ## The below steps help you create an independent jenkins machine to build iDempiere and your plugins
 
+## NOTE: if you are installing this in an AWS VPC and you are getting the following error:
+##    sudo: unable to resolve host
+## Execute this script: https://bitbucket.org/cboecking/idempiere-installation-script/src/default/utils/setHostName.sh
+
 #####Install needed tools
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
