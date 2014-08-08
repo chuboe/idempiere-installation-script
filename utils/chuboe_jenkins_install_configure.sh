@@ -75,7 +75,7 @@ sudo /etc/init.d/apache2 restart
 #  Source Code Management
 #    URL: /home/ubuntu/source/id/idempiere
 #    Revision Type: Branch
-# 	 Revision: release-2.0
+#    Revision: release-2.0
 
 #####Jenkins Job Commands (performed in jenkins UI)
 #1 Shell - clear workspace
