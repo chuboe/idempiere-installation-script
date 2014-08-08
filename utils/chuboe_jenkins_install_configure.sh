@@ -5,6 +5,9 @@
 ##    sudo: unable to resolve host
 ## Execute this script: https://bitbucket.org/cboecking/idempiere-installation-script/src/default/utils/setHostName.sh
 
+## ASSUMPTIONS
+## local OS username = ubuntu
+
 #####Install needed tools
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
@@ -22,7 +25,7 @@ hg clone https://bitbucket.org/idempiere/idempiere
 
 #####Install Director and Buckminster
 sudo mkdir /opt/buckminster-headless-4.2
-#may need to give ubuntu permission to this folder
+sudo chown -R ubuntu:ubuntu /opt/buckminster-headless-4.2
 cd /opt/buckminster-headless-4.2
 wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
 sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
