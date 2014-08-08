@@ -33,6 +33,7 @@ sudo chmod +x -R /opt/buckminster-headless-4.2/*.sh
 cd /opt/buckminster-headless-4.2/director
 
 sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.2/ -d /opt/buckminster-headless-4.2/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
+cd /opt/buckminster-headless-4.2
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.maven.headless.feature
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.core.headless.feature
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.pde.headless.feature
