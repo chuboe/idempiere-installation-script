@@ -78,7 +78,8 @@ sudo /etc/init.d/apache2 restart
 #   Additonal Startup Parameters: -Xmx1024m
 
 #####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere Build" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere-2.0" of type "Build a freestyle Software Project" => OK
+#   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management
 #    URL: /home/ubuntu/source/id/idempiere
