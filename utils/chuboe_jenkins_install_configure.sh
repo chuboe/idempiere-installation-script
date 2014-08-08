@@ -65,12 +65,19 @@ sudo /etc/init.d/apache2 restart
 
 #####Install Jenkins plugins (performed in jenkins UI)
 # www.YourURL.com:8080
-# Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
+# Jenkins Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
 # (1) buckminster
 # (2) mercurial
 
+#####Configure Jenkins System (performed in jenkins UI)
+# Jenkins Menu => Manage Jenkins => Configure System
+#   Add Buckminster Button
+#   Buckminster Name: buckminster-headless-4.2
+#   Installation Directory: /opt/buckminster-headless-4.2/
+#   Additonal Startup Parameters: -Xmx1024m
+
 #####Create New Item (new job in jenkins UI)
-# Menu => New Item "iDempiere Build" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere Build" of type "Build a freestyle Software Project" => OK
 # Configuration
 #  Source Code Management
 #    URL: /home/ubuntu/source/id/idempiere
