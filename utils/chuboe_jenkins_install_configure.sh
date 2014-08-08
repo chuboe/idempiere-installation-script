@@ -1,5 +1,6 @@
 ## NOTE: this is not an automated isntall script (not yet)
 ## The below steps help you create an independent jenkins machine to build iDempiere and your plugins
+## This script was last successfully run on Ubuntu 14.04
 
 ## NOTE: if you are installing this in an AWS VPC and you are getting the following error:
 ##    sudo: unable to resolve host
