@@ -65,6 +65,7 @@ sudo /etc/init.d/apache2 restart
 
 #####Install Jenkins plugins (performed in jenkins UI)
 # www.YourURL.com:8080
+# Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
 # (1) buckminster
 # (2) mercurial
 
