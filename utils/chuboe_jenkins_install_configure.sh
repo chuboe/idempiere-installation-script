@@ -73,6 +73,7 @@ sudo /etc/init.d/apache2 restart
 # Jenkins Menu => Manage Jenkins => Configure System
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.2
+#   Install Automatically: no (uncheck)
 #   Installation Directory: /opt/buckminster-headless-4.2/
 #   Additonal Startup Parameters: -Xmx1024m
 
