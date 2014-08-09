@@ -162,7 +162,7 @@ echo "Distro details:"
 cat /etc/*-release
 
 echo "Write out properties files"
-echo "$JENKINSPROJECT">$CHUBOE_PROP/JENKINS_PROJECT
+echo "$JENKINSPROJECT">$CHUBOE_PROP/JENKINS_PROJECT.txt
 
 # Create file to give user feedback about installation
 echo "">/home/$OSUSER/$README
