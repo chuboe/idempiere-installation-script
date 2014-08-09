@@ -47,10 +47,13 @@ sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headles
 #####Create web directories publishing p2
 sudo mkdir /opt/idempiere-builds
 sudo mkdir /opt/idempiere-builds/idempiere.p2
+sudo mkdir /opt/idempiere-builds/idempiere.migration
 sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.p2
+sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.migration
 
 cd /var/www
 sudo ln -s /opt/idempiere-builds/idempiere.p2
+sudo ln -s /opt/idempiere-builds/idempiere.migration
 
 sudo nano /etc/apache2/sites-available/000-default.conf
 
@@ -59,7 +62,12 @@ sudo nano /etc/apache2/sites-available/000-default.conf
 			AllowOverride AuthConfig
 		</Directory>
 
+		<Directory /var/www/idempiere.migration>
+			AllowOverride AuthConfig
+		</Directory>
+
 		Alias /idempiere/p2 /var/www/idempiere.p2
+		Alias /idempiere/migration /var/www/idempiere.migration
 	#end: Somewhere in your VirtualHost, add the following:
 
 sudo /etc/init.d/apache2 restart
@@ -105,7 +113,9 @@ perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.bui
 
 #3 Shell - copy results (site.ps) to webserver
 rm -rf /opt/idempiere-builds/idempiere.p2/*
+rm -rf /opt/idempiere-builds/idempiere.migration/*
 cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
+cp -fR ${WORKSPACE}/migration/* /opt/idempiere-builds/idempiere.migration
 # s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/ s3://YourBucket/iDempiere_backup/build/
 
 #####Build Now
