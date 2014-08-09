@@ -116,6 +116,8 @@ rm -rf /opt/idempiere-builds/idempiere.p2/*
 rm -rf /opt/idempiere-builds/idempiere.migration/*
 cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
 cp -fR ${WORKSPACE}/migration/* /opt/idempiere-builds/idempiere.migration
+cd ${WORKSPACE}
+zip -r /opt/idempiere-builds/idempiere.migration/migration.zip migration/
 # s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/ s3://YourBucket/iDempiere_backup/build/
 
 #####Build Now
