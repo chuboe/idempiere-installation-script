@@ -531,7 +531,7 @@ then
 	mkdir $CHUBOE_UTIL
 	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-	chmod +x $CHUBOE_UTIL/*.sh
+	sudo chmod +x $CHUBOE_UTIL/*.sh
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
