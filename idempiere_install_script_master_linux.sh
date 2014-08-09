@@ -63,6 +63,8 @@ PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
 INSTALLPATH="/opt/idempiere-server/"
+CHUBOE_UTIL="$INSTALLPATH/chuboe_util"
+CHUBOE_PROP="$CHUBOE_UTIL/properties"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
@@ -143,6 +145,8 @@ echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
 echo "Install Path="$INSTALLPATH
+echo "Chuboe_Util Path="$CHUBOE_UTIL
+echo "Chuboe_Properties Path="$CHUBOE_PROP
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
@@ -521,10 +525,10 @@ then
 	echo "HERE: copying over chuboe_utils"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
-	mkdir $INSTALLPATH/chuboe_utils
-	cp -r $SCRIPTPATH/utils/* $INSTALLPATH/chuboe_utils
+	mkdir $CHUBOE_UTIL
+	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-	chmod +x $INSTALLPATH/chuboe_utils/*.sh
+	chmod +x $CHUBOE_UTIL/*.sh
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
