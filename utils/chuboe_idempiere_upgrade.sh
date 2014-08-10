@@ -60,11 +60,11 @@ do
 		c)	#Specify connection options
 			PG_CONNECT=$OPTARG;;
 
-		m)	#Specify FILE path to migration scripts
+		m)	#Specify FILE path to unzipped migration scripts
 			IS_GET_MIGRATION="N"
 			MIGRATION_DIR=$OPTARG;;
 
-		M)	#Specify URL to migration scripts
+		M)	#Specify URL to migration scripts zip
 			MIGRATION_DOWNLOAD=$OPTARG;;
 
 		u)	#Upgrade URL to p2
