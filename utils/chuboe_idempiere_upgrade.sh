@@ -37,7 +37,6 @@ EOF
 
 SERVER_DIR="/opt/idempiere-server"
 CHUBOE_PROP="$SERVER_DIR/chuboe_utils/properties"
-PG_HBA="/etc/postgresql/9.1/main/pg_hba.conf"
 SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/script_to_sync_db/syncApplied.sh"
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
@@ -85,7 +84,6 @@ echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
 echo "SERVER_DIR="$SERVER_DIR
 echo "P2="$P2
-echo "PG_HBA="$PG_HBA
 echo "SYNC_APP="$SYNC_APP
 echo "ID_DB_NAME="$ID_DB_NAME
 echo "PG_CONNECT="$PG_CONNECT
