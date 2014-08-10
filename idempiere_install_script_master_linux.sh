@@ -528,7 +528,8 @@ sh RUN_ImportIdempiere.sh <<!
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
 	echo "Write out iDempiere properties files"
-	sudo -u idempiere echo "$JENKINSPROJECT">$CHUBOE_PROP/JENKINS_PROJECT.txt
+	sudo -u idempiere touch $CHUBOE_PROP/JENKINS_PROJECT.txt
+	sudo -u idempiere sed -i '$ a\$JENKINSPROJECT' $CHUBOE_PROP/JENKINS_PROJECT.txt
 
 fi #end if $IS_INSTALL_ID == "Y"
 
