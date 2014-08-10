@@ -35,7 +35,6 @@ Outstanding actions:
 EOF
 }
 
-LOG_FILE="/log/chuboe_app_upgrade.log"
 SERVER_DIR="/opt/idempiere-server"
 CHUBOE_PROP="$SERVER_DIR/chuboe_utils/properties"
 PG_HOST_NORM="host    all             all             127.0.0.1/32            md5"
@@ -86,7 +85,6 @@ P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.a
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
-echo "LOG_FILE="$LOG_FILE
 echo "SERVER_DIR="$SERVER_DIR
 echo "P2="$P2
 echo "PG_HOST_NORM="$PG_HOST_NORM
