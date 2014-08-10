@@ -520,16 +520,14 @@ sh RUN_ImportIdempiere.sh <<!
 	echo "">>/home/$OSUSER/$README
 	mkdir $CHUBOE_UTIL
 	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
-	sudo chmod +x $CHUBOE_UTIL/*.sh
+	echo "Write out iDempiere properties file for use in other scripts"
+	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
+	chmod +x $CHUBOE_UTIL/*.sh
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	# please note this command will only take effect after your user session is restarted
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
-
-	echo "Write out iDempiere properties files"
-	sudo -u idempiere touch $CHUBOE_PROP/JENKINS_PROJECT.txt
-	sudo -u idempiere sed -i '$ a\$JENKINSPROJECT' $CHUBOE_PROP/JENKINS_PROJECT.txt
 
 fi #end if $IS_INSTALL_ID == "Y"
 
