@@ -161,9 +161,6 @@ echo "Jenkins Project="$JENKINSPROJECT
 echo "Distro details:"
 cat /etc/*-release
 
-echo "Write out properties files"
-echo "$JENKINSPROJECT">$CHUBOE_PROP/JENKINS_PROJECT.txt
-
 # Create file to give user feedback about installation
 echo "">/home/$OSUSER/$README
 
@@ -518,24 +515,27 @@ sh RUN_ImportIdempiere.sh <<!
 !
 #end of file input
 
+	echo "HERE: copying over chuboe_utils"
+	echo "">>/home/$OSUSER/$README
+	echo "">>/home/$OSUSER/$README
+	mkdir $CHUBOE_UTIL
+	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
+	sudo chmod +x $CHUBOE_UTIL/*.sh
+	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
+
+	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
+	# please note this command will only take effect after your user session is restarted
+	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
+
+	echo "Write out iDempiere properties files"
+	sudo -u idempiere echo "$JENKINSPROJECT">$CHUBOE_PROP/JENKINS_PROJECT.txt
+
 fi #end if $IS_INSTALL_ID == "Y"
 
 # Run iDempiere
 echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
-
-	echo "HERE: copying over chuboe_utils"
-	echo "">>/home/$OSUSER/$README
-	echo "">>/home/$OSUSER/$README
-	mkdir $CHUBOE_UTIL
-	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
-	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-	sudo chmod +x $CHUBOE_UTIL/*.sh
-
-	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
-	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
-
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
