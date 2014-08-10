@@ -23,11 +23,11 @@ This script helps you upgrade your iDempiere server
 OPTIONS:
 	-h	Help
 	-c	Specify connection options
-	-m	Specify path to migration scripts
-	-u	Upgrade URL
+	-m	Specify FILE path to migration scripts
+	-M	Specify URL to migration scripts
+	-u	Upgrade URL to p2 directory
 	-r	Do not restart server
 	-s	Skip iDempiere binary upgrade
-	-j	Specify specific Jenkins project
 
 Outstanding actions:
 * add issues here
@@ -41,14 +41,17 @@ SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/scr
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
 MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
+# get JENKINSPROJECT varialble from properties file
 JENKINSPROJECT=$(cat $CHUBOE_PROP/"JENKINS_PROJECT.txt")
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
+MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
+P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hc:m:u:rsj:" OPTION
+while getopts "hc:m:M:u:rs" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -57,11 +60,14 @@ do
 		c)	#Specify connection options
 			PG_CONNECT=$OPTARG;;
 
-		m)	#Specify path to migration scripts
+		m)	#Specify FILE path to migration scripts
 			IS_GET_MIGRATION="N"
 			MIGRATION_DIR=$OPTARG;;
 
-		u)	#Upgrade URL
+		M)	#Specify URL to migration scripts
+			MIGRATION_DOWNLOAD=$OPTARG;;
+
+		u)	#Upgrade URL to p2
 			P2=$OPTARG;;
 
 		r)	#Do not restart server
@@ -70,14 +76,8 @@ do
 		s)	#Do not upgrade binaries
 			IS_RESTART_SERVER="N"
 			IS_SKIP_BIN_UPGRADE="Y";;
-
-		j)	#jenkins project
-			JENKINSPROJECT=$OPTARG;;
 	esac
 done
-
-MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
-P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
