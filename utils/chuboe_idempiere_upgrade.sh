@@ -37,8 +37,6 @@ EOF
 
 SERVER_DIR="/opt/idempiere-server"
 CHUBOE_PROP="$SERVER_DIR/chuboe_utils/properties"
-PG_HOST_NORM="host    all             all             127.0.0.1/32            md5"
-PG_HOST_TEMP="host    all             all             127.0.0.1/32            trust"
 PG_HBA="/etc/postgresql/9.1/main/pg_hba.conf"
 SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/script_to_sync_db/syncApplied.sh"
 ID_DB_NAME="idempiere"
@@ -87,8 +85,6 @@ echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
 echo "SERVER_DIR="$SERVER_DIR
 echo "P2="$P2
-echo "PG_HOST_NORM="$PG_HOST_NORM
-echo "PG_HOST_TEMP="$PG_HOST_TEMP
 echo "PG_HBA="$PG_HBA
 echo "SYNC_APP="$SYNC_APP
 echo "ID_DB_NAME="$ID_DB_NAME
@@ -129,11 +125,6 @@ fi #end if IS_SKIP_BIN_UPGRADE = N
 cd $SERVER_DIR/utils/
 sh RUN_DBExport.sh
 
-# temporarily make the database accessible to local connections without requiring a password
-# no longer needed because of .pgpass file
-# sudo sed -i "s|$PG_HOST_NORM|$PG_HOST_TEMP|" $PG_HBA
-# sudo service postgresql restart
-
 cd $SERVER_DIR/chuboe_utils/
 
 # Get Carlos Ruiz syncApplied.sh script
@@ -150,11 +141,6 @@ fi #end if syncApplied.sh exists
 
 # run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
-
-# return database permissions back to normal
-# no longer needed because of .pgpass file
-# sudo sed -i "s|$PG_HOST_TEMP|$PG_HOST_NORM|" $PG_HBA
-# sudo service postgresql restart
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
