@@ -526,7 +526,8 @@ sh RUN_ImportIdempiere.sh <<!
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
-	# please note this command will only take effect after your user session is restarted
+	# NOTE: this command will only take effect after your user session is restarted
+	# NOTE: you can use "exec su -l $USER" to reload your group membership without logging out
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
 fi #end if $IS_INSTALL_ID == "Y"
