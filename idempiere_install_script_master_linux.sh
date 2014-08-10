@@ -540,7 +540,7 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "iDempiere set to start on boot">>/home/$OSUSER/$README
-	sudo cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
+	sudo -u idempiere cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
 	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
