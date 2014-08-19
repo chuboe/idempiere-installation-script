@@ -47,6 +47,7 @@ Outstanding actions:
 	- If you wish to make the max heap size larger, modify the file named "idempiere" to add "-Xmx2g" to the end of the line that starts the iDempiere server.
 	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
+* Check to ensure user home exists, if not, use tmp folder.
 
 EOF
 }
