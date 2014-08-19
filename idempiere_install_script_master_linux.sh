@@ -276,15 +276,14 @@ then
 	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/
 
 	# Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
-	echo "">/home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\[Desktop Entry]' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Encoding=UTF-8' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Type=Application' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Name=eclipse' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Name[en_US]=eclipse' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Icon=/home/$OSUSER/dev/eclipse/icon.xpm' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Exec=/home/$OSUSER/dev/eclipse/eclipse  -vmargs -Xmx512M' /home/$OSUSER/dev/launchEclipse.desktop
-	sudo sed -i '$ a\Comment[en_US]=' /home/$OSUSER/dev/launchEclipse.desktop
+	echo "[Desktop Entry]">/home/$OSUSER/dev/launchEclipse.desktop
+	echo "Encoding=UTF-8">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "Type=Application">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "Name=eclipse">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "Name[en_US]=eclipse">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "Icon=/home/$OSUSER/dev/eclipse/icon.xpm">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "Exec=/home/$OSUSER/dev/eclipse/eclipse  -vmargs -Xmx512M">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "Comment[en_US]=">> /home/$OSUSER/dev/launchEclipse.desktop
 
 	# create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
 	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" /home/$OSUSER/.bashrc
@@ -435,14 +434,14 @@ then
 	if [ $RESULT -ge 1 ]; then
         	echo "HERE: file exists"
 	else
-        	echo "HERE: file does not exist. Stopping script!"
+		echo "HERE: file does not exist. Stopping script!"
 		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.0Daily/ to see if the daily build failed"
 		echo "">>/home/$OSUSER/$README
 		echo "">>/home/$OSUSER/$README
-        	echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
-        	echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.0Daily/ to see if the daily build failed">>/home/$OSUSER/$README
+		echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
+		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.0Daily/ to see if the daily build failed">>/home/$OSUSER/$README
 		# nano /home/$OSUSER/$README
-	        exit 1
+		exit 1
 	fi
 
 	unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`
@@ -544,7 +543,6 @@ then
 	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
-
 	sudo /etc/init.d/$INITDNAME start
 fi
 
