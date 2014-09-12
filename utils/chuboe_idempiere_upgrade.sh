@@ -30,7 +30,7 @@ OPTIONS:
 	-s	Skip iDempiere binary upgrade
 
 Outstanding actions:
-* add issues here
+* check that a .hg file exists. If no, exit. They should have a backup to the binaries first.
 
 EOF
 }
