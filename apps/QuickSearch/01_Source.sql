@@ -1,3 +1,4 @@
+--Create View
 create or replace view chuboe_quicksearch as
 Select value, m_product_id as record_id, 208::numeric as ad_table_id,
 ad_client_id, 0::numeric as ad_org_id, created, createdby, updated, updatedby,
@@ -19,6 +20,11 @@ ad_client_id, 0::numeric as ad_org_id, created, createdby, updated, updatedby,
 'Product'::text as Description
 from M_Product
 union all
+Select value, c_bpartner_id as record_id, 291::numeric as ad_table_id,
+ad_client_id, 0::numeric as ad_org_id, created, createdby, updated, updatedby,
+'Business Partner'::text as Description
+from c_bpartner
+union all
 Select name, c_bpartner_id as record_id, 291::numeric as ad_table_id,
 ad_client_id, 0::numeric as ad_org_id, created, createdby, updated, updatedby,
 'Business Partner'::text as Description
@@ -31,7 +37,7 @@ from c_bpartner
 union all
 Select ReferenceNo, c_bpartner_id as record_id, 291::numeric as ad_table_id,
 ad_client_id, 0::numeric as ad_org_id, created, createdby, updated, updatedby,
-'Product'::text as Description
+'Business Partner'::text as Description
 from c_bpartner
 union all
 Select name, ad_user_id as record_id, 114::numeric as ad_table_id,
@@ -84,3 +90,13 @@ ad_client_id, 0::numeric as ad_org_id, created, createdby, updated, updatedby,
 'Production'::text as Description
 from m_production
 ;
+
+--Create Indexes
+CREATE INDEX chuboe_m_product_sku_idx ON m_product USING btree (sku);
+CREATE INDEX chuboe_c_bpartner_name2_ref_idx ON c_bpartner USING btree (name2, ReferenceNo);
+CREATE INDEX chuboe_ad_user_name_idx ON ad_user USING btree (name);
+CREATE INDEX chuboe_c_bpartner_location_name_idx ON c_bpartner_location USING btree (name);
+CREATE INDEX chuboe_c_payment_docno_idx ON c_payment USING btree (documentno);
+CREATE INDEX chuboe_m_inventory_docno_idx ON m_inventory USING btree (documentno);
+CREATE INDEX chuboe_m_movement_docno_idx ON m_movement USING btree (documentno);
+CREATE INDEX chuboe_m_production_docno_idx ON m_production USING btree (documentno);
