@@ -11,6 +11,7 @@
 # 1.3 added better error checking and user handling
 # 1.4 added better user instruction (specifically for s3 backup)
 # 1.5 run iDempiere service as idempiere user
+# 1.6 added hot_standby replication
 
 # function to help the user better understand how the script works
 usage()
@@ -38,6 +39,7 @@ OPTIONS:
 	-B	Use bleeding edge copy of iDempiere
 	-D	Install desktop development tools
 	-j	Specify specific Jenkins build
+	-r	Add Hot_Standby Replication
 
 Outstanding actions:
 * Add an option to set the java max heap size when starting iDempiere. 
@@ -46,6 +48,7 @@ Outstanding actions:
 	- 1GB is not good if you are running the iDempiere server on a dedicated server with 4GB of RAM or more.
 	- If you wish to make the max heap size larger, modify the file named "idempiere" to add "-Xmx2g" to the end of the line that starts the iDempiere server.
 	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
+* Add PostgreSQL performance tuning configuration changes for different sizes.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
 * Check to ensure user home exists, if not, use tmp folder.
 * Get rid of wait/sleep on RUN_DBExport.sh
@@ -77,6 +80,10 @@ OSUSER="ubuntu"
 IDEMPIEREUSER="idempiere"
 README="idempiere_installer_feedback.txt"
 PGVERSION="9.3"
+IS_REPLICATION="N"
+REPLICATION_URL="NONE"
+IS_REPLICATION_MASTER="Y"
+REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
