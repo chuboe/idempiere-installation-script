@@ -84,6 +84,8 @@ IS_REPLICATION="N"
 REPLICATION_URL="NONE"
 IS_REPLICATION_MASTER="Y"
 REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
+REPLATION_ROLE="id_replicate_role"
+REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -184,6 +186,8 @@ echo "Is Replication="$IS_REPLICATION
 echo "Replication URL="$REPLICATION_URL
 echo "Is Replication Master="$IS_REPLICATION_MASTER
 echo "Replication Backup Name="$REPLATION_BACKUP_NAME
+echo "Replication Role="$REPLATION_ROLE
+echo "Replication Trigger="$REPLATION_TRIGGER
 echo "Distro details:"
 cat /etc/*-release
 
@@ -234,7 +238,7 @@ then
 	# remove replication attribute from postgres user for added security
 	sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
 	# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
-	sudo -u postgres psql -c "create role id_replicate_role with REPLICATION LOGIN CONNECTION PASSWORD $DBPASS;"
+	sudo -u postgres psql -c "create role $REPLATION_ROLE with REPLICATION LOGIN CONNECTION PASSWORD $DBPASS;"
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
@@ -257,6 +261,15 @@ then
 		sudo sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
+	fi
+
+	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]	
+	then
+		sudo rm -r /var/lib/postgresql/$PGVERSION/main/*
+		cd /var/lib/postgresql/$PGVERSION
+		sudo -u postgres pg_basebackup -x -R -P -D main -h $REPLICATION_URL
+		sudo sed -i "s|user=postgres|user=$REPLATION_ROLE password=$DBPASS application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
+		sudo sed -i "$ a\trigger_file = $REPLATION_TRIGGER" /var/lib/postgresql/$PGVERSION/main/recovery.conf
 	fi
 
 	sudo -u postgres service postgresql restart
