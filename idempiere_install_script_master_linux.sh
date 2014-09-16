@@ -246,8 +246,8 @@ then
 	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users">>/home/$OSUSER/$README
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
-	sudo sed -i "$ a\host    replication     id_replicate_role        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
-	echo "SECURITY NOTICE: Using id_replicate_role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
+	sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
+	echo "SECURITY NOTICE: Using $REPLATION_ROLE Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
 	echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>/home/$OSUSER/$README
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
 
