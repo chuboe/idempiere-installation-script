@@ -231,13 +231,33 @@ then
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+	# remove replication attribute from postgres user for added security
+	sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
+	# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
+	sudo -u postgres psql -c "create role id_replicate_role with REPLICATION LOGIN CONNECTION PASSWORD $DBPASS;"
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
 	# prevents outsiders for connecting to your server.
+	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users">>/home/$OSUSER/$README
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
+	sed -i "$ a\host    replication     id_replicate_role        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
+	echo "SECURITY NOTICE: Using id_replicate_role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
+	echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>/home/$OSUSER/$README
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
+
+	if [[ $IS_REPLICATION == "Y" ]]	
+	then
+		sed -i "s|#wal_level = minimal|wal_level = hot_standby|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sed -i "s|#archive_mode = off|archive_mode = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sed -i "s|#archive_command = ''|archive_command = 'cd .'|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+			# ACTION: is the above needed?
+		sed -i "s|#max_wal_senders = 0|max_wal_senders = 3|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
+	fi
 
 	sudo -u postgres service postgresql restart
 
