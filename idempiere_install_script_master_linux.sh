@@ -275,7 +275,6 @@ then
 		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command:">>/home/$OSUSER/$README
 		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>/home/$OSUSER/$README
 	fi
-	
 
 	sudo -u postgres service postgresql restart
 
