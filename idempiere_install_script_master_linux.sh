@@ -39,7 +39,7 @@ OPTIONS:
 	-B	Use bleeding edge copy of iDempiere
 	-D	Install desktop development tools
 	-j	Specify specific Jenkins build
-	-r	Add Hot_Standby Replication
+	-r	Add Hot_Standby Replication - if you specify a URL to a Master, the script assumes this instance is a Hot_Standby server (replica)
 
 Outstanding actions:
 * Add an option to set the java max heap size when starting iDempiere. 
@@ -147,6 +147,13 @@ then
 	IDEMPIERECLIENTPATH=$IDEMPIERECLIENTPATHBLEED
 fi
 
+#determine if IS_REPLICATION_MASTER should = N
+#  if not installing iDempiere and the user did specify a URL to replicate from, then this instance is not a master.
+if [[ $IS_INSTALL_ID == "N" && expr length $REPLICATION_URL -gt 0 ]]	
+then
+	IS_REPLICATION_MASTER="N"
+fi
+
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
@@ -173,6 +180,10 @@ echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
 echo "Jenkins Project="$JENKINSPROJECT
+echo "Is Replication="$IS_REPLICATION
+echo "Replication URL="$REPLICATION_URL
+echo "Is Replication Master="$IS_REPLICATION_MASTER
+echo "Replication Backup Name="$REPLATION_BACKUP_NAME
 echo "Distro details:"
 cat /etc/*-release
 
