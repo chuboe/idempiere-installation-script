@@ -87,7 +87,7 @@ REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BDj:" OPTION
+while getopts "hsp:e:ib:P:lu:BDj:r:" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -126,6 +126,11 @@ do
 		j)	#jenkins project
 			IS_BLEED_EDGE="Y"
 			JENKINSPROJECT=$OPTARG;;
+
+		r)	#replication
+			IS_REPLICATION="Y"
+			REPLICATION_URL=$OPTARG;;
+
 	esac
 done
 
