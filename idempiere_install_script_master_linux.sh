@@ -151,7 +151,7 @@ fi
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
-if [[ $IS_INSTALL_ID == "N" && $REPLICATION_URL -ne "Master" ]]
+if [[ $IS_INSTALL_ID == "N" && $REPLICATION_URL != "Master" ]]
 then
 	IS_REPLICATION_MASTER="N"
 fi
