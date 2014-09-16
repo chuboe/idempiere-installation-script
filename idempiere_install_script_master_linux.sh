@@ -238,7 +238,7 @@ then
 	# remove replication attribute from postgres user for added security
 	sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
 	# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
-	sudo -u postgres psql -c "create role $REPLATION_ROLE with REPLICATION LOGIN CONNECTION PASSWORD $DBPASS;"
+	sudo -u postgres psql -c "create role $REPLATION_ROLE with REPLICATION LOGIN CONNECTION PASSWORD '"$DBPASS"';"
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
