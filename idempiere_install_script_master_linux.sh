@@ -310,7 +310,7 @@ then
 
 	echo "localhost:*:*:adempiere:$DBPASS">>/home/$OSUSER/.pgpass
 	sudo -u $OSUSER chmod 600 .pgpass
-	
+
 	echo "HERE END: Installing DB because IS_INSTALL_DB == Y"
 
 fi #end if IS_INSTALL_DB==Y
@@ -476,7 +476,7 @@ then
 	sudo mount /etc/postgresql/$PGVERSION/main
 
 	sudo -u postgres service postgresql start
-	
+
 	echo "HERE END: Moving DB because IS_MOVE_DB == Y"
 
 fi #end if IS_MOVE_DB==Y
