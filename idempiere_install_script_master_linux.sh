@@ -253,6 +253,7 @@ then
 
 	if [[ $IS_REPLICATION == "Y" ]]
 	then
+		# the following is true for both the master and the backup. PostgreSQL is smart enough to know to use the appropriate settings
 		sudo sed -i "s|#wal_level = minimal|wal_level = hot_standby|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "s|#archive_mode = off|archive_mode = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "s|#archive_command = ''|archive_command = 'cd .'|" /etc/postgresql/$PGVERSION/main/postgresql.conf
@@ -265,12 +266,22 @@ then
 
 	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]
 	then
-		# echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/var/lib/postgresql/.pgpass
-		# chmod 600 /var/lib/postgresql/.pgpass
-		sudo rm -rf /var/lib/postgresql/$PGVERSION/main/*
-		sudo -u postgres pg_basebackup -x -R -P -D /var/lib/postgresql/$PGVERSION/main -h $REPLICATION_URL -U $REPLATION_ROLE
+		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
+		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
+		sudo chown postgres:postgres /tmp/.pgpass
+		sudo chmod 0600 /tmp/.pgpass
+		sudo mv /tmp/.pgpass /var/lib/postgresql/
+
+		# clear out the data directory for PostgreSQL - we will re-create it in the next section
+		sudo rm -rf /var/lib/postgresql/$PGVERSION/main/
+		sudo -u postgres mkdir /var/lib/postgresql/$PGVERSION/main
+		sudo chmod 0700 /var/lib/postgresql/$PGVERSION/main
+
+		# create a copy of the master and establish a recovery file (-R)
+		sudo -u postgres pg_basebackup -x -R -D /var/lib/postgresql/$PGVERSION/main -h $REPLICATION_URL -U $REPLATION_ROLE
 		sudo sed -i "s|user=postgres|user=$REPLATION_ROLE password=$DBPASS application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
 		sudo sed -i "$ a\trigger_file = $REPLATION_TRIGGER" /var/lib/postgresql/$PGVERSION/main/recovery.conf
+
 		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If you database is not inside LAN and behind a firewall, enable SSL!">>/home/$OSUSER/$README
 		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>/home/$OSUSER/$README
 		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command:">>/home/$OSUSER/$README
