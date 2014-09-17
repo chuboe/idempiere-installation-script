@@ -265,8 +265,10 @@ then
 
 	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]	
 	then
-		sudo -u postgres echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/var/lib/postgresql/.pgpass
-		sudo -u postgres chmod 600 /var/lib/postgresql/.pgpass.pgpass
+		sudo su postgres
+		echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/var/lib/postgresql/.pgpass
+		chmod 600 /var/lib/postgresql/.pgpass
+		exit
 		sudo rm -rf /var/lib/postgresql/$PGVERSION/main/*
 		sudo -u postgres pg_basebackup -x -R -P -D /var/lib/postgresql/$PGVERSIONmain -h $REPLICATION_URL -U $REPLATION_ROLE
 		sudo sed -i "s|user=postgres|user=$REPLATION_ROLE password=$DBPASS application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
