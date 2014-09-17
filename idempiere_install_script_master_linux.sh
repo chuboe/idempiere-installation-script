@@ -272,6 +272,8 @@ then
 	then
 		echo "HERE: Is Replication = Y AND Is Replication Master = N"
 		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
+
+		sudo -u postgres service postgresql stop
 		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
 		sudo chown postgres:postgres /tmp/.pgpass
 		sudo chmod 0600 /tmp/.pgpass
@@ -291,10 +293,13 @@ then
 		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>/home/$OSUSER/$README
 		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command:">>/home/$OSUSER/$README
 		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>/home/$OSUSER/$README
-		echo "HERE END: Is Replication = Y AND Is Replication Master = N"
-	fi
 
-	sudo -u postgres service postgresql restart
+		sudo -u postgres service postgresql start
+		echo "HERE END: Is Replication = Y AND Is Replication Master = N"
+	else 
+		# restart to make the previous changes (before the if statement) take effect
+		sudo -u postgres service postgresql restart
+	fi
 
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
