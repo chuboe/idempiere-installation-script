@@ -84,7 +84,7 @@ IS_REPLICATION="N"
 REPLICATION_URL="Master"
 IS_REPLICATION_MASTER="Y"
 REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
-REPLATION_ROLE="id_replicate_role"
+REPLATION_ROLE="postgres"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
 
 # process the specified options
@@ -236,9 +236,9 @@ then
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 	# remove replication attribute from postgres user for added security
-	sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
+	# sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
 	# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
-	sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
+	# sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
@@ -247,11 +247,11 @@ then
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
-	echo "SECURITY NOTICE: Using $REPLATION_ROLE Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
+	echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
 	echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>/home/$OSUSER/$README
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
 
-	if [[ $IS_REPLICATION == "Y" ]]	
+	if [[ $IS_REPLICATION == "Y" ]]
 	then
 		sudo sed -i "s|#wal_level = minimal|wal_level = hot_standby|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "s|#archive_mode = off|archive_mode = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
@@ -263,12 +263,10 @@ then
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
 	fi
 
-	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]	
+	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]
 	then
-		sudo su postgres
-		echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/var/lib/postgresql/.pgpass
-		chmod 600 /var/lib/postgresql/.pgpass
-		exit
+		# echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/var/lib/postgresql/.pgpass
+		# chmod 600 /var/lib/postgresql/.pgpass
 		sudo rm -rf /var/lib/postgresql/$PGVERSION/main/*
 		sudo -u postgres pg_basebackup -x -R -P -D /var/lib/postgresql/$PGVERSIONmain -h $REPLICATION_URL -U $REPLATION_ROLE
 		sudo sed -i "s|user=postgres|user=$REPLATION_ROLE password=$DBPASS application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
