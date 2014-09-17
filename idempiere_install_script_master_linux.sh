@@ -287,7 +287,7 @@ then
 		# create a copy of the master and establish a recovery file (-R)
 		sudo -u postgres pg_basebackup -x -R -D /var/lib/postgresql/$PGVERSION/main -h $REPLICATION_URL -U $REPLATION_ROLE
 		sudo sed -i "s|user=postgres|user=$REPLATION_ROLE password=$DBPASS application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
-		sudo sed -i "$ a\trigger_file = $REPLATION_TRIGGER" /var/lib/postgresql/$PGVERSION/main/recovery.conf
+		sudo sed -i "$ a\trigger_file = '$REPLATION_TRIGGER'" /var/lib/postgresql/$PGVERSION/main/recovery.conf
 
 		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If you database is not inside LAN and behind a firewall, enable SSL!">>/home/$OSUSER/$README
 		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>/home/$OSUSER/$README
