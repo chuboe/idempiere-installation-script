@@ -3,7 +3,7 @@ You can use this script to install all components on a single server,
 or you can separate the WebUI and database onto different servers. 
 By choosing the correct command options, you choose what to install.
 
-The script is currently configured to work well on Ubuntu 12.04 LTS. 
+The script is currently configured to work well on Ubuntu 14.04 LTS. 
 I will eventually make the script more graceful; 
 however, it is very important to keep the script readable to Linux newbies. 
 There is as much value in understanding the script is there is utility in using it.
