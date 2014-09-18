@@ -161,11 +161,12 @@ fi
 
 # Check if home directory exists
 RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
+echo $RESULT
 if [ $RESULT == "Y" ]; then
-	echo "HERE: User's home directory exists - place installation details here"
+	echo "HERE: User's home directory exists - placin installation details here"
 else
 	HOME_DIR="/tmp/idempiere-installation-details/"
-	echo "HERE: User's home directory does not exist. Using $HOME_DIR instead!"	
+	echo "HERE: User's home directory does not exist. Exiting! Will some day use $HOME_DIR instead!"
 	sudo mkdir $HOME_DIR
 	exit 1
 fi
@@ -188,6 +189,7 @@ echo "Chuboe_Properties Path="$CHUBOE_PROP
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
+echo "Home Directory="$HOME_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
 echo "Use bleeding edge="$IS_BLEED_EDGE
