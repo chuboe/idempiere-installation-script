@@ -50,8 +50,7 @@ Outstanding actions:
 	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
 * Add PostgreSQL performance tuning configuration changes for different sizes.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
-* Get rid of wait/sleep on RUN_DBExport.sh
-* Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard accounting, org costing level)
+* Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 
 EOF
 }
