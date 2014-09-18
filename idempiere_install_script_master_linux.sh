@@ -82,7 +82,7 @@ IS_REPLICATION="N"
 REPLICATION_URL="Master"
 IS_REPLICATION_MASTER="Y"
 REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
-REPLATION_ROLE="postgres"
+REPLATION_ROLE="id_replicate_role"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
 
 # process the specified options
@@ -250,10 +250,6 @@ then
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
-	# remove replication attribute from postgres user for added security
-	# sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
-	# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
-	# sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
@@ -278,6 +274,15 @@ then
 		sudo sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
+
+		if [[ $REPLATION_ROLE != "postgres" ]]
+		then
+			# remove replication attribute from postgres user/role for added security
+			sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
+			# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
+			sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
+		fi
+
 		echo "HERE END: Is Replication = Y"
 	fi
 
