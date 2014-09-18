@@ -322,9 +322,23 @@ then
 		# Change 1 - turn on logging - requires little overhead and provide much information 
 		#	Remember most performance issues are application related - not necessarily database parameters
 		#   Logging gives you great insight into how the application is running.
-		# How to get memory = grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}' in MB
 
 		# Change 2 - memory related changes - there are many configuration changes based how much RAM your server has.
+		TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
+		echo "Total Memory="$TOTAL_MEMORY
+
+		# SHARED_BUFFERS - I realize the GB to MB is x1024; however, I am erroring on the low side.
+		if [[ $TOTAL_MEMORY -lt 2000 ]]
+		then
+			# less than 2GB
+			SHARED_BUFFERS=TOTAL_MEMORY*0.2
+		else if [[ $TOTAL_MEMORY -lt 32000 ]]
+			# less than 32GB
+			SHARED_BUFFERS=TOTAL_MEMORY*0.25
+		else 
+			SHARED_BUFFERS=8192
+		fi
+		echo "Shared Buffers="$SHARED_BUFFERS
 
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
