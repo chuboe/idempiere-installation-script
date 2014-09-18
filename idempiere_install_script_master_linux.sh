@@ -364,6 +364,11 @@ then
 			MAINTENANCE_WORK_MEM=1024
 		fi
 		echo "MAINTENANCE_WORK_MEM="$MAINTENANCE_WORK_MEM
+
+		# EFFECTIVE_CACHE_SIZE
+		# Set to the amount of file system cache available.
+		# If you don’t know, set it to 50% of total system memory.
+		EFFECTIVE_CACHE_SIZE=$TOTAL_MEMORY*0.5
 		
 
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
