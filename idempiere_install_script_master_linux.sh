@@ -11,6 +11,7 @@
 # 1.3 added better error checking and user handling
 # 1.4 added better user instruction (specifically for s3 backup)
 # 1.5 run iDempiere service as idempiere user
+# 1.6 added hot_standby replication, user home directory check, and removed sleep statement from backup command
 
 # function to help the user better understand how the script works
 usage()
@@ -38,6 +39,7 @@ OPTIONS:
 	-B	Use bleeding edge copy of iDempiere
 	-D	Install desktop development tools
 	-j	Specify specific Jenkins build
+	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
 * Add an option to set the java max heap size when starting iDempiere. 
@@ -46,10 +48,9 @@ Outstanding actions:
 	- 1GB is not good if you are running the iDempiere server on a dedicated server with 4GB of RAM or more.
 	- If you wish to make the max heap size larger, modify the file named "idempiere" to add "-Xmx2g" to the end of the line that starts the iDempiere server.
 	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
+* Add PostgreSQL performance tuning configuration changes for different sizes.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
-* Check to ensure user home exists, if not, use tmp folder.
-* Get rid of wait/sleep on RUN_DBExport.sh
-* Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard accounting, org costing level)
+* Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 
 EOF
 }
@@ -77,10 +78,16 @@ OSUSER="ubuntu"
 IDEMPIEREUSER="idempiere"
 README="idempiere_installer_feedback.txt"
 PGVERSION="9.3"
+IS_REPLICATION="N"
+REPLICATION_URL="Master"
+IS_REPLICATION_MASTER="Y"
+REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
+REPLATION_ROLE="id_replicate_role"
+REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BDj:" OPTION
+while getopts "hsp:e:ib:P:lu:BDj:r:" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -119,6 +126,11 @@ do
 		j)	#jenkins project
 			IS_BLEED_EDGE="Y"
 			JENKINSPROJECT=$OPTARG;;
+
+		r)	#replication
+			IS_REPLICATION="Y"
+			REPLICATION_URL=$OPTARG;;
+
 	esac
 done
 
@@ -127,12 +139,35 @@ IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/bu
 IDEMPIERESOURCEPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v2.0/server/idempiereServer.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
+HOME_DIR="/home/$OSUSER"
 
 #if bleeding edge
 if [[ $IS_BLEED_EDGE == "Y" ]]
 then
+	echo "HERE: update source and client paths"
 	IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
 	IDEMPIERECLIENTPATH=$IDEMPIERECLIENTPATHBLEED
+fi
+
+#determine if IS_REPLICATION_MASTER should = N
+#  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
+if [[ $IS_INSTALL_ID == "N" && $REPLICATION_URL != "Master" ]]
+then
+	echo "HERE: Check if Is Replication Master"
+	IS_REPLICATION_MASTER="N"
+fi
+
+# Check if home directory exists
+RESULT=$([ -d /home/$OSUSER ] && echo "Y" || echo "N")
+# need to use ~$OSUSER to find the user's home directory and check for its existance. Then set the $HOME_DIR to that directory.
+# echo $RESULT
+if [ $RESULT == "Y" ]; then
+	echo "HERE: User's home directory exists - placing installation details here $HOME_DIR"
+else
+	HOME_DIR="/tmp/idempiere-installation-details/"
+	echo "HERE: User's home directory does not exist. Exiting! Will some day use $HOME_DIR instead!"
+	# sudo mkdir $HOME_DIR
+	exit 1
 fi
 
 # show variables to the user (debug)
@@ -153,6 +188,7 @@ echo "Chuboe_Properties Path="$CHUBOE_PROP
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
+echo "Home Directory="$HOME_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
 echo "Use bleeding edge="$IS_BLEED_EDGE
@@ -161,6 +197,12 @@ echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
 echo "Jenkins Project="$JENKINSPROJECT
+echo "Is Replication="$IS_REPLICATION
+echo "Replication URL="$REPLICATION_URL
+echo "Is Replication Master="$IS_REPLICATION_MASTER
+echo "Replication Backup Name="$REPLATION_BACKUP_NAME
+echo "Replication Role="$REPLATION_ROLE
+echo "Replication Trigger="$REPLATION_TRIGGER
 echo "Distro details:"
 cat /etc/*-release
 
@@ -212,11 +254,70 @@ then
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
 	# prevents outsiders for connecting to your server.
+	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users">>/home/$OSUSER/$README
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
 
-	sudo -u postgres service postgresql restart
+	if [[ $IS_REPLICATION == "Y" ]]
+	then
+		echo "HERE: Is Replication = Y"
+		# the following is true for both the master and the backup. PostgreSQL is smart enough to know to use the appropriate settings
+		sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
+		echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
+		echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>/home/$OSUSER/$README
+		sudo sed -i "s|#wal_level = minimal|wal_level = hot_standby|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "s|#archive_mode = off|archive_mode = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "s|#archive_command = ''|archive_command = 'cd .'|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+			# ACTION: is the above needed?
+		sudo sed -i "s|#max_wal_senders = 0|max_wal_senders = 3|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
+
+		if [[ $REPLATION_ROLE != "postgres" ]]
+		then
+			# remove replication attribute from postgres user/role for added security
+			sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
+			# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
+			sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
+		fi
+
+		echo "HERE END: Is Replication = Y"
+	fi
+
+	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]
+	then
+		echo "HERE: Is Replication = Y AND Is Replication Master = N"
+		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
+
+		sudo -u postgres service postgresql stop
+		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
+		sudo chown postgres:postgres /tmp/.pgpass
+		sudo chmod 0600 /tmp/.pgpass
+		sudo mv /tmp/.pgpass /var/lib/postgresql/
+
+		# clear out the data directory for PostgreSQL - we will re-create it in the next section
+		sudo rm -rf /var/lib/postgresql/$PGVERSION/main/
+		sudo -u postgres mkdir /var/lib/postgresql/$PGVERSION/main
+		sudo chmod 0700 /var/lib/postgresql/$PGVERSION/main
+
+		# create a copy of the master and establish a recovery file (-R)
+		sudo -u postgres pg_basebackup -x -R -D /var/lib/postgresql/$PGVERSION/main -h $REPLICATION_URL -U $REPLATION_ROLE
+		sudo sed -i "s|user=postgres|user=$REPLATION_ROLE password=$DBPASS application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
+		sudo sed -i "$ a\trigger_file = '$REPLATION_TRIGGER'" /var/lib/postgresql/$PGVERSION/main/recovery.conf
+
+		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If you database is not inside LAN and behind a firewall, enable SSL!">>/home/$OSUSER/$README
+		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>/home/$OSUSER/$README
+		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command from the master:">>/home/$OSUSER/$README
+		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>/home/$OSUSER/$README
+
+		sudo -u postgres service postgresql start
+		echo "HERE END: Is Replication = Y AND Is Replication Master = N"
+	else 
+		# restart to make the previous changes (before the if statement) take effect
+		sudo -u postgres service postgresql restart
+	fi
 
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
@@ -232,6 +333,8 @@ then
 
 	echo "localhost:*:*:adempiere:$DBPASS">>/home/$OSUSER/.pgpass
 	sudo -u $OSUSER chmod 600 .pgpass
+
+	echo "HERE END: Installing DB because IS_INSTALL_DB == Y"
 
 fi #end if IS_INSTALL_DB==Y
 
@@ -355,6 +458,7 @@ then
 	echo "Please note that iDempiere is installed twice: first as a service, and second in eclipse.">>/home/$OSUSER/$README
 	echo "If you run the iDempiere server through eclipse, make sure you stop the iDempiere service using 'sudo service idempiere stop' first.">>/home/$OSUSER/$README
 
+	echo "HERE END: Install desktop components because IS_INSTALL_DESKTOP == Y"
 
 fi #end if IS_INSTALL_DESKTOP = Y
 
@@ -396,6 +500,8 @@ then
 
 	sudo -u postgres service postgresql start
 
+	echo "HERE END: Moving DB because IS_MOVE_DB == Y"
+
 fi #end if IS_MOVE_DB==Y
 
 # Install iDempiere
@@ -417,7 +523,7 @@ then
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
-		#install postgresql client tools
+		echo "HERE: install postgresql client tools"
 		sudo apt-get -y install postgresql-client
 	fi
 
@@ -429,6 +535,7 @@ then
 	wget $IDEMPIERECLIENTPATH -P /home/$OSUSER/installer_client_`date +%Y%m%d`
 	if [[ $IS_BLEED_EDGE == "Y" ]]
 	then
+		echo "HERE: IS_BLEED_EDGE == Y"
 		wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P /home/$OSUSER/installer_`date +%Y%m%d` -O iDempiere_Version.html
 	fi
 
@@ -483,6 +590,7 @@ then
 	echo "To update your server's timezone, run this command:">>/home/$OSUSER/$README
 	echo "----> sudo dpkg-reconfigure tzdata">>/home/$OSUSER/$README
 
+echo "HERE: Launching console-setup.sh"
 #not indented because of file input
 sh console-setup.sh <<!
 
@@ -516,6 +624,7 @@ sh RUN_ImportIdempiere.sh <<!
 
 !
 #end of file input
+echo "HERE END: Launching console-setup.sh"
 
 	echo "HERE: copying over chuboe_utils"
 	echo "">>/home/$OSUSER/$README
@@ -525,19 +634,21 @@ sh RUN_ImportIdempiere.sh <<!
 	echo "Write out iDempiere properties file for use in other scripts"
 	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
 	chmod +x $CHUBOE_UTIL/*.sh
+	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
-	# NOTE: this command will only take effect after your user session is restarted
-	# NOTE: you can use "exec su -l $USER" to reload your group membership without logging out
+	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
+
+	echo "HERE END: Installing iDemipere because IS_INSTALL_ID == Y"
 
 fi #end if $IS_INSTALL_ID == "Y"
 
 # Run iDempiere
-echo "HERE: IS_LAUNCH_ID="$IS_LAUNCH_ID
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
+	echo "HERE: IS_LANUNCH_ID == Y"
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
@@ -547,12 +658,8 @@ then
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
 	sudo /etc/init.d/$INITDNAME start
+	echo "HERE END: IS_LANUNCH_ID == Y"
 fi
 
-# show results to user
-# nano /home/$OSUSER/$README
+# Congratulations!!
 
-# TODO: Need section for S3 backup
-# Consider modifying the existing backup script
-# to issue the s3cmd command to push the newly
-# create file the desired s3 bucket
