@@ -160,9 +160,9 @@ fi
 
 # Check if home directory exists
 RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
-echo $RESULT
+# echo $RESULT
 if [ $RESULT == "Y" ]; then
-	echo "HERE: User's home directory exists - placing installation details here"
+	echo "HERE: User's home directory exists - placing installation details here $HOME_DIR"
 else
 	HOME_DIR="/tmp/idempiere-installation-details/"
 	echo "HERE: User's home directory does not exist. Exiting! Will some day use $HOME_DIR instead!"
