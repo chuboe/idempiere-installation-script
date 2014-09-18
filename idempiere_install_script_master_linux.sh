@@ -11,7 +11,7 @@
 # 1.3 added better error checking and user handling
 # 1.4 added better user instruction (specifically for s3 backup)
 # 1.5 run iDempiere service as idempiere user
-# 1.6 added hot_standby replication
+# 1.6 added hot_standby replication, and user home directory check
 
 # function to help the user better understand how the script works
 usage()
@@ -50,7 +50,6 @@ Outstanding actions:
 	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
 * Add PostgreSQL performance tuning configuration changes for different sizes.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
-* Check to ensure user home exists, if not, use tmp folder.
 * Get rid of wait/sleep on RUN_DBExport.sh
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard accounting, org costing level)
 
