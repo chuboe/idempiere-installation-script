@@ -343,7 +343,7 @@ then
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
 
-		# Change 4 - 
+		# Change 4 - Create cron job to VACUUM as specific times - not when the DB thinks is the right time.
 
 	fi
 
