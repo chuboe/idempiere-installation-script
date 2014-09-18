@@ -11,7 +11,7 @@
 # 1.3 added better error checking and user handling
 # 1.4 added better user instruction (specifically for s3 backup)
 # 1.5 run iDempiere service as idempiere user
-# 1.6 added hot_standby replication, and user home directory check
+# 1.6 added hot_standby replication, user home directory check, and removed sleep statement from backup command
 
 # function to help the user better understand how the script works
 usage()
@@ -630,13 +630,14 @@ echo "HERE END: Launching console-setup.sh"
 	echo "Write out iDempiere properties file for use in other scripts"
 	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
 	chmod +x $CHUBOE_UTIL/*.sh
+	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
-	# NOTE: this command will only take effect after your user session is restarted
+	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
-	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"
+	echo "HERE END: Installing iDemipere because IS_INSTALL_ID == Y"
 
 fi #end if $IS_INSTALL_ID == "Y"
 
