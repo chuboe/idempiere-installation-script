@@ -159,7 +159,8 @@ then
 fi
 
 # Check if home directory exists
-RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
+RESULT=$([ -d /home/$OSUSER ] && echo "Y" || echo "N")
+# need to use ~$OSUSER to find the user's home directory and check for its existance. Then set the $HOME_DIR to that directory.
 # echo $RESULT
 if [ $RESULT == "Y" ]; then
 	echo "HERE: User's home directory exists - placing installation details here $HOME_DIR"
