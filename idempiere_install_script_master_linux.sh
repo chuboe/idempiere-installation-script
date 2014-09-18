@@ -74,6 +74,7 @@ CHUBOE_PROP="$CHUBOE_UTIL/properties"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
+HOME_DIR=/home/$OSUSER
 JENKINSPROJECT="iDempiere2.0Daily"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
@@ -156,6 +157,17 @@ if [[ $IS_INSTALL_ID == "N" && $REPLICATION_URL != "Master" ]]
 then
 	echo "HERE: Check if Is Replication Master"
 	IS_REPLICATION_MASTER="N"
+fi
+
+# Check if home directory exists
+RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
+if [ $RESULT == "Y" ]; then
+	echo "HERE: User's home directory exists - place installation details here"
+else
+	HOME_DIR="/tmp/idempiere-installation-details/"
+	echo "HERE: User's home directory does not exist. Using $HOME_DIR instead!"	
+	sudo mkdir $HOME_DIR
+	exit 1
 fi
 
 # show variables to the user (debug)
