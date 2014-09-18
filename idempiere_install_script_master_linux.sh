@@ -250,6 +250,7 @@ then
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+	sudo -u postgres service postgresql stop
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
@@ -291,7 +292,6 @@ then
 		echo "HERE: Is Replication = Y AND Is Replication Master = N"
 		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
 
-		sudo -u postgres service postgresql stop
 		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
 		sudo chown postgres:postgres /tmp/.pgpass
 		sudo chmod 0600 /tmp/.pgpass
@@ -312,12 +312,28 @@ then
 		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command from the master:">>/home/$OSUSER/$README
 		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>/home/$OSUSER/$README
 
-		sudo -u postgres service postgresql start
 		echo "HERE END: Is Replication = Y AND Is Replication Master = N"
-	else 
-		# restart to make the previous changes (before the if statement) take effect
-		sudo -u postgres service postgresql restart
 	fi
+
+	if [[ $IS_INSTALL_ID == "N" ]]
+	then
+		#this is where we focus on database performance - when not installing tomcat/idempiere - just the database!
+
+		# Change 1 - turn on logging - requires little overhead and provide much information 
+		#	Remember most performance issues are application related - not necessarily database parameters
+		#   Logging gives you great insight into how the application is running.
+
+		# Change 2 - memory related changes - there are many configuration changes based how much RAM your server has.
+
+		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
+		#	This section assumes that the database is the only application on this server.
+
+		# Change 4 - 
+
+	fi
+
+	# start postgresql after all changes and before installing phppgadmin
+	sudo -u postgres service postgresql start
 
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
