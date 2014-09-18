@@ -167,7 +167,7 @@ if [ $RESULT == "Y" ]; then
 else
 	HOME_DIR="/tmp/idempiere-installation-details/"
 	echo "HERE: User's home directory does not exist. Exiting! Will some day use $HOME_DIR instead!"
-	sudo mkdir $HOME_DIR
+	# sudo mkdir $HOME_DIR
 	exit 1
 fi
 
