@@ -340,6 +340,15 @@ then
 		fi
 		echo "Shared Buffers="$SHARED_BUFFERS
 
+		# WORK_MEM in MB
+		if [[ $TOTAL_MEMORY -lt 4000 ]]
+		then
+			WORK_MEM=32
+		else 
+			WORK_MEM=64
+		fi
+		echo "Work_Mem="$WORK_MEM
+
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
 
