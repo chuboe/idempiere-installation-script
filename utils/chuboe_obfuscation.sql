@@ -3,6 +3,8 @@
 
 -- Note: this list is not complete; however, it does give you an idea of how to accomplish the task.
 
+--ACTION - remove change log entries
+
 -- Business Partner 
 update C_BPartner bp
 set 
