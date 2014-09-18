@@ -322,6 +322,7 @@ then
 		# Change 1 - turn on logging - requires little overhead and provide much information 
 		#	Remember most performance issues are application related - not necessarily database parameters
 		#   Logging gives you great insight into how the application is running.
+		# How to get memory = grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}' in MB
 
 		# Change 2 - memory related changes - there are many configuration changes based how much RAM your server has.
 
