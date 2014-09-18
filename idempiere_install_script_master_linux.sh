@@ -309,7 +309,7 @@ then
 
 		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If you database is not inside LAN and behind a firewall, enable SSL!">>/home/$OSUSER/$README
 		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>/home/$OSUSER/$README
-		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command:">>/home/$OSUSER/$README
+		echo "NOTE: verify that the MASTER sees the BACKUP as being replicated by issuing the following command from the master:">>/home/$OSUSER/$README
 		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>/home/$OSUSER/$README
 
 		sudo -u postgres service postgresql start
