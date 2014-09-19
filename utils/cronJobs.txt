@@ -25,5 +25,6 @@
 # Runs at 8:30 UTC every Saturday.
 # 30 08 * * 6 sudo /opt/idempiere-server/chuboe_utils/chuboe_ubuntu_upgrade.sh &>> /opt/idempiere-server/log/chuboe_ubuntu_upgrade.log
 
-# If you executed chuboe_hg_bindir.sh add your idempiere server bin directory to a mecurial repostitory,
-# add a hg push to the remote repository
+# Perform an offsite backup of your iDempeire directory at 7:30AM UTC every day.
+# Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
+# 30 07 * * * /opt/idempiere-server/chuboe_utils/chuboe_hg_bindir.sh
