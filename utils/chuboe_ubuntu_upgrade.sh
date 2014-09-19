@@ -12,7 +12,7 @@
 
 # To use this file, do one of the following tasks:
 #  1. run this periodically
-#  2. create a cron job to run this every weekend. 
+#  2. create a cron job to run this every weekend. There is a sample cron file in this same folder for your reference.
 #		Make sure you have a process to monitoring when the server needs to be rebooted. 
 #		It will not reboot by itself. The statement: [ -f /var/run/reboot-required ] will tell you if you need a reboot.
 # 		Just in case you are monitoring such things.
