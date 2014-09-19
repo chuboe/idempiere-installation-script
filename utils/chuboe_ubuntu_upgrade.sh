@@ -17,6 +17,10 @@
 #		It will not reboot by itself. The statement: [ -f /var/run/reboot-required ] will tell you if you need a reboot.
 # 		Just in case you are monitoring such things.
 
+echo " ------------------------------------------------------------------- "
+echo " -------          	STARTING Ubuntu Backup		           ------- "
+echo " ------------------------------------------------------------------- "
+
 unset UCF_FORCE_CONFFOLD
 export UCF_FORCE_CONFFNEW=YES
 ucf --purge /boot/grub/menu.lst
@@ -24,3 +28,7 @@ ucf --purge /boot/grub/menu.lst
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -o Dpkg::Options::="--force-confnew" --force-yes -fuy upgrade
+
+echo " ------------------------------------------------------------------- "
+echo " -------          	   ENDING Ubuntu Backup		           ------- "
+echo " ------------------------------------------------------------------- "
