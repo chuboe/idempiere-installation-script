@@ -1,5 +1,6 @@
 #!/bin/bash
 # Created Version 1 Chuck Boecking
+# 1.1 - Chuck Boecking - update to run repeatedly in cron to create daily commits
 
 ######################################
 # The purpose of this script is to help make sure the idempiere server directory only changes when you desire it.
@@ -13,38 +14,46 @@ INSTALLPATH="/opt/idempiere-server/"
 IGNORENAME=".hgignore"
 HGNAME=".hgrc"
 
-# (1) create the .hgignore file
-echo "">$INSTALLPATH/$IGNORENAME
-sed -i '$ a\syntax: glob' $INSTALLPATH/$IGNORENAME
-sed -i '$ a\chuboe_backup' $INSTALLPATH/$IGNORENAME
-sed -i '$ a\chuboe_restore' $INSTALLPATH/$IGNORENAME
-sed -i '$ a\chuboe_temp' $INSTALLPATH/$IGNORENAME
-sed -i '$ a\log' $INSTALLPATH/$IGNORENAME
-sed -i '$ a\*.tmp*' $INSTALLPATH/$IGNORENAME
-
-# (2) create the .hgrc file if does not already exist
+# (1) create the .hgrc file if does not already exist
 cd
-RESULT=$(ls -l .hgrc | wc -l)
+RESULT=$(ls -l $HGNAME | wc -l)
 if [ $RESULT -ge 1 ]; 
 then
-	echo "HERE: .hgrc already exists"
+	echo "HERE: $HGNAME already exists"
 else
-	echo "HERE: creating .hgrc file"
+	echo "HERE: creating $HGNAME file"
 	echo "">$HGNAME
-	sudo sed -i '$ a\[ui]' $HGNAME
-	sudo sed -i '$ a\username = iDempiere Master' $HGNAME
-fi #end if migration.zip exists
+	echo "[ui]">>$HGNAME
+	echo "username = iDempiere Master">>$HGNAME
+fi #end if .hgrc file exists
 
-# (3) commit the repository
+# (2) create the .hgignore file
 cd $INSTALLPATH
-hg init
-hg add
-hg commit -m "Initial Commit"
+RESULT=$(ls -l $IGNORENAME | wc -l)
+if [ $RESULT -ge 1 ]; 
+then
+	echo "HERE: $IGNORENAME already exists"
+	echo "HERE: perform addremove and commit"
+	hg addremove
+	hg commit -m "Daily Commit"
+else
+	echo "HERE: creating $IGNORENAME file"
+	echo "syntax: glob" >> $INSTALLPATH/$IGNORENAME
+	echo "chuboe_backup" >>  $INSTALLPATH/$IGNORENAME
+	echo "chuboe_restore" >>  $INSTALLPATH/$IGNORENAME
+	echo "chuboe_temp" >>  $INSTALLPATH/$IGNORENAME
+	echo "log" >>  $INSTALLPATH/$IGNORENAME
+	echo "*.tmp*" >>  $INSTALLPATH/$IGNORENAME
+	echo "HERE: perform init, add, and commit"
+	hg init
+	hg add
+	hg commit -m "Initial Commit"
+fi #end if .hgignore file exists
 
-# (4) offer a script to commit and push changed/added/removed files off-machine
-# coming soon.... for now just issue: hg push 'path to remote repo'
+# (3) when you create a private remote repository, uncommend the below command and update the URL
+# hg push www.url_to_remote_repository
 
 # to see what has changed since the last commit, issue: hg status
-# if you ever want to undo a change that has not been committed, you can issue: hg revert --all
+# if you ever want to undo a change that has not been committed, you can issue: hg revert --all (you can also use hg purge)
 # if you want to revert to a previous commit, you can use: hg revert --all --rev [xxx]
 # for more information, here is a great summary: http://stackoverflow.com/questions/2540454/mercurial-revert-back-to-old-version-and-continue-from-there
