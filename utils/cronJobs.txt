@@ -20,5 +20,10 @@
 # Runs at 8:30 UTC every Saturday.
 # 30 08 * * 6 /opt/idempiere-server/chuboe_utils/chuboe_idempiere_upgrade.sh &>> /opt/idempiere-server/log/chuboe_iD_upgrade.log
 
+# Upgrade your Ubuntu OS every Saturday
+# This process is not heavily tested.
+# Runs at 8:30 UTC every Saturday.
+# 30 08 * * 6 sudo /opt/idempiere-server/chuboe_utils/chuboe_ubuntu_upgrade.sh &>> /opt/idempiere-server/log/chuboe_ubuntu_upgrade.log
+
 # If you executed chuboe_hg_bindir.sh add your idempiere server bin directory to a mecurial repostitory,
 # add a hg push to the remote repository
