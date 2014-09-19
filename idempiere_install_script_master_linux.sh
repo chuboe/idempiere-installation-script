@@ -51,6 +51,7 @@ Outstanding actions:
 * Add PostgreSQL performance tuning configuration changes for different sizes.
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
+* Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
 
 EOF
 }
