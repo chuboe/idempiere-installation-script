@@ -29,6 +29,7 @@ ucf --purge /boot/grub/menu.lst
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -o Dpkg::Options::="--force-confnew" --force-yes -fuy upgrade
+apt-get update
 
 echo " ------------------------------------------------------------------- "
 echo " -------          	   ENDING Ubuntu Backup		           ------- "
