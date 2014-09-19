@@ -43,6 +43,7 @@ else
 	echo "chuboe_restore" >>  $INSTALLPATH/$IGNORENAME
 	echo "chuboe_temp" >>  $INSTALLPATH/$IGNORENAME
 	echo "log" >>  $INSTALLPATH/$IGNORENAME
+	echo "data" >>  $INSTALLPATH/$IGNORENAME
 	echo "*.tmp*" >>  $INSTALLPATH/$IGNORENAME
 	echo "HERE: perform init, add, and commit"
 	hg init
