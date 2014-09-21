@@ -52,6 +52,8 @@ Outstanding actions:
 * Add support for pgpool. This option will allow you to read from multiple database servers across multiple aws availability zones.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 * Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
+* When Replication is turned on, created and set archive files to appropriate place.
+	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
 
 EOF
 }
