@@ -273,7 +273,8 @@ then
 			# ACTION: is the above needed?
 		sudo sed -i "s|#max_wal_senders = 0|max_wal_senders = 3|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "s|#hot_standby = off|hot_standby = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		# sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf # replaced by above statement - deleteme after testing.
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
 
 		if [[ $REPLATION_ROLE != "postgres" ]]
