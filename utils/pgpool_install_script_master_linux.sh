@@ -42,12 +42,19 @@ sudo sed -i "s|#backend_weight1 = 1|backend_weight1 = 1|" /etc/pgpool2/pgpool.co
 sudo sed -i "s|#backend_data_directory1 = '/data1'|backend_data_directory1 = '/var/lib/postgresql/9.3/main/'|" /etc/pgpool2/pgpool.conf;
 sudo sed -i "s|#backend_flag1 = 'ALLOW_TO_FAILOVER'|backend_flag1 = 'DISALLOW_TO_FAILOVER'|" /etc/pgpool2/pgpool.conf;
 
+# ACTION: make sure health_check_user is correct. Could explain why getting authorizationerror when checkinng status
+
 # make all backend servers pg_hba.conf = trust and restart DBs
 # making them trust is just temporary!!!!!!!!!!!!!! Make sure you are behind a firewall!!!!!
 
 sudo service pgpool2 start
 
 sudo -u postgres psql -p 5433 postgres
+
+#Test status
+pcp_node_count 10 localhost 9898 pgpool pgpool
+pcp_node_info 10 localhost 9898 pgpool pgpool 0
+pcp_node_info 10 localhost 9898 pgpool pgpool 1
 
 #Test queries
 sudo su postgres 
