@@ -35,3 +35,11 @@ from c_invoice o
 join c_invoiceline ol on o.c_invoice_id= ol.c_invoice_id
 ;
 
+Create or replace view chuboe_adv_search_payment as
+select o.ad_client_id, o.ad_org_id,
+o.created, o.createdby, o.updated, o.updatedby,
+o.documentno, o.c_payment_id, 
+o.c_bpartner_id, o.c_charge_id, o.datetrx, o.dateacct,
+o.c_invoice_id
+from c_payment o
+;
