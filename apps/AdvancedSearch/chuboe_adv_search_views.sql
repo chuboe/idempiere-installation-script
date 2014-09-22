@@ -22,3 +22,16 @@ ol.line
 from m_inout o
 join m_inoutline ol on o.m_inout_id= ol.m_inout_id
 ;
+
+Create or replace view chuboe_adv_search_invoice as
+select o.ad_client_id, o.ad_org_id,
+o.created, o.createdby, o.updated, o.updatedby,
+o.documentno, o.c_invoice_id, ol.c_invoiceline_id,
+o.c_bpartner_id, o.c_bpartner_location_id,
+ol.m_product_id, ol.c_charge_id, o.dateinvoiced,
+o.dateacct,
+ol.line
+from c_invoice o
+join c_invoiceline ol on o.c_invoice_id= ol.c_invoice_id
+;
+
