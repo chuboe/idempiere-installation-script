@@ -1,5 +1,8 @@
 # This is not a script yet!!! It is a collection of commands to run - a work in progress.
-# pgpool instruction
+
+# This script is used to create a dedicated pgpool2 server to perform two tasks:
+# 1) automate the fail over to a second database in case the first server is not available
+# 2) provide load balancing of read-only queries
 
 
 Pool Machine
@@ -8,7 +11,8 @@ chmod +x setHostName.sh;
 sudo ./setHostName.sh;
 
 sudo apt-get -y install pgpool2
-sudo apt-get -y install postgresql-9.3-pgpool2
+# sudo apt-get -y install postgresql-9.3-pgpool2 # not needed in simple cases
+sudo apt-get -y install postgresql-client-9.3
 sudo service pgpool2 stop
 sudo cp -p /etc/pgpool2/pgpool.conf{,.back};
 sudo cp -p /etc/pgpool2/pcp.conf{,.back};
@@ -27,8 +31,6 @@ sudo sed -i "s|#backend_port1 = 5433|backend_port1 = 5432|" /etc/pgpool2/pgpool.
 sudo sed -i "s|#backend_weight1 = 1|backend_weight1 = 1|" /etc/pgpool2/pgpool.conf;
 sudo sed -i "s|#backend_data_directory1 = '/data1'|backend_data_directory1 = '/var/lib/postgresql/9.3/main/'|" /etc/pgpool2/pgpool.conf;
 sudo sed -i "s|#backend_flag1 = 'ALLOW_TO_FAILOVER'|backend_flag1 = 'DISALLOW_TO_FAILOVER'|" /etc/pgpool2/pgpool.conf;
-
-sudo apt-get install postgresql-client-9.3
 
 make all backend servers ph_hba.conf = trust and restart DBs
 
