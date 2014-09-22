@@ -15,15 +15,19 @@ wget bitbucket.org/cboecking/idempiere-installation-script/raw/default/utils/set
 chmod +x setHostName.sh;
 sudo ./setHostName.sh;
 
-# Install components and crate backups
+# Install components
 sudo apt-get -y install pgpool2
-# sudo apt-get -y install postgresql-9.3-pgpool2 # not needed in simple cases
+sudo apt-get -y install postgresql-9.3-pgpool2
+# --> https://packages.debian.org/sid/postgresql-9.3-pgpool2
 sudo apt-get -y install postgresql-client-9.3
+# --> so you can use psql directly from this machine
 sudo service pgpool2 stop
+
+# Create backups of config files
 sudo cp -p /etc/pgpool2/pgpool.conf{,.back};
 sudo cp -p /etc/pgpool2/pcp.conf{,.back};
 
-# Pull reference config from documentation
+# Pull reference master/slave streaming config from documentation
 sudo cp /usr/share/doc/pgpool2/examples/pgpool.conf.sample-stream.gz /etc/pgpool2/
 sudo gunzip pgpool.conf.sample-stream.gz
 sudo mv pgpool.conf.sample-stream pgpool.conf
@@ -45,6 +49,7 @@ sudo sed -i "s|#backend_flag1 = 'ALLOW_TO_FAILOVER'|backend_flag1 = 'DISALLOW_TO
 # ACTION: make sure health_check_user is correct. Could explain why getting authorizationerror when checkinng status
 
 # make all backend servers pg_hba.conf = trust and restart DBs
+# --> http://www.pgpool.net/pipermail/pgpool-general/2013-May/001773.html
 # making them trust is just temporary!!!!!!!!!!!!!! Make sure you are behind a firewall!!!!!
 
 sudo service pgpool2 start
