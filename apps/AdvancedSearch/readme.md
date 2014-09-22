@@ -6,3 +6,5 @@ The purpose of this application is to:
 
 To Install:
 Install the views first, then pack in the zip as the System Administrator role.
+
+If you find you need to add a new column, please do so. You can find more information and demonstrations about adding columns at erp-academy.chuckboecking.com.
