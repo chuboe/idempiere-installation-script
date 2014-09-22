@@ -27,6 +27,7 @@ sudo cp -p /etc/pgpool2/pcp.conf{,.back};
 sudo cp /usr/share/doc/pgpool2/examples/pgpool.conf.sample-stream.gz /etc/pgpool2/
 sudo gunzip pgpool.conf.sample-stream.gz
 sudo mv pgpool.conf.sample-stream pgpool.conf
+sudo chmod 0640 pgpool.conf
 
 # update the config file to point to your database servers (Master and Backup)
 # be sure to swap out the correct IPs below.
