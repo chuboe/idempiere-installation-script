@@ -46,7 +46,7 @@ sudo sed -i "s|#backend_weight1 = 1|backend_weight1 = 1|" /etc/pgpool2/pgpool.co
 sudo sed -i "s|#backend_data_directory1 = '/data1'|backend_data_directory1 = '/var/lib/postgresql/9.3/main/'|" /etc/pgpool2/pgpool.conf;
 sudo sed -i "s|#backend_flag1 = 'ALLOW_TO_FAILOVER'|backend_flag1 = 'DISALLOW_TO_FAILOVER'|" /etc/pgpool2/pgpool.conf;
 
-# ACTION: make sure health_check_user is correct. Could explain why getting authorizationerror when checkinng status
+# ACTION: make sure health_check_user and sr_check_user is correct. Could explain why getting authorizationerror when checkinng status.
 
 # make all backend servers pg_hba.conf = trust and restart DBs
 # --> http://www.pgpool.net/pipermail/pgpool-general/2013-May/001773.html
