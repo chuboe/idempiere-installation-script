@@ -1,5 +1,11 @@
 -- this file contains all the views for the Advanced Search window. Install these views first.
 
+--Deactivate the existing duplicate tabs in Business Partner Info. Not performing this in Pack Out because of the ties to C_Order, C_Invioce, etc... tables. The back out is too dangerous.
+update ad_tab
+set isactive = 'N'
+where ad_tab_id in (551, 552, 553, 554)
+;
+
 Create or replace view chuboe_adv_search_order as
 select o.ad_client_id, o.ad_org_id,
 o.created, o.createdby, o.updated, o.updatedby,
