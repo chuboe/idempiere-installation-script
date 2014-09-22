@@ -1,0 +1,1 @@
+-- this file contains all the views for the Advanced Search window. Install these views first.
