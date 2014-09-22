@@ -6,6 +6,12 @@ set isactive = 'N'
 where ad_tab_id in (551, 552, 553, 554)
 ;
 
+--Prevent Name2 from being the first field displayed when searching in Business Partner Info.
+update ad_field
+set seqno = 100
+where ad_field_id = 9760
+;
+
 Create or replace view chuboe_adv_search_order as
 select o.ad_client_id, o.ad_org_id,
 o.created, o.createdby, o.updated, o.updatedby,
