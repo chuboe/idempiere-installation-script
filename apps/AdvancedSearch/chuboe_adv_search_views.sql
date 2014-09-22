@@ -43,3 +43,17 @@ o.c_bpartner_id, o.c_charge_id, o.datetrx, o.dateacct,
 o.c_invoice_id
 from c_payment o
 ;
+
+Create or replace view chuboe_adv_search_bp_loc as
+select b.ad_client_id, b.ad_org_id,
+b.created, b.createdby, b.updated, b.updatedby,
+b.c_bpartner_id, b.name, b.name2,
+bl.name as LocationName,
+bl.isshipto, bl.isbillto, bl.isremitto, bl.ispayfrom,
+l.address1, l.address2, l.address3, l.address4,
+l.city, l.regionname
+--action - need to left join in city and region and coalesce the above values
+from c_bpartner b 
+left outer join c_bpartner_location bl on b.c_bpartner_id = bl.c_bpartner_id
+left outer join c_location l on bl.c_location_id = l.c_location_id
+;
