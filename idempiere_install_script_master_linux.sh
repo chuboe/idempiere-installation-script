@@ -275,8 +275,8 @@ then
 		sudo sed -i "$ a\archive_mode = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\archive_command = 'cd .' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 			# Note: the above commmand is needed so that the archive command returns successfully. Otherwise, you will get a log full of errors
-		sudo sed -i "$ a\max_wal_senders = 3 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "$ a\wal_keep_segments = 16 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\max_wal_senders = 5 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\wal_keep_segments = 48 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\hot_standby = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
 
@@ -335,11 +335,15 @@ then
 		sudo apt-get install -y pgtune
 		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
 		sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
+		# Be aware that pgtune has a reputation for being too generous with work_mem and shared_buffers. 
+		#   Setting these values too high can cause degraded performance
+		# For more information about creating a highly available and fast database, consult:
+		# --> http://www.amazon.com/PostgreSQL-9-High-Availability-Cookbook/dp/1849516960 -- chapter 
 
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
 
-		# Change 4 - Create cron job to VACUUM as specific times - not when the DB thinks is the right time.
+		# Change 4 - Create cron job to FREEZE VACUUM as specific times - not when the DB thinks is the right time.
 
 	fi
 
