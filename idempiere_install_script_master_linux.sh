@@ -262,7 +262,7 @@ then
 	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users">>/home/$OSUSER/$README
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
-	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
+	sudo sed -i '$ a\listen_addresses = '"'"'*'"'"' # chuboe '`date +%Y%m%d` /etc/postgresql/$PGVERSION/main/postgresql.conf
 
 	if [[ $IS_REPLICATION == "Y" ]]
 	then
@@ -271,14 +271,13 @@ then
 		sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
 		echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
 		echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>/home/$OSUSER/$README
-		sudo sed -i "s|#wal_level = minimal|wal_level = hot_standby|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#archive_mode = off|archive_mode = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#archive_command = ''|archive_command = 'cd .'|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-			# ACTION: is the above needed?
-		sudo sed -i "s|#max_wal_senders = 0|max_wal_senders = 3|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#hot_standby = off|hot_standby = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		# sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf # replaced by above statement - deleteme after testing.
+		sudo sed -i "$ a\wal_level = hot_standby # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\archive_mode = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\archive_command = 'cd .' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+			# Note: the above commmand is needed so that the archive command returns successfully. Otherwise, you will get a log full of errors
+		sudo sed -i "$ a\max_wal_senders = 5 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\wal_keep_segments = 48 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\hot_standby = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
 
 		if [[ $REPLATION_ROLE != "postgres" ]]
@@ -330,17 +329,35 @@ then
 		# Change 1 - turn on logging - requires little overhead and provide much information 
 		#	Remember most performance issues are application related - not necessarily database parameters
 		#   Logging gives you great insight into how the application is running.
+		sudo sed -i "$ a\log_destination = 'csvlog' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\logging_collector = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_rotation_size = 1GB # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_connections = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_disconnections = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_lock_waits = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_temp_files = 0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_min_duration_statement = 1000 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_checkpoints = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 
 		# Change 2 - postgresql.comf related changes
 		# TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
 		sudo apt-get install -y pgtune
 		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
 		sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\random_page_cost = 2.0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		# Be aware that pgtune has a reputation for being too generous with work_mem and shared_buffers. 
+		#   Setting these values too high can cause degraded performance.
+		#	This is especially true if you perform high volumes of simple queries.
+		# For more information about creating a highly available and fast database, consult:
+		# --> http://www.amazon.com/PostgreSQL-9-High-Availability-Cookbook/dp/1849516960 -- chapter 
 
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
 
-		# Change 4 - Create cron job to VACUUM as specific times - not when the DB thinks is the right time.
+		# Do this only after you vet and adjust the above settings. I am not convinced this step is the right thing to do.
+
+		# Change 4 - Create cron job to FREEZE VACUUM as specific times - not when the DB thinks is the right time.
+		# This step is handled manually.
 
 	fi
 
@@ -663,6 +680,38 @@ echo "HERE END: Launching console-setup.sh"
 	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
 	chmod +x $CHUBOE_UTIL/*.sh
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
+
+	# if server is dedicated to iDempiere, give it more power
+	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
+	echo "total memory in MB="$TOTAL_MEMORY
+	AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*0.70" | bc)
+	AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
+	echo "available memory in MB="$AVAIL_MEMORY
+	if [[ $AVAIL_MEMORY -gt 1000 && $IS_INSTALL_DB == "N" ]]
+	then
+		echo "HERE: lots of memory and dedicated idempiere server"
+		XMX=1024
+		if [[ $AVAIL_MEMORY -gt 2048 ]]
+			then XMX=2048
+		fi
+		if [[ $AVAIL_MEMORY -gt 4096 ]]
+			then XMX=4096
+		fi
+		if [[ $AVAIL_MEMORY -gt 8192 ]]
+			then XMX=8192
+		fi
+		if [[ $AVAIL_MEMORY -gt 16384 ]]
+			then XMX=16384
+		fi
+		if [[ $AVAIL_MEMORY -gt 32768 ]]
+			then XMX=32768
+		fi
+		echo "XMX="$XMX
+		sudo sed -i "s|-XX:MaxPermSize|-Xmx"$XMX"m -XX:MaxPermSize|" $INSTALLPATH/idempiere-server.sh
+		# use the following command to confirm the above setting took: sudo -u idempiere jps -v localhost
+		echo "HERE END: lots of memory and dedicated idempiere server"
+	fi
+
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
