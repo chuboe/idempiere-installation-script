@@ -262,7 +262,7 @@ then
 	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users">>/home/$OSUSER/$README
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
-	sudo sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/' /etc/postgresql/$PGVERSION/main/postgresql.conf
+	sudo sed -i '$ a\listen_addresses = '"'"'*'"'"' # chuboe '`date +%Y%m%d` /etc/postgresql/$PGVERSION/main/postgresql.conf
 
 	if [[ $IS_REPLICATION == "Y" ]]
 	then
