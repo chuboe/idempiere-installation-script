@@ -329,6 +329,15 @@ then
 		# Change 1 - turn on logging - requires little overhead and provide much information 
 		#	Remember most performance issues are application related - not necessarily database parameters
 		#   Logging gives you great insight into how the application is running.
+		sudo sed -i "$ a\log_destination = 'csvlog' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\logging_collector = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_rotation_size = 1GB # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_connections = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_disconnections = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_lock_waits = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_temp_files = 0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_min_duration_statement = 1000 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\log_checkpoints = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 
 		# Change 2 - postgresql.comf related changes
 		# TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
@@ -336,17 +345,19 @@ then
 		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
 		sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\random_page_cost = 2.0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "$ a\log_min_duration_statement = 1000 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "$ a\log_checkpoints = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		# Be aware that pgtune has a reputation for being too generous with work_mem and shared_buffers. 
-		#   Setting these values too high can cause degraded performance
+		#   Setting these values too high can cause degraded performance.
+		#	This is especially true if you perform high volumes of simple queries.
 		# For more information about creating a highly available and fast database, consult:
 		# --> http://www.amazon.com/PostgreSQL-9-High-Availability-Cookbook/dp/1849516960 -- chapter 
 
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
 
+		# Do this only after you vet and adjust the above settings. I am not convinced this step is the right thing to do.
+
 		# Change 4 - Create cron job to FREEZE VACUUM as specific times - not when the DB thinks is the right time.
+		# This step is handled manually.
 
 	fi
 
