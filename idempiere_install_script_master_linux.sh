@@ -670,10 +670,10 @@ echo "HERE END: Launching console-setup.sh"
 	chmod +x $CHUBOE_UTIL/*.sh
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 
-	# server is dedicated to iDempiere, give it more power
+	# if server is dedicated to iDempiere, give it more power
 	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
 	echo "total memory in MB="$TOTAL_MEMORY
-	if [[ $TOTAL_MEMORY -gt 1900 && $IS_INSTALL_DB == "N" ]]	
+	if [[ $TOTAL_MEMORY -gt 1800 && $IS_INSTALL_DB == "N" ]]	
 	then
 		echo "HERE: lots of memory and dedicated idempiere server"
 		XMX=$TOTAL_MEMORY*0.80
