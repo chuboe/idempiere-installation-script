@@ -676,8 +676,16 @@ echo "HERE END: Launching console-setup.sh"
 	if [[ $TOTAL_MEMORY -gt 1800 && $IS_INSTALL_DB == "N" ]]	
 	then
 		echo "HERE: lots of memory and dedicated idempiere server"
-		XMX=$(echo "$TOTAL_MEMORY*0.80" | bc)
-		XMX=${XMX%.*} # removes decimal
+		AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*0.70" | bc)
+		if [[ $AVAIL_MEMORY -gt 1024 ]]
+			then XMX=1024
+		if [[ $AVAIL_MEMORY -gt 2048 ]]
+			then XMX=2048
+		if [[ $AVAIL_MEMORY -gt 4096 ]]
+			then XMX=4096
+		if [[ $AVAIL_MEMORY -gt 8192 ]]
+			then XMX=8192
+			else XMX=16384
 		sudo sed -i "s|-XX:MaxPermSize|-Xmx"$XMX"m -XX:MaxPermSize|" $INSTALLPATH/idempiere-server.sh
 		# use the following command to confirm the above setting took: sudo -u idempiere jps -v localhost
 		echo "HERE END: lots of memory and dedicated idempiere server"
