@@ -271,14 +271,13 @@ then
 		sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
 		echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>/home/$OSUSER/$README
 		echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>/home/$OSUSER/$README
-		sudo sed -i "s|#wal_level = minimal|wal_level = hot_standby|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#archive_mode = off|archive_mode = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#archive_command = ''|archive_command = 'cd .'|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-			# ACTION: is the above needed?
-		sudo sed -i "s|#max_wal_senders = 0|max_wal_senders = 3|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#wal_keep_segments = 0|wal_keep_segments = 16|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		sudo sed -i "s|#hot_standby = off|hot_standby = on|" /etc/postgresql/$PGVERSION/main/postgresql.conf
-		# sudo sed -i "$ a\hot_standby = on" /etc/postgresql/$PGVERSION/main/postgresql.conf # replaced by above statement - deleteme after testing.
+		sudo sed -i "$ a\wal_level = hot_standby # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\archive_mode = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\archive_command = 'cd .' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+			# Note: the above commmand is needed so that the archive command returns successfully. Otherwise, you will get a log full of errors
+		sudo sed -i "$ a\max_wal_senders = 3 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\wal_keep_segments = 16 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+		sudo sed -i "$ a\hot_standby = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>/home/$OSUSER/$README
 
 		if [[ $REPLATION_ROLE != "postgres" ]]
