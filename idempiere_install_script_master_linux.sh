@@ -673,19 +673,22 @@ echo "HERE END: Launching console-setup.sh"
 	# if server is dedicated to iDempiere, give it more power
 	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
 	echo "total memory in MB="$TOTAL_MEMORY
-	if [[ $TOTAL_MEMORY -gt 1800 && $IS_INSTALL_DB == "N" ]]	
+	AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*0.70" | bc)
+	echo "available memory in MB="$AVAIL_MEMORY
+	if [[ $AVAIL_MEMORY -gt 1000 && $IS_INSTALL_DB == "N" ]]	
 	then
 		echo "HERE: lots of memory and dedicated idempiere server"
-		AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*0.70" | bc)
-		if [[ $AVAIL_MEMORY -gt 1024 ]]
-			then XMX=1024
+		XMX=1024
 		if [[ $AVAIL_MEMORY -gt 2048 ]]
 			then XMX=2048
 		if [[ $AVAIL_MEMORY -gt 4096 ]]
 			then XMX=4096
 		if [[ $AVAIL_MEMORY -gt 8192 ]]
 			then XMX=8192
-			else XMX=16384
+		if [[ $AVAIL_MEMORY -gt 16384 ]]
+			then XMX=16384
+		if [[ $AVAIL_MEMORY -gt 32768 ]]
+			then XMX=32768
 		sudo sed -i "s|-XX:MaxPermSize|-Xmx"$XMX"m -XX:MaxPermSize|" $INSTALLPATH/idempiere-server.sh
 		# use the following command to confirm the above setting took: sudo -u idempiere jps -v localhost
 		echo "HERE END: lots of memory and dedicated idempiere server"
