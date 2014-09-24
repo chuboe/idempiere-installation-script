@@ -323,53 +323,11 @@ then
 		#	Remember most performance issues are application related - not necessarily database parameters
 		#   Logging gives you great insight into how the application is running.
 
-		# Change 2 - memory related changes - there are many configuration changes based how much RAM your server has.
-		TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
-		echo "TOTAL_MEMORY="$TOTAL_MEMORY
-
-		# SHARED_BUFFERS - I realize the GB to MB is x1024; however, I am erroring on the low side.
-		if [[ $TOTAL_MEMORY -lt 2000 ]]
-		then
-			# less than 2GB
-			SHARED_BUFFERS=TOTAL_MEMORY*0.2
-		else if [[ $TOTAL_MEMORY -lt 32000 ]]
-			# less than 32GB
-			SHARED_BUFFERS=TOTAL_MEMORY*0.25
-		else 
-			SHARED_BUFFERS=8192
-		fi
-		echo "SHARED_BUFFERS="$SHARED_BUFFERS
-
-		# WORK_MEM in MB
-		# Start low: 32-64MB.
-		# Look for ‘temporary file’ lines in logs.
-		# Set to 2-3x the largest temp file you see.
-		# Can cause a huge speed-up if set properly!
-		# But be careful: It can use that amount of memory per planner node.
-		if [[ $TOTAL_MEMORY -lt 4000 ]]
-		then
-			WORK_MEM=32
-		else 
-			WORK_MEM=64
-		fi
-		echo "WORK_MEM="$WORK_MEM
-
-		# MAINTENANCE_WORK_MEM
-		# 10% of system memory, up to 1GB.
-		# Maybe even higher if you are having VACUUM problems.
-		if [[ $TOTAL_MEMORY -lt 10240 ]]
-		then
-			MAINTENANCE_WORK_MEM=$TOTAL_MEMORY*0.1
-		else 
-			MAINTENANCE_WORK_MEM=1024
-		fi
-		echo "MAINTENANCE_WORK_MEM="$MAINTENANCE_WORK_MEM
-
-		# EFFECTIVE_CACHE_SIZE
-		# Set to the amount of file system cache available.
-		# If you don’t know, set it to 50% of total system memory.
-		EFFECTIVE_CACHE_SIZE=$TOTAL_MEMORY*0.5
-		
+		# Change 2 - postgresql.comf related changes
+		# TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
+		sudo apt-get install -y pgtune
+		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
+		sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
 
 		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
 		#	This section assumes that the database is the only application on this server.
