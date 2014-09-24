@@ -674,7 +674,7 @@ echo "HERE END: Launching console-setup.sh"
 	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
 	echo "total memory in MB="$TOTAL_MEMORY
 	AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*0.70" | bc)
-	AVAIL_MEMORY=${AVAIL_MEMORY%.*}
+	AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
 	echo "available memory in MB="$AVAIL_MEMORY
 	if [[ $AVAIL_MEMORY -gt 1000 && $IS_INSTALL_DB == "N" ]]
 	then
@@ -700,7 +700,7 @@ echo "HERE END: Launching console-setup.sh"
 		# use the following command to confirm the above setting took: sudo -u idempiere jps -v localhost
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
-	
+
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
