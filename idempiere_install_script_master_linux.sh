@@ -12,6 +12,7 @@
 # 1.4 added better user instruction (specifically for s3 backup)
 # 1.5 run iDempiere service as idempiere user
 # 1.6 added hot_standby replication, user home directory check, and removed sleep statement from backup command
+# 1.7 added JVM and PostgreSQL performance enhancements when installing on dedicated boxes.
 
 # function to help the user better understand how the script works
 usage()
@@ -42,19 +43,13 @@ OPTIONS:
 	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
-* Add an option to set the java max heap size when starting iDempiere. 
-	- The default heap size for this java on 64-bit linux is 1GB (1035993088) - assuming I did the math correctly.
-	- 1GB is good if you are using a machine with 2GB of memory and it is also running a database.
-	- 1GB is not good if you are running the iDempiere server on a dedicated server with 4GB of RAM or more.
-	- If you wish to make the max heap size larger, modify the file named "idempiere" to add "-Xmx2g" to the end of the line that starts the iDempiere server.
-	- If you have already installed iDempiere, you will find the "idempiere" file is located in the /etc/init.d/ directory.
-* Add PostgreSQL performance tuning configuration changes for different sizes.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 	- set default focus on fields like SOLine=>Product
 	- set default to grid view - not detail view
 * Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
 * When Replication is turned on, created and set archive files to appropriate place.
 	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
+* Create drive options for WAL. Move logs to different location - not on DB or WAL drive. Can be local system drive.
 
 EOF
 }
