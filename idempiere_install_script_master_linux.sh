@@ -254,6 +254,7 @@ then
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+	sudo -u postgres service postgresql stop
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
@@ -296,7 +297,6 @@ then
 		echo "HERE: Is Replication = Y AND Is Replication Master = N"
 		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
 
-		sudo -u postgres service postgresql stop
 		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
 		sudo chown postgres:postgres /tmp/.pgpass
 		sudo chmod 0600 /tmp/.pgpass
@@ -320,12 +320,32 @@ then
 		echo "--> ps -u postgres u">>/home/$OSUSER/$README
 		echo "--> You should see something like: postgres: wal receiver process   streaming">>/home/$OSUSER/$README
 
-		sudo -u postgres service postgresql start
 		echo "HERE END: Is Replication = Y AND Is Replication Master = N"
-	else 
-		# restart to make the previous changes (before the if statement) take effect
-		sudo -u postgres service postgresql restart
 	fi
+
+	if [[ $IS_INSTALL_ID == "N" ]]
+	then
+		#this is where we focus on database performance - when not installing tomcat/idempiere - just the database!
+
+		# Change 1 - turn on logging - requires little overhead and provide much information 
+		#	Remember most performance issues are application related - not necessarily database parameters
+		#   Logging gives you great insight into how the application is running.
+
+		# Change 2 - postgresql.comf related changes
+		# TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
+		sudo apt-get install -y pgtune
+		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
+		sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
+
+		# Change 3 - kill the linux OOM	Killer. You hope your database takes up almost all the memory on your server. 
+		#	This section assumes that the database is the only application on this server.
+
+		# Change 4 - Create cron job to VACUUM as specific times - not when the DB thinks is the right time.
+
+	fi
+
+	# start postgresql after all changes and before installing phppgadmin
+	sudo -u postgres service postgresql start
 
 	# The following commands update phppgadmin to allow all IPs to connect.
 	# Make sure your firewall prevents outsiders from connecting to your server.
