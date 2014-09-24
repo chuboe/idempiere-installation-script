@@ -676,7 +676,7 @@ echo "HERE END: Launching console-setup.sh"
 	if [[ $TOTAL_MEMORY -gt 1800 && $IS_INSTALL_DB == "N" ]]	
 	then
 		echo "HERE: lots of memory and dedicated idempiere server"
-		XMX=$TOTAL_MEMORY*0.80
+		XMX=$($TOTAL_MEMORY*0.80) #{printf("%.0f\n", $2 / 1024)}
 		sudo sed -i "s|-console 12612|-console 12612 -Xmx"$XMX"m|" $INSTALLPATH/idempiere-server.sh
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
