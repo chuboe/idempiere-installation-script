@@ -277,10 +277,12 @@ then
 
 		if [[ $REPLATION_ROLE != "postgres" ]]
 		then
+			sudo -u postgres service postgresql start
 			# remove replication attribute from postgres user/role for added security
 			sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
 			# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
 			sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
+			sudo -u postgres service postgresql stop
 		fi
 
 		echo "HERE END: Is Replication = Y"
@@ -289,8 +291,8 @@ then
 	if [[ $IS_REPLICATION == "Y" && $IS_REPLICATION_MASTER == "N" ]]
 	then
 		echo "HERE: Is Replication = Y AND Is Replication Master = N"
-		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
 
+		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
 		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
 		sudo chown postgres:postgres /tmp/.pgpass
 		sudo chmod 0600 /tmp/.pgpass
