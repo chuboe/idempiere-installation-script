@@ -43,6 +43,9 @@ OPTIONS:
 	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
+* Create flag or convention to change username and passwords for system generated entries (i.e. MaxSuperUser and MaxSystem)
+	 - add this information to the idempiere feedback file
+* Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 	- set default focus on fields like SOLine=>Product
 	- set default to grid view - not detail view
