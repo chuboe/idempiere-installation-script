@@ -51,6 +51,7 @@ Outstanding actions:
 	- set default to grid view - not detail view
 	- set files to be stored at the file system (not os)
 	- set GL Journal Description to context date by default.
+		- update ad_column set defaultvalue = '@SQL=SELECT ''@#Date@ - ReasonForGLJournal'' FROM DUAL' WHERE AD_Column_ID=1630
 * Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
 * When Replication is turned on, created and set archive files to appropriate place.
 	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
