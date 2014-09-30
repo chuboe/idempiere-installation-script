@@ -56,7 +56,11 @@ Outstanding actions:
 * When Replication is turned on, created and set archive files to appropriate place.
 	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
 * Create drive options for WAL. Move logs to different location - not on DB or WAL drive. Can be local system drive.
-* Create drive options for attachments
+* Attachments
+	- Create /opt/idempiere-attachments folder chown idempiere user/group
+	- Create record in iDempiere (as system client) to enable using the above folder (sql) (Attachment Storage clientInfo)
+	- Create drive option/flag for attachments to store off the actual server
+	- 
 
 EOF
 }
