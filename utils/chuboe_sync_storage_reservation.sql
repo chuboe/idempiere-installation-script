@@ -32,7 +32,6 @@ from m_storagereservation r
 -- delete all records from m_storagereservation - to be created next
 delete from m_storagereservation;
 
---ACTION - check to see if the code cares about ad_org_id - the primary key says no!!
 --create missing records for QtyReserved and QtyOnOrder
 insert into m_storagereservation
 (ad_client_id,
