@@ -1,4 +1,6 @@
+--Created by Chuck Boecking
 --details
+	-- this script is designed for iDempiere. Use the similarly named script for ADempiere.
 	-- create a backup of m_storagereservation
 	-- review current table for accuracy
 	-- delete all m_storagereservation records
