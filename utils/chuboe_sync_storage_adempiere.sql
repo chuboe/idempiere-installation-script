@@ -1,3 +1,4 @@
+-- Disclaimer - The quality of this script is not a the level of my normal script. It was posted at the request of someone. I figured it is better to post something to act as a guide than to post nothing at all.
 -- This script is designed to ADempiere's M_Storage QtyReserved and QtyOnOrder. This script is significantly more complex than iDempiere's sync.
 -- This script accounts for Manufacturing Orders,  Distribution Orders and Sales/Purchase Order's impact on M_Storage.
 -- This script was created for an ADempiere isntance that has been modified. It may need to work to get it to work with stock ADempiere. Please let me know of any needed changes.
