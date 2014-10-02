@@ -12,6 +12,7 @@ create table deleteme_TODAYSDATE_m_storagereservation as select * from m_storage
 --test query - shows reserved QtyReserved and QtyOrdered accuracy 
 	--used to test for accuracy first before resetting the table
 	-- note - does not account for potentially missing records in m_storagereservation
+select *, abs(x.qty-x.Order_QtyReserved) as delta  from (
 select r.m_product_id, p.value as product_value, 
 	r.m_warehouse_id, w.name as warehouse_name, 
 	r.m_attributesetinstance_id, 
@@ -29,6 +30,8 @@ from m_storagereservation r
 	join m_product p on r.m_product_id = p.m_product_id
 	join m_warehouse w on r.m_warehouse_id = w.m_warehouse_id
 	join m_attributesetinstance asi on r.m_attributesetinstance_id = asi.m_attributesetinstance_id
+) x
+order by abs(x.qty-x.Order_QtyReserved) desc
 ;
 
 -- delete all records from m_storagereservation - to be created next
