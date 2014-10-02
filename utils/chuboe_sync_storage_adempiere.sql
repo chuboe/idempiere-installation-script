@@ -1,6 +1,8 @@
--- This script is designed to 
+-- This script is designed to ADempiere's M_Storage QtyReserved and QtyOnOrder. This script is significantly more complex than iDempiere's sync.
+-- This script accounts for Manufacturing Orders,  Distribution Orders and Sales/Purchase Order's impact on M_Storage.
+-- This script was created for an ADempiere isntance that has been modified. It may need to work to get it to work with stock ADempiere. Please let me know of any needed changes.
 -- Each Product at each WH must have an m_storage record for the default locator with a 0 ASI since this is the record being matched against for the update.
--- DOs and IM's are customized heavily:  Moved columns from Header to Lines, have redundancy on DO line : WH and Locator FROM/TO
+-- Note: DOs and IM's are customized heavily:  Moved columns from Header to Lines, have redundancy on DO line : WH and Locator FROM/TO
 
 See the Problem:  Show mismatched Storage OnOrder and Doc ONORDER:
 SELECT * 
