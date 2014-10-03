@@ -60,10 +60,10 @@ insert into m_storagereservation
 		null,
 		'Y',
 		o.issotrx,
-		ol.m_attributesetinstance_id,
+		coalesce(ol.m_attributesetinstance_id,0),
 		ol.m_product_id,
 		ol.m_warehouse_id,
-		sum(qtyreserved),
+		sum(ol.qtyreserved),
 		now(),
 		100,
 		generate_uuid()
@@ -77,5 +77,5 @@ insert into m_storagereservation
 								and xr.m_warehouse_id = ol.m_warehouse_id
 								and xr.issotrx = o.issotrx
 						)
-	group by o.ad_client_id, o.ad_org_id,o.issotrx, ol.m_attributesetinstance_id, ol.m_product_id, ol.m_warehouse_id
+	group by o.ad_client_id, o.ad_org_id,o.issotrx, coalesce(ol.m_attributesetinstance_id,0), ol.m_product_id, ol.m_warehouse_id
 ;
