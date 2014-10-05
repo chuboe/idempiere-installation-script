@@ -62,7 +62,7 @@ Outstanding actions:
 	- Create /opt/idempiere-attachments folder chown idempiere user/group
 	- Create record in iDempiere (as system client) to enable using the above folder (sql) (Attachment Storage clientInfo)
 	- Create drive option/flag for attachments to store off the actual server
-	- 
+* Enable PG_Statements by default when installing the DB alone
 
 EOF
 }
