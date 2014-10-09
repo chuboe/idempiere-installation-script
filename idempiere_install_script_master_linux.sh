@@ -408,10 +408,11 @@ then
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/ppa
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/trusty-mate
 	sudo apt-get update
-	sudo apt-get install -y mate-desktop-environment
+	# sudo apt-get install -y mate-desktop-environment
+	sudo apt-get install -y ubuntu-mate-core ubuntu-mate-desktop
+	sudo apt-get install -y chromium-browser gimp xarchiver
 	echo mate-session> ~/.xsession
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
-	sudo apt-get install -y chromium-browser gimp xarchiver
 	sudo service xrdp restart
 
 	#new desktop installation (compatible with 14.04) - alternative to Mate Desktop
