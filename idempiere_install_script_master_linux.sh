@@ -403,13 +403,14 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
 
+	echo "HERE: Install Mate Desktop"
 	#nice MATE desktop installation (compatible with 14.04)
-	sudo apt-get install xrdp -y
-	sudo add-apt-repository "deb http://repo.mate-desktop.org/archive/1.8/ubuntu $(lsb_release -cs) main"
-	wget -q http://mirror1.mate-desktop.org/debian/mate-archive-keyring.gpg -O- | sudo apt-key add -
+	sudo apt-add-repository ppa:ubuntu-mate-dev/ppa
+	sudo apt-add-repository ppa:ubuntu-mate-dev/trusty-mate
 	sudo apt-get update
-	sudo apt-get install -y --force-yes mate-core mate-desktop-environment mate-notification-daemon
+	sudo apt-get install --no-install-recommends ubuntu-mate-core ubuntu-mate-desktop
 	echo mate-session> ~/.xsession
+	echo "HERE END: Install Mate Desktop"
 
 	#gives you the ability to reconnect to a port - usually 5910
 	sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
