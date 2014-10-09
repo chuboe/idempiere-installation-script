@@ -408,6 +408,7 @@ then
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/ppa
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/trusty-mate
 	sudo apt-get update
+	# the below line will install a smaller footprint desktop. Comment out the ubuntu-mate-core ubuntu-mate-desktop line if you use it.
 	# sudo apt-get install -y mate-desktop-environment
 	sudo apt-get install -y ubuntu-mate-core ubuntu-mate-desktop
 	sudo apt-get install -y chromium-browser gimp xarchiver
