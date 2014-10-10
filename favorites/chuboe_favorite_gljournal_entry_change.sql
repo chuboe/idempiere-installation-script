@@ -1,4 +1,5 @@
--- chuboe_favorite_gljournal_entry_change
+-- the purpose of this script is to make data entry into GL Journal lines easier. 
+-- note there are undo scripts at the bottom of the script
 
 create table chuboe_favorite_gljournal_entry_change as
 select lower(tablename) as tablename from ad_table where lower(tablename) in ('gl_journalline')
