@@ -5,7 +5,7 @@ create table chuboe_favorite_line_entry_change as
 select lower(tablename) as tablename from ad_table where lower(tablename) in ('c_orderline', 'c_invoiceline','m_inoutline')
 ;
 
-create table chuboe_ad_field_orig as 
+create table chuboe_favorite_line_entry_change_field_orig as 
 select ad_field_id, seqnogrid 
 from ad_field
 where ad_tab_id in
@@ -140,5 +140,5 @@ from ad_table where lower(tablename) in (select tablename from chuboe_favorite_l
 ;
 
 --use the following queries to put the tabs and fields back to their original state
---update ad_field set seqnogrid = (select seqnogrid from chuboe_ad_field_orig x where ad_field.ad_field_id = x.ad_field_id) where ad_field_id in (select ad_field_id from chuboe_ad_field_orig);
+--update ad_field set seqnogrid = (select seqnogrid from chuboe_favorite_line_entry_change_field_orig x where ad_field.ad_field_id = x.ad_field_id) where ad_field_id in (select ad_field_id from chuboe_favorite_line_entry_change_field_orig);
 --update ad_tab set issinglerow = 'Y' where ad_table_id in (select ad_table_id from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change));
