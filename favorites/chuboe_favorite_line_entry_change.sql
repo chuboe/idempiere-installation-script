@@ -1,7 +1,7 @@
 -- the purpose of this script is to make data entry into order, invoice and shipment/receipt lines easier. 
 -- note at the bottom of the script three is are undo scripts
 
-create table chuboe_favorite_grid_table_change as
+create table chuboe_favorite_line_entry_change as
 select lower(tablename) as tablename from ad_table where lower(tablename) in ('c_orderline', 'c_invoiceline','m_inoutline')
 ;
 
@@ -12,7 +12,7 @@ where ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -20,7 +20,7 @@ update ad_tab
 set issinglerow = 'N'
 where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 )
 ;
 
@@ -30,7 +30,7 @@ where ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -45,7 +45,7 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -60,7 +60,7 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -75,7 +75,7 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -90,7 +90,7 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -105,7 +105,7 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -120,7 +120,7 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
@@ -135,10 +135,10 @@ ad_tab_id in
 (select ad_tab_id
 from ad_tab where ad_table_id in
 (select ad_table_id 
-from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change)
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
 ))
 ;
 
 --use the following queries to put the tabs and fields back to their original state
 --update ad_field set seqnogrid = (select seqnogrid from chuboe_ad_field_orig x where ad_field.ad_field_id = x.ad_field_id) where ad_field_id in (select ad_field_id from chuboe_ad_field_orig);
---update ad_tab set issinglerow = 'Y' where ad_table_id in (select ad_table_id from ad_table where lower(tablename) in (select tablename from chuboe_favorite_grid_table_change));
+--update ad_tab set issinglerow = 'Y' where ad_table_id in (select ad_table_id from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change));
