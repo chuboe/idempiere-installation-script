@@ -1,5 +1,5 @@
 -- the purpose of this script is to make data entry into order, invoice and shipment/receipt lines easier. 
--- note at the bottom of the script three is are undo scripts
+-- note there are undo scripts at the bottom of the script
 
 create table chuboe_favorite_line_entry_change as
 select lower(tablename) as tablename from ad_table where lower(tablename) in ('c_orderline', 'c_invoiceline','m_inoutline')
