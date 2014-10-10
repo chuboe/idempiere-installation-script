@@ -54,7 +54,6 @@ Outstanding actions:
 		- update ad_column set defaultvalue = '@SQL=SELECT ''@#Date@ - ReasonForGLJournal'' FROM DUAL' WHERE AD_Column_ID=1630
 	- Set BP_Loc check boxes to 'N' instead of 'Y' - this prevents you from having lots of Invioce and Pay-From locations
 	- Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
-	- update the system where you do not need to choose an organization when creating account combinations
 * Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
 * When Replication is turned on, created and set archive files to appropriate place.
 	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
@@ -403,7 +402,8 @@ then
 	echo "">>/home/$OSUSER/$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>/home/$OSUSER/$README
 
-	#nice MATE desktop installation (compatible with 14.04)
+	# nice MATE desktop installation (compatible with 14.04)
+	# http://wiki.mate-desktop.org/download)
 	sudo apt-get install -y xrdp
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/ppa
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/trusty-mate
