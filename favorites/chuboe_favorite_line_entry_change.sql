@@ -98,7 +98,7 @@ update ad_field
 set seqnogrid = 50
 where ad_column_id in
 (
-select ad_column_id from ad_column where lower(columnname) = 'm_locator_id'
+select ad_column_id from ad_column where lower(columnname) = 'priceentered'
 ) 
 and 
 ad_tab_id in
@@ -113,7 +113,7 @@ update ad_field
 set seqnogrid = 60
 where ad_column_id in
 (
-select ad_column_id from ad_column where lower(columnname) = 'description'
+select ad_column_id from ad_column where lower(columnname) = 'm_locator_id'
 ) 
 and 
 ad_tab_id in
@@ -126,6 +126,21 @@ from ad_table where lower(tablename) in (select tablename from chuboe_favorite_l
 
 update ad_field
 set seqnogrid = 70
+where ad_column_id in
+(
+select ad_column_id from ad_column where lower(columnname) = 'description'
+) 
+and 
+ad_tab_id in
+(select ad_tab_id
+from ad_tab where ad_table_id in
+(select ad_table_id 
+from ad_table where lower(tablename) in (select tablename from chuboe_favorite_line_entry_change)
+))
+;
+
+update ad_field
+set seqnogrid = 80
 where ad_column_id in
 (
 select ad_column_id from ad_column where lower(columnname) = 'linenetamt'
