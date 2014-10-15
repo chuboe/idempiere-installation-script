@@ -46,7 +46,7 @@ Outstanding actions:
 * Create flag or convention to change username and passwords for system generated entries (i.e. MaxSuperUser and MaxSystem)
 	 - add this information to the idempiere feedback file
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
-* Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
+* Create SQL script with Chucks Favorite changes:
 	- set files to be stored at the file system (not os) - see below drive for attachments
 	- Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
 * Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
