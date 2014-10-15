@@ -48,7 +48,6 @@ Outstanding actions:
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 	- set default focus on fields like SOLine=>Product
-	- set default to grid view - not detail view
 	- set files to be stored at the file system (not os) - see below drive for attachments
 	- set GL Journal Description to context date by default.
 		- update ad_column set defaultvalue = '@SQL=SELECT ''@#Date@ - ReasonForGLJournal'' FROM DUAL' WHERE AD_Column_ID=1630
