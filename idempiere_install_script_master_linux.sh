@@ -48,9 +48,7 @@ Outstanding actions:
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
 	- set files to be stored at the file system (not os) - see below drive for attachments
-	- Set BP_Loc check boxes to 'N' instead of 'Y' - this prevents you from having lots of Invioce and Pay-From locations
 	- Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
-	- Default the MR=>Create Invoice process param => PriceList to null
 * Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
 * When Replication is turned on, created and set archive files to appropriate place.
 	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
