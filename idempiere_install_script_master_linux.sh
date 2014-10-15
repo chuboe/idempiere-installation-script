@@ -47,10 +47,7 @@ Outstanding actions:
 	 - add this information to the idempiere feedback file
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
 * Create SQL script with Chucks Favorite changes (Ex: no automatic periods, standard cost accounting, org costing level)
-	- set default focus on fields like SOLine=>Product
 	- set files to be stored at the file system (not os) - see below drive for attachments
-	- set GL Journal Description to context date by default.
-		- update ad_column set defaultvalue = '@SQL=SELECT ''@#Date@ - ReasonForGLJournal'' FROM DUAL' WHERE AD_Column_ID=1630
 	- Set BP_Loc check boxes to 'N' instead of 'Y' - this prevents you from having lots of Invioce and Pay-From locations
 	- Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
 	- Default the MR=>Create Invoice process param => PriceList to null
