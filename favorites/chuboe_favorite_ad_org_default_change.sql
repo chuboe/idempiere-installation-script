@@ -1,3 +1,6 @@
+--the purpose of this scrit is to set the default org to '*' for most common objects.
+--there are times when you might want some of these to be a specific org; however, the average company does not.
+
 create table chuboe_favorite_ad_org_default_change as
 select lower(tablename) as tablename from ad_table where lower(tablename) in ('m_product', 'c_bpartner', 'c_paymentterm', 'c_bank', 'c_bp_group', 'c_bp_relation', 'c_bpartner_location', 'ad_user', 'c_calendar', 'c_charge', 'c_uom', 'm_attribute', 'm_attributeset', 'm_pricelist', 'm_pricelist_version', 'm_product_category', 'r_request', 'r_requesttype', 'r_resolution', 'r_status', 's_resource', 'r_statuscategory')
 ;
