@@ -47,3 +47,6 @@ costinglevel = 'O', --org level costing
 autoperiodcontrol = 'N', 
 isallownegativeposting = 'N'
 ;
+
+--change default usernames by adding a prefix
+update ad_user set name = 'ChuBoe'||name where ad_user_id in (select ad_user_id from AD_User_Roles);
