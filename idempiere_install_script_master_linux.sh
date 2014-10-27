@@ -43,6 +43,10 @@ OPTIONS:
 	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
+* Add a -t flag to allow for giving a server a specific name
+	 - update the $PS1 command prompt with new name
+	 - append the tag to the end of the database name: i.e. -t dev-01 would create idempiere-dev-01
+	 - test all scripts to make sure they work with the different datbase name
 * Create flag or convention to change username and passwords for system generated entries (i.e. MaxSuperUser and MaxSystem)
 	 - add this information to the idempiere feedback file
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
