@@ -1,6 +1,3 @@
---Outstanding Items
-  -- GL Journal Header => default values => Ppsting Type, Document Type, Document Date
-
 --set GL Journal Org to context by default.
 update ad_column 
 set defaultvalue = '@#AD_Org_ID@' 
