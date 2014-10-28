@@ -1,7 +1,28 @@
+--Outstanding Items
+  -- GL Journal Header => default values => Ppsting Type, Document Type, Document Date
+
+--set GL Journal Org to context by default.
+update ad_column 
+set defaultvalue = '@#AD_Org_ID@' 
+WHERE AD_Column_ID=1619
+;
+
 --set GL Journal Description to context date by default.
 update ad_column 
 set defaultvalue = '@SQL=SELECT ''@#Date@ - ReasonForGLJournal'' FROM DUAL' 
 WHERE AD_Column_ID=1630
+;
+
+--set GL Journal Doc Date to context date by default.
+update ad_column 
+set defaultvalue = '@#Date@' 
+WHERE AD_Column_ID=1634
+;
+
+--set GL Journal Posting Type to Actual by default.
+update ad_column 
+set defaultvalue = 'A' 
+WHERE AD_Column_ID=1631
 ;
 
 --remove existing isDefaultFocus values from the below windows/tabs
