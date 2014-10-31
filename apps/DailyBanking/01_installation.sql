@@ -32,5 +32,15 @@ CREATE VIEW chuboe_rv_daily_bank_base AS
   WHERE ba.isactive = 'Y'::bpchar;
 
 CREATE VIEW chuboe_rv_daily_bank AS
-SELECT chuboe_rv_daily_bank_base.ad_client_id, chuboe_rv_daily_bank_base.ad_org_id, chuboe_rv_daily_bank_base.created, chuboe_rv_daily_bank_base.createdby, chuboe_rv_daily_bank_base.updated, chuboe_rv_daily_bank_base.updatedby, chuboe_rv_daily_bank_base.c_currency_id, chuboe_rv_daily_bank_base.currentbank_bal - chuboe_rv_daily_bank_base.ap_noclear_norecon_bal + chuboe_rv_daily_bank_base.ar_noclear_norecon_bal - chuboe_rv_daily_bank_base.ap_yesclear_norecon_bal + chuboe_rv_daily_bank_base.ar_yesclear_norecon_bal AS total_bal, chuboe_rv_daily_bank_base.ap_noclear_norecon_bal, chuboe_rv_daily_bank_base.ar_noclear_norecon_bal, chuboe_rv_daily_bank_base.ap_yesclear_norecon_bal, chuboe_rv_daily_bank_base.ar_yesclear_norecon_bal, chuboe_rv_daily_bank_base.c_bankaccount_id, chuboe_rv_daily_bank_base.c_bankaccount_id AS chuboe_rv_daily_bank_id, chuboe_rv_daily_bank_base.currentbank_bal
+SELECT chuboe_rv_daily_bank_base.ad_client_id, chuboe_rv_daily_bank_base.ad_org_id, 
+         chuboe_rv_daily_bank_base.created, chuboe_rv_daily_bank_base.createdby, chuboe_rv_daily_bank_base.updated, 
+         chuboe_rv_daily_bank_base.updatedby, chuboe_rv_daily_bank_base.c_currency_id, 
+         chuboe_rv_daily_bank_base.currentbank_bal 
+                  - chuboe_rv_daily_bank_base.ap_noclear_norecon_bal 
+                  + chuboe_rv_daily_bank_base.ar_noclear_norecon_bal 
+                  - chuboe_rv_daily_bank_base.ap_yesclear_norecon_bal 
+                  + chuboe_rv_daily_bank_base.ar_yesclear_norecon_bal AS total_bal, 
+         chuboe_rv_daily_bank_base.ap_noclear_norecon_bal, chuboe_rv_daily_bank_base.ar_noclear_norecon_bal, chuboe_rv_daily_bank_base.ap_yesclear_norecon_bal, 
+         chuboe_rv_daily_bank_base.ar_yesclear_norecon_bal, chuboe_rv_daily_bank_base.c_bankaccount_id, chuboe_rv_daily_bank_base.c_bankaccount_id AS chuboe_rv_daily_bank_id, 
+         chuboe_rv_daily_bank_base.currentbank_bal
    FROM chuboe_rv_daily_bank_base;
