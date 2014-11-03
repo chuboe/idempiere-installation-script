@@ -460,9 +460,9 @@ then
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
 	#if not bleeding edge
-	if [[ $JENKINSPROJECT == "iDempiere2.0Daily" ]]
+	if [[ $JENKINSPROJECT == "iDempiere2.1Daily" ]]
 	then
-		hg update -r release-2.0
+		hg update -r release-2.1
 	fi
 
 	# go back to home directory
