@@ -600,11 +600,11 @@ then
         	echo "HERE: file exists"
 	else
 		echo "HERE: file does not exist. Stopping script!"
-		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.0Daily/ to see if the daily build failed"
+		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.1Daily/ to see if the daily build failed"
 		echo "">>/home/$OSUSER/$README
 		echo "">>/home/$OSUSER/$README
 		echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
-		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.0Daily/ to see if the daily build failed">>/home/$OSUSER/$README
+		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.1Daily/ to see if the daily build failed">>/home/$OSUSER/$README
 		# nano /home/$OSUSER/$README
 		exit 1
 	fi
