@@ -630,7 +630,7 @@ then
 	echo "--------> Test the application server and database then click the green check.">>/home/$OSUSER/$README
 	echo "To install swing clients for other OS's, go to:">>/home/$OSUSER/$README
 	echo "----> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>/home/$OSUSER/$README
-	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v2.0/swing-client/">>/home/$OSUSER/$README
+	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v2.1/swing-client/">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.">>/home/$OSUSER/$README
