@@ -47,7 +47,7 @@ IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
 MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
-P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/"
+P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.1.0-eclipse.feature/site.p2/"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
