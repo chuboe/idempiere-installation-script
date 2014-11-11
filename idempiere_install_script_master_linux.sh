@@ -461,9 +461,9 @@ then
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
 
 	#if not bleeding edge
-	if [[ $JENKINSPROJECT == "iDempiere2.1Daily" ]]
+	if [[ $JENKINSPROJECT == "iDempiere"$IDEMPIERE_VERSION"Daily" ]]
 	then
-		hg update -r release-2.1
+		hg update -r release-"$IDEMPIERE_VERSION"
 	fi
 
 	# go back to home directory
