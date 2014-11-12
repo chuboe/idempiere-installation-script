@@ -689,6 +689,7 @@ echo "HERE END: Launching console-setup.sh"
 	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
 	echo "Write out iDempiere properties file for use in other scripts"
 	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
+	echo $IDEMPIERE_VERSION > $CHUBOE_PROP/IDEMPIERE_VERSION.txt
 	chmod +x $CHUBOE_UTIL/*.sh
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 
