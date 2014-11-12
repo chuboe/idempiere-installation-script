@@ -43,11 +43,12 @@ PG_CONNECT="-h localhost"
 MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
 # get JENKINSPROJECT varialble from properties file
 JENKINSPROJECT=$(cat $CHUBOE_PROP/"JENKINS_PROJECT.txt")
+IDEMPIERE_VERSION=$(cat $CHUBOE_PROP/"IDEMPIERE_VERSION.txt")
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
 MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
-P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_2.1.0-eclipse.feature/site.p2/"
+P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -93,6 +94,7 @@ echo "IS_RESTART_SERVER="$IS_RESTART_SERVER
 echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
 echo "JENKINSPROJECT="$JENKINSPROJECT
+echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
 
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
