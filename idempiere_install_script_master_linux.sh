@@ -601,11 +601,11 @@ then
         	echo "HERE: file exists"
 	else
 		echo "HERE: file does not exist. Stopping script!"
-		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.1Daily/ to see if the daily build failed"
+		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed"
 		echo "">>/home/$OSUSER/$README
 		echo "">>/home/$OSUSER/$README
 		echo "File does not exist. Stopping script!">>/home/$OSUSER/$README
-		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere2.1Daily/ to see if the daily build failed">>/home/$OSUSER/$README
+		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed">>/home/$OSUSER/$README
 		# nano /home/$OSUSER/$README
 		exit 1
 	fi
@@ -631,7 +631,7 @@ then
 	echo "--------> Test the application server and database then click the green check.">>/home/$OSUSER/$README
 	echo "To install swing clients for other OS's, go to:">>/home/$OSUSER/$README
 	echo "----> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>/home/$OSUSER/$README
-	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v2.1/swing-client/">>/home/$OSUSER/$README
+	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v"$IDEMPIERE_VERSION"/swing-client/">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
 	echo "Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.">>/home/$OSUSER/$README
