@@ -87,13 +87,13 @@ sudo /etc/init.d/apache2 restart
 #   Additonal Startup Parameters: -Xmx1024m
 
 #####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere-2.0" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere-2.1" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
 #    URL: /home/ubuntu/source/id/idempiere
 #    Revision Type: Branch
-#    Revision: release-2.0
+#    Revision: release-2.1
 #  Add below build steps
 
 #####Jenkins Build Steps (performed in jenkins UI)
@@ -114,11 +114,11 @@ perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.bui
 #3 Shell - copy results (site.ps) to webserver
 rm -rf /opt/idempiere-builds/idempiere.p2/*
 rm -rf /opt/idempiere-builds/idempiere.migration/*
-cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
+cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.1.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
 cp -fR ${WORKSPACE}/migration/* /opt/idempiere-builds/idempiere.migration
 cd ${WORKSPACE}
 zip -r /opt/idempiere-builds/idempiere.migration/migration.zip migration/
-# s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.0.0-eclipse.feature/site.p2/ s3://YourBucket/iDempiere_backup/build/
+# s3cmd sync ${WORKSPACE}/buckminster.output/org.adempiere.server_2.1.0-eclipse.feature/site.p2/ s3://YourBucket/iDempiere_backup/build/
 
 #####Build Now
 # See if she works!!
