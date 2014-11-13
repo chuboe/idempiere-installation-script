@@ -50,6 +50,7 @@ Update c_order set c_Payment_ID= null;
 delete from c_depositbatchline;
 delete from c_depositbatch;
 delete from c_orderpayschedule;
+delete from c_paymenttransaction;
 delete from c_payment ;
 delete from c_paymentbatch ;
 Update M_INOUTLINE Set C_Orderline_ID = null, M_RMALine_ID=null ;
