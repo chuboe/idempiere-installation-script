@@ -127,17 +127,14 @@ sh RUN_DBExport.sh
 
 cd $SERVER_DIR/chuboe_utils/
 
+# remove the old copy of syncApplied.sh if it exists
+echo "removing old syncApplied.sh"
+rm syncApplied.sh
+
 # Get Carlos Ruiz syncApplied.sh script
-# First, check to see if syncApplied.sh exists
-RESULT=$(ls -l syncApplied.sh | wc -l)
-if [ $RESULT -ge 1 ]; then
-	echo "HERE: syncApplied.sh already exists"
-else
-	echo "HERE: syncApplied.sh does not exist"
-	echo "getting syncApplied.sh"
-	wget $SYNC_APP
-	chmod 766 syncApplied.sh
-fi #end if syncApplied.sh exists
+echo "getting syncApplied.sh"
+wget $SYNC_APP
+chmod 766 syncApplied.sh
 
 # run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
