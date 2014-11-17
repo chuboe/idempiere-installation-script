@@ -8,7 +8,7 @@ cd $MIGRATIONDIR
 psql -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
 
 > /tmp/lisFS.txt
-for FOLDER in i2.1 i2.1z
+for FOLDER in i2.0 i2.0z i2.1 i2.1z
 do
     if [ -d ${FOLDER}/postgresql ]
     then
