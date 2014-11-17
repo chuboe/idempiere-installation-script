@@ -127,15 +127,6 @@ sh RUN_DBExport.sh
 
 cd $SERVER_DIR/chuboe_utils/
 
-# remove the old copy of syncApplied.sh if it exists
-echo "removing old syncApplied.sh"
-rm syncApplied.sh
-
-# Get Carlos Ruiz syncApplied.sh script
-echo "getting syncApplied.sh"
-wget $SYNC_APP
-chmod 766 syncApplied.sh
-
 # run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
 
