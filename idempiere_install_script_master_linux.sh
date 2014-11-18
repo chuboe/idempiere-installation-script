@@ -63,6 +63,10 @@ Outstanding actions:
 	- Create record in iDempiere (as system client) to enable using the above folder (sql) (Attachment Storage clientInfo)
 	- Create drive option/flag for attachments to store off the actual server
 * Enable PG_Statements by default when installing the DB alone
+* Add ability to read idempiereEnv.properties
+	- ACTION=$(grep -i 'SOME_PROPERTY' $PATH_TO_FILE  | cut -f2 -d'=')
+	- source: http://www.linuxquestions.org/questions/linux-newbie-8/reading-a-property-file-through-shell-script-906482/
+
 
 EOF
 }
