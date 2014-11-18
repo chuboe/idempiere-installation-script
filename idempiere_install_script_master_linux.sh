@@ -693,7 +693,7 @@ echo "HERE END: Launching console-setup.sh"
 	chmod +x $CHUBOE_UTIL/*.sh
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 	#Security: Only allow the owner of the idempiere folder to access the below file.
-	sudo chmod 600 idempiereEnv.properties
+	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
 	# if server is dedicated to iDempiere, give it more power
 	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
