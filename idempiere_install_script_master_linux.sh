@@ -379,10 +379,12 @@ then
 	# start postgresql after all changes and before installing phppgadmin
 	sudo -u postgres service postgresql start
 
-	# copy the phppgadmin apache2 configuration file
+	# copy the phppgadmin apache2 configuration file that puts phppgadmin on port 8083
 	sudo cp $SCRIPTPATH/web/000-phppgadmin.conf /etc/apache2/sites-enabled
-	#remove the apache2 default site
+	# remove the apache2 default site
 	sudo unlink /etc/apache2/sites-enabled/000-default.conf
+	# make apache listenon port 8083
+	sudo sed -i '$ a\Listen 8083' /etc/apache2/ports.conf
 
 	sudo service apache2 restart
 
