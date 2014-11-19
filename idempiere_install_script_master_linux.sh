@@ -383,7 +383,13 @@ then
 	# Make sure your firewall prevents outsiders from connecting to your server.
 	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
 	# the next command is needed for ubuntu 14.04 - http://askubuntu.com/questions/451378/phppgadmin-not-working-in-ubuntu-14-04
-	sudo cp /etc/apache2/conf.d/phppgadmin /etc/apache2/conf-enabled/phppgadmin.conf
+	
+	#updating the script to use my own phppgadmin.conf
+	#OLD: sudo cp /etc/apache2/conf.d/phppgadmin /etc/apache2/conf-enabled/phppgadmin.conf
+	#If just a database machine, keep current config, if combo, use my config
+	#ACTION add if statements
+	
+	
 	sudo service apache2 restart
 
 	echo "">>/home/$OSUSER/$README
