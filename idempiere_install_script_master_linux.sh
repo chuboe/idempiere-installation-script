@@ -736,12 +736,22 @@ echo "HERE END: Launching console-setup.sh"
 	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
-	echo "HERE: configure apache to present webui on port 80"
+	echo "HERE: configure apache to present webui on port 80 - reverse proxy"
 	# copy the iDempiere apache2 configuration file
 	sudo cp $SCRIPTPATH/web/000-webui.conf /etc/apache2/sites-enabled
-	#remove the apache2 default site
+	# remove the apache2 default site
 	sudo unlink /etc/apache2/sites-enabled/000-default.conf
 
+	# apache modules needed to support reverse proxy
+	sudo a2enmod proxy
+	sudo a2enmod proxy_http
+	sudo a2enmod proxy_ajp
+	sudo a2enmod rewrite
+	sudo a2enmod deflate
+	sudo a2enmod headers
+	sudo a2enmod proxy_balancer
+	sudo a2enmod proxy_connect
+	sudo a2enmod proxy_html
 	sudo service apache2 restart
 
 	echo "HERE END: Installing iDemipere because IS_INSTALL_ID == Y"
