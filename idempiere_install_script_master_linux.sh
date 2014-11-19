@@ -379,16 +379,18 @@ then
 	# start postgresql after all changes and before installing phppgadmin
 	sudo -u postgres service postgresql start
 
-	# The following commands update phppgadmin to allow all IPs to connect.
-	# Make sure your firewall prevents outsiders from connecting to your server.
-	sudo sed -i 's/# allow from all/allow from all/' /etc/apache2/conf.d/phppgadmin
-	# the next command is needed for ubuntu 14.04 - http://askubuntu.com/questions/451378/phppgadmin-not-working-in-ubuntu-14-04
-	sudo cp /etc/apache2/conf.d/phppgadmin /etc/apache2/conf-enabled/phppgadmin.conf
+	# copy the phppgadmin apache2 configuration file that puts phppgadmin on port 8083
+	sudo cp $SCRIPTPATH/web/000-phppgadmin.conf /etc/apache2/sites-enabled
+	# remove the apache2 default site
+	sudo unlink /etc/apache2/sites-enabled/000-default.conf
+	# make apache listenon port 8083
+	sudo sed -i '$ a\Listen 8083' /etc/apache2/ports.conf
+
 	sudo service apache2 restart
 
 	echo "">>/home/$OSUSER/$README
 	echo "">>/home/$OSUSER/$README
-	echo "SECURITY NOTICE: phppgadmin has been installed on port 80.">>/home/$OSUSER/$README
+	echo "SECURITY NOTICE: phppgadmin has been installed on port 8083.">>/home/$OSUSER/$README
 	echo "Make sure this port is blocked from external traffic as a security mesaure.">>/home/$OSUSER/$README
 
 	echo "localhost:*:*:adempiere:$DBPASS">>/home/$OSUSER/.pgpass
@@ -735,6 +737,24 @@ echo "HERE END: Launching console-setup.sh"
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
+
+	echo "HERE: configure apache to present webui on port 80 - reverse proxy"
+	# copy the iDempiere apache2 configuration file
+	sudo cp $SCRIPTPATH/web/000-webui.conf /etc/apache2/sites-enabled
+	# remove the apache2 default site
+	sudo unlink /etc/apache2/sites-enabled/000-default.conf
+
+	# apache modules needed to support reverse proxy
+	sudo a2enmod proxy
+	sudo a2enmod proxy_http
+	sudo a2enmod proxy_ajp
+	sudo a2enmod rewrite
+	sudo a2enmod deflate
+	sudo a2enmod headers
+	sudo a2enmod proxy_balancer
+	sudo a2enmod proxy_connect
+	sudo a2enmod proxy_html
+	sudo service apache2 restart
 
 	echo "HERE END: Installing iDemipere because IS_INSTALL_ID == Y"
 
