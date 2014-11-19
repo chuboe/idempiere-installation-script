@@ -736,7 +736,7 @@ echo "HERE END: Launching console-setup.sh"
 	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
-	echo "HERE configure apache for webui"
+	echo "HERE: configure apache to present webui on port 80"
 	# copy the iDempiere apache2 configuration file
 	sudo cp $SCRIPTPATH/web/000-webui.conf /etc/apache2/sites-enabled
 	#remove the apache2 default site
