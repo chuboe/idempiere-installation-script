@@ -754,6 +754,7 @@ echo "HERE END: Launching console-setup.sh"
 	sudo a2enmod proxy_balancer
 	sudo a2enmod proxy_connect
 	sudo a2enmod proxy_html
+	sudo a2enmod ssl
 	sudo service apache2 restart
 
 	echo "HERE END: Installing iDemipere because IS_INSTALL_ID == Y"
