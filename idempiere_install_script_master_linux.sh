@@ -267,9 +267,6 @@ then
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
-	# add pgcrypto to support apache based authentication
-	echo "HERE: pgcrypto extension"
-	sudo -u postgres psql -c "CREATE EXTENSION pgcrypto"
 	sudo -u postgres service postgresql stop
 
 	# The following commands update postgresql to listen for all
@@ -690,6 +687,10 @@ sh RUN_ImportIdempiere.sh <<!
 !
 #end of file input
 echo "HERE END: Launching console-setup.sh"
+
+	# add pgcrypto to support apache based authentication
+	echo "HERE: pgcrypto extension"
+	psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
 
 	echo "HERE: copying over chuboe_utils"
 	echo "">>/home/$OSUSER/$README
