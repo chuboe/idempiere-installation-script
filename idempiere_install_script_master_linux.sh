@@ -269,7 +269,7 @@ then
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 	# add pgcrypto to support apache based authentication
 	echo "HERE: pgcrypto extension"
-	psql -u postgres psql -c "CREATE EXTENSION pgcrypto"
+	sudo -u postgres psql -c "CREATE EXTENSION pgcrypto"
 	sudo -u postgres service postgresql stop
 
 	# The following commands update postgresql to listen for all
