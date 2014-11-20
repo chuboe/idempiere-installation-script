@@ -265,8 +265,11 @@ if [[ $IS_INSTALL_DB == "Y" ]]
 then
 	echo "HERE: Installing DB because IS_INSTALL_DB == Y"
 	echo "Installing DB because IS_INSTALL_DB == Y">>/home/$OSUSER/$README
-	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin
+	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+	# add pgcrypto to support apache based authentication
+	echo "HERE: pgcrypto extension"
+	psql -u postgres psql -c "CREATE EXTENSION pgcrypto"
 	sudo -u postgres service postgresql stop
 
 	# The following commands update postgresql to listen for all
@@ -754,6 +757,8 @@ echo "HERE END: Launching console-setup.sh"
 	sudo a2enmod proxy_balancer
 	sudo a2enmod proxy_connect
 	sudo a2enmod proxy_html
+	sudo a2enmod dbd
+	sudo a2enmod authn_dbd
 	sudo a2enmod ssl
 	sudo service apache2 restart
 
