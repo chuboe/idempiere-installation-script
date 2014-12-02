@@ -5,6 +5,7 @@
 
 --ACTION - remove change log entries
 --ACTION - remove user email index and recreate at the end of the script
+--ACTION - remove BP Bank records and BP Shipping records and Payment Transaction text fields
 
 -- Business Partner 
 update C_BPartner bp
@@ -30,7 +31,6 @@ update AD_User u
 set 
 Name='user' || u.ad_user_id, 
 Description='user' || u.ad_user_id
-from ad_user u2
 where u.name <> 'SuperUser'
   and ((u.c_bpartner_id is null) 
     or (
