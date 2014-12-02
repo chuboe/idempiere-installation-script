@@ -13,7 +13,6 @@ description = null,
 name2 = null, 
 taxId = null, 
 url = null
-from c_bpartner bp2
 ;
 
 -- Business Partner Location
@@ -23,7 +22,6 @@ name='bplocation' || bpl2.c_bpartner_location_id,
 Phone='555-555-5555', 
 Phone2=null, 
 Fax=null
-from c_bpartner_location bpl2
 ;
 
 -- User
@@ -51,7 +49,6 @@ EmailUserPW=null,
 EmailUser=null, 
 EmailVerify=null, 
 Birthday=null
-from ad_user u2
 ;
 
 -- Location
@@ -65,7 +62,6 @@ city=null,
 postal=null,
 c_region_id=null,
 c_country_id=120
-from c_location loc2
 ;
 
 -- Bank Account
