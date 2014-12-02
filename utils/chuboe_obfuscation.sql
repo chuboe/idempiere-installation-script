@@ -4,6 +4,7 @@
 -- Note: this list is not complete; however, it does give you an idea of how to accomplish the task.
 
 --ACTION - remove change log entries
+--ACTION - remove user email index and recreate at the end of the script
 
 -- Business Partner 
 update C_BPartner bp
