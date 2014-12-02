@@ -458,6 +458,7 @@ then
 	sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" /home/$OSUSER/.bashrc
 
 	# get idempiere code
+	echo "HERE: Installing iDempiere via mercurial"
 	cd /home/$OSUSER/dev
 	hg clone https://bitbucket.org/idempiere/idempiere
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
@@ -465,6 +466,7 @@ then
 	cd /home/$OSUSER/dev/myexperiment
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
 	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
+	echo "HERE END: Installing iDempiere via mercurial"
 
 	#if not bleeding edge
 	if [[ $JENKINSPROJECT == "iDempiere"$IDEMPIERE_VERSION"Daily" ]]
