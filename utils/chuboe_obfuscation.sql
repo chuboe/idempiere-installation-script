@@ -22,6 +22,26 @@ taxId = null,
 url = null
 ;
 
+-- Business Partner Bank Account
+update C_BP_BankAccount
+set a_name = 'test', 
+a_street = 'test',
+a_city = 'test',
+a_state = 'test',
+a_zip = 'test',
+a_ident_dl = 'test',
+a_email = 'test',
+a_ident_ssn = 'test',
+a_country = 'test',
+customerpaymentprofileid = 'test',
+creditcardnumber = 'test',
+routingno = 'test',
+accountno = 'test',
+creditcardvv = 'test',
+creditcardexpmm = 1,
+creditcardexpyy = 1
+;
+
 -- Business Partner Location
 update C_BPartner_Location bpl
 set 
