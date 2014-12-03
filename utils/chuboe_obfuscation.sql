@@ -42,6 +42,14 @@ creditcardexpmm = 1,
 creditcardexpyy = 1
 ;
 
+-- Business Partner Shipper Account
+update C_BP_ShippingAcct
+set 
+shipperaccount = 'test',
+dutiesshipperaccount = 'test',
+shippermeter = 'test'
+;
+
 -- Business Partner Location
 update C_BPartner_Location bpl
 set 
