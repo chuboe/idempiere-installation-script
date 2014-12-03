@@ -25,12 +25,12 @@ url = null
 -- Business Partner Bank Account
 update C_BP_BankAccount
 set a_name = 'test', 
-a_street = 'test',
-a_city = 'test',
-a_state = 'test',
-a_zip = 'test',
+a_street = '2 Lafayette St',
+a_city = 'New York',
+a_state = 'NY',
+a_zip = '10007',
 a_ident_dl = 'test',
-a_email = 'test',
+a_email = 'test@idempiere.com',
 a_ident_ssn = 'test',
 a_country = 'test',
 customerpaymentprofileid = 'test',
@@ -88,14 +88,14 @@ Birthday=null
 -- Location
 update C_Location loc
 set 
-Address1='1313 Mockingbird Ln', 
-Address2=null, 
+Address1='2 Lafayette St', 
+Address2='#5', 
 Address3=null, 
 Address4=null,
-city=null,
-postal=null,
-c_region_id=null,
-c_country_id=120
+city='New York',
+postal='10007',
+c_region_id=108,
+c_country_id=100
 ;
 
 -- Bank Account
@@ -106,14 +106,14 @@ set AccountNo = 'BankAcct: '||ba.c_bankaccount_id
 update C_PaymentTransaction
 set 
 description = 'test',
-a_city  = 'test',
-a_country  = 'test',
-a_email  = 'test',
+a_city  = 'New York',
+a_country  = 'US',
+a_email  = 'test@idempiere.com',
 a_ident_dl  = 'test',
 a_ident_ssn = 'test',
 a_name  = 'test',
-a_state  = 'test',
-a_zip  = 'test',
+a_state  = 'NY',
+a_zip  = '10007',
 accountno  = 'test',
 creditcardexpmm = 1,
 creditcardexpyy = 1,
@@ -133,14 +133,14 @@ voiceauthcode = 'test'
 update c_payment
 set 
 description = 'test',
-a_city  = 'test',
-a_country  = 'test',
-a_email  = 'test',
+a_city  = 'New York',
+a_country  = 'NY',
+a_email  = 'test@idempiere.com',
 a_ident_dl  = 'test',
 a_ident_ssn = 'test',
 a_name  = 'test',
-a_state  = 'test',
-a_zip  = 'test',
+a_state  = 'NY',
+a_zip  = '10007',
 accountno  = 'test',
 creditcardexpmm = 1,
 creditcardexpyy = 1,
