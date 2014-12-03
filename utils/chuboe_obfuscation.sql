@@ -130,5 +130,32 @@ routingno = 'test',
 voiceauthcode = 'test'
 ;
 
+update c_payment
+set 
+description = 'test',
+a_city  = 'test',
+a_country  = 'test',
+a_email  = 'test',
+a_ident_dl  = 'test',
+a_ident_ssn = 'test',
+a_name  = 'test',
+a_state  = 'test',
+a_zip  = 'test',
+accountno  = 'test',
+creditcardexpmm = 1,
+creditcardexpyy = 1,
+creditcardnumber  = 'test',
+creditcardvv  = 'test',
+ponum  = 'test',
+r_authcode  = 'test',
+r_info  = 'test',
+r_pnref  = 'test',
+r_respmsg  = 'test',
+r_result  = 'test',
+r_voidmsg  = 'test',
+routingno = 'test',
+voiceauthcode = 'test'
+;
+
 -- Recreate index that were dropped above
 CREATE INDEX ad_user_email ON ad_user USING btree (email);
