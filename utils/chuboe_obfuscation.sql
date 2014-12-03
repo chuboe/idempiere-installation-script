@@ -2,10 +2,15 @@
 -- DO NOT EXECUTE against a production database.
 
 -- Note: this list is not complete; however, it does give you an idea of how to accomplish the task.
+-- Please be quick to let me know if you want to add statements to this script!!
 
---ACTION - remove change log entries
---ACTION - remove user email index and recreate at the end of the script
 --ACTION - remove BP Bank records and BP Shipping records and Payment Transaction text fields
+
+-- There is no need for changelog to be included in the obfuscated database
+delete from ad_changelog;
+
+-- Drop the following indexes to make the updates faster. They will be recreated at the end of the script
+drop INDEX ad_user_email;
 
 -- Business Partner 
 update C_BPartner bp
@@ -69,3 +74,6 @@ c_country_id=120
 update C_BankAccount ba
 set AccountNo = 'BankAcct: '||ba.c_bankaccount_id
 ;
+
+-- Recreate index that were dropped above
+CREATE INDEX ad_user_email ON ad_user USING btree (email);
