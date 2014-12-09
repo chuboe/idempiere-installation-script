@@ -12,7 +12,7 @@ select inv.name,
     inv.c_currency_id,
     inv.costinglevel,
     inv.qtyonhand,
-	inv.futurecostprice - inv.currentcostprice as costdelta,
+	inv.futurecostprice - inv.currentcostprice as costdelta
 from chuboe_cost_per_product_per_org inv
 where (costinglevel = 'C' 
 	and ad_org_id = 0) or
