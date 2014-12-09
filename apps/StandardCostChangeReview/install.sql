@@ -1,6 +1,17 @@
 --future cost change impact on inventory
-create ro replace view chuboe_future_cost_inventory as
-select *
+create or replace view chuboe_future_cost_inventory as
+select inv.name,
+    inv.m_product_id,
+    inv.ad_client_id,
+    inv.ad_org_id,
+    inv.m_attributesetinstance_id,
+    inv.c_acctschema_id,
+    inv.m_costtype_id,
+    inv.currentcostprice,
+    inv.futurecostprice,
+    inv.c_currency_id,
+    inv.costinglevel,
+    inv.qtyonhand
 from chuboe_cost_per_product_per_org inv
 where (costinglevel = 'C' 
 	and ad_org_id = 0) or
