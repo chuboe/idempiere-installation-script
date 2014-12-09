@@ -1,4 +1,5 @@
---need to create a view for this one
+--future cost change impact on booked but not shipped (scheduled) orders
+create or replace view chuboe_future_cost_scheduled_order as
 select ol.ad_org_id, ol.m_product_id, ol.qtyordered - ol.qtydelivered as qtyremaining, ol.priceentered, c.currentcostprice as currentcost, c.futurecostprice as futurecost, (c.futurecostprice - c.currentcostprice) as costdelta
 from c_orderline ol
 join c_order o on ol.c_order_id = o.c_order_id
