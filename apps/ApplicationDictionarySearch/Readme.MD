@@ -1,4 +1,5 @@
-This app is amazing if you find your self searching for something in iDempiere's application dictionary. Let say you want to know what impact's a BP Location => isPayFrom has on the system. This view will show you everywhere the the isPayFrom field is referenced in:
+This app is amazing if you find your self searching for something in iDempiere's application dictionary. 
+Let say you want to know what impact the BP Location => isPayFrom field has on the system. This view will show you everywhere the the isPayFrom field is referenced in:
 
 1. Column SQL
 1. Column Default Logic
