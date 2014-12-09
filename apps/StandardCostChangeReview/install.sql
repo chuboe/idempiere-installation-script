@@ -12,7 +12,7 @@ select inv.name,
     inv.c_currency_id,
     inv.costinglevel,
     inv.qtyonhand,
-	inv.futurecostprice - inv.currentcostprice as costdelta
+	(inv.futurecostprice - inv.currentcostprice)*inv.qtyonhand as costdelta
 from chuboe_cost_per_product_per_org inv
 where (costinglevel = 'C' 
 	and ad_org_id = 0) or
@@ -25,7 +25,7 @@ where (costinglevel = 'C'
 create or replace view chuboe_future_cost_scheduled_order as
 select ol.ad_org_id, ol.m_product_id, ol.qtyordered - ol.qtydelivered as qtyremaining, ol.priceentered, 
 c.currentcostprice as currentcost, c.futurecostprice as futurecost, 
-(c.futurecostprice - c.currentcostprice) as costdelta
+(c.futurecostprice - c.currentcostprice)*(ol.qtyordered - ol.qtydelivered) as costdelta
 from c_orderline ol
 join c_order o on ol.c_order_id = o.c_order_id
 join chuboe_cost_per_product_per_org c on ol.m_product_id = c.m_product_id and 
