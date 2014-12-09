@@ -2,5 +2,5 @@ When using standard costing, you can set the future cost. Doing so will impact t
 
 Installation Instruction:
 
-1) Execute SQL script
-2) Pack in zip file as System Admin role
+1 Execute SQL script
+2 Pack in zip file as System Admin role
