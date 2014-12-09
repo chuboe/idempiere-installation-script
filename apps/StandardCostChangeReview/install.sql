@@ -24,9 +24,10 @@ where (costinglevel = 'C'
 
 --future cost change impact on booked but not shipped (scheduled) orders
 create or replace view chuboe_future_cost_scheduled_order as
-select ol.ad_org_id, ol.m_product_id, ol.qtyordered - ol.qtydelivered as qtyremaining, ol.priceentered, 
+select ol.ad_client_id, ol.ad_org_id, ol.m_product_id, ol.qtyordered - ol.qtydelivered as qtyremaining, ol.priceentered, 
 c.currentcostprice as currentcost, c.futurecostprice as futurecost, 
-(c.futurecostprice - c.currentcostprice)*(ol.qtyordered - ol.qtydelivered) as costdelta
+(c.futurecostprice - c.currentcostprice)*(ol.qtyordered - ol.qtydelivered) as costdelta,
+c.C_AcctSchema_ID, c.M_CostType_ID
 from c_orderline ol
 join c_order o on ol.c_order_id = o.c_order_id
 join chuboe_cost_per_product_per_org c on ol.m_product_id = c.m_product_id and 
