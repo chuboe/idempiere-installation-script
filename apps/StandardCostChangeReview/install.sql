@@ -20,6 +20,7 @@ where (costinglevel = 'C'
 	and ad_org_id <> 0) or
 	(costinglevel = 'B'
 	and ad_org_id = 0)
+;
 
 --future cost change impact on booked but not shipped (scheduled) orders
 create or replace view chuboe_future_cost_scheduled_order as
