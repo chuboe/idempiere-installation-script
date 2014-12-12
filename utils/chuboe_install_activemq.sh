@@ -16,6 +16,8 @@ ACTIVEMQ_USER="activemq"
 OSUSER="ubuntu"
 INSTALLPATH=/opt/$FOLDER
 CONFIG_FILE="/etc/default/activemq"
+TMP_DIR="/tmp/chuboe_activemq"
+INITDNAME="activemq"
 
 sudo apt-get update
 
@@ -24,8 +26,8 @@ sudo apt-get update
 #chmod +x setHostName.sh
 #sudo ./setHostName.sh
 
-mkdir /tmp/chuboe_activemq
-cd /tmp/chuboe_activemq
+mkdir $TMP_DIR
+cd $TMP_DIR
 wget $DOWNLOAD
 sudo tar zxvf $FILENAME -C /opt/
 
@@ -57,7 +59,7 @@ sudo chown -R $ACTIVEMQ_USER:$ACTIVEMQ_USER $INSTALLPATH
 
 #add activemq as a service that boots automatically
 
-sudo cat <<EOT >> /etc/init.d/activemq
+cat <<EOT >> $TMP_DIR/$INITDNAME
 #!/bin/bash
 #
 # Author
@@ -106,9 +108,11 @@ esac
 
 exit $?
 EOT
-sudo chmod +x /etc/init.d/activemq
-sudo update-rc.d activemq defaults
-sudo /etc/init.d/activemq start
+
+sudo mv $TMP_DIR/$INITDNAME /etc/init.d/
+sudo chmod +x /etc/init.d/$INITDNAME
+sudo update-rc.d $INITDNAME defaults
+sudo /etc/init.d/$INITDNAME start
 
 #test
 #netstat -an|grep 61616
