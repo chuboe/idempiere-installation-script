@@ -76,22 +76,22 @@ umask 077
 start() {
        echo -n $"Starting ActiveMQ: "
        cd $INSTALLPATH/bin
-	   ./activemq start
+       ./activemq start
        echo
-       return $RETVAL
+       return \$RETVAL
 }
 stop() {
        echo -n $"Shutting down ActiveMQ: "
        cd $INSTALLPATH/bin
-	   ./activemq stop
+       ./activemq stop
        echo
-       return $RETVAL
+       return \$RETVAL
 }
 restart() {
        stop
        start
 }
-case "$1" in
+case "\$1" in
  start)
        start
        ;;
@@ -102,11 +102,11 @@ case "$1" in
        restart
        ;;
  *)
-       echo $"Usage: $0 {start|stop|restart}"
+       echo $"Usage: \$0 {start|stop|restart}"
        exit 1
 esac
 
-exit $?
+exit \$?
 EOT
 
 sudo mv $TMP_DIR/$INITDNAME /etc/init.d/
