@@ -26,6 +26,9 @@ sudo apt-get update
 #chmod +x setHostName.sh
 #sudo ./setHostName.sh
 
+#if idempiere does not already exist, you will need to install java
+#sudo apt-get --yes install openjdk-6-jdk
+
 mkdir $TMP_DIR
 cd $TMP_DIR
 wget $DOWNLOAD
