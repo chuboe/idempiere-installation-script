@@ -24,6 +24,8 @@ sudo apt-get update
 #chmod +x setHostName.sh
 #sudo ./setHostName.sh
 
+mkdir /tmp/chuboe_activemq
+cd /tmp/chuboe_activemq
 wget $DOWNLOAD
 sudo tar zxvf $FILENAME -C /opt/
 
