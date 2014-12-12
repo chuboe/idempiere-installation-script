@@ -5,9 +5,16 @@
 #   chuck@chuboe.com
 #   http://chuckboecking.com
 # chuboe_install_activemq.sh
+#
 # Notes:
 #  - If you are running ActiveMQ and iDempiere on the same machine, you need at least 2GB of RAM
 #  - This script is fully functioning as is. Just execute it.
+#
+# Test:
+#  - navigate to url.com:8161
+#  - default username/password = admin/admin
+#  - issue the command "netstat -an|grep 61616"
+#  - more info: http://activemq.apache.org/web-console.html
 
 DOWNLOAD="http://apache.tradebit.com/pub/activemq/5.10.0/apache-activemq-5.10.0-bin.tar.gz"
 FILENAME="apache-activemq-5.10.0-bin.tar.gz"
@@ -116,12 +123,3 @@ sudo mv $TMP_DIR/$INITDNAME /etc/init.d/
 sudo chmod +x /etc/init.d/$INITDNAME
 sudo update-rc.d $INITDNAME defaults
 sudo /etc/init.d/$INITDNAME start
-
-#test
-#netstat -an|grep 61616
-
-#http://activemq.apache.org/web-console.html
-#navigate to url.com:8161 or url.com:8161/admin
-#default username/password = admin/admin
-
-#done
