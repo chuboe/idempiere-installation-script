@@ -5,6 +5,9 @@
 #   chuck@chuboe.com
 #   http://chuckboecking.com
 # chuboe_install_activemq.sh
+# Notes:
+#  - If you are running ActiveMQ and iDempiere on the same machine, you need at least 2GB of RAM
+#  - This script is fully functioning as is. Just execute it.
 
 DOWNLOAD="http://apache.tradebit.com/pub/activemq/5.10.0/apache-activemq-5.10.0-bin.tar.gz"
 FILENAME="apache-activemq-5.10.0-bin.tar.gz"
