@@ -13,6 +13,7 @@
 # 1.5 run iDempiere service as idempiere user
 # 1.6 added hot_standby replication, user home directory check, and removed sleep statement from backup command
 # 1.7 added JVM and PostgreSQL performance enhancements when installing on dedicated boxes.
+# 1.8 Added ActiveMQ JMS installation script
 
 # function to help the user better understand how the script works
 usage()
@@ -50,6 +51,7 @@ Outstanding actions:
 * Create flag or convention to change username and passwords for system generated entries (i.e. MaxSuperUser and MaxSystem)
 	 - add this information to the idempiere feedback file
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
+* Create option to specify password during installation - as opposed to as a command line option
 * Create SQL script with Chucks Favorite changes:
 	- set files to be stored at the file system (not os) - see below drive for attachments
 	- Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
