@@ -1,7 +1,7 @@
 The purpose of this app is to help consignees of inventory create AP Invoices as a result of product sales. This app includes:
 
 * A report of consigned sales
-* An Import Load Format for importing the results of the above report directly into AP Invoices.
+* An Import Loader Format for importing the results of the above report directly into AP Invoices.
 
 See a demonstration of how to [install and use this app here](http://erp-academy.chuckboecking.com/?page_id=2841). 
 This page also gives detailed explanations and demonstrations of how to use iDempiere as a consignor and a consignee of inventory.
