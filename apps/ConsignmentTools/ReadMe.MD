@@ -12,4 +12,4 @@ Installation Instructions:
 2. Pack In the ChuBoe_Consign_System.zip through the System Admin Role
 3. Pack In the ChuBoe_Consign_Report_GW_Print_Format.zip through the GardenAdmin (or any other admin) role
 4. Pack In the 04_ChuBoe_Consign_Import_File_Loader.zip through the GardenAdmin (or any other admin) role
-4. Execuse Role Access Update from your GardenAdmin (or any other admin) role
+4. Execute Role Access Update from your GardenAdmin (or any other admin) role
