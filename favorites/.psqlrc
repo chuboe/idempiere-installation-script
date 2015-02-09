@@ -1,0 +1,15 @@
+\set QUIET 1
+\set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
+\set PROMPT2 '[more] %R > '
+\pset null '[NULL]'
+\x auto
+\set VERBOSITY verbose
+\set HISTFILE ~/.psql_history- :DBNAME
+\set HISTCONTROL ignoredups
+\set COMP_KEYWORD_CASE upper
+\set PSQL_EDITOR /usr/bin/nano
+\set EDITOR /usr/bin/nano
+\set VISUAL /usr/bin/nano
+\timing
+\set HISTSIZE 2000
+\set QUIET 0
