@@ -10,6 +10,7 @@
 \set PSQL_EDITOR /usr/bin/nano
 \set EDITOR /usr/bin/nano
 \set VISUAL /usr/bin/nano
+\set ON_ERROR_ROLLBACK interactive
 \timing
 \set HISTSIZE 2000
-\set QUIET 0
+\unset QUIET
