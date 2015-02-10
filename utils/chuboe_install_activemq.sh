@@ -35,6 +35,9 @@ sudo apt-get update
 #chmod +x setHostName.sh
 #sudo ./setHostName.sh
 
+#all in once command
+#wget bitbucket.org/cboecking/idempiere-installation-script/raw/default/utils/setHostName.sh; chmod +x setHostName.sh; sudo ./setHostName.sh
+
 #if idempiere does not already exist, you will need to install java
 #sudo apt-get --yes install openjdk-6-jdk
 
