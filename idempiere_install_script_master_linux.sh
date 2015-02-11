@@ -747,6 +747,12 @@ echo "HERE END: Launching console-setup.sh"
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
 	echo "HERE: configure apache to present webui on port 80 - reverse proxy"
+	# install apache2 if missed during db/phpgadmin
+	if [[ $IS_INSTALL_DB == "N" ]]
+	then 
+		sudo apt-get install -y apache2
+	fi
+	
 	# copy the iDempiere apache2 configuration file
 	sudo cp $SCRIPTPATH/web/000-webui.conf /etc/apache2/sites-enabled
 	# remove the apache2 default site
