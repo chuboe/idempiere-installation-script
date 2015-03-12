@@ -25,6 +25,11 @@ else
 	echo "">$HGNAME
 	echo "[ui]">>$HGNAME
 	echo "username = iDempiere Master">>$HGNAME
+	echo "">>$HGNAME
+	echo "[extensions]">>$HGNAME
+	echo "purge =">>$HGNAME
+	echo "hgext.mq =">>$HGNAME
+	echo "extdiff =">>$HGNAME
 fi #end if .hgrc file exists
 
 # (2) create the .hgignore file
