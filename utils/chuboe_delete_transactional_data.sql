@@ -133,5 +133,5 @@ delete from I_Inventory;
 delete from I_GLJournal;
 delete from m_distributionrunline;
 delete from c_rfqline;
-delete from c_projectline where c_project_id not in (100);
-delete from c_project where c_project_id not in (100);
+delete from c_projectline where c_project_id not in (select c_project_id from c_acctschema_element);
+delete from c_project where c_project_id not in (select c_project_id from c_acctschema_element);
