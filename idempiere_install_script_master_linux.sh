@@ -14,6 +14,7 @@
 # 1.6 added hot_standby replication, user home directory check, and removed sleep statement from backup command
 # 1.7 added JVM and PostgreSQL performance enhancements when installing on dedicated boxes.
 # 1.8 Added ActiveMQ JMS installation script
+# 1.9 refactored to not use local user and install chuboe_utils beside idempiere - not inside
 
 # function to help the user better understand how the script works
 usage()
