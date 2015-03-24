@@ -38,8 +38,8 @@ OPTIONS:
 	-i	No install iDempiere (DB only)
 	-P	DB password
 	-l	Launch iDempiere as service
-	-u	Specify a username other than ubuntu
-	-B	Use bleeding edge copy of iDempiere
+	-u	Adds this user to the iDempiere group (default: ubuntu)
+	-B	Use bleeding edge copy of iDempiere (defaults to 2.1)
 	-D	Install desktop development tools
 	-j	Specify specific Jenkins build
 	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
