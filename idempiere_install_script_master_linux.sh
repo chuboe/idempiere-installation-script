@@ -85,8 +85,8 @@ PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
 INSTALLPATH="/opt/idempiere-server/"
-CHUBOE_UTIL="/opt/chuboe_utils"
-CHUBOE_PROP="$CHUBOE_UTIL/idempiere-installation-script/properties"
+CHUBOE_UTIL="$INSTALLPATH/chuboe_utils"
+CHUBOE_PROP="$CHUBOE_UTIL/properties"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
@@ -176,15 +176,16 @@ then
 	IS_REPLICATION_MASTER="N"
 fi
 
-# Check if you can create a temp folder
-TMP_INSTALLPATH="/opt/idempiere-server/"
-sudo mkdir /tmp/idempiere-installation-details
-RESULT=$([ -d $TMP_INSTALLPATH ] && echo "Y" || echo "N")
+# Check if home directory exists
+RESULT=$([ -d /home/$OSUSER ] && echo "Y" || echo "N")
+# need to use ~$OSUSER to find the user's home directory and check for its existance. Then set the $HOME_DIR to that directory.
 # echo $RESULT
 if [ $RESULT == "Y" ]; then
-	echo "HERE: User can create a temp directory - placing installation details here $TMP_INSTALLPATH"
+	echo "HERE: User's home directory exists - placing installation details here $HOME_DIR"
 else
-	echo "HERE: User cannot create a temp directory"
+	HOME_DIR="/tmp/idempiere-installation-details/"
+	echo "HERE: User's home directory does not exist. Exiting! Will some day use $HOME_DIR instead!"
+	# sudo mkdir $HOME_DIR
 	exit 1
 fi
 
@@ -793,3 +794,4 @@ then
 fi
 
 # Congratulations!!
+
