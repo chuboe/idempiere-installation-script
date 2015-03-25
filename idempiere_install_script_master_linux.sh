@@ -14,6 +14,7 @@
 # 1.6 added hot_standby replication, user home directory check, and removed sleep statement from backup command
 # 1.7 added JVM and PostgreSQL performance enhancements when installing on dedicated boxes.
 # 1.8 Added ActiveMQ JMS installation script
+# 1.9 refactored to not use local user and install chuboe_utils beside idempiere - not inside
 
 # function to help the user better understand how the script works
 usage()
@@ -37,8 +38,8 @@ OPTIONS:
 	-i	No install iDempiere (DB only)
 	-P	DB password
 	-l	Launch iDempiere as service
-	-u	Specify a username other than ubuntu
-	-B	Use bleeding edge copy of iDempiere
+	-u	Adds this user to the iDempiere group (default: ubuntu)
+	-B	Use bleeding edge copy of iDempiere (defaults to 2.1)
 	-D	Install desktop development tools
 	-j	Specify specific Jenkins build
 	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
