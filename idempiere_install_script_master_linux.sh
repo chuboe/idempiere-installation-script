@@ -579,6 +579,7 @@ then
 	# create IDEMPIEREUSER user and group
 	sudo adduser $IDEMPIEREUSER --system
 
+	# create database password file for iDempiere user
 	echo "localhost:*:*:adempiere:$DBPASS">>/home/$IDEMPIEREUSER/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 /home/$IDEMPIEREUSER/.pgpass
 
