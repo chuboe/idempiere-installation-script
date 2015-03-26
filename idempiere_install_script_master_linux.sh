@@ -598,20 +598,23 @@ then
 	# make installpath
 	# clone id_installer againt to chuboe_isntallpath
 	
-	mkdir /home/$OSUSER/installer_`date +%Y%m%d`
-	mkdir /home/$OSUSER/installer_client_`date +%Y%m%d`
+	mkdir $HOME_DIR/installer_`date +%Y%m%d`
+	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
-	sudo chown $OSUSER:$OSUSER $INSTALLPATH
-	wget $IDEMPIERESOURCEPATH -P /home/$OSUSER/installer_`date +%Y%m%d`
-	wget $IDEMPIERECLIENTPATH -P /home/$OSUSER/installer_client_`date +%Y%m%d`
+	
+	#TODO remove the below line
+	#sudo chown $OSUSER:$OSUSER $INSTALLPATH
+	
+	sudo wget $IDEMPIERESOURCEPATH -P $HOME_DIR/installer_`date +%Y%m%d`
+	sudo wget $IDEMPIERECLIENTPATH -P $HOME_DIR/installer_client_`date +%Y%m%d`
 	if [[ $IS_BLEED_EDGE == "Y" ]]
 	then
 		echo "HERE: IS_BLEED_EDGE == Y"
-		wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P /home/$OSUSER/installer_`date +%Y%m%d` -O iDempiere_Version.html
+		sudo wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P $HOME_DIR/installer_`date +%Y%m%d` -O iDempiere_Version.html
 	fi
 
 	# check if file downloaded
-	RESULT=$(ls -l /home/$OSUSER/installer_`date +%Y%m%d`/*64.zip | wc -l)
+	RESULT=$(ls -l $HOME_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
 	if [ $RESULT -ge 1 ]; then
         	echo "HERE: file exists"
 	else
@@ -625,14 +628,10 @@ then
 		exit 1
 	fi
 
-	unzip /home/$OSUSER/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_`date +%Y%m%d`
-	cd /home/$OSUSER/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
+	sudo unzip $HOME_DIR/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d $HOME_DIR/installer_`date +%Y%m%d`
+	cd $HOME_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
-	mkdir log
-	mkdir chuboe_backup
-	mkdir chuboe_restore
-	mkdir chuboe_temp
 
 	echo "">>$README
 	echo "">>$README
@@ -699,14 +698,16 @@ echo "HERE END: Launching console-setup.sh"
 
 	# add pgcrypto to support apache based authentication
 	echo "HERE: pgcrypto extension"
-	psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
+	sudo -u idempiere psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
 
 	echo "HERE: copying over chuboe_utils"
+	cd 
 	echo "">>$README
 	echo "">>$README
 	mkdir $CHUBOE_UTIL
-	cp -r $SCRIPTPATH/utils/* $CHUBOE_UTIL
-	echo "Write out iDempiere properties file for use in other scripts"
+	cd $CHUBOE_UTIL
+	sudo hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+
 	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
 	echo $IDEMPIERE_VERSION > $CHUBOE_PROP/IDEMPIERE_VERSION.txt
 	chmod +x $CHUBOE_UTIL/*.sh
