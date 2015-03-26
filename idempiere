@@ -49,7 +49,6 @@ start () {
     cd $IDEMPIERE_HOME/utils
     . $ENVFILE 
     export LOGFILE=$IDEMPIERE_LOG/idempiere_`date +%Y%m%d%H%M%S`.log
-    sudo su $IDEMPIEREUSER -c "mkdir -p IDEMPIERE_HOME/log"
     sudo su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
     RETVAL=$?
     if [ $RETVAL -eq 0 ] ; then
