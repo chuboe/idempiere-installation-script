@@ -735,7 +735,7 @@ echo "HERE END: Launching console-setup.sh"
 	cd 
 	echo "">>$README
 	echo "">>$README
-	mkdir $CHUBOE_UTIL
+	sudo mkdir $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	sudo hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 
