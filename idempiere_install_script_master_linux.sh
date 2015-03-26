@@ -578,6 +578,8 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "Installing iDemipere because IS_INSTALL_ID == Y">>$README
+	echo "">>$README
+	echo "">>$README
 	echo "SECURITY NOTICE: Execute the below command if you want no other user to see your home directory">>$README
 	echo "  sudo chmod -R o-rx /home/$OSUSER">>$README
 
@@ -585,8 +587,10 @@ then
 	sudo adduser $IDEMPIEREUSER --system
 
 	# create database password file for iDempiere user
-	echo "localhost:*:*:adempiere:$DBPASS">>/home/$IDEMPIEREUSER/.pgpass
-	sudo -u $IDEMPIEREUSER chmod 600 /home/$IDEMPIEREUSER/.pgpass
+	sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
+	sudo chown $IDEMPIEREUSER: $HOME_DIR/.pgpass
+	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
+	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
 
 	echo "">>$README
 	echo "">>$README
@@ -602,11 +606,11 @@ then
 
 	# make installpath
 	# clone id_installer againt to chuboe_isntallpath
-	
+
 	mkdir $HOME_DIR/installer_`date +%Y%m%d`
 	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
-	
+
 	sudo wget $IDEMPIERESOURCEPATH -P $HOME_DIR/installer_`date +%Y%m%d`
 	sudo wget $IDEMPIERECLIENTPATH -P $HOME_DIR/installer_client_`date +%Y%m%d`
 	if [[ $IS_BLEED_EDGE == "Y" ]]
@@ -747,8 +751,8 @@ echo "HERE END: Launching console-setup.sh"
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
 
-	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $CHUBOE_UTIL
+	sudo chown -R $IDEMPIEREUSER: $INSTALLPATH
+	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
 	sudo chmod -R 0640 $INSTALLPATH
 	sudo chmod -R 0640 $CHUBOE_UTIL
 	sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
