@@ -163,6 +163,7 @@ IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/bu
 IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
 
 #if bleeding edge
+echo "HERE: check if is Bleeding edge"
 if [[ $IS_BLEED_EDGE == "Y" ]]
 then
 	echo "HERE: update source and client paths"
@@ -172,6 +173,7 @@ fi
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
+echo "HERE: check if IS_REPLICATION_MASTER should = N"
 if [[ $IS_INSTALL_ID == "N" && $REPLICATION_URL != "Master" ]]
 then
 	echo "HERE: Check if Is Replication Master"
@@ -179,6 +181,7 @@ then
 fi
 
 # Check if you can create a temp folder
+echo "HERE: check if you can create a temp folder"
 sudo mkdir $HOME_DIR
 RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
