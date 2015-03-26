@@ -89,7 +89,8 @@ HOME_DIR="/tmp/chuboe-idempiere-server/"
 README="$HOME_DIR/idempiere_installer_feedback.txt"
 INSTALLPATH="/opt/idempiere-server/"
 CHUBOE_UTIL="/opt/chuboe_utils"
-CHUBOE_PROP="$CHUBOE_UTIL/idempiere-installation-script/properties"
+CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/properties"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
@@ -202,7 +203,7 @@ echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
 echo "Install Path="$INSTALLPATH
 echo "Chuboe_Util Path="$CHUBOE_UTIL
-echo "Chuboe_Properties Path="$CHUBOE_PROP
+echo "Chuboe_Properties Path="$CHUBOE_UTIL_HG_PROP
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
@@ -602,9 +603,6 @@ then
 	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
 	
-	#TODO remove the below line
-	#sudo chown $OSUSER:$OSUSER $INSTALLPATH
-	
 	sudo wget $IDEMPIERESOURCEPATH -P $HOME_DIR/installer_`date +%Y%m%d`
 	sudo wget $IDEMPIERECLIENTPATH -P $HOME_DIR/installer_client_`date +%Y%m%d`
 	if [[ $IS_BLEED_EDGE == "Y" ]]
@@ -708,12 +706,11 @@ echo "HERE END: Launching console-setup.sh"
 	cd $CHUBOE_UTIL
 	sudo hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 
-	echo $JENKINSPROJECT > $CHUBOE_PROP/JENKINS_PROJECT.txt
-	echo $IDEMPIERE_VERSION > $CHUBOE_PROP/IDEMPIERE_VERSION.txt
-	chmod +x $CHUBOE_UTIL/*.sh
+	sudo sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
+	sudo sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
+
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 	#Security: Only allow the owner of the idempiere folder to access the below file.
-	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
 	# if server is dedicated to iDempiere, give it more power
 	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
@@ -747,6 +744,11 @@ echo "HERE END: Launching console-setup.sh"
 	fi
 
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
+	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $CHUBOE_UTIL
+	sudo chmod -R 0640 $INSTALLPATH
+	sudo chmod -R 0640 $CHUBOE_UTIL
+	sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
+	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
@@ -758,7 +760,7 @@ echo "HERE END: Launching console-setup.sh"
 	then 
 		sudo apt-get install -y apache2
 	fi
-	
+
 	# copy the iDempiere apache2 configuration file
 	sudo cp $SCRIPTPATH/web/000-webui.conf /etc/apache2/sites-enabled
 	# remove the apache2 default site
