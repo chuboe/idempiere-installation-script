@@ -90,7 +90,7 @@ README="$HOME_DIR/idempiere_installer_feedback.txt"
 INSTALLPATH="/opt/idempiere-server/"
 CHUBOE_UTIL="/opt/chuboe_utils/"
 CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
-CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/properties/"
+CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
 INITDNAME="idempiere"
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
@@ -231,24 +231,18 @@ cat /etc/*-release
 
 # Create file to give user feedback about installation
 echo "">$README
+echo "Welcome to the iDempiere Installer.">$README
+echo "The purpose of this file is to help you understand what this script accomplished.">$README
+echo "If anything went wrong during the installation, you will see line in this file that begins with ERROR:">$README
+echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the erp-academy.chuckboecking.com site.">$README
 
 # Check to ensure DB password is set
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
 	echo "HERE: Must set DB Password if installing DB!!"
-	echo "Must set DB Password if installing DB!! Stopping script!">>$README
-	exit 1
-fi
-
-# TODO this section can be deleted
-# Check if user exists
-RESULT=$(id -u $OSUSER)
-if [ $RESULT -ge 0 ]; then
-	echo "HERE: OSUser exists"
-else
-	echo "HERE: OSUser does not exist. Stopping script!"
-	echo "OSUser does not exist. Stopping script!">>$README
-	# nano /home/$OSUSER/$README
+	echo "">$README
+	echo "">$README
+	echo "ERROR: Must set DB Password if installing DB!! Stopping script!">>$README
 	exit 1
 fi
 
@@ -411,8 +405,22 @@ then
 	echo "">>$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
 
+	# Check if OS user exists
+	RESULT=$(id -u $OSUSER)
+	if [ $RESULT -ge 0 ]; then
+		echo "HERE: OSUser exists"
+	else
+		echo "ERROR: HERE: OSUser does not exist. Stopping script!"
+		echo "">$README
+		echo "">$README
+		echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
+		# nano /home/$OSUSER/$README
+		exit 1
+	fi
+
 	# nice MATE desktop installation (compatible with 14.04)
 	# http://wiki.mate-desktop.org/download)
+	echo "HERE:Installing xrdp and ubuntu-mate-desktop"
 	sudo apt-get install -y xrdp
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/ppa
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/trusty-mate
@@ -435,9 +443,23 @@ then
 	echo "HERE: set the ubuntu password using passwd command to log in remotely"
 	echo "">>$README
 	echo "">>$README
-	echo "ACTION REQUIRED: set the ubuntu password using 'passwd' command to log in remotely">>$README
-	echo "--------> to set the password for the ubuntu user: 'sudo passwd $OSUSER'">>$README
-	echo "--------> the script installed 'xrdp' with allows you to use Windows Remote Desktop to connect.">>$README
+	echo "ACTION REQUIRED: before you can log in using remote desktop, you must set the ubuntu password using 'passwd' command.">>$README
+	echo "---> to set the password for the ubuntu user: 'sudo passwd $OSUSER'">>$README
+	echo "---> the script installed 'xrdp' with allows you to use Windows Remote Desktop to connect.">>$README
+	echo "">>$README
+	echo "">>$README
+	echo "NOTE: Use the following linux command to see what XRDP/VNC sessions are open:">>$README
+	echo "---> wvnc -> which is short for: sudo netstat -tulpn | grep Xvnc">>$README
+	echo "---> It is usually 5910 the first time you connect.">>$README
+	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>$README
+	echo "---> set desktop wallpaper to top-left gradient">>$README
+	echo "---> set theme to menta">>$README
+	echo "---> set fixed width font to monospace">>$README
+	echo "NOTE: Command/Terminal niceties - edit -> Profile Preferences:">>$README
+	echo "---> General Tab -> turn off the terminal bell">>$README
+	echo "---> Colors tab -> Choose White on Black">>$README
+	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
+
 	mkdir /home/$OSUSER/dev
 	mkdir /home/$OSUSER/dev/downloads
 	mkdir /home/$OSUSER/dev/plugins
@@ -460,6 +482,10 @@ then
 	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" /home/$OSUSER/.bashrc
 	sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" /home/$OSUSER/.bashrc
 
+	echo "">>$README
+	echo "">>$README
+	echo "A clean or prestine copy of the iDempiere code is downloaded to /home/$OSUSER/dev/idempiere">>$README
+	echo "A working copy of iDempiere's code is downloaded to /home/$OSUSER/dev/myexperiment">>$README
 	# get idempiere code
 	echo "HERE: Installing iDempiere via mercurial"
 	cd /home/$OSUSER/dev
@@ -474,6 +500,10 @@ then
 	#if not bleeding edge
 	if [[ $JENKINSPROJECT == "iDempiere"$IDEMPIERE_VERSION"Daily" ]]
 	then
+		echo "">>$README
+		echo "">>$README
+		echo "The working copy of iDempiere code in /home/$OSUSER/dev/myexperiment has been updated to verion $IDEMPIERE_VERSION">>$README
+		echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
 		hg update -r release-"$IDEMPIERE_VERSION"
 	fi
 
@@ -482,47 +512,36 @@ then
 
 	echo "">>$README
 	echo "">>$README
-	echo "When the script finishes, log in via remote desktop.">>$README
-	echo "NOTE: Use the following command to see what XRDP/VNC sessions are open:">>$README
-	echo "--> wvnc -> which is short for: sudo netstat -tulpn | grep Xvnc">>$README
-	echo "--> It is usually 5910 the first time you connect.">>$README
-	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>$README
-	echo "--> set desktop wallpaper to top-left gradient">>$README
-	echo "--> set theme to menta">>$README
-	echo "--> set fixed width font to monospace">>$README
-	echo "NOTE: Command/Terminal niceties - edit -> Profile Preferences:">>$README
-	echo "--> General Tab -> turn off the terminal bell">>$README
-	echo "--> Colors tab -> Choose White on Black">>$README
-	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
-	echo "">>$README
-	echo "">>$README
-	echo "NOTE: By default, the script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-	echo "--> Make sure you update your code set the correct branch to match your binaries: hg update -r [BranchName]">>$README
-	echo "--> Doing so helps ensure your code matches the database that was installed/initialized.">>$README
-	echo "Copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>$README
+	echo "This section discusses how to build iDempiere in Eclipse">>$README
+	echo "STEP 1">>$README
+	echo "To launch eclipse, copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>$README
 	echo "Open Eclipse.">>$README
 	echo "Choose the myexperiment folder as your workspace when eclipse launches.">>$README
 	echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>$README
 	echo "Add the mercurial and buckminster plugins.">>$README
-	echo "More detailed instructions for the following can be found at http://www.globalqss.com/wiki/index.php/IDempiere/Install_Prerequisites_on_Ubuntu">>$README
-	echo " --> Mercurial">>$README
+	echo " ---> Mercurial">>$README
 	echo " ------> http://mercurialeclipse.eclipselabs.org.codespot.com/hg.wiki/update_site/stable">>$README
 	echo " ------> choose mercurial but not windows binaries">>$README
-	echo " --> Buckminster">>$README
+	echo " ---> Buckminster">>$README
 	echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>$README
 	echo " ------> choose Core, Maven, and PDE">>$README
-	echo " --> JasperStudio (Optional for Jasper Reports)">>$README
+	echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
 	echo " ------> http://jasperstudio.sf.net/updates">>$README
 	echo " ------> note: use Report Design perspective when ready to create reports.">>$README
+	echo "More detailed instructions for the following can be found at http://www.globalqss.com/wiki/index.php/IDempiere/Install_Prerequisites_on_Ubuntu">>$README
+	echo "">>$README
+	echo "">>$README
+	echo "STEP 2">>$README
 	echo "Click on Window > Preferences > Plug-in Development > Target Platform.">>$README
 	echo "Create your target platform.">>$README
-	echo "Click on File > Import > Buckminster > Materialize from Buckminster MSPEC, CQUERY or BOM.">>$README
+	echo "Click on File > Import > Buckminster > Materialize from Buckminster CQUERY.">>$README
 	echo "Materialize the project. If you browse to org.adempiere.sdk-feature/adempiere.cquery (instead of MSPEC),">>$README
-	echo " --> eclipse will automatically build the workspace">>$README
+	echo " ---> eclipse will automatically build the workspace as part of the buckminster import process">>$README
 	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>$README
 	echo "">>$README
 	echo "">>$README
-	echo "Please note that iDempiere is installed twice: first as a service, and second in eclipse.">>$README
+	echo "Important Note!">>$README
+	echo "iDempiere is installed twice: first as a service, and second in eclipse.">>$README
 	echo "If you run the iDempiere server through eclipse, make sure you stop the iDempiere service using 'sudo service idempiere stop' first.">>$README
 
 	echo "HERE END: Install desktop components because IS_INSTALL_DESKTOP == Y"
@@ -540,7 +559,7 @@ then
 	echo "HERE: Moving DB because IS_MOVE_DB == Y"
 	echo "">>$README
 	echo "">>$README
-	echo "Moving DB because IS_MOVE_DB == Y">>$README
+	echo "The database files are being moved. You can access the mount directly at /vol">>$README
 	sudo apt-get update
 	sudo apt-get install -y xfsprogs
 	#sudo apt-get install -y postgresql #uncomment if you need the script to install the db
@@ -577,10 +596,10 @@ then
 	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"
 	echo "">>$README
 	echo "">>$README
-	echo "Installing iDemipere because IS_INSTALL_ID == Y">>$README
+	echo "iDemipere is installed on this server">>$README
 	echo "">>$README
 	echo "">>$README
-	echo "SECURITY NOTICE: Execute the below command if you want no other user to see your home directory">>$README
+	echo "Note: The below command helps you prevent other users from seeing your home directory">>$README
 	echo "  sudo chmod -R o-rx /home/$OSUSER">>$README
 
 	# create IDEMPIEREUSER user and group
@@ -592,10 +611,9 @@ then
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
 
-	echo "">>$README
-	echo "">>$README
-	echo "To add your OS user to the iDempiere group, issue the following commands">>$README
-	echo "	sudo usermod -a -G $IDEMPIEREUSER YOUR_USER_NAME_HERE">>$README
+	#the following is no longer applicable since iDempiere is now a system user
+	#echo "To add your OS user to the iDempiere group, issue the following commands">>$README
+	#echo "	sudo usermod -a -G $IDEMPIEREUSER YOUR_USER_NAME_HERE">>$README
 
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
@@ -628,8 +646,8 @@ then
 		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed"
 		echo "">>$README
 		echo "">>$README
-		echo "File does not exist. Stopping script!">>$README
-		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed">>$README
+		echo "ERROR: The iDempiere binary file download failed. The file does not exist locally. Stopping script!">>$README
+		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed.">>$README
 		# nano /home/$OSUSER/$README
 		exit 1
 	fi
@@ -641,30 +659,36 @@ then
 
 	echo "">>$README
 	echo "">>$README
+	echo "The following section applies to the iDempiere Swing client.">>$README
 	echo "To use the swing client, unzip it by issuing the command:">>$README
-	echo "----> unzip /home/$OSUSER/installer_client_`date +%Y%m%d`/idempiereClient.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_client_`date +%Y%m%d`">>$README
-	echo "----> change directory to your adempiere-client directory in your new unzipped folder.">>$README
-	echo "----> Launch the client using ./adempiere-client.sh">>$README
-	echo "----> At the login screen, click on the server field.">>$README
-	echo "----> In the server dialog, set the Application Host (for example: localhost) to your web server,">>$README
-	echo "--------> and set the Application Port to 8443.">>$README
-	echo "--------> Test the application server and database then click the green check.">>$README
+	echo "---> unzip /home/$OSUSER/installer_client_`date +%Y%m%d`/idempiereClient.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_client_`date +%Y%m%d`">>$README
+	echo "---> change directory to your adempiere-client directory in your new unzipped folder.">>$README
+	echo "---> Launch the client using ./adempiere-client.sh">>$README
+	echo "---> At the login screen, click on the server field.">>$README
+	echo "---> In the server dialog, set the Application Host (for example: localhost) to your web server,">>$README
+	echo "------> and set the Application Port to 8443.">>$README
+	echo "------> Test the application server and database then click the green check.">>$README
 	echo "To install swing clients for other OS's, go to:">>$README
-	echo "----> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>$README
-	echo "----> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v"$IDEMPIERE_VERSION"/swing-client/">>$README
+	echo "---> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>$README
+	echo "---> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v"$IDEMPIERE_VERSION"/swing-client/">>$README
 	echo "">>$README
 	echo "">>$README
+	echo "This section applies to offsite backups.">>$README
+	echo "The utilities directory includes some very useful scipts: $CHUBOE_UTIL_HG/utils">>$README
 	echo "Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.">>$README
-	echo "----> s3cmd --configure">>$README
-	echo "--------> get your access key and secred key by logging into your AWS account">>$README
-	echo "--------> enter a password. Chose something different than your AWS password. Write it down!!">>$README
-	echo "--------> Accept the default path to GPG">>$README
-	echo "--------> Answer yes to HTTPS">>$README
-	echo "----> s3cmd mb s3://iDempiere_backup">>$README
+	echo "---> s3cmd --configure">>$README
+	echo "------> get your access key and secred key by logging into your AWS account">>$README
+	echo "------> enter a password. Chose something different than your AWS password. Write it down!!">>$README
+	echo "------> Accept the default path to GPG">>$README
+	echo "------> Answer yes to HTTPS">>$README
+	echo "Create your new S3 backup bucket">>$README
+	echo "---> s3cmd mb s3://iDempiere_backup">>$README
+	echo "IMPORTANT NOTE: the above S3 bucket name might not be available. If not, use something like iDempiere_backup_YOURNAME.">>$README
+	echo "If you do need to change the bucket name, make sure both the backup and the restore scripts are updated accordingly.">>$README
 	echo "">>$README
 	echo "">>$README
 	echo "To update your server's timezone, run this command:">>$README
-	echo "----> sudo dpkg-reconfigure tzdata">>$README
+	echo "---> sudo dpkg-reconfigure tzdata">>$README
 
 echo "HERE: Launching console-setup.sh"
 #not indented because of file input
@@ -706,7 +730,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "HERE: pgcrypto extension"
 	sudo -u idempiere psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
 
-	echo "HERE: copying over chuboe_utils"
+	echo "HERE: Creating chuboe_utils"
 	cd 
 	echo "">>$README
 	echo "">>$README
@@ -717,8 +741,8 @@ echo "HERE END: Launching console-setup.sh"
 	sudo sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sudo sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
 
+	#prevent the backup's annoying 30 second delay
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
-	#Security: Only allow the owner of the idempiere folder to access the below file.
 
 	# if server is dedicated to iDempiere, give it more power
 	TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
@@ -751,6 +775,7 @@ echo "HERE END: Launching console-setup.sh"
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
 
+	#hand ownership of iDempiere direcetory to the idempiere user
 	sudo chown -R $IDEMPIEREUSER: $INSTALLPATH
 	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
 	sudo chmod -R 0640 $INSTALLPATH
@@ -760,6 +785,7 @@ echo "HERE END: Launching console-setup.sh"
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
+	#TODO check to see if this still works since idempiere is a system user
 	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
 	echo "HERE: configure apache to present webui on port 80 - reverse proxy"
@@ -800,7 +826,7 @@ then
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>$README
 	echo "">>$README
-	echo "iDempiere set to start on boot">>$README
+	echo "iDempiere is started and is set to start on system boot">>$README
 	sudo -u idempiere cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
 	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
@@ -811,4 +837,6 @@ fi
 
 sudo chmod -R 0555 $HOME_DIR
 
-# Congratulations!!
+echo "">>$README
+echo "">>$README
+echo "Contratulations - the script seems to have executed successfully.">>$README
