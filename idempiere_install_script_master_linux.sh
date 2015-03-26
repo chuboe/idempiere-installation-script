@@ -805,4 +805,6 @@ then
 	echo "HERE END: IS_LANUNCH_ID == Y"
 fi
 
+sudo chmod -R 0555 $HOME_DIR
+
 # Congratulations!!
