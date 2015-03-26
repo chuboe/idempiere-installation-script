@@ -738,6 +738,7 @@ echo "HERE END: Launching console-setup.sh"
 	sudo mkdir $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	sudo hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+	sudo hg update development-release-20150324
 
 	sudo sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sudo sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
@@ -779,8 +780,8 @@ echo "HERE END: Launching console-setup.sh"
 	#hand ownership of iDempiere direcetory to the idempiere user
 	sudo chown -R $IDEMPIEREUSER: $INSTALLPATH
 	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
-	sudo chmod -R 0640 $INSTALLPATH
-	sudo chmod -R 0640 $CHUBOE_UTIL
+	sudo chmod -R 0655 $INSTALLPATH
+	sudo chmod -R 0655 $CHUBOE_UTIL
 	sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
