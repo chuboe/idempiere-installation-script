@@ -183,6 +183,7 @@ fi
 # Check if you can create a temp folder
 echo "HERE: check if you can create a temp folder"
 sudo mkdir $HOME_DIR
+sudo chmod -R 0666 $HOME_DIR
 RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
 if [ $RESULT == "Y" ]; then
