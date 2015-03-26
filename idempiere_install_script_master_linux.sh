@@ -628,14 +628,10 @@ then
 	mkdir $HOME_DIR/installer_`date +%Y%m%d`
 	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
+	sudo chmod 0777 $INSTALLPATH
 
 	sudo wget $IDEMPIERESOURCEPATH -P $HOME_DIR/installer_`date +%Y%m%d`
 	sudo wget $IDEMPIERECLIENTPATH -P $HOME_DIR/installer_client_`date +%Y%m%d`
-	if [[ $IS_BLEED_EDGE == "Y" ]]
-	then
-		echo "HERE: IS_BLEED_EDGE == Y"
-		sudo wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P $HOME_DIR/installer_`date +%Y%m%d` -O iDempiere_Version.html
-	fi
 
 	# check if file downloaded
 	RESULT=$(ls -l $HOME_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
@@ -656,6 +652,11 @@ then
 	cd $HOME_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
+	if [[ $IS_BLEED_EDGE == "Y" ]]
+		then
+			echo "HERE: IS_BLEED_EDGE == Y"
+			sudo wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P $INSTALLPATH -O iDempiere_Build_Details.html
+		fi
 
 	echo "">>$README
 	echo "">>$README
@@ -835,8 +836,8 @@ then
 	echo "HERE END: IS_LANUNCH_ID == Y"
 fi
 
-sudo chmod -R 0555 $HOME_DIR
-
 echo "">>$README
 echo "">>$README
 echo "Contratulations - the script seems to have executed successfully.">>$README
+
+sudo chmod -R 0555 $HOME_DIR
