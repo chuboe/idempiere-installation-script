@@ -44,9 +44,6 @@ then
 else
 	echo "HERE: creating $IGNORENAME file"
 	echo "syntax: glob" >> $INSTALLPATH/$IGNORENAME
-	echo "chuboe_backup" >>  $INSTALLPATH/$IGNORENAME
-	echo "chuboe_restore" >>  $INSTALLPATH/$IGNORENAME
-	echo "chuboe_temp" >>  $INSTALLPATH/$IGNORENAME
 	echo "log" >>  $INSTALLPATH/$IGNORENAME
 	echo "data/*" >>  $INSTALLPATH/$IGNORENAME
 	echo "*.tmp*" >>  $INSTALLPATH/$IGNORENAME
