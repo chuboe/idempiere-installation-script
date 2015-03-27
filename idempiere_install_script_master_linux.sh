@@ -765,21 +765,21 @@ echo "HERE END: Launching console-setup.sh"
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
 	echo "This the utils directory has some scripts that make supporting and maintaining iDempiere much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
-	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
+	sudo chmod 0777 $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
-	sudo -u $IDEMPIEREUSER hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 	
 	#added the following trying to get rid of an unknown user error
-	sudo -u $IDEMPIEREUSER cp /home/$IDEMPIEREUSER/.hgrc $CHUBOE_UTIL_HG/.hg/hgrc
+	cp /home/$IDEMPIEREUSER/.hgrc $CHUBOE_UTIL_HG/.hg/hgrc
 	
 	#TODO remove the below two lines when moving to production
 	cd $CHUBOE_UTIL_HG
-	sudo -u $IDEMPIEREUSER hg update development-release-20150324
+	hg update development-release-20150324
 
-	sudo sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
-	sudo sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
+	sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
+	sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
 	
-	sudo -u $IDEMPIEREUSER hg commit -m "commit after installation - updated variables specific to this machine"
+	hg commit -m "commit after installation - updated variables specific to this machine"
 
 	#prevent the backup's annoying 30 second delay
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
