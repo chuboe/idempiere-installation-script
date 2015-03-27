@@ -620,7 +620,15 @@ then
 	sudo chown $IDEMPIEREUSER: $HOME_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
-	
+
+	echo "">>$README
+	echo "">>$README
+	echo "Your user will have read access to the $CHUBOE_UTIL_HG repository.">>$README
+	echo "If you issue mercurial command as your user, you might get trust issues.">>$README
+	echo "If so, add the following to your /home/YOURUSER/.hgrc file">>$README
+	echo "	[trusted]">>$README
+	echo "	users = $IDEMPIEREUSER">>$README
+
 	# create mercurial .hgrc file for $IDEMPIEREUSER. This allows the user to commit/push changes
 	sudo echo "[ui]">>$HOME_DIR/.hgrc
 	sudo echo "username = YourName <YourName@YourURL.com>">>$HOME_DIR/.hgrc
