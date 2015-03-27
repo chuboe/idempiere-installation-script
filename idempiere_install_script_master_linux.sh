@@ -732,13 +732,18 @@ echo "HERE END: Launching console-setup.sh"
 	sudo -u idempiere psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
 
 	echo "HERE: Creating chuboe_utils"
-	cd 
 	echo "">>$README
 	echo "">>$README
+	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
+	echo "This the utils directory has some scripts that make supporting and maintaining iDempiere much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
+	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
-	sudo hg clone https://bitbucket.org/cboecking/idempiere-installation-script
-	sudo hg update development-release-20150324
+	sudo -u idempiere hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+	
+	#TODO remove the below two lines when moving to production
+	cd $CHUBOE_UTIL_HG
+	sudo -u idempiere hg update development-release-20150324
 
 	sudo sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sudo sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
