@@ -629,17 +629,6 @@ then
 	echo "	[trusted]">>$README
 	echo "	users = $IDEMPIEREUSER">>$README
 
-	# create mercurial .hgrc file for $IDEMPIEREUSER. This allows the user to commit/push changes
-	sudo echo "[ui]">>$HOME_DIR/.hgrc
-	sudo echo "username = YourName <YourName@YourURL.com>">>$HOME_DIR/.hgrc
-	sudo echo "">>$HOME_DIR/.hgrc
-	sudo echo "[extensions]">>$HOME_DIR/.hgrc
-	sudo echo "purge =">>$HOME_DIR/.hgrc
-	sudo echo "hgext.mq =">>$HOME_DIR/.hgrc
-	sudo echo "extdiff =">>$HOME_DIR/.hgrc
-	sudo chown $IDEMPIEREUSER: $HOME_DIR/.hgrc
-	sudo mv $HOME_DIR/.hgrc /home/$IDEMPIEREUSER/
-
 	#echo "To add your OS user to the iDempiere group, issue the following commands">>$README
 	#echo "	sudo usermod -a -G $IDEMPIEREUSER YOUR_USER_NAME_HERE">>$README
 
@@ -768,10 +757,20 @@ echo "HERE END: Launching console-setup.sh"
 	sudo chmod 0777 $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
-	
-	#added the following trying to get rid of an unknown user error
-	cp /home/$IDEMPIEREUSER/.hgrc $CHUBOE_UTIL_HG/.hg/hgrc
-	
+
+	# create mercurial hgrc file for project.
+	echo "[ui]">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "username = YourName <YourName@YourURL.com>">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "[extensions]">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "purge =">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "hgext.mq =">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "extdiff =">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "[paths]">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "default = https://bitbucket.org/cboecking/idempiere-installation-script">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "default-push = /dev/null/">>$CHUBOE_UTIL_HG/.hg/hgrc
+
 	#TODO remove the below two lines when moving to production
 	cd $CHUBOE_UTIL_HG
 	hg update development-release-20150324
@@ -779,7 +778,7 @@ echo "HERE END: Launching console-setup.sh"
 	sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
 	
-	hg commit -m "commit after installation - updated variables specific to this machine"
+	hg commit -m "commit after installation - updated variables specific to this installation"
 
 	#prevent the backup's annoying 30 second delay
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
