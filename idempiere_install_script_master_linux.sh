@@ -603,7 +603,7 @@ then
 	echo "  sudo chmod -R o-rx /home/$OSUSER">>$README
 
 	# create IDEMPIEREUSER user and group
-	sudo adduser $IDEMPIEREUSER --system
+	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "idempiere,none,none,none"
 
 	# create database password file for iDempiere user
 	sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
@@ -729,7 +729,7 @@ echo "HERE END: Launching console-setup.sh"
 
 	# add pgcrypto to support apache based authentication
 	echo "HERE: pgcrypto extension"
-	sudo -u idempiere psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
+	sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
 
 	echo "HERE: Creating chuboe_utils"
 	echo "">>$README
@@ -739,14 +739,16 @@ echo "HERE END: Launching console-setup.sh"
 	sudo mkdir $CHUBOE_UTIL
 	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
-	sudo -u idempiere hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+	sudo -u $IDEMPIEREUSER hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 	
 	#TODO remove the below two lines when moving to production
 	cd $CHUBOE_UTIL_HG
-	sudo -u idempiere hg update development-release-20150324
+	sudo -u $IDEMPIEREUSER hg update development-release-20150324
 
 	sudo sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sudo sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
+	
+	sudo -u $IDEMPIEREUSER hg commit -m "commit after installation - updated variables specific to this machine"
 
 	#prevent the backup's annoying 30 second delay
 	sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
