@@ -639,9 +639,7 @@ then
 	sudo echo "extdiff =">>$HOME_DIR/.hgrc
 	sudo chown $IDEMPIEREUSER: $HOME_DIR/.hgrc
 	sudo mv $HOME_DIR/.hgrc /home/$IDEMPIEREUSER/
-	
 
-	#the following is no longer applicable since iDempiere is now a system user
 	#echo "To add your OS user to the iDempiere group, issue the following commands">>$README
 	#echo "	sudo usermod -a -G $IDEMPIEREUSER YOUR_USER_NAME_HERE">>$README
 
@@ -770,6 +768,9 @@ echo "HERE END: Launching console-setup.sh"
 	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	sudo -u $IDEMPIEREUSER hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+	
+	#added the following trying to get rid of an unknown user error
+	sudo -u $IDEMPIEREUSER cp /home/$IDEMPIEREUSER/.hgrc $CHUBOE_UTIL_HG/.hg/hgrc
 	
 	#TODO remove the below two lines when moving to production
 	cd $CHUBOE_UTIL_HG
