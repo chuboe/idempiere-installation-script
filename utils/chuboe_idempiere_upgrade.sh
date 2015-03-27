@@ -36,14 +36,15 @@ EOF
 }
 
 SERVER_DIR="/opt/idempiere-server"
-CHUBOE_PROP="$SERVER_DIR/chuboe_utils/properties"
-SYNC_APP="https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/raw/tip/script_to_sync_db/syncApplied.sh"
+CHUBOE_UTIL="/opt/chuboe_utils/"
+CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
-MIGRATION_DIR=$SERVER_DIR"/chuboe_temp/migration"
+MIGRATION_DIR=$CHUBOE_UTIL_HG"/chuboe_temp/migration"
 # get JENKINSPROJECT varialble from properties file
-JENKINSPROJECT=$(cat $CHUBOE_PROP/"JENKINS_PROJECT.txt")
-IDEMPIERE_VERSION=$(cat $CHUBOE_PROP/"IDEMPIERE_VERSION.txt")
+JENKINSPROJECT=$(cat $CHUBOE_UTIL_HG_PROP/"JENKINS_PROJECT.txt")
+IDEMPIERE_VERSION=$(cat $CHUBOE_UTIL_HG_PROP/"IDEMPIERE_VERSION.txt")
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
@@ -85,7 +86,6 @@ echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
 echo "SERVER_DIR="$SERVER_DIR
 echo "P2="$P2
-echo "SYNC_APP="$SYNC_APP
 echo "ID_DB_NAME="$ID_DB_NAME
 echo "PG_CONNECT="$PG_CONNECT
 echo "MIGRATION_DIR="$MIGRATION_DIR
@@ -99,7 +99,7 @@ echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
 then
-	cd $SERVER_DIR/chuboe_temp
+	cd $CHUBOE_UTIL_HG/chuboe_temp
 	RESULT=$(ls -l migration.zip | wc -l)
 	if [ $RESULT -ge 1 ]; then
 		echo "HERE: migration.zip already exists"
@@ -125,7 +125,7 @@ fi #end if IS_SKIP_BIN_UPGRADE = N
 cd $SERVER_DIR/utils/
 sh RUN_DBExport.sh
 
-cd $SERVER_DIR/chuboe_utils/
+cd $CHUBOE_UTIL_HG/chuboe_utils/
 
 # run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
