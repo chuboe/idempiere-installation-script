@@ -96,6 +96,9 @@ echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
 echo "JENKINSPROJECT="$JENKINSPROJECT
 echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
 
+#TODO Check if idempiere is running
+#If running - notify user and exit
+
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
 then
