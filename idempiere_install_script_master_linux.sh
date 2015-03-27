@@ -617,6 +617,18 @@ then
 	sudo chown $IDEMPIEREUSER: $HOME_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
+	
+	# create mercurial .hgrc file for $IDEMPIEREUSER. This allows the user to commit/push changes
+	sudo echo "[ui]">>$HOME_DIR/.hgrc
+	sudo echo "username = YourName <YourName@YourURL.com>">>$HOME_DIR/.hgrc
+	sudo echo "">>$HOME_DIR/.hgrc
+	sudo echo "[extensions]">>$HOME_DIR/.hgrc
+	sudo echo "purge =">>$HOME_DIR/.hgrc
+	sudo echo "hgext.mq =">>$HOME_DIR/.hgrc
+	sudo echo "extdiff =">>$HOME_DIR/.hgrc
+	sudo chown $IDEMPIEREUSER: $HOME_DIR/.hgrc
+	sudo mv $HOME_DIR/.hgrc /home/$IDEMPIEREUSER/
+	
 
 	#the following is no longer applicable since iDempiere is now a system user
 	#echo "To add your OS user to the iDempiere group, issue the following commands">>$README
@@ -794,8 +806,8 @@ echo "HERE END: Launching console-setup.sh"
 	#hand ownership of iDempiere direcetory to the idempiere user
 	sudo chown -R $IDEMPIEREUSER: $INSTALLPATH
 	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
-	sudo chmod -R 0655 $INSTALLPATH
-	sudo chmod -R 0655 $CHUBOE_UTIL
+	sudo chmod -R 0755 $INSTALLPATH
+	sudo chmod -R 0755 $CHUBOE_UTIL
 	sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
