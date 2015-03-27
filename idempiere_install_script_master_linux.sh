@@ -230,18 +230,17 @@ echo "Distro details:"
 cat /etc/*-release
 
 # Create file to give user feedback about installation
-echo "">$README
 echo "Welcome to the iDempiere Installer.">$README
-echo "The purpose of this file is to help you understand what this script accomplished.">$README
-echo "If anything went wrong during the installation, you will see line in this file that begins with ERROR:">$README
-echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the erp-academy.chuckboecking.com site.">$README
+echo "The purpose of this file is to help you understand what this script accomplished.">>$README
+echo "If anything went wrong during the installation, you will see line in this file that begins with ERROR:">>$README
+echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the erp-academy.chuckboecking.com site.">>$README
 
 # Check to ensure DB password is set
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
 	echo "HERE: Must set DB Password if installing DB!!"
-	echo "">$README
-	echo "">$README
+	echo "">>$README
+	echo "">>$README
 	echo "ERROR: Must set DB Password if installing DB!! Stopping script!">>$README
 	exit 1
 fi
@@ -254,8 +253,8 @@ then
 		echo "HERE: OSUser exists"
 	else
 		echo "ERROR: HERE: OSUser does not exist. Stopping script!"
-		echo "">$README
-		echo "">$README
+		echo "">>$README
+		echo "">>$README
 		echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
 		# nano /home/$OSUSER/$README
 		exit 1
