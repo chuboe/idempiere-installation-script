@@ -45,7 +45,8 @@ else
 	echo "HERE: creating $IGNORENAME file"
 	echo "syntax: glob" >> $INSTALLPATH/$IGNORENAME
 	echo "log" >>  $INSTALLPATH/$IGNORENAME
-	echo "data/*" >>  $INSTALLPATH/$IGNORENAME
+	echo "data/*.jar" >>  $INSTALLPATH/$IGNORENAME
+	echo "data/*.dmp" >>  $INSTALLPATH/$IGNORENAME
 	echo "*.tmp*" >>  $INSTALLPATH/$IGNORENAME
 	echo "HERE: perform init, add, and commit"
 	hg init
