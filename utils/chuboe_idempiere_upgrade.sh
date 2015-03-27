@@ -128,7 +128,7 @@ fi #end if IS_SKIP_BIN_UPGRADE = N
 cd $SERVER_DIR/utils/
 sh RUN_DBExport.sh
 
-cd $CHUBOE_UTIL_HG/chuboe_utils/
+cd $CHUBOE_UTIL_HG/utils/
 
 # run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
