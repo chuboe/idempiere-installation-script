@@ -824,8 +824,8 @@ echo "HERE END: Launching console-setup.sh"
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
 	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
-	#TODO check to see if this still works since idempiere is a system user
-	sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
+	# 20150327 CBO - Commented out the below line. It is a bad idea to give the local user write abilities. It causes issues and confusion. All work should be done through the idempiere user.
+	#sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
 
 	echo "HERE: configure apache to present webui on port 80 - reverse proxy"
 	# install apache2 if missed during db/phpgadmin
