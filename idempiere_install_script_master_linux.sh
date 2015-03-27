@@ -602,6 +602,13 @@ then
 	echo "Note: The below command helps you prevent other users from seeing your home directory">>$README
 	echo "  sudo chmod -R o-rx /home/$OSUSER">>$README
 
+	echo "">>$README
+	echo "">>$README
+	echo "The script created an '$IDEMPIEREUSER' user without a password.">>$README
+	echo "You can use the 'sudo -u idempiere LinuxCommandHere' process to execute tasks as that user.">>$README
+	echo "You can use the 'sudo -i -u $IDEMPIEREUSER' to become the $IDEMPIEREUSER user.">>$README
+	echo "Loggin in as $IDEMPIEREUSER is often easier that issuing a bunch of sudo commands.">>$README
+	echo "If you need to give $IDEMPIEREUSER a password, use the command 'sudo passwd $IDEMPIEREUSER'.">>$README
 	# create IDEMPIEREUSER user and group
 	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "idempiere,none,none,none"
 
