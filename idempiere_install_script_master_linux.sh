@@ -246,6 +246,22 @@ then
 	exit 1
 fi
 
+if [[ $IS_INSTALL_DESKTOP == "Y" ]]
+then
+	# Check if OS user exists
+	RESULT=$(id -u $OSUSER)
+	if [ $RESULT -ge 0 ]; then
+		echo "HERE: OSUser exists"
+	else
+		echo "ERROR: HERE: OSUser does not exist. Stopping script!"
+		echo "">$README
+		echo "">$README
+		echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
+		# nano /home/$OSUSER/$README
+		exit 1
+	fi
+fi
+
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
 # If you are not running in AWS VPC, you can comment these lines out.
 sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
@@ -404,19 +420,6 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
-
-	# Check if OS user exists
-	RESULT=$(id -u $OSUSER)
-	if [ $RESULT -ge 0 ]; then
-		echo "HERE: OSUser exists"
-	else
-		echo "ERROR: HERE: OSUser does not exist. Stopping script!"
-		echo "">$README
-		echo "">$README
-		echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
-		# nano /home/$OSUSER/$README
-		exit 1
-	fi
 
 	# nice MATE desktop installation (compatible with 14.04)
 	# http://wiki.mate-desktop.org/download)
