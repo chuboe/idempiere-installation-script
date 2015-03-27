@@ -759,7 +759,7 @@ echo "HERE END: Launching console-setup.sh"
 	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 
 	# create mercurial hgrc file for project.
-	echo "[ui]">>$CHUBOE_UTIL_HG/.hg/hgrc
+	echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "username = YourName <YourName@YourURL.com>">>$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "">>$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "[extensions]">>$CHUBOE_UTIL_HG/.hg/hgrc
