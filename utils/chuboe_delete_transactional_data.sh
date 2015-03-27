@@ -6,6 +6,7 @@
 # This script should only be executed from a development instance - NOT PRODUCTION.
 ######################################
 
+CHUBOE_UTIL="/opt/chuboe_utils/"
 CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
 LOGFILE="/log/chuboe_db_del_trx.log"
