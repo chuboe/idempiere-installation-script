@@ -819,8 +819,7 @@ echo "HERE END: Launching console-setup.sh"
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $CHUBOE_UTIL
 	sudo chmod -R go-w $INSTALLPATH
 	sudo chmod -R go-w $CHUBOE_UTIL
-	#the below comment should not be needed
-	#sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
+	sudo chmod -R u+x $CHUBOE_UTIL_HG/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
