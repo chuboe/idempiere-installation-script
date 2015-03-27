@@ -53,10 +53,10 @@ start () {
     RESULT=$([ -d $IDEMPIERE_LOG ] && echo "Y" || echo "N")
     # echo $RESULT
     if [ $RESULT == "Y" ]; then
-        echo "Log directory exists"
+        #echo "Log directory exists"
     else
         echo "Log directory does not exist. Creating one..."
-        sudo -u $IDEMPIEREUSER mkdir IDEMPIERE_LOG
+        sudo -u $IDEMPIEREUSER mkdir $IDEMPIERE_LOG
     fi
 
     sudo su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
