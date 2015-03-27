@@ -121,7 +121,7 @@ if [[ $IS_SKIP_BIN_UPGRADE == "N" ]]
 then
 	# update iDempiere binaries
 	cd $SERVER_DIR
-	sudo -u idempiere ./update.sh $P2
+	./update.sh $P2
 fi #end if IS_SKIP_BIN_UPGRADE = N
 
 # create a database backup just in case things go badly
