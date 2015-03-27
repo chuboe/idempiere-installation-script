@@ -183,7 +183,7 @@ fi
 # Check if you can create a temp folder
 echo "HERE: check if you can create a temp folder"
 sudo mkdir $HOME_DIR
-sudo chmod 0777 $HOME_DIR
+sudo chmod -R go+w $HOME_DIR
 RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
 if [ $RESULT == "Y" ]; then
@@ -645,7 +645,8 @@ then
 	mkdir $HOME_DIR/installer_`date +%Y%m%d`
 	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
-	sudo chmod 0777 $INSTALLPATH
+	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
+	sudo chmod -R go+w $INSTALLPATH
 
 	sudo wget $IDEMPIERESOURCEPATH -P $HOME_DIR/installer_`date +%Y%m%d`
 	sudo wget $IDEMPIERECLIENTPATH -P $HOME_DIR/installer_client_`date +%Y%m%d`
@@ -754,7 +755,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
 	echo "This the utils directory has some scripts that make supporting and maintaining iDempiere much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
-	sudo chmod 0777 $CHUBOE_UTIL
+	sudo chmod -R go+w $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 
@@ -815,11 +816,12 @@ echo "HERE END: Launching console-setup.sh"
 	fi
 
 	#hand ownership of iDempiere direcetory to the idempiere user
-	sudo chown -R $IDEMPIEREUSER: $INSTALLPATH
-	sudo chown -R $IDEMPIEREUSER: $CHUBOE_UTIL
-	sudo chmod -R 0755 $INSTALLPATH
-	sudo chmod -R 0755 $CHUBOE_UTIL
-	sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
+	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
+	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $CHUBOE_UTIL
+	sudo chmod -R go-w $INSTALLPATH
+	sudo chmod -R go-w $CHUBOE_UTIL
+	#the below comment should not be needed
+	#sudo chmod -R +x $CHUBOE_UTIL_HG/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
 	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
@@ -878,4 +880,4 @@ echo "">>$README
 echo "">>$README
 echo "Contratulations - the script seems to have executed successfully.">>$README
 
-sudo chmod -R 0555 $HOME_DIR
+sudo chmod -R go-w $HOME_DIR
