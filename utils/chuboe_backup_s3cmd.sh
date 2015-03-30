@@ -22,6 +22,7 @@ echo  Executing RUN_DBExport.sh local backup utility. >> "$CHUBOE_UTIL_HG"/"$LOG
 if 
     sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     cp "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/
+    sudo rm "$ADEMROOTDIR"/data/ExpDat????????_??????.jar
 then
     echo Prepare latest directory >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     mkdir "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/latest/
