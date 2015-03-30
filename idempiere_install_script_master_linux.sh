@@ -624,7 +624,7 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "Note: The below command helps you prevent other users from seeing your home directory">>$README
-	echo "--->sudo chmod -R o-rx /home/$OSUSER">>$README
+	echo "--->sudo chmod -R o-rx $OSUSER_HOME">>$README
 
 	echo "">>$README
 	echo "">>$README
