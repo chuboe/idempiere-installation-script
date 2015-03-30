@@ -15,6 +15,7 @@ INSTALLPATH="/opt/idempiere-server/"
 IGNORENAME="$INSTALLPATH/.hgignore"
 HGNAME="$INSTALLPATH/.hg/hgrc"
 IDEMPIEREUSER="idempiere"
+CHUBOE_UTIL="/opt/chuboe_utils/"
 CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
 CHUBOE_UTIL_HG_TEMP_HGRC="$CHUBOE_UTIL_HG/chuboe_temp/hgrc"
 CHUBOE_UTIL_HG_TEMP_IGNORE="$CHUBOE_UTIL_HG/chuboe_temp/.hgignore"
@@ -22,7 +23,7 @@ CHUBOE_UTIL_HG_TEMP_IGNORE="$CHUBOE_UTIL_HG/chuboe_temp/.hgignore"
 # Check to see if the repository already exists
 cd $INSTALLPATH
 RESULT=$(ls -l $HGNAME | wc -l)
-if [ $RESULT -ge 1 ]; 
+if [ $RESULT -ge 1 ];
 then
 	echo "HERE: $IGNORENAME already exists"
 	echo "HERE: perform addremove and commit"
@@ -30,7 +31,7 @@ then
 	sudo -u $IDEMPIEREUSER hg commit -m "Regular Commit"
 else
 	# create repository
-	hg init
+	sudo -u $IDEMPIEREUSER hg init
 	echo "HERE: creating $HGNAME file"
 	echo "[ui]">$CHUBOE_UTIL_HG_TEMP_HGRC
 	echo "username = iDempiere Master">>$CHUBOE_UTIL_HG_TEMP_HGRC
@@ -39,8 +40,7 @@ else
 	echo "purge =">>$CHUBOE_UTIL_HG_TEMP_HGRC
 	echo "hgext.mq =">>$CHUBOE_UTIL_HG_TEMP_HGRC
 	echo "extdiff =">>$CHUBOE_UTIL_HG_TEMP_HGRC
-	cd $INSTALLPATH
-	sudo mv $CHUBOE_UTIL_HG_TEMP $HGNAME
+	sudo mv $CHUBOE_UTIL_HG_TEMP_HGRC $HGNAME
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $HGNAME
 
 	echo "HERE: creating $IGNORENAME file"
@@ -52,7 +52,8 @@ else
 	sudo mv $CHUBOE_UTIL_HG_TEMP_IGNORE $IGNORENAME
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $IGNORENAME
 
-	sudo -u $IDEMPIEREUSER hg add
+	cd $INSTALLPATH
+sudo -u $IDEMPIEREUSER hg add
 	sudo -u $IDEMPIEREUSER hg commit -m "Initial Commit"
 
 fi #end if .hgrc file exists
