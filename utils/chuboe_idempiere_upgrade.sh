@@ -39,6 +39,7 @@ SERVER_DIR="/opt/idempiere-server"
 CHUBOE_UTIL="/opt/chuboe_utils/"
 CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
+IDEMPIEREUSER="idempiere"
 ID_DB_NAME="idempiere"
 PG_CONNECT="-h localhost"
 MIGRATION_DIR=$CHUBOE_UTIL_HG"/chuboe_temp/migration"
@@ -121,12 +122,12 @@ if [[ $IS_SKIP_BIN_UPGRADE == "N" ]]
 then
 	# update iDempiere binaries
 	cd $SERVER_DIR
-	./update.sh $P2
+	sudo -u $IDEMPIEREUSER ./update.sh $P2
 fi #end if IS_SKIP_BIN_UPGRADE = N
 
 # create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
-sh RUN_DBExport.sh
+sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
 
 cd $CHUBOE_UTIL_HG/utils/
 
