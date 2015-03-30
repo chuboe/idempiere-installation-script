@@ -836,7 +836,7 @@ echo "HERE END: Launching console-setup.sh"
 	# add OSUSER to IDEMPIEREUSER group
 	if [[ $IDEMPIEREUSER != $OSUSER ]]
 	then
-		echo "HERE: adding $OSUSER to $IDEMPIEREUSER group
+		echo "HERE: adding $OSUSER to $IDEMPIEREUSER group"
 		sudo usermod -a -G $IDEMPIEREUSER $OSUSER
 		echo "">>$README
 		echo "">>$README
