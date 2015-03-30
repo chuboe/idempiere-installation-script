@@ -13,6 +13,7 @@ LOGFILE="/log/chuboe_db_obfuscate.log"
 ADEMROOTDIR="/opt/idempiere-server"
 UTILSDIR="chuboe_utils"
 DATABASE="idempiere"
+IDEMPIEREUSER="idempiere"
 USER="adempiere"
 ADDPG="-h localhost -p 5432"
 
@@ -35,7 +36,7 @@ else
     echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     exit 1
 fi #end if dev environment check
-if "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 then
     echo adembak: Local Backup Succeeded.  >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 else
