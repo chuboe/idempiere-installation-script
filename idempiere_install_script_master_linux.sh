@@ -826,8 +826,8 @@ echo "HERE END: Launching console-setup.sh"
 	fi
 
 	#update owndership and write priviledges after installation is complete
-	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
+	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
+	sudo chown -R $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go-w $INSTALLPATH
 	sudo chmod -R go-w $CHUBOE_UTIL
 	sudo chmod -R u+x $CHUBOE_UTIL_HG/*.sh
