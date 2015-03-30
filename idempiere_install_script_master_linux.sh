@@ -245,20 +245,29 @@ then
 	exit 1
 fi
 
-if [[ $IS_INSTALL_DESKTOP == "Y" ]]
-then
-	# Check if OS user exists
-	RESULT=$(id -u $OSUSER)
-	if [ $RESULT -ge 0 ]; then
-		echo "HERE: OSUser exists"
-	else
+# Check if OS user exists
+RESULT=$(id -u $OSUSER)
+if [ $RESULT -ge 0 ]; then
+	echo "HERE: OSUser exists"
+	echo "">>$README
+	echo "">>$README
+	echo "The specified OS user ($OSUSER) exists. The script will use $OSUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
+else
+	if [[ $IS_INSTALL_DESKTOP == "Y" ]]
+	then
 		echo "ERROR: HERE: OSUser does not exist. Stopping script!"
 		echo "">>$README
 		echo "">>$README
 		echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
-		# nano /home/$OSUSER/$README
 		exit 1
 	fi
+	# nano /home/$OSUSER/$README
+	echo "HERE: OSUser does not exist. Using $IDEMPIEREUSER instead. The script will use $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory."
+	echo "">>$README
+	echo "">>$README
+	echo "The specified OS user ($OSUSER) does not exist. The script will use the $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
+	echo "Please note that the $IDEMPIEREUSER user does not have sudo priviledges. Therefore, it will not be able to execute some scripts.">>$README
+	OSUSER=$IDEMPIEREUSER
 fi
 
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
@@ -612,11 +621,12 @@ then
 	echo "Loggin in as $IDEMPIEREUSER is often easier that issuing a bunch of sudo commands.">>$README
 	echo "If you need to give $IDEMPIEREUSER a password, use the command 'sudo passwd $IDEMPIEREUSER'.">>$README
 	# create IDEMPIEREUSER user and group
+	# Note: we could create the iDempiere user as a system user; however, it is convenient to be able to "sudo -i -u idempiere" to perform tasks.
 	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "idempiere,none,none,none"
 
 	# create database password file for iDempiere user
 	sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
-	sudo chown $IDEMPIEREUSER: $HOME_DIR/.pgpass
+	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $HOME_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
 
@@ -624,7 +634,7 @@ then
 	echo "">>$README
 	echo "Your user will have read access to the $CHUBOE_UTIL_HG repository.">>$README
 	echo "If you issue mercurial command as your user, you might get trust issues.">>$README
-	echo "If so, add the following to your /home/YOURUSER/.hgrc file">>$README
+	echo "If so, add the following to your /home/$OSUSER/.hgrc file">>$README
 	echo "	[trusted]">>$README
 	echo "	users = $IDEMPIEREUSER">>$README
 
@@ -754,6 +764,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
 	echo "This the utils directory has some scripts that make supporting and maintaining iDempiere much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
+	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go+w $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
@@ -777,7 +788,7 @@ echo "HERE END: Launching console-setup.sh"
 
 	sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
-	
+
 	hg commit -m "commit after installation - updated variables specific to this installation"
 
 	#prevent the backup's annoying 30 second delay
@@ -814,18 +825,21 @@ echo "HERE END: Launching console-setup.sh"
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
 
-	#hand ownership of iDempiere direcetory to the idempiere user
-	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $CHUBOE_UTIL
+	#update write priviledges after installation is complete
 	sudo chmod -R go-w $INSTALLPATH
 	sudo chmod -R go-w $CHUBOE_UTIL
 	sudo chmod -R u+x $CHUBOE_UTIL_HG/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
-	# give $OSUSER write access to idempiere server directory through the $IDEMPIEREUSER group
-	# HERE NOTE: You must restart your ssh session to be able to interact with the idempiere tools.
-	# 20150327 CBO - Commented out the below line. It is a bad idea to give the local user write abilities. It causes issues and confusion. All work should be done through the idempiere user.
-	#sudo find /opt/idempiere-server -type d -exec chmod 775 {} \;
+	# add OSUSER to IDEMPIEREUSER group
+	if [[ $IDEMPIEREUSER != $OSUSER ]]
+	then
+		sudo usermod -a -G $IDEMPIEREUSER $OSUSER
+		echo "">>$README
+		echo "">>$README
+		echo "Your user ($OSUSER) has been added to the $IDEMPIEREUSER group.">>$README
+		echo "You must restart your current SSH session for this setting to take effect.">>$README
+	fi
 
 	echo "HERE: configure apache to present webui on port 80 - reverse proxy"
 	# install apache2 if missed during db/phpgadmin
