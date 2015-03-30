@@ -825,7 +825,9 @@ echo "HERE END: Launching console-setup.sh"
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
 
-	#update write priviledges after installation is complete
+	#update owndership and write priviledges after installation is complete
+	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
+	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go-w $INSTALLPATH
 	sudo chmod -R go-w $CHUBOE_UTIL
 	sudo chmod -R u+x $CHUBOE_UTIL_HG/*.sh
@@ -834,6 +836,7 @@ echo "HERE END: Launching console-setup.sh"
 	# add OSUSER to IDEMPIEREUSER group
 	if [[ $IDEMPIEREUSER != $OSUSER ]]
 	then
+		echo "HERE: adding $OSUSER to $IDEMPIEREUSER group
 		sudo usermod -a -G $IDEMPIEREUSER $OSUSER
 		echo "">>$README
 		echo "">>$README
