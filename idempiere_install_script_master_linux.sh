@@ -267,7 +267,7 @@ else
 		echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
 		exit 1
 	fi
-	# nano /home/$OSUSER/$README
+	# nano $OSUSER_HOME/$README
 	echo "HERE: OSUser does not exist. Using $IDEMPIEREUSER instead. The script will use $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory."
 	echo "">>$README
 	echo "">>$README
@@ -460,7 +460,7 @@ then
 	#new desktop installation (compatible with 14.04) - alternative to Mate Desktop
 	#sudo apt-get install -y xrdp lxde
 	#sudo apt-get install -y chromium-browser leafpad xarchiver gimp
-	#echo lxsession -s LXDE -e LXDE >/home/$OSUSER/.xsession
+	#echo lxsession -s LXDE -e LXDE >$OSUSER_HOME/.xsession
 	#sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
 	#sudo service xrdp restart
 
@@ -484,41 +484,41 @@ then
 	echo "---> Colors tab -> Choose White on Black">>$README
 	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
 
-	mkdir /home/$OSUSER/dev
-	mkdir /home/$OSUSER/dev/downloads
-	mkdir /home/$OSUSER/dev/plugins
+	mkdir $OSUSER_HOME/dev
+	mkdir $OSUSER_HOME/dev/downloads
+	mkdir $OSUSER_HOME/dev/plugins
 
 	# get eclipse IDE
-	wget $ECLIPSESOURCEPATH -P /home/$OSUSER/dev/downloads
-	tar -zxvf /home/$OSUSER/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C /home/$OSUSER/dev/
+	wget $ECLIPSESOURCEPATH -P $OSUSER_HOME/dev/downloads
+	tar -zxvf $OSUSER_HOME/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C $OSUSER_HOME/dev/
 
 	# Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
-	echo "[Desktop Entry]">/home/$OSUSER/dev/launchEclipse.desktop
-	echo "Encoding=UTF-8">> /home/$OSUSER/dev/launchEclipse.desktop
-	echo "Type=Application">> /home/$OSUSER/dev/launchEclipse.desktop
-	echo "Name=eclipse">> /home/$OSUSER/dev/launchEclipse.desktop
-	echo "Name[en_US]=eclipse">> /home/$OSUSER/dev/launchEclipse.desktop
-	echo "Icon=/home/$OSUSER/dev/eclipse/icon.xpm">> /home/$OSUSER/dev/launchEclipse.desktop
-	echo "Exec=/home/$OSUSER/dev/eclipse/eclipse  -vmargs -Xmx512M">> /home/$OSUSER/dev/launchEclipse.desktop
-	echo "Comment[en_US]=">> /home/$OSUSER/dev/launchEclipse.desktop
+	echo "[Desktop Entry]">$OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Encoding=UTF-8">> $OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Type=Application">> $OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Name=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Name[en_US]=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Icon=$OSUSER_HOME/dev/eclipse/icon.xpm">> $OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Exec=$OSUSER_HOME/dev/eclipse/eclipse  -vmargs -Xmx512M">> $OSUSER_HOME/dev/launchEclipse.desktop
+	echo "Comment[en_US]=">> $OSUSER_HOME/dev/launchEclipse.desktop
 
 	# create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
-	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" /home/$OSUSER/.bashrc
-	sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" /home/$OSUSER/.bashrc
+	sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" $OSUSER_HOME/.bashrc
+	sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" $OSUSER_HOME/.bashrc
 
 	echo "">>$README
 	echo "">>$README
-	echo "A clean or prestine copy of the iDempiere code is downloaded to /home/$OSUSER/dev/idempiere">>$README
-	echo "A working copy of iDempiere's code is downloaded to /home/$OSUSER/dev/myexperiment">>$README
+	echo "A clean or prestine copy of the iDempiere code is downloaded to $OSUSER_HOME/dev/idempiere">>$README
+	echo "A working copy of iDempiere's code is downloaded to $OSUSER_HOME/dev/myexperiment">>$README
 	# get idempiere code
 	echo "HERE: Installing iDempiere via mercurial"
-	cd /home/$OSUSER/dev
+	cd $OSUSER_HOME/dev
 	hg clone https://bitbucket.org/idempiere/idempiere
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
 	hg clone idempiere myexperiment
-	cd /home/$OSUSER/dev/myexperiment
+	cd $OSUSER_HOME/dev/myexperiment
 	# create a targetPlatform directory for eclipse - used when materializing the proejct
-	mkdir /home/$OSUSER/dev/myexperiment/targetPlatform
+	mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
 	echo "HERE END: Installing iDempiere via mercurial"
 
 	#if not bleeding edge
@@ -526,7 +526,7 @@ then
 	then
 		echo "">>$README
 		echo "">>$README
-		echo "The working copy of iDempiere code in /home/$OSUSER/dev/myexperiment has been updated to verion $IDEMPIERE_VERSION">>$README
+		echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to verion $IDEMPIERE_VERSION">>$README
 		echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
 		hg update -r release-"$IDEMPIERE_VERSION"
 	fi
@@ -538,7 +538,7 @@ then
 	echo "">>$README
 	echo "This section discusses how to build iDempiere in Eclipse">>$README
 	echo "STEP 1">>$README
-	echo "To launch eclipse, copy the file named launchEclipse in the /home/$OSUSER/dev/ folder to your desktop.">>$README
+	echo "To launch eclipse, copy the file named launchEclipse in the $OSUSER_HOME/dev/ folder to your desktop.">>$README
 	echo "Open Eclipse.">>$README
 	echo "Choose the myexperiment folder as your workspace when eclipse launches.">>$README
 	echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>$README
@@ -649,7 +649,7 @@ then
 		sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
 		sudo chown $OSUSER:$OSUSER $HOME_DIR/.pgpass
 		sudo -u $OSUSER chmod 600 $HOME_DIR/.pgpass
-		sudo mv $HOME_DIR/.pgpass /home/$OSUSER/
+		sudo mv $HOME_DIR/.pgpass $OSUSER_HOME/
 	fi
 
 	sudo apt-get --yes install openjdk-6-jdk
@@ -682,7 +682,7 @@ then
 		echo "">>$README
 		echo "ERROR: The iDempiere binary file download failed. The file does not exist locally. Stopping script!">>$README
 		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed.">>$README
-		# nano /home/$OSUSER/$README
+		# nano $OSUSER_HOME/$README
 		exit 1
 	fi
 
@@ -700,7 +700,7 @@ then
 	echo "">>$README
 	echo "The following section applies to the iDempiere Swing client.">>$README
 	echo "To use the swing client, unzip it by issuing the command:">>$README
-	echo "---> unzip /home/$OSUSER/installer_client_`date +%Y%m%d`/idempiereClient.gtk.linux.x86_64.zip -d /home/$OSUSER/installer_client_`date +%Y%m%d`">>$README
+	echo "---> unzip $OSUSER_HOME/installer_client_`date +%Y%m%d`/idempiereClient.gtk.linux.x86_64.zip -d $OSUSER_HOME/installer_client_`date +%Y%m%d`">>$README
 	echo "---> change directory to your adempiere-client directory in your new unzipped folder.">>$README
 	echo "---> Launch the client using ./adempiere-client.sh">>$README
 	echo "---> At the login screen, click on the server field.">>$README
