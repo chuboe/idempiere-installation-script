@@ -762,7 +762,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "">>$README
 	echo "">>$README
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
-	echo "This the utils directory has some scripts that make supporting and maintaining iDempiere much easier.">>$README
+	echo "This utils directory has  scripts that make supporting and maintaining iDempiere much much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
 	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go+w $CHUBOE_UTIL
