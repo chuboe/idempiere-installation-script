@@ -830,7 +830,8 @@ echo "HERE END: Launching console-setup.sh"
 	sudo chown -R $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go-w $INSTALLPATH
 	sudo chmod -R go-w $CHUBOE_UTIL
-	sudo chmod -R u+x $CHUBOE_UTIL_HG/*.sh
+	sudo chmod u+x $CHUBOE_UTIL_HG/*.sh
+	sudo chmod u+x $CHUBOE_UTIL_HG/utils/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
 
 	# add OSUSER to IDEMPIEREUSER group
