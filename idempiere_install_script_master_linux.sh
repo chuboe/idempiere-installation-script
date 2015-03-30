@@ -230,10 +230,11 @@ echo "Distro details:"
 cat /etc/*-release
 
 # Create file to give user feedback about installation
-echo "Welcome to the iDempiere Installer.">$README
+echo "Welcome to the iDempiere community.">$README
 echo "The purpose of this file is to help you understand what this script accomplished.">>$README
 echo "If anything went wrong during the installation, you will see line in this file that begins with ERROR:">>$README
-echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the erp-academy.chuckboecking.com site.">>$README
+echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the site.">>$README
+echo "---->http://erp-academy.chuckboecking.com">>$README
 
 # Check to ensure DB password is set
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
@@ -251,7 +252,8 @@ if [ $RESULT -ge 0 ]; then
 	echo "HERE: OSUser exists"
 	echo "">>$README
 	echo "">>$README
-	echo "The specified OS user ($OSUSER) exists. The script will use $OSUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
+	echo "The specified OS user ($OSUSER) exists.">>$README
+	echo "The script will use $OSUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
 else
 	if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 	then
@@ -265,8 +267,11 @@ else
 	echo "HERE: OSUser does not exist. Using $IDEMPIEREUSER instead. The script will use $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory."
 	echo "">>$README
 	echo "">>$README
-	echo "The specified OS user ($OSUSER) does not exist. The script will use the $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
+	echo "ISSUE: The specified OS user ($OSUSER) does not exist.">>$README
+	echo "The script will use the $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
 	echo "Please note that the $IDEMPIEREUSER user does not have sudo priviledges. Therefore, it will not be able to execute some scripts.">>$README
+	
+	# OSUSER was not available
 	OSUSER=$IDEMPIEREUSER
 fi
 
@@ -288,7 +293,6 @@ sudo apt-get --yes install unzip htop s3cmd expect
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
 	echo "HERE: Installing DB because IS_INSTALL_DB == Y"
-	echo "Installing DB because IS_INSTALL_DB == Y">>$README
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
 	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
 	sudo -u postgres service postgresql stop
@@ -296,7 +300,11 @@ then
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
 	# prevents outsiders for connecting to your server.
-	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users">>$README
+	echo "">>$README
+	echo "">>$README
+	echo "PostgreSQL installed.">>$README
+	echo "The script installed the phppgadmin tool to help you administer your database.">>$README 
+	echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users.">>$README
 	sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
 	sudo sed -i '$ a\listen_addresses = '"'"'*'"'"' # chuboe '`date +%Y%m%d` /etc/postgresql/$PGVERSION/main/postgresql.conf
@@ -611,14 +619,14 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "Note: The below command helps you prevent other users from seeing your home directory">>$README
-	echo "  sudo chmod -R o-rx /home/$OSUSER">>$README
+	echo "--->sudo chmod -R o-rx /home/$OSUSER">>$README
 
 	echo "">>$README
 	echo "">>$README
 	echo "The script created an '$IDEMPIEREUSER' user without a password.">>$README
 	echo "You can use the 'sudo -u idempiere LinuxCommandHere' process to execute tasks as that user.">>$README
 	echo "You can use the 'sudo -i -u $IDEMPIEREUSER' to become the $IDEMPIEREUSER user.">>$README
-	echo "Loggin in as $IDEMPIEREUSER is often easier that issuing a bunch of sudo commands.">>$README
+	echo "Logging in as $IDEMPIEREUSER is often easier that issuing a bunch of sudo commands.">>$README
 	echo "If you need to give $IDEMPIEREUSER a password, use the command 'sudo passwd $IDEMPIEREUSER'.">>$README
 	# create IDEMPIEREUSER user and group
 	# Note: we could create the iDempiere user as a system user; however, it is convenient to be able to "sudo -i -u idempiere" to perform tasks.
@@ -629,14 +637,6 @@ then
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $HOME_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
-
-	echo "">>$README
-	echo "">>$README
-	echo "Your user will have read access to the $CHUBOE_UTIL_HG repository.">>$README
-	echo "If you issue mercurial command as your user, you might get trust issues.">>$README
-	echo "If so, add the following to your /home/$OSUSER/.hgrc file">>$README
-	echo "	[trusted]">>$README
-	echo "	users = $IDEMPIEREUSER">>$README
 
 	#echo "To add your OS user to the iDempiere group, issue the following commands">>$README
 	#echo "	sudo usermod -a -G $IDEMPIEREUSER YOUR_USER_NAME_HERE">>$README
@@ -762,7 +762,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "">>$README
 	echo "">>$README
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
-	echo "This the utils directory has some scripts that make supporting and maintaining iDempiere much easier.">>$README
+	echo "This utils directory has  scripts that make supporting and maintaining iDempiere much much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
 	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go+w $CHUBOE_UTIL
