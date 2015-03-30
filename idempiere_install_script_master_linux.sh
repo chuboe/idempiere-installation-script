@@ -98,6 +98,7 @@ IDEMPIERE_VERSION="2.1"
 JENKINSPROJECT="iDempiere"$IDEMPIERE_VERSION"Daily"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
+OSUSER_EXISTS="N"
 IDEMPIEREUSER="idempiere"
 PGVERSION="9.3"
 IS_REPLICATION="N"
@@ -254,6 +255,7 @@ if [ $RESULT -ge 0 ]; then
 	echo "">>$README
 	echo "The specified OS user ($OSUSER) exists.">>$README
 	echo "The script will use $OSUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
+	OSUSER_EXISTS="Y"
 else
 	if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 	then
