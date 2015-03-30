@@ -99,6 +99,7 @@ JENKINSPROJECT="iDempiere"$IDEMPIERE_VERSION"Daily"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 OSUSER_EXISTS="N"
+OSUSER_HOME=""
 IDEMPIEREUSER="idempiere"
 PGVERSION="9.3"
 IS_REPLICATION="N"
@@ -256,6 +257,7 @@ if [ $RESULT -ge 0 ]; then
 	echo "The specified OS user ($OSUSER) exists.">>$README
 	echo "The script will use $OSUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
 	OSUSER_EXISTS="Y"
+	OSUSER_HOME=$(eval echo ~$OSUSER)
 else
 	if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 	then
@@ -275,6 +277,7 @@ else
 	
 	# OSUSER was not available
 	OSUSER=$IDEMPIEREUSER
+	OSUSER_HOME=$(eval echo ~$OSUSER)
 fi
 
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
@@ -640,8 +643,14 @@ then
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
 
-	#echo "To add your OS user to the iDempiere group, issue the following commands">>$README
-	#echo "	sudo usermod -a -G $IDEMPIEREUSER YOUR_USER_NAME_HERE">>$README
+	# create database password file for OSUSER user
+	if [[ $OSUSER_EXISTS == "Y" ]]
+	then
+		sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
+		sudo chown $OSUSER:$OSUSER $HOME_DIR/.pgpass
+		sudo -u $OSUSER chmod 600 $HOME_DIR/.pgpass
+		sudo mv $HOME_DIR/.pgpass /home/$OSUSER/
+	fi
 
 	sudo apt-get --yes install openjdk-6-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
