@@ -233,8 +233,9 @@ cat /etc/*-release
 
 # Create file to give user feedback about installation
 echo "Welcome to the iDempiere community.">$README
-echo "Press Ctrl+x to close this file and return to the prompt.">>$README
 echo "The purpose of this file is to help you understand what this script accomplished.">>$README
+echo "In the future, you can find this file in the $README directory.">>$README
+echo "Press Ctrl+x to close this file and return to the prompt.">>$README
 echo "If anything went wrong during the installation, you will see line in this file that begins with ERROR:">>$README
 echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the site.">>$README
 echo "---->http://erp-academy.chuckboecking.com">>$README
