@@ -798,13 +798,10 @@ echo "HERE END: Launching console-setup.sh"
 	echo "default = https://bitbucket.org/cboecking/idempiere-installation-script">>$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "default-push = /dev/null/">>$CHUBOE_UTIL_HG/.hg/hgrc
 
-	#TODO remove the below two lines when moving to production
-	cd $CHUBOE_UTIL_HG
-	hg update development-release-20150324
-
 	sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
 
+	cd $CHUBOE_UTIL_HG
 	hg commit -m "commit after installation - updated variables specific to this installation"
 
 	#prevent the backup's annoying 30 second delay
