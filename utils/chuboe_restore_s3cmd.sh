@@ -15,6 +15,7 @@ LOGFILE="/log/chuboe_db_restore.log"
 ADEMROOTDIR="/opt/idempiere-server"
 LOCALBACKDIR="chuboe_restore"
 S3BUCKET="iDempiere_backup"
+IDEMPIEREUSER="idempiere"
 
 echo LOGFILE="$CHUBOE_UTIL_HG"/"$LOGFILE" >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 echo ADEMROOTDIR="$ADEMROOTDIR" >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
@@ -42,10 +43,10 @@ then
     if s3cmd sync --delete s3://"$S3BUCKET"/latest/ "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/ >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     then
         cd "$ADEMROOTDIR"/data
-        rm ExpDat.dmp
-        jar xf "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/*.jar
+        sudo rm ExpDat.dmp
+        sudo -u $IDEMPIEREUSER jar xf "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/*.jar
         cd "$ADEMROOTDIR"/utils
-        if ./RUN_DBRestore.sh <<!
+        if sudo -u $IDEMPIEREUSER ./RUN_DBRestore.sh <<!
 
 !
         then
