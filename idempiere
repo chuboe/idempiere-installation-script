@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 
 ### BEGIN INIT INFO
@@ -18,8 +18,8 @@
 
 # initialization
 # adjust these variables to your environment
-#IDEMPIERE_HOME=/home/idempiere/idempiere-server
 IDEMPIERE_HOME=/opt/idempiere-server/
+IDEMPIERE_LOG=$IDEMPIERE_HOME/log/
 IDEMPIEREUSER=idempiere
 # Instead of using ENVFILE you can set JAVA_HOME, IDEMPIERE_HOME and add JAVA_HOME/bin to PATH
 # in this case you can comment the source lines for ENVFILE below
@@ -47,8 +47,16 @@ start () {
     echo -n "Starting iDempiere ERP: "
     cd $IDEMPIERE_HOME/utils
     . $ENVFILE 
-    export LOGFILE=$IDEMPIERE_HOME/log/idempiere_`date +%Y%m%d%H%M%S`.log
-    sudo su $IDEMPIEREUSER -c "mkdir -p IDEMPIERE_HOME/log"
+    export LOGFILE=$IDEMPIERE_LOG/idempiere_`date +%Y%m%d%H%M%S`.log
+
+    #check if log directory exists
+    RESULT=$([ -d $IDEMPIERE_LOG ] && echo "Y" || echo "N")
+    # echo $RESULT
+    if [ $RESULT == "N" ]; then
+        echo "Log directory does not exist. Creating one..."
+        sudo -u $IDEMPIEREUSER mkdir $IDEMPIERE_LOG
+    fi
+
     sudo su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
     RETVAL=$?
     if [ $RETVAL -eq 0 ] ; then

@@ -1,6 +1,7 @@
 #!/bin/bash
 # Created Version 1 Chuck Boecking
 # 1.1 - Chuck Boecking - update to run repeatedly in cron to create daily commits
+# 1.2 - Chuck Boecking - refactor to run in separate directory
 
 ######################################
 # The purpose of this script is to help make sure the idempiere server directory only changes when you desire it.
@@ -11,52 +12,53 @@
 ######################################
 
 INSTALLPATH="/opt/idempiere-server/"
-IGNORENAME=".hgignore"
-HGNAME=".hgrc"
+IGNORENAME="$INSTALLPATH/.hgignore"
+HGNAME="$INSTALLPATH/.hg/hgrc"
+IDEMPIEREUSER="idempiere"
+CHUBOE_UTIL="/opt/chuboe_utils/"
+CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+CHUBOE_UTIL_HG_TEMP_HGRC="$CHUBOE_UTIL_HG/chuboe_temp/hgrc"
+CHUBOE_UTIL_HG_TEMP_IGNORE="$CHUBOE_UTIL_HG/chuboe_temp/.hgignore"
 
-# (1) create the .hgrc file if does not already exist
-cd
-RESULT=$(ls -l $HGNAME | wc -l)
-if [ $RESULT -ge 1 ]; 
-then
-	echo "HERE: $HGNAME already exists"
-else
-	echo "HERE: creating $HGNAME file"
-	echo "">$HGNAME
-	echo "[ui]">>$HGNAME
-	echo "username = iDempiere Master">>$HGNAME
-	echo "">>$HGNAME
-	echo "[extensions]">>$HGNAME
-	echo "purge =">>$HGNAME
-	echo "hgext.mq =">>$HGNAME
-	echo "extdiff =">>$HGNAME
-fi #end if .hgrc file exists
-
-# (2) create the .hgignore file
+# Check to see if the repository already exists
 cd $INSTALLPATH
-RESULT=$(ls -l $IGNORENAME | wc -l)
-if [ $RESULT -ge 1 ]; 
+RESULT=$(ls -l $HGNAME | wc -l)
+if [ $RESULT -ge 1 ];
 then
 	echo "HERE: $IGNORENAME already exists"
 	echo "HERE: perform addremove and commit"
-	hg addremove
-	hg commit -m "Daily Commit"
+	sudo -u $IDEMPIEREUSER hg addremove
+	sudo -u $IDEMPIEREUSER hg commit -m "Regular Commit"
 else
-	echo "HERE: creating $IGNORENAME file"
-	echo "syntax: glob" >> $INSTALLPATH/$IGNORENAME
-	echo "chuboe_backup" >>  $INSTALLPATH/$IGNORENAME
-	echo "chuboe_restore" >>  $INSTALLPATH/$IGNORENAME
-	echo "chuboe_temp" >>  $INSTALLPATH/$IGNORENAME
-	echo "log" >>  $INSTALLPATH/$IGNORENAME
-	echo "data/*" >>  $INSTALLPATH/$IGNORENAME
-	echo "*.tmp*" >>  $INSTALLPATH/$IGNORENAME
-	echo "HERE: perform init, add, and commit"
-	hg init
-	hg add
-	hg commit -m "Initial Commit"
-fi #end if .hgignore file exists
+	# create repository
+	sudo -u $IDEMPIEREUSER hg init
+	echo "HERE: creating $HGNAME file"
+	echo "[ui]">$CHUBOE_UTIL_HG_TEMP_HGRC
+	echo "username = iDempiere Master">>$CHUBOE_UTIL_HG_TEMP_HGRC
+	echo "">>$CHUBOE_UTIL_HG_TEMP_HGRC
+	echo "[extensions]">>$CHUBOE_UTIL_HG_TEMP_HGRC
+	echo "purge =">>$CHUBOE_UTIL_HG_TEMP_HGRC
+	echo "hgext.mq =">>$CHUBOE_UTIL_HG_TEMP_HGRC
+	echo "extdiff =">>$CHUBOE_UTIL_HG_TEMP_HGRC
+	sudo mv $CHUBOE_UTIL_HG_TEMP_HGRC $HGNAME
+	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $HGNAME
 
-# (3) when you create a private remote repository, uncommend the below command and update the URL
+	echo "HERE: creating $IGNORENAME file"
+	echo "syntax: glob" > $CHUBOE_UTIL_HG_TEMP_IGNORE
+	echo "log" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
+	echo "data/*.jar" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
+	echo "data/*.dmp" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
+	echo "*.tmp*" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
+	sudo mv $CHUBOE_UTIL_HG_TEMP_IGNORE $IGNORENAME
+	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $IGNORENAME
+
+	cd $INSTALLPATH
+sudo -u $IDEMPIEREUSER hg add
+	sudo -u $IDEMPIEREUSER hg commit -m "Initial Commit"
+
+fi #end if .hgrc file exists
+
+# (2) when you create a private remote repository, uncommend the below command and update the URL
 # hg push www.url_to_remote_repository
 
 # to see what has changed since the last commit, issue: hg status

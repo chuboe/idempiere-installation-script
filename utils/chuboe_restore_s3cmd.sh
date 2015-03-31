@@ -8,83 +8,86 @@
 # ACTION: consider performing a local backup before restoring just in case someone accidentally performs this task
 ######################################
 
+CHUBOE_UTIL="/opt/chuboe_utils/"
+CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
 LOGFILE="/log/chuboe_db_restore.log"
 ADEMROOTDIR="/opt/idempiere-server"
-UTILSDIR="chuboe_utils"
 LOCALBACKDIR="chuboe_restore"
 S3BUCKET="iDempiere_backup"
+IDEMPIEREUSER="idempiere"
 
-echo LOGFILE="$ADEMROOTDIR"/"$LOGFILE" >> "$ADEMROOTDIR"/"$LOGFILE"
-echo ADEMROOTDIR="$ADEMROOTDIR" >> "$ADEMROOTDIR"/"$LOGFILE"
+echo LOGFILE="$CHUBOE_UTIL_HG"/"$LOGFILE" >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+echo ADEMROOTDIR="$ADEMROOTDIR" >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 
 cd "$ADEMROOTDIR"/utils
-echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-echo ademres: -------          STARTING iDempiere Daily Restore           ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+echo ademres: -------          STARTING iDempiere Daily Restore           ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 
-RESULT=$(ls -l $ADEMROOTDIR/$UTILSDIR/properties/CHUBOE_TEST_ENV_YES.txt | wc -l)
+RESULT=$(ls -l $CHUBOE_UTIL_HG_PROP/CHUBOE_TEST_ENV_YES.txt | wc -l)
 if [ $RESULT -ge 1 ]; then
-    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    echo ademres: -------              This is a Dev Envrionment              ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    echo ademres: -------              This is a Dev Envrionment              ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 else
-    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    echo ademres: -------            STOPPING Not a Dev Envrionment           ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    echo ademres: -------            STOPPING Not a Dev Envrionment           ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     exit 1
 fi #end if dev environment check
 
-if sudo service idempiere stop >> "$ADEMROOTDIR"/"$LOGFILE"
+if sudo service idempiere stop >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 then
-    echo ademres: iDempiere Stopped >> "$ADEMROOTDIR"/"$LOGFILE"
-    if s3cmd sync --delete s3://"$S3BUCKET"/latest/ "$ADEMROOTDIR"/"$LOCALBACKDIR"/ >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: iDempiere Stopped >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    if s3cmd sync --delete s3://"$S3BUCKET"/latest/ "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/ >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     then
         cd "$ADEMROOTDIR"/data
-        rm ExpDat.dmp
-        jar xf "$ADEMROOTDIR"/"$LOCALBACKDIR"/*.jar
+        sudo rm ExpDat.dmp
+        sudo -u $IDEMPIEREUSER jar xf "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/*.jar
         cd "$ADEMROOTDIR"/utils
-        if ./RUN_DBRestore.sh <<!
+        if sudo -u $IDEMPIEREUSER ./RUN_DBRestore.sh <<!
 
 !
         then
-            if sudo service idempiere start >> "$ADEMROOTDIR"/"$LOGFILE"
+            if sudo service idempiere start >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
             then
-                echo ademres: iDempiere Started Back Up >> "$ADEMROOTDIR"/"$LOGFILE"
+                echo ademres: iDempiere Started Back Up >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
             else
-                echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-                echo ademres: -------         Remote iDempiere Backup FAILED!             ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-                echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+                echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+                echo ademres: -------         Remote iDempiere Backup FAILED!             ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+                echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
                 #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
                 #sudo cp /dev/null /var/log/ex_restore.log
                 exit 1
             fi
         else
-            echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-            echo ademres: -------          Idempiere Restore FAILED!                  ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-            echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+            echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+            echo ademres: -------          Idempiere Restore FAILED!                  ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+            echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
             #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
             #sudo cp /dev/null /var/log/ex_restore.log
             exit 1
         fi
     else
-        echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-        echo ademres: -------         iDempiere Sync From Remote S3 FAILED!       ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-        echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+        echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+        echo ademres: -------         iDempiere Sync From Remote S3 FAILED!       ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+        echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
         #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
         #sudo cp /dev/null /var/log/ex_restore.log
         exit 1
     fi
 else
-    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    echo ademres: -------         iDempiere Stop Service FAILED!              ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-    echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    echo ademres: -------         iDempiere Stop Service FAILED!              ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+    echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
     #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
     #sudo cp /dev/null /var/log/ex_restore.log
     exit 1 
 fi
-echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
-echo ademres: -------         COMPLETED iDempiere Daily Restore           ------- >> "$ADEMROOTDIR"/"$LOGFILE"
-echo ademres: ------------------------------------------------------------------- >> "$ADEMROOTDIR"/"$LOGFILE"
+echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+echo ademres: -------         COMPLETED iDempiere Daily Restore           ------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
+echo ademres: ------------------------------------------------------------------- >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 #sudo cp /var/log/ex_restore.log /var/log/ex_restore_logs/ex_restore_"$(date +'%d_%m_%Y')".log
 #sudo cp /dev/null /var/log/ex_restore.log
 exit 0
