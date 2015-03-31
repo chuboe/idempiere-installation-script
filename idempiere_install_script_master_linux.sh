@@ -272,9 +272,14 @@ else
 	echo "">>$README
 	echo "">>$README
 	echo "ISSUE: The specified OS user ($OSUSER) does not exist.">>$README
-	echo "The script will use the $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory.">>$README
+	echo "The script will use the $IDEMPIEREUSER OS user as the owner to the $CHUBOE_UTIL_HG directory.">>$README
 	echo "Please note that the $IDEMPIEREUSER user does not have sudo priviledges. Therefore, it will not be able to execute some scripts.">>$README
-	
+	echo "IF you later create a sudoer user that you want to manage the chuboe_utils directory, issue the following commands:">>$README
+	echo "--->sudo chown -R YourNewUser:YourNewUser /opt/chuboe_utils/  #this makes you the owner.">>$README
+	echo "--->sudo usermod -a -G $IDEMPIEREUSER YourNewUser  #this adds your user to the $IDEMPIEREUSER group.">>$README
+	echo "--->sudo cp /home/idempiere/.pgpass /home/YourNewUser/  #this and the next line make connecting to psql much easier">>$README
+	echo "--->sudo chown YourNewUser:YourNewUser /home/YourNewUser/.pgpass">>$README
+
 	# OSUSER was not available
 	OSUSER=$IDEMPIEREUSER
 	OSUSER_HOME=$(eval echo ~$OSUSER)
