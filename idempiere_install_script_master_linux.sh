@@ -275,7 +275,7 @@ else
 	echo "">>$README
 	echo "ISSUE: The specified OS user ($OSUSER) does not exist.">>$README
 	echo "The script will use the $IDEMPIEREUSER OS user as the owner to the $CHUBOE_UTIL_HG directory.">>$README
-	echo "Please note that the $IDEMPIEREUSER user does not have sudo priviledges. Therefore, it will not be able to execute some scripts.">>$README
+	echo "Please note that the $IDEMPIEREUSER user does not have sudo privileges. Therefore, it will not be able to execute some scripts.">>$README
 	echo "IF you later create a sudoer user that you want to manage the chuboe_utils directory, issue the following commands:">>$README
 	echo "--->sudo chown -R YourNewUser:YourNewUser /opt/chuboe_utils/  #this makes you the owner.">>$README
 	echo "--->sudo usermod -a -G $IDEMPIEREUSER YourNewUser  #this adds your user to the $IDEMPIEREUSER group.">>$README
@@ -311,7 +311,7 @@ then
 
 	# The following commands update postgresql to listen for all
 	# connections (not just localhost). Make sure your firewall
-	# prevents outsiders for connecting to your server.
+	# prevents outsiders from connecting to your server.
 	echo "">>$README
 	echo "">>$README
 	echo "PostgreSQL installed.">>$README
@@ -326,7 +326,7 @@ then
 		echo "HERE: Is Replication = Y"
 		# the following is true for both the master and the backup. PostgreSQL is smart enough to know to use the appropriate settings
 		sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
-		echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut of replication in the case of a security breach.">>$README
+		echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut off replication in the case of a security breach.">>$README
 		echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>$README
 		sudo sed -i "$ a\wal_level = hot_standby # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\archive_mode = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
@@ -342,7 +342,7 @@ then
 			sudo -u postgres service postgresql start
 			# remove replication attribute from postgres user/role for added security
 			sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
-			# create a new replication user. Doing so gives you the ability to cut-off replication without disabling the postgres user.
+			# create a new replication user. Doing so gives you the ability to cut off replication without disabling the postgres user.
 			sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
 			sudo -u postgres service postgresql stop
 		fi
@@ -370,7 +370,7 @@ then
 		sudo sed -i "s|user=$REPLATION_ROLE|user=$REPLATION_ROLE application_name=$REPLATION_BACKUP_NAME|" /var/lib/postgresql/$PGVERSION/main/recovery.conf
 		sudo sed -i "$ a\trigger_file = '$REPLATION_TRIGGER'" /var/lib/postgresql/$PGVERSION/main/recovery.conf
 
-		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If you database is not inside LAN and behind a firewall, enable SSL!">>$README
+		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If your database is not inside LAN and behind a firewall, enable SSL!">>$README
 		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>$README
 		echo "NOTE: Verify that the MASTER sees the BACKUP as being replicated by issuing the following command from the MASTER:">>$README
 		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>$README
@@ -385,7 +385,7 @@ then
 	then
 		#this is where we focus on database performance - when not installing tomcat/idempiere - just the database!
 
-		# Change 1 - turn on logging - requires little overhead and provide much information 
+		# Change 1 - turn on logging - requires little overhead and provides much information 
 		#	Remember most performance issues are application related - not necessarily database parameters
 		#   Logging gives you great insight into how the application is running.
 		sudo sed -i "$ a\log_destination = 'csvlog' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
@@ -398,7 +398,7 @@ then
 		sudo sed -i "$ a\log_min_duration_statement = 1000 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\log_checkpoints = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
 
-		# Change 2 - postgresql.comf related changes
+		# Change 2 - postgresql.conf related changes
 		# TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
 		sudo apt-get install -y pgtune
 		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
@@ -427,7 +427,7 @@ then
 	sudo cp $SCRIPTPATH/web/000-phppgadmin.conf /etc/apache2/sites-enabled
 	# remove the apache2 default site
 	sudo unlink /etc/apache2/sites-enabled/000-default.conf
-	# make apache listenon port 8083
+	# make apache listen on port 8083
 	sudo sed -i '$ a\Listen 8083' /etc/apache2/ports.conf
 
 	sudo service apache2 restart
@@ -435,7 +435,7 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "SECURITY NOTICE: phppgadmin has been installed on port 8083.">>$README
-	echo "Make sure this port is blocked from external traffic as a security mesaure.">>$README
+	echo "Make sure this port is blocked from external traffic as a security measure.">>$README
 
 	echo "HERE END: Installing DB because IS_INSTALL_DB == Y"
 
@@ -476,20 +476,20 @@ then
 	echo "">>$README
 	echo "ACTION REQUIRED: before you can log in using remote desktop, you must set the ubuntu password using 'passwd' command.">>$README
 	echo "---> to set the password for the ubuntu user: 'sudo passwd $OSUSER'">>$README
-	echo "---> the script installed 'xrdp' with allows you to use Windows Remote Desktop to connect.">>$README
+	echo "---> the script installed 'xrdp' which allows you to use Windows Remote Desktop to connect.">>$README
 	echo "">>$README
 	echo "">>$README
 	echo "NOTE: Use the following linux command to see what XRDP/VNC sessions are open:">>$README
 	echo "---> wvnc -> which is short for: sudo netstat -tulpn | grep Xvnc">>$README
 	echo "---> It is usually 5910 the first time you connect.">>$README
-	echo "NOTE: Desktop niceties - right-click on dekstop -> change desktop background:">>$README
+	echo "NOTE: Desktop niceties - right-click on desktop -> change desktop background:">>$README
 	echo "---> set desktop wallpaper to top-left gradient">>$README
 	echo "---> set theme to menta">>$README
 	echo "---> set fixed width font to monospace">>$README
 	echo "NOTE: Command/Terminal niceties - edit -> Profile Preferences:">>$README
 	echo "---> General Tab -> turn off the terminal bell">>$README
 	echo "---> Colors tab -> Choose White on Black">>$README
-	echo "NOTE: If the remote desktop ever seens locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
+	echo "NOTE: If the remote desktop ever seems locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
 
 	mkdir $OSUSER_HOME/dev
 	mkdir $OSUSER_HOME/dev/downloads
@@ -515,16 +515,16 @@ then
 
 	echo "">>$README
 	echo "">>$README
-	echo "A clean or prestine copy of the iDempiere code is downloaded to $OSUSER_HOME/dev/idempiere">>$README
+	echo "A clean or pristine copy of the iDempiere code is downloaded to $OSUSER_HOME/dev/idempiere">>$README
 	echo "A working copy of iDempiere's code is downloaded to $OSUSER_HOME/dev/myexperiment">>$README
 	# get idempiere code
 	echo "HERE: Installing iDempiere via mercurial"
 	cd $OSUSER_HOME/dev
 	hg clone https://bitbucket.org/idempiere/idempiere
-	# create a copy of the idempiere code named myexperiment. Use the myexperiment repostitory and not the idempiere (pristine)
+	# create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
 	hg clone idempiere myexperiment
 	cd $OSUSER_HOME/dev/myexperiment
-	# create a targetPlatform directory for eclipse - used when materializing the proejct
+	# create a targetPlatform directory for eclipse - used when materializing the project
 	mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
 	echo "HERE END: Installing iDempiere via mercurial"
 
@@ -533,7 +533,7 @@ then
 	then
 		echo "">>$README
 		echo "">>$README
-		echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to verion $IDEMPIERE_VERSION">>$README
+		echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
 		echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
 		hg update -r release-"$IDEMPIERE_VERSION"
 	fi
@@ -568,7 +568,7 @@ then
 	echo "Click on File > Import > Buckminster > Materialize from Buckminster CQUERY.">>$README
 	echo "Materialize the project. If you browse to org.adempiere.sdk-feature/adempiere.cquery (instead of MSPEC),">>$README
 	echo " ---> eclipse will automatically build the workspace as part of the buckminster import process">>$README
-	echo "If you ger errors when running install.app, try cleaning the project. Menu->Project->Clean">>$README
+	echo "If you get errors when running install.app, try cleaning the project. Menu->Project->Clean">>$README
 	echo "">>$README
 	echo "">>$README
 	echo "Important Note!">>$README
@@ -581,8 +581,8 @@ fi #end if IS_INSTALL_DESKTOP = Y
 
 
 # Move postgresql files to a separate device.
-# This is incredibly useful if you are running in aws where if the server dies, you lose your work.
-# By moving the DB files to an EBS drive, you help ensure you data will survive a server crash or shutdown.
+# This is incredibly useful if you are running in AWS where if the server dies, you lose your work.
+# By moving the DB files to an EBS drive, you help ensure your data will survive a server crash or shutdown.
 # Make note that Ubuntu renames the device from s.. to xv.. For example, device sdh will get renamed to xvdh.
 # The below code makes the mapping persist after a reboot by creating the fstab entry.
 if [[ $IS_MOVE_DB == "Y" ]]
@@ -601,7 +601,7 @@ then
 
 	sudo -u postgres service postgresql stop
 
-	#map the data direcory
+	#map the data directory
 	sudo mkdir /vol/var
 	sudo mv /var/lib/postgresql/$PGVERSION/main /vol/var
 	sudo mkdir /var/lib/postgresql/$PGVERSION/main
@@ -624,10 +624,10 @@ fi #end if IS_MOVE_DB==Y
 # Install iDempiere
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-	echo "HERE: Installing iDemipere because IS_INSTALL_ID == Y"
+	echo "HERE: Installing iDempiere because IS_INSTALL_ID == Y"
 	echo "">>$README
 	echo "">>$README
-	echo "iDemipere is installed on this server">>$README
+	echo "iDempiere is installed on this server">>$README
 	echo "">>$README
 	echo "">>$README
 	echo "Note: The below command helps you prevent other users from seeing your home directory">>$README
@@ -638,7 +638,7 @@ then
 	echo "The script created an '$IDEMPIEREUSER' user without a password.">>$README
 	echo "You can use the 'sudo -u idempiere LinuxCommandHere' process to execute tasks as that user.">>$README
 	echo "You can use the 'sudo -i -u $IDEMPIEREUSER' to become the $IDEMPIEREUSER user.">>$README
-	echo "Logging in as $IDEMPIEREUSER is often easier that issuing a bunch of sudo commands.">>$README
+	echo "Logging in as $IDEMPIEREUSER is often easier than issuing a bunch of sudo commands.">>$README
 	echo "If you need to give $IDEMPIEREUSER a password, use the command 'sudo passwd $IDEMPIEREUSER'.">>$README
 	# create IDEMPIEREUSER user and group
 	# Note: we could create the iDempiere user as a system user; however, it is convenient to be able to "sudo -i -u idempiere" to perform tasks.
@@ -667,7 +667,7 @@ then
 	fi
 
 	# make installpath
-	# clone id_installer againt to chuboe_isntallpath
+	# clone id_installer again to chuboe_installpath
 
 	mkdir $HOME_DIR/installer_`date +%Y%m%d`
 	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
@@ -720,11 +720,11 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "This section applies to offsite backups.">>$README
-	echo "The utilities directory includes some very useful scipts: $CHUBOE_UTIL_HG/utils">>$README
+	echo "The utilities directory includes some very useful scripts: $CHUBOE_UTIL_HG/utils">>$README
 	echo "Issue the following commands to enable s3cmd and create an iDempiere backup bucket in S3.">>$README
 	echo "---> s3cmd --configure">>$README
-	echo "------> get your access key and secred key by logging into your AWS account">>$README
-	echo "------> enter a password. Chose something different than your AWS password. Write it down!!">>$README
+	echo "------> get your access key and secret key by logging into your AWS account">>$README
+	echo "------> enter a password. Choose something different than your AWS password. Write it down!!">>$README
 	echo "------> Accept the default path to GPG">>$README
 	echo "------> Answer yes to HTTPS">>$README
 	echo "Create your new S3 backup bucket">>$README
@@ -733,7 +733,7 @@ then
 	echo "If you do need to change the bucket name, make sure both the backup and the restore scripts are updated accordingly.">>$README
 	echo "">>$README
 	echo "">>$README
-	echo "To update your server's timezone, run this command:">>$README
+	echo "To update your server's time zone, run this command:">>$README
 	echo "---> sudo dpkg-reconfigure tzdata">>$README
 
 echo "HERE: Launching console-setup.sh"
@@ -780,7 +780,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "">>$README
 	echo "">>$README
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
-	echo "This utils directory has  scripts that make supporting and maintaining iDempiere much much easier.">>$README
+	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
 	sudo mkdir $CHUBOE_UTIL
 	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go+w $CHUBOE_UTIL
@@ -840,7 +840,7 @@ echo "HERE END: Launching console-setup.sh"
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
 
-	#update owndership and write priviledges after installation is complete
+	#update ownership and write privileges after installation is complete
 	sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 	sudo chown -R $OSUSER:$OSUSER $CHUBOE_UTIL
 	sudo chmod -R go-w $INSTALLPATH
@@ -887,14 +887,14 @@ echo "HERE END: Launching console-setup.sh"
 	sudo a2enmod ssl
 	sudo service apache2 restart
 
-	echo "HERE END: Installing iDemipere because IS_INSTALL_ID == Y"
+	echo "HERE END: Installing iDempiere because IS_INSTALL_ID == Y"
 
 fi #end if $IS_INSTALL_ID == "Y"
 
 # Run iDempiere
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
-	echo "HERE: IS_LANUNCH_ID == Y"
+	echo "HERE: IS_LAUNCH_ID == Y"
 	echo "HERE: setting iDempiere to start on boot"
 	echo "">>$README
 	echo "">>$README
@@ -904,11 +904,11 @@ then
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
 	sudo /etc/init.d/$INITDNAME start
-	echo "HERE END: IS_LANUNCH_ID == Y"
+	echo "HERE END: IS_LAUNCH_ID == Y"
 fi
 
 echo "">>$README
 echo "">>$README
-echo "Contratulations - the script seems to have executed successfully.">>$README
+echo "Congratulations - the script seems to have executed successfully.">>$README
 
 sudo chmod -R go-w $HOME_DIR
