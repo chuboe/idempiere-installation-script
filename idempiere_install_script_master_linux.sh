@@ -489,6 +489,7 @@ then
 	echo "NOTE: Command/Terminal niceties - edit -> Profile Preferences:">>$README
 	echo "---> General Tab -> turn off the terminal bell">>$README
 	echo "---> Colors tab -> Choose White on Black">>$README
+	echo "Other niceties: http://community.linuxmint.com/tutorial/view/1395">>$README
 	echo "NOTE: If the remote desktop ever seems locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
 
 	mkdir $OSUSER_HOME/dev
