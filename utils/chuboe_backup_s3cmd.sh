@@ -11,6 +11,11 @@ LOCALBACKDIR="chuboe_backup"
 S3BUCKET="iDempiere_backup"
 IDEMPIEREUSER="idempiere"
 
+# Outstanding Features
+### Add a cli option to append a text string to a current backup. 
+###    Example: ./chuboe_backup_s3cmd -m "after_client_create". 
+###    The result would be ExpDmp_DATE..._after_client_create.jar
+
 echo LOGFILE="$CHUBOE_UTIL_HG"/"$LOGFILE" >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 echo ADEMROOTDIR="$ADEMROOTDIR" >> "$CHUBOE_UTIL_HG"/"$LOGFILE"
 
