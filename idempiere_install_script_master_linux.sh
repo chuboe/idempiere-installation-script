@@ -69,7 +69,7 @@ Outstanding actions:
 * Add ability to read idempiereEnv.properties
 	- ACTION=$(grep -i 'SOME_PROPERTY' $PATH_TO_FILE  | cut -f2 -d'=')
 	- source: http://www.linuxquestions.org/questions/linux-newbie-8/reading-a-property-file-through-shell-script-906482/
-
+* Create /opt/idempiere-attachment/ and /opt-idempiere-archive/ folders so that users can have an easy place to store external files.
 
 EOF
 }
