@@ -12,7 +12,7 @@ mkdir pgbadger_install
 cd pgbadger_install
 
 #note: you can get the most recent URL from http://sf.net/project/pgbadger
-wget http://downloads.sourceforge.net/project/pgbadger/$CURRENT_VER/pgbadger-7.0.tar.gz -O pgbadger-$CURRENT_VER.tar.gz
+wget http://downloads.sourceforge.net/project/pgbadger/$CURRENT_VER/pgbadger-$CURRENT_VER.tar.gz -O pgbadger-$CURRENT_VER.tar.gz
 
 tar xzf pgbadger-$CURRENT_VER.tar.gz
 cd pgbadger-$CURRENT_VER/
