@@ -19,7 +19,16 @@ cd pgbadger-$CURRENT_VER/
 perl Makefile.PL INSTALLDIRS=vendor
 make && sudo make install
 
+sudo mkdir /var/reports
+sudo mkdir /var/reports/pgbadger/
+sudo chown ubuntu:ubuntu /var/reports/pgbadger/
+
 # verify installation
 pgbadger --version
 
 ### Usage Recommendations ###
+# single command - simple test and info
+# pgbadger /var/log/postgresql/postgresql-9.3*
+
+# 0 4 * * * /usr/bin/pgbadger -I -q /var/log/postgresql/postgresql.log.1 -O /var/reports/pgbadger/
+
