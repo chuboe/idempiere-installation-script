@@ -400,7 +400,12 @@ then
 
 		# Change 2 - postgresql.conf related changes
 		# TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
-		sudo apt-get install -y pgtune
+		sudo apt-get install -y pgtune pgbadger
+		echo "">>$README
+		echo "">>$README
+		echo "NOTE: pgbadger is used for analyzing postgresql logs">>$README
+		echo "--> Sample Command: pgbadger /var/log/postgresql/postgresql-9.3-main.log">>$README
+		echo "--> You can use a command line cli browser to view the results: sudo apt-get install w3m w3m-img">>$README
 		sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
 		sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
 		sudo sed -i "$ a\random_page_cost = 2.0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
