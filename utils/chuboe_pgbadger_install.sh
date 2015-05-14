@@ -30,5 +30,6 @@ pgbadger --version
 # single command - simple test and info
 # pgbadger /var/log/postgresql/postgresql-9.3*
 
+#add the following to cron to create an ongoing report
 # 0 4 * * * /usr/bin/pgbadger -I -q /var/log/postgresql/postgresql.log.1 -O /var/reports/pgbadger/
 
