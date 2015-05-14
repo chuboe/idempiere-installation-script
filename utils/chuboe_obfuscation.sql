@@ -15,7 +15,7 @@ drop INDEX ad_user_email;
 -- Business Partner 
 update C_BPartner bp
 set 
-name = 'bp' || bp2.c_bpartner_id, 
+name = 'bp' || bp.c_bpartner_id, 
 description = null, 
 name2 = null, 
 taxId = null, 
@@ -53,7 +53,7 @@ shippermeter = 'test'
 -- Business Partner Location
 update C_BPartner_Location bpl
 set 
-name='bplocation' || bpl2.c_bpartner_location_id, 
+name='bplocation' || bpl.c_bpartner_location_id, 
 Phone='555-555-5555', 
 Phone2=null, 
 Fax=null
