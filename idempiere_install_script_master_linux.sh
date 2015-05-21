@@ -927,4 +927,6 @@ echo "">>$README
 echo "">>$README
 echo "Congratulations - the script seems to have executed successfully.">>$README
 
+mv $README $CHUBOE_UTIL
+
 sudo chmod -R go-w $HOME_DIR
