@@ -13,6 +13,10 @@
 
 set search_path to adempiere;
 
+--delete from ChuBoe_Replenish;
+--delete from ChuBoe_Replenish_Product_PO;
+--delete from chuboe_replenish_multiplier;
+
 delete from ad_changelog;
 delete from c_allocationline;
 delete from c_allocationhdr;
@@ -135,3 +139,10 @@ delete from m_distributionrunline;
 delete from c_rfqline;
 delete from c_projectline where c_project_id not in (select c_project_id from c_acctschema_element);
 delete from c_project where c_project_id not in (select c_project_id from c_acctschema_element);
+
+--delete from ChuBoe_Replenish_Action;
+--delete from ChuBoe_Replenish_TempAction;
+--delete from ChuBoe_Replenish_Date;
+--delete from ChuBoe_Replenish_Pressure;
+--delete from ChuBoe_Replenish_Storage;
+--delete from ChuBoe_Replenish_Run;
