@@ -5,7 +5,7 @@ ADDPG=${2}   # i.e. "-h localhost -p 5432"
 MIGRATIONDIR=${3:-~/hgAdempiere/localosgi/migration}
 cd $MIGRATIONDIR
 
-psql -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
+sudo -u idempiere psql -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
 
 > /tmp/lisFS.txt
 for FOLDER in i2.0 i2.0z i2.1 i2.1z
@@ -26,7 +26,7 @@ for i in `comm -13 /tmp/lisDB.txt /tmp/lisFS.txt`
 do
     SCRIPT=`find . -name "$i" -print | fgrep -v /oracle/`
     OUTFILE=/tmp/`basename "$i" .sql`.out
-    psql -d $DATABASE -U $USER $ADDPG -f "$SCRIPT" 2>&1 | tee "$OUTFILE"
+    sudo -u idempiere psql -d $DATABASE -U $USER $ADDPG -f "$SCRIPT" 2>&1 | tee "$OUTFILE"
     if fgrep "ERROR:
 FATAL:" "$OUTFILE" > /dev/null 2>&1
     then
@@ -40,7 +40,7 @@ then
     for i in processes_post_migration/postgresql/*.sql
     do
         OUTFILE=/tmp/`basename "$i" .sql`.out
-        psql -d $DATABASE -U $USER $ADDPG -f "$i" 2>&1 | tee "$OUTFILE"
+        sudo -u idempiere psql -d $DATABASE -U $USER $ADDPG -f "$i" 2>&1 | tee "$OUTFILE"
         if fgrep "ERROR:
 FATAL:" "$OUTFILE" > /dev/null 2>&1
         then
