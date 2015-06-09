@@ -650,7 +650,7 @@ then
 	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "idempiere,none,none,none"
 
 	# create database password file for iDempiere user
-	sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
+	sudo echo "*:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $HOME_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
 	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
@@ -658,7 +658,7 @@ then
 	# create database password file for OSUSER user
 	if [[ $OSUSER_EXISTS == "Y" ]]
 	then
-		sudo echo "localhost:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
+		sudo echo "*:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
 		sudo chown $OSUSER:$OSUSER $HOME_DIR/.pgpass
 		sudo -u $OSUSER chmod 600 $HOME_DIR/.pgpass
 		sudo mv $HOME_DIR/.pgpass $OSUSER_HOME/
