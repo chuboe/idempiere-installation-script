@@ -41,7 +41,7 @@ CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
 IDEMPIEREUSER="idempiere"
 ID_DB_NAME="idempiere"
-PG_CONNECT="-h localhost"
+PG_CONNECT="NONE"
 MIGRATION_DIR=$CHUBOE_UTIL_HG"/chuboe_temp/migration"
 # get JENKINSPROJECT varialble from properties file
 JENKINSPROJECT=$(cat $CHUBOE_UTIL_HG_PROP/"JENKINS_PROJECT.txt")
@@ -61,7 +61,7 @@ do
 			exit 1;;
 
 		c)	#Specify connection options
-			PG_CONNECT=$OPTARG;;
+			PG_CONNECT="-h "$OPTARG;;
 
 		m)	#Specify FILE path to unzipped migration scripts
 			IS_GET_MIGRATION="N"
@@ -81,6 +81,11 @@ do
 			IS_SKIP_BIN_UPGRADE="Y";;
 	esac
 done
+
+if [[ $PG_CONNECT == "NONE" ]]
+then
+	PG_CONNECT="-h "$(sudo -u idempiere cat $SERVER_DIR/idempiereEnv.properties | grep "ADEMPIERE_DB_SERVER=" | cut -f2 -d'=')
+fi
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
