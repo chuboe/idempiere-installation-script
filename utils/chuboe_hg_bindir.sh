@@ -59,7 +59,7 @@ sudo -u $IDEMPIEREUSER hg add
 fi #end if .hgrc file exists
 
 # (2) when you create a private remote repository, uncommend the below command and update the URL
-# hg push www.url_to_remote_repository
+# sudo -u $IDEMPIEREUSER hg push www.url_to_remote_repository
 
 # to see what has changed since the last commit, issue: hg status
 # if you ever want to undo a change that has not been committed, you can issue: hg revert --all (you can also use hg purge)
