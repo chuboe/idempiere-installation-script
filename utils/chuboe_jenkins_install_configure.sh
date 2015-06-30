@@ -16,6 +16,8 @@ sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources
 sudo apt-get update
 sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-6-jdk openjdk-7-jdk
 
+## NOTE: Jenkins now requires java 1.7. This script installs both - just in case you want to compile iDempiere in 1.6
+
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
 ##    https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu (search google for "install jenkins")
