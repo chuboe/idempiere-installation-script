@@ -14,7 +14,7 @@
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd
+sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-6-jdk openjdk-7-jdk
 
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
