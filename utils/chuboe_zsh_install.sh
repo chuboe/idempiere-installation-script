@@ -8,3 +8,5 @@ sudo sed -i "s|ZSH_THEME=\"robbyrussell\"|ZSH_THEME=\"ys\"|" ~/.zshrc
 echo "modify the /etc/passwd file to set zsh as your username's default."
 echo "==> look for something like this: ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash"
 echo "==> replace the bash with zsh like this: ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/zsh"
+echo ""
+echo "Either type in zsh or restart your terminal to use zsh"
