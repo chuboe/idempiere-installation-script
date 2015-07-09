@@ -525,8 +525,19 @@ then
 	# get idempiere code
 	echo "HERE: Installing iDempiere via mercurial"
 	cd $OSUSER_HOME/dev
-	hg clone https://bitbucket.org/idempiere/idempiere
+	
+	#Note: no longer perform the first clone - download the initial repo then clone.
+	#hg clone https://bitbucket.org/idempiere/idempiere
+	
+	#Note: if you already have a downloaded copy of iDempiere's hg repo zip, update the following URL
+	wget http://sourceforge.net/projects/idempiere/files/v2.1/source-repo/idempiere_hgrepo_v2.1.zip/download -O download.zip
+	unzip download.zip
+	cd idempiere
+	hg pull
+	hg update
+	
 	# create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
+	cd $OSUSER_HOME/dev
 	hg clone idempiere myexperiment
 	cd $OSUSER_HOME/dev/myexperiment
 	# create a targetPlatform directory for eclipse - used when materializing the project
@@ -915,5 +926,7 @@ fi
 echo "">>$README
 echo "">>$README
 echo "Congratulations - the script seems to have executed successfully.">>$README
+
+mv $README $CHUBOE_UTIL
 
 sudo chmod -R go-w $HOME_DIR
