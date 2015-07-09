@@ -301,6 +301,11 @@ sudo updatedb
 # install useful utilities
 sudo apt-get --yes install unzip htop s3cmd expect
 
+# create a directory where iDempiere related stuff will go. Including the helpful tips/hints/feedback file.
+sudo mkdir $CHUBOE_UTIL
+sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
+sudo chmod -R go+w $CHUBOE_UTIL
+
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
@@ -797,9 +802,6 @@ echo "HERE END: Launching console-setup.sh"
 	echo "">>$README
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
 	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
-	sudo mkdir $CHUBOE_UTIL
-	sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
-	sudo chmod -R go+w $CHUBOE_UTIL
 	cd $CHUBOE_UTIL
 	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 
@@ -930,3 +932,4 @@ echo "Congratulations - the script seems to have executed successfully.">>$READM
 mv $README $CHUBOE_UTIL
 
 sudo chmod -R go-w $HOME_DIR
+
