@@ -15,6 +15,8 @@
 # 1.7 added JVM and PostgreSQL performance enhancements when installing on dedicated boxes.
 # 1.8 Added ActiveMQ JMS installation script
 # 1.9 refactored to not use local user and install chuboe_utils beside idempiere - not inside
+# 2.0 removed ability to pull from sf.net - always pull from a Jenkens server.
+
 
 # function to help the user better understand how the script works
 usage()
@@ -39,7 +41,6 @@ OPTIONS:
 	-P	DB password
 	-l	Launch iDempiere as service
 	-u	Adds this user to the iDempiere group (default: ubuntu)
-	-B	Use bleeding edge copy of iDempiere (defaults to 2.1)
 	-D	Install desktop development tools
 	-j	Specify specific Jenkins build
 	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
@@ -81,7 +82,6 @@ IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
 IS_INSTALL_DESKTOP="N"
-IS_BLEED_EDGE="N"
 PIP="localhost"
 DEVNAME="NONE"
 DBPASS="NONE"
@@ -141,14 +141,10 @@ do
 		u)	#user
 			OSUSER=$OPTARG;;
 
-		B)	#use bleeding edge copy of iDempiere
-			IS_BLEED_EDGE="Y";;
-
 		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
 
 		j)	#jenkins project
-			IS_BLEED_EDGE="Y"
 			JENKINSPROJECT=$OPTARG;;
 
 		r)	#replication
@@ -158,20 +154,9 @@ do
 	esac
 done
 
-IDEMPIERECLIENTPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v"$IDEMPIERE_VERSION"/swing-client/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERECLIENTPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATH="http://superb-dca2.dl.sourceforge.net/project/idempiere/v"$IDEMPIERE_VERSION"/server/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEED="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHBLEEDDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
-
-#if bleeding edge
-echo "HERE: check if is Bleeding edge"
-if [[ $IS_BLEED_EDGE == "Y" ]]
-then
-	echo "HERE: update source and client paths"
-	IDEMPIERESOURCEPATH=$IDEMPIERESOURCEPATHBLEED
-	IDEMPIERECLIENTPATH=$IDEMPIERECLIENTPATHBLEED
-fi
+IDEMPIERECLIENTPATH="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATH="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
@@ -216,7 +201,6 @@ echo "ScriptPath="$SCRIPTPATH
 echo "Home Directory="$HOME_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
-echo "Use bleeding edge="$IS_BLEED_EDGE
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
@@ -718,11 +702,7 @@ then
 	cd $HOME_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
-	if [[ $IS_BLEED_EDGE == "Y" ]]
-		then
-			echo "HERE: IS_BLEED_EDGE == Y"
-			sudo wget $IDEMPIERESOURCEPATHBLEEDDETAIL -P $INSTALLPATH -O iDempiere_Build_Details.html
-		fi
+	sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details.html
 
 	echo "">>$README
 	echo "">>$README
