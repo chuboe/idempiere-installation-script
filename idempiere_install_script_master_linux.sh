@@ -29,21 +29,22 @@ This script helps you launch the appropriate
 iDempiere components on a given server
 
 OPTIONS:
-	-h	Help
-	-s	Prevent this server from running
-		services like accounting and workflow
-		(not implemented yet)
-	-p 	No install postgresql - provide the
-		IP for the postgresql server
-	-e	Move the postgresql files
-		to EBS - provide the drive name
-	-i	No install iDempiere (DB only)
-	-P	DB password
-	-l	Launch iDempiere as service
-	-u	Adds this user to the iDempiere group (default: ubuntu)
-	-D	Install desktop development tools
-	-j	Specify specific Jenkins build
-	-r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
+    -h	Help
+    -s	Prevent this server from running
+        services like accounting and workflow
+        (not implemented yet)
+    -p 	No install postgresql - provide the
+        IP for the postgresql server
+    -e	Move the postgresql files
+        to EBS - provide the drive name
+    -i	No install iDempiere (DB only)
+    -P	DB password
+    -l	Launch iDempiere as service
+    -u	Adds this user to the iDempiere group (default: ubuntu)
+    -D	Install desktop development tools
+    -J  Specify Jenkins iDempiere viersion - defaults to 2.1
+    -j	Specify Jenkins project name - defaults to iDempiere2.1Daily
+    -r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
 * Add a -t flag to allow for giving a server a specific name
@@ -111,7 +112,7 @@ REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BDj:r:" OPTION
+while getopts "hsp:e:ib:P:lu:BDj:J:r:" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -146,6 +147,9 @@ do
 
 		j)	#jenkins project
 			JENKINSPROJECT=$OPTARG;;
+
+		J)	#jenkins idempiere version
+			IDEMPIERE_VERSION=$OPTARG;;
 
 		r)	#replication
 			IS_REPLICATION="Y"
@@ -533,7 +537,7 @@ then
 	mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
 	echo "HERE END: Installing iDempiere via mercurial"
 
-	#if not bleeding edge
+    #this will not execute for the development branch. This is a good thing.
 	if [[ $JENKINSPROJECT == "iDempiere"$IDEMPIERE_VERSION"Daily" ]]
 	then
 		echo "">>$README
@@ -689,11 +693,11 @@ then
         	echo "HERE: file exists"
 	else
 		echo "HERE: file does not exist. Stopping script!"
-		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed"
+		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/$JENKINSPROJECT/ to see if the daily build failed"
 		echo "">>$README
 		echo "">>$README
 		echo "ERROR: The iDempiere binary file download failed. The file does not exist locally. Stopping script!">>$README
-		echo "If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/iDempiere"$IDEMPIERE_VERSION"Daily/ to see if the daily build failed.">>$README
+		echo "Check http://jenkins.idempiere.com/job/$JENKINSPROJECT/ to see if the daily build failed.">>$README
 		# nano $OSUSER_HOME/$README
 		exit 1
 	fi
@@ -716,8 +720,7 @@ then
 	echo "------> and set the Application Port to 8443.">>$README
 	echo "------> Test the application server and database then click the green check.">>$README
 	echo "To install swing clients for other OS's, go to:">>$README
-	echo "---> Bleeding Edge: http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>$README
-	echo "---> Current Stable Release: http://sourceforge.net/projects/idempiere/files/v"$IDEMPIERE_VERSION"/swing-client/">>$README
+	echo "---> http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>$README
 	echo "">>$README
 	echo "">>$README
 	echo "This section applies to offsite backups.">>$README
