@@ -42,7 +42,8 @@ OPTIONS:
     -l	Launch iDempiere as service
     -u	Adds this user to the iDempiere group (default: ubuntu)
     -D	Install desktop development tools
-    -J  Specify Jenkins iDempiere viersion - defaults to 2.1
+    -v  Specify iDempiere viersion - defaults to 2.1
+    -J  Specify Jenkins URL - defaults to http://jenkins.idempiere.com
     -j	Specify Jenkins project name - defaults to iDempiere2.1Daily
     -r	Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
@@ -97,6 +98,7 @@ SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 IDEMPIERE_VERSION="2.1"
 JENKINSPROJECT="iDempiere"$IDEMPIERE_VERSION"Daily"
+JENKINSURL="http://jenkins.idempiere.com/"
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
 OSUSER="ubuntu"
 OSUSER_EXISTS="N"
@@ -112,7 +114,7 @@ REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BDj:J:r:" OPTION
+while getopts "hsp:e:ib:P:lu:BDj:J:v:r:" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -148,7 +150,10 @@ do
 		j)	#jenkins project
 			JENKINSPROJECT=$OPTARG;;
 
-		J)	#jenkins idempiere version
+		J)	#jenkins URL
+			JENKINSURL=$OPTARG;;
+
+		v)	#idempiere version
 			IDEMPIERE_VERSION=$OPTARG;;
 
 		r)	#replication
@@ -158,9 +163,9 @@ do
 	esac
 done
 
-IDEMPIERECLIENTPATH="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATH="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHDETAIL="http://jenkins.idempiere.com/job/$JENKINSPROJECT/changes"
+IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
@@ -210,6 +215,8 @@ echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
 echo "Jenkins Project="$JENKINSPROJECT
+echo "Jenkins URL="$JENKINSURL
+echo "iDempiere Version"=$IDEMPIERE_VERSION
 echo "Is Replication="$IS_REPLICATION
 echo "Replication URL="$REPLICATION_URL
 echo "Is Replication Master="$IS_REPLICATION_MASTER
@@ -693,11 +700,11 @@ then
         	echo "HERE: file exists"
 	else
 		echo "HERE: file does not exist. Stopping script!"
-		echo "HERE: If pulling Bleeding Copy, check http://jenkins.idempiere.com/job/$JENKINSPROJECT/ to see if the daily build failed"
+		echo "HERE: If pulling Bleeding Copy, check $JENKINSURL/job/$JENKINSPROJECT/ to see if the daily build failed"
 		echo "">>$README
 		echo "">>$README
 		echo "ERROR: The iDempiere binary file download failed. The file does not exist locally. Stopping script!">>$README
-		echo "Check http://jenkins.idempiere.com/job/$JENKINSPROJECT/ to see if the daily build failed.">>$README
+		echo "Check $JENKINSURL/job/$JENKINSPROJECT/ to see if the daily build failed.">>$README
 		# nano $OSUSER_HOME/$README
 		exit 1
 	fi
