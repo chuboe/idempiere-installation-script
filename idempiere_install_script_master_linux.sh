@@ -675,7 +675,7 @@ then
 		sudo mv $HOME_DIR/.pgpass $OSUSER_HOME/
 	fi
 
-	sudo apt-get --yes install openjdk-6-jdk
+	sudo apt-get --yes install openjdk-7-jdk
 	if [[ $IS_INSTALL_DB == "N" ]]
 	then
 		echo "HERE: install postgresql client tools"
