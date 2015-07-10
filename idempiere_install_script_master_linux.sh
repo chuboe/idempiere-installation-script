@@ -223,7 +223,7 @@ echo "Is Replication Master="$IS_REPLICATION_MASTER
 echo "Replication Backup Name="$REPLATION_BACKUP_NAME
 echo "Replication Role="$REPLATION_ROLE
 echo "Replication Trigger="$REPLATION_TRIGGER
-echo "Distro details:"
+echo "HERE: Distro details:"
 cat /etc/*-release
 
 # Create file to give user feedback about installation
