@@ -77,6 +77,13 @@ Outstanding actions:
 EOF
 }
 
+#pull in variables from properties file
+SCRIPTNAME=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPTNAME")
+source $SCRIPTPATH/utils/chuboe.properties
+
+exit
+
 #initialize variables with default values - these values might be overwritten during the next section based on command options
 IS_INSTALL_DB="Y"
 IS_INSTALL_SERVICE="Y"
@@ -94,8 +101,6 @@ CHUBOE_UTIL="/opt/chuboe_utils/"
 CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
 INITDNAME="idempiere"
-SCRIPTNAME=$(readlink -f "$0")
-SCRIPTPATH=$(dirname "$SCRIPTNAME")
 IDEMPIERE_VERSION="2.1"
 JENKINSPROJECT="iDempiere"$IDEMPIERE_VERSION"Daily"
 JENKINSURL="http://jenkins.idempiere.com/"
