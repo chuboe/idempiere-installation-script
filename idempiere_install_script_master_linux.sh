@@ -713,7 +713,7 @@ then
 	cd $HOME_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
-	sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details.html
+	sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_'date +%Y%m%d'.html
 
 	echo "">>$README
 	echo "">>$README
