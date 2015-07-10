@@ -105,12 +105,13 @@ OSUSER_EXISTS="N"
 OSUSER_HOME=""
 IDEMPIEREUSER="idempiere"
 PGVERSION="9.3"
+PGPORT="5432"
 IS_REPLICATION="N"
 REPLICATION_URL="Master"
 IS_REPLICATION_MASTER="Y"
 REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
 REPLATION_ROLE="id_replicate_role"
-REPLATION_TRIGGER="/tmp/id_pgsql.trigger.5432"
+REPLATION_TRIGGER="/tmp/id_pgsql.trigger.$PGPORT"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -214,6 +215,7 @@ echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
 echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
+echo "PG Port="$PGPORT
 echo "Jenkins Project="$JENKINSPROJECT
 echo "Jenkins URL="$JENKINSURL
 echo "iDempiere Version"=$IDEMPIERE_VERSION
@@ -371,7 +373,7 @@ then
 		sudo sed -i "$ a\trigger_file = '$REPLATION_TRIGGER'" /var/lib/postgresql/$PGVERSION/main/recovery.conf
 
 		echo "SECURITY NOTICE: This configuration does not use SSL for replication. If your database is not inside LAN and behind a firewall, enable SSL!">>$README
-		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.5432' will promote the hot-standby server to a master.">>$README
+		echo "NOTE: Using the command 'touch /tmp/id_pgsql.trigger.$PGPORT' will promote the hot-standby server to a master.">>$README
 		echo "NOTE: Verify that the MASTER sees the BACKUP as being replicated by issuing the following command from the MASTER:">>$README
 		echo "--> sudo -u postgres psql -c 'select * from pg_stat_replication;'">>$README
 		echo "NOTE: Verify that the BACKUP is receiving the stream by issuing the following command from the BACKUP:">>$README
@@ -748,7 +750,35 @@ then
 	echo "---> sudo dpkg-reconfigure tzdata">>$README
 
 echo "HERE: Launching console-setup.sh"
-exit
+
+#FYI each line represents an input. Each blank line takes the console-setup.sh default.
+#HERE are the prompts:
+#jdk
+#idempiere_home
+#keystore_password - if run a second time, the lines beginning with dashes do not get asked again
+#- common_name
+#- org_unit
+#- org
+#- local/town
+#- state
+#- country
+#host_name
+#app_server_web_port
+#app_server_ssl_port
+#db_exists
+#db_type
+#db_server_host
+#db_server_port
+#db_name
+#db_user
+#db_password
+#db_system_password
+#mail_host
+#mail_user
+#mail_user_password
+#mail_admin_email
+#save_changes
+
 #not indented because of file input
 sh console-setup.sh <<!
 
@@ -766,7 +796,7 @@ sh console-setup.sh <<!
 
 2
 $PIP
-
+$PGPORT
 
 
 $DBPASS
