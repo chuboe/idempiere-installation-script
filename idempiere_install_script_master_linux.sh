@@ -748,6 +748,7 @@ then
 	echo "---> sudo dpkg-reconfigure tzdata">>$README
 
 echo "HERE: Launching console-setup.sh"
+exit
 #not indented because of file input
 sh console-setup.sh <<!
 
