@@ -82,8 +82,6 @@ SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 source $SCRIPTPATH/utils/chuboe.properties
 
-exit
-
 #initialize variables with default values - these values might be overwritten during the next section based on command options
 IS_INSTALL_DB="Y"
 IS_INSTALL_SERVICE="Y"
@@ -97,9 +95,11 @@ DBPASS="NONE"
 HOME_DIR="/tmp/chuboe-idempiere-server/"
 README="$HOME_DIR/idempiere_installer_feedback.txt"
 INSTALLPATH="/opt/idempiere-server/"
-CHUBOE_UTIL="/opt/chuboe_utils/"
-CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
+CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
+CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
+#ACTION HERE - replace properties directory with properties file
 INITDNAME="idempiere"
 IDEMPIERE_VERSION="2.1"
 JENKINSPROJECT="iDempiere"$IDEMPIERE_VERSION"Daily"
@@ -232,6 +232,8 @@ echo "Replication Role="$REPLATION_ROLE
 echo "Replication Trigger="$REPLATION_TRIGGER
 echo "HERE: Distro details:"
 cat /etc/*-release
+
+exit
 
 # Create file to give user feedback about installation
 echo "Welcome to the iDempiere community.">$README
