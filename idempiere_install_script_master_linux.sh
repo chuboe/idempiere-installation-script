@@ -236,6 +236,10 @@ awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe
 mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
 rm $SCRIPTPATH/utils/install.properties
 
+#remove passwords from chuboe.properties file.
+#the password can be retrieved from the idempiere properties file if needed.
+sed -i '/CHUBOE_PROP_DB_PASSWORD/d'$SCRIPTPATH/utils/chuboe.properties 
+
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
@@ -925,6 +929,7 @@ echo "HERE END: Launching console-setup.sh"
 	sudo chmod u+x $CHUBOE_UTIL_HG/*.sh
 	sudo chmod u+x $CHUBOE_UTIL_HG/utils/*.sh
 	sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
+    sudo chmod 600 $CHUBOE_UTIL_HG/utils/chuboe.properties
 
 	# add OSUSER to IDEMPIEREUSER group
 	if [[ $IDEMPIEREUSER != $OSUSER ]]
