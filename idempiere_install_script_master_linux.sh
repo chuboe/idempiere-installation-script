@@ -238,7 +238,7 @@ rm $SCRIPTPATH/utils/install.properties
 
 #remove passwords from chuboe.properties file.
 #the password can be retrieved from the idempiere properties file if needed.
-sed -i "/CHUBOE_PROP_DB_PASSWORD/d"$SCRIPTPATH/utils/chuboe.properties 
+sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $SCRIPTPATH/utils/chuboe.properties 
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
