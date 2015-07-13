@@ -222,7 +222,7 @@ fi
 #turn args array into a properties file.
 #Merge the newly create properties file into chuboe.properties
 printf "%s\n" "${args[@]}" > $SCRIPTPATH/utils/install.properties
-awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe_temp.properties
+awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
@@ -261,8 +261,6 @@ echo "Replication Role="$REPLATION_ROLE
 echo "Replication Trigger="$REPLATION_TRIGGER
 echo "HERE: Distro details:"
 cat /etc/*-release
-
-exit
 
 # Create file to give user feedback about installation
 echo "Welcome to the iDempiere community.">$README
@@ -855,7 +853,7 @@ echo "HERE END: Launching console-setup.sh"
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
 	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
 	cd $CHUBOE_UTIL
-	mv -r $SCRIPTPATH . 
+	mv $SCRIPTPATH . 
     
     #The below line was commented out. Now move instead of clone.
     #hg clone https://bitbucket.org/cboecking/idempiere-installation-script
@@ -989,8 +987,7 @@ echo "">>$README
 echo "">>$README
 echo "Congratulations - the script seems to have executed successfully.">>$README
 
-mv $README $CHUBOE_UTIL
-
+#clean up activities
 sudo chmod -R go-w $TEMP_DIR
 
 #utility scripts
