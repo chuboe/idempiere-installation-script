@@ -105,18 +105,21 @@ IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
-OSUSER="ubuntu"
+OSUSER=$CHUBOE_PROP_OS_USER
 OSUSER_EXISTS="N"
 OSUSER_HOME=""
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 PGVERSION=$CHUBOE_PROP_DB_VERSION
-PGPORT=$CHUBOE_PROP_DB_HOST
+PGPORT=$CHUBOE_PROP_DB_PORT_
 IS_REPLICATION="N"
 REPLICATION_URL="Master"
 IS_REPLICATION_MASTER="Y"
 REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
 REPLATION_ROLE="id_replicate_role"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.$PGPORT"
+
+#create array of updated parameters to later update chuboe.properties
+args=()
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -142,24 +145,29 @@ do
 			IS_INSTALL_ID="N";;
 
 		P)	#database password
-			DBPASS=$OPTARG;;
+            args+=("CHUBOE_PROP_DB_PASSWORD=$OPTARG")
+            DBPASS=$OPTARG;;
 
 		l)	#launch iDempiere
 			IS_LAUNCH_ID="Y";;
 
 		u)	#user
+            args+=("CHUBOE_PROP_OS_USER=$OPTARG")
 			OSUSER=$OPTARG;;
 
 		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
 
 		j)	#jenkins project
+            args+=("CHUBOE_PROP_JENKINS_PROJECT=$OPTARG")
 			JENKINSPROJECT=$OPTARG;;
 
 		J)	#jenkins URL
+            args+=("CHUBOE_PROP_JENKINS_URL=$OPTARG")
 			JENKINSURL=$OPTARG;;
 
 		v)	#idempiere version
+            args+=("CHUBOE_PROP_IDEMPIERE_VERSION=$OPTARG")
 			IDEMPIERE_VERSION=$OPTARG;;
 
 		r)	#replication
@@ -209,6 +217,11 @@ else
 	echo "HERE: User cannot create the chuboe directory"
 	exit 1
 fi
+
+#turn args array into a properties file.
+#Merge the newly create properties file into chuboe.properties
+echo "${args[@]}" > $SCRIPTPATH/utils/install.properties
+awk -F= '!a[(]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
@@ -841,7 +854,10 @@ echo "HERE END: Launching console-setup.sh"
 	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
 	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
 	cd $CHUBOE_UTIL
-	hg clone https://bitbucket.org/cboecking/idempiere-installation-script
+	mv -r $SCRIPTPATH . 
+    
+    #The below line was commented out. Now move instead of clone.
+    #hg clone https://bitbucket.org/cboecking/idempiere-installation-script
 
 	# create mercurial hgrc file for project.
 	echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
