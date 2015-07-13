@@ -224,7 +224,7 @@ echo "DB Password="$DBPASS
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
 echo "Install Path="$INSTALLPATH
 echo "Chuboe_Util Path="$CHUBOE_UTIL
-echo "Chuboe_Properties Path="$CHUBOE_UTIL_HG_PROP
+echo "Chuboe_Properties file="$CHUBOE_UTIL_HG_PROP_FILE
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
@@ -856,8 +856,13 @@ echo "HERE END: Launching console-setup.sh"
 	echo "default = https://bitbucket.org/cboecking/idempiere-installation-script">>$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "default-push = /dev/null/">>$CHUBOE_UTIL_HG/.hg/hgrc
 
-	sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
+	#ACTION DELETE THE NEXT TWO LINES AND THEIR FILES
+    #ACTION UPDATE ALL SCRIPTS ACCORDINGLY
+    sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
 	sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
+
+    set_chuboe_property "CHUBOE_PROP_JENKINS_PROJECT" $JENKINSPROJECT
+    set_chuboe_property "CHUBOE_PROP_IDEMPIERE_VERSION" $IDEMPIERE_VERSION
 
 	cd $CHUBOE_UTIL_HG
 	hg commit -m "commit after installation - updated variables specific to this installation"
@@ -973,9 +978,9 @@ sudo chmod -R go-w $HOME_DIR
 
 #utility scripts
 
-set_property (){
+set_chuboe_property (){
 SET_PROP_TARGET_PROPERTY=$1
 SET_PROP_REPLACEMENT_VALUE=$2
-sed -i "s/\($SET_PROP_TARGET_PROPERTY *= *\).*/\1$SET_PROP_REPLACEMENT_VALUE/" $SET_PROP_FILE
+sed -i "s/\($SET_PROP_TARGET_PROPERTY *= *\).*/\1$SET_PROP_REPLACEMENT_VALUE/" $CHUBOE_UTIL_HG_PROP_FILE
 }
 
