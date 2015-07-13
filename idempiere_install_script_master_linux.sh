@@ -220,7 +220,7 @@ fi
 
 #turn args array into a properties file.
 #Merge the newly create properties file into chuboe.properties
-echo "${args[@]}" > $SCRIPTPATH/utils/install.properties
+printf "%s\n" "${args[@]}" > $SCRIPTPATH/utils/install.properties
 awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
 
 # show variables to the user (debug)
