@@ -88,7 +88,8 @@ then
     #load the variables
     source $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH
     #merge new variables back to chuboe.properties file
-    awk -F= '!a[$1]++' $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
+    awk -F= '!a[$1]++' $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
+    mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
 fi
 
 #initialize variables with default values - these values might be overwritten during the next section based on command options
@@ -231,7 +232,8 @@ fi
 #turn args array into a properties file.
 printf "%s\n" "${args[@]}" > $SCRIPTPATH/utils/install.properties
 #Merge the newly create properties file back into chuboe.properties
-awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
+awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
+mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
 rm $SCRIPTPATH/utils/install.properties
 
 # show variables to the user (debug)
