@@ -93,7 +93,7 @@ PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
 DBPASS=$CHUBOE_PROP_DB_PASSWORD
 INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
-HOME_DIR="/tmp/chuboe-idempiere-server/"
+TEMP_DIR="/tmp/chuboe-idempiere-server/"
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 #ACTION - Next action to replace use of below properties individual with consolidated one.
@@ -184,12 +184,12 @@ fi
 
 # Check if $OSUSER can create the temporary install folder
 echo "HERE: check if $OSUSER can create the temporary installation directory"
-sudo mkdir $HOME_DIR
-sudo chmod -R go+w $HOME_DIR
-RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
+sudo mkdir $TEMP_DIR
+sudo chmod -R go+w $TEMP_DIR
+RESULT=$([ -d $TEMP_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
 if [ $RESULT == "Y" ]; then
-	echo "HERE: User can create temporary installation directory - placing temp installation details here $HOME_DIR"
+	echo "HERE: User can create temporary installation directory - placing temp installation details here $TEMP_DIR"
 else
 	echo "HERE: User cannot create the temporary installation directory"
 	exit 1
@@ -228,7 +228,7 @@ echo "Chuboe_Properties file="$CHUBOE_UTIL_HG_PROP_FILE
 echo "InitDName="$INITDNAME
 echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
-echo "Home Directory="$HOME_DIR
+echo "Temp Directory="$TEMP_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
@@ -680,18 +680,18 @@ then
 	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "idempiere,none,none,none"
 
 	# create database password file for iDempiere user
-	sudo echo "*:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
-	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $HOME_DIR/.pgpass
-	sudo -u $IDEMPIEREUSER chmod 600 $HOME_DIR/.pgpass
-	sudo mv $HOME_DIR/.pgpass /home/$IDEMPIEREUSER/
+	sudo echo "*:*:*:adempiere:$DBPASS">>$TEMP_DIR/.pgpass
+	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $TEMP_DIR/.pgpass
+	sudo -u $IDEMPIEREUSER chmod 600 $TEMP_DIR/.pgpass
+	sudo mv $TEMP_DIR/.pgpass /home/$IDEMPIEREUSER/
 
 	# create database password file for OSUSER user
 	if [[ $OSUSER_EXISTS == "Y" ]]
 	then
-		sudo echo "*:*:*:adempiere:$DBPASS">>$HOME_DIR/.pgpass
-		sudo chown $OSUSER:$OSUSER $HOME_DIR/.pgpass
-		sudo -u $OSUSER chmod 600 $HOME_DIR/.pgpass
-		sudo mv $HOME_DIR/.pgpass $OSUSER_HOME/
+		sudo echo "*:*:*:adempiere:$DBPASS">>$TEMP_DIR/.pgpass
+		sudo chown $OSUSER:$OSUSER $TEMP_DIR/.pgpass
+		sudo -u $OSUSER chmod 600 $TEMP_DIR/.pgpass
+		sudo mv $TEMP_DIR/.pgpass $OSUSER_HOME/
 	fi
 
 	sudo apt-get --yes install openjdk-7-jdk
@@ -704,17 +704,17 @@ then
 	# make installpath
 	# clone id_installer again to chuboe_installpath
 
-	mkdir $HOME_DIR/installer_`date +%Y%m%d`
-	mkdir $HOME_DIR/installer_client_`date +%Y%m%d`
+	mkdir $TEMP_DIR/installer_`date +%Y%m%d`
+	mkdir $TEMP_DIR/installer_client_`date +%Y%m%d`
 	sudo mkdir $INSTALLPATH
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
 	sudo chmod -R go+w $INSTALLPATH
 
-	sudo wget $IDEMPIERESOURCEPATH -P $HOME_DIR/installer_`date +%Y%m%d`
-	sudo wget $IDEMPIERECLIENTPATH -P $HOME_DIR/installer_client_`date +%Y%m%d`
+	sudo wget $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
+	sudo wget $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
 
 	# check if file downloaded
-	RESULT=$(ls -l $HOME_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
+	RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
 	if [ $RESULT -ge 1 ]; then
         	echo "HERE: file exists"
 	else
@@ -728,8 +728,8 @@ then
 		exit 1
 	fi
 
-	sudo unzip $HOME_DIR/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d $HOME_DIR/installer_`date +%Y%m%d`
-	cd $HOME_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
+	sudo unzip $TEMP_DIR/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d $TEMP_DIR/installer_`date +%Y%m%d`
+	cd $TEMP_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
 	sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_'date +%Y%m%d'.html
@@ -974,7 +974,7 @@ echo "Congratulations - the script seems to have executed successfully.">>$READM
 
 mv $README $CHUBOE_UTIL
 
-sudo chmod -R go-w $HOME_DIR
+sudo chmod -R go-w $TEMP_DIR
 
 #utility scripts
 
