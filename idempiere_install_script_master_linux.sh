@@ -135,6 +135,7 @@ do
 
 		p)	#no install postgresql
 			IS_INSTALL_DB="N"
+            args+=("CHUBOE_PROP_DB_HOST=\"$OPTARG\"")
 			PIP=$OPTARG;;
 
 		e)	#move DB
@@ -145,29 +146,29 @@ do
 			IS_INSTALL_ID="N";;
 
 		P)	#database password
-            args+=("CHUBOE_PROP_DB_PASSWORD=$OPTARG")
+            args+=("CHUBOE_PROP_DB_PASSWORD=\"$OPTARG\"")
             DBPASS=$OPTARG;;
 
 		l)	#launch iDempiere
 			IS_LAUNCH_ID="Y";;
 
 		u)	#user
-            args+=("CHUBOE_PROP_OS_USER=$OPTARG")
+            args+=("CHUBOE_PROP_OS_USER=\"$OPTARG\"")
 			OSUSER=$OPTARG;;
 
 		D)	#install desktop development components
 			IS_INSTALL_DESKTOP="Y";;
 
 		j)	#jenkins project
-            args+=("CHUBOE_PROP_JENKINS_PROJECT=$OPTARG")
+            args+=("CHUBOE_PROP_JENKINS_PROJECT=\"$OPTARG\"")
 			JENKINSPROJECT=$OPTARG;;
 
 		J)	#jenkins URL
-            args+=("CHUBOE_PROP_JENKINS_URL=$OPTARG")
+            args+=("CHUBOE_PROP_JENKINS_URL=\"$OPTARG\"")
 			JENKINSURL=$OPTARG;;
 
 		v)	#idempiere version
-            args+=("CHUBOE_PROP_IDEMPIERE_VERSION=$OPTARG")
+            args+=("CHUBOE_PROP_IDEMPIERE_VERSION=\"$OPTARG\"")
 			IDEMPIERE_VERSION=$OPTARG;;
 
 		r)	#replication
