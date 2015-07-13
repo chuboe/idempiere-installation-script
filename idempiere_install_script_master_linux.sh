@@ -82,6 +82,15 @@ SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 source $SCRIPTPATH/utils/chuboe.properties
 
+#check to see if the properties file specifies an alternative properties file
+if [[ $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH != "NONE" ]]
+then
+    #load the variables
+    source $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH
+    #merge new variables back to chuboe.properties file
+    awk -F= '!a[$1]++' $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
+fi
+
 #initialize variables with default values - these values might be overwritten during the next section based on command options
 IS_INSTALL_DB="Y"
 IS_INSTALL_SERVICE="Y"
