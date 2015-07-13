@@ -59,7 +59,6 @@ Outstanding actions:
 * Create SQL script with Chucks Favorite changes:
 	- set files to be stored at the file system (not os) - see below drive for attachments
 	- Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
-* Update script to make better use of HOME_DIR variable when writing to files i.e. feedback file.
 * When Replication is turned on, created and set archive files to appropriate place.
 	* create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
 * Create drive options for WAL. Move logs to different location - not on DB or WAL drive. Can be local system drive.
@@ -78,6 +77,7 @@ EOF
 }
 
 #pull in variables from properties file
+#NOTE: all variables starting with CHUBOE_PROP... come from this file.
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 source $SCRIPTPATH/utils/chuboe.properties
@@ -91,14 +91,15 @@ IS_LAUNCH_ID="N"
 IS_INSTALL_DESKTOP="N"
 PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
-DBPASS="NONE"
-HOME_DIR="/tmp/chuboe-idempiere-server/"
-README="$HOME_DIR/idempiere_installer_feedback.txt"
+DBPASS=$CHUBOE_PROP_DB_PASSWORD
 INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
+HOME_DIR="/tmp/chuboe-idempiere-server/"
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 #ACTION - Next action to replace use of below properties individual with consolidated one.
 CHUBOE_UTIL_HG_PROP="$CHUBOE_PROP_UTIL_HG_UTIL_PATH/properties/"
+CHUBOE_UTIL_HG_PROP_FILE="$CHUBOE_PROP_UTIL_HG_PROP_FILE"
+README="$CHUBOE_UTIL/idempiere_installer_feedback.txt"
 INITDNAME=$CHUBOE_PROP_IDEMPIERE_SERVICE_NAME
 IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
@@ -181,16 +182,31 @@ then
 	IS_REPLICATION_MASTER="N"
 fi
 
-# Check if you can create a temp folder
-echo "HERE: check if you can create a temp folder"
+# Check if $OSUSER can create the temporary install folder
+echo "HERE: check if $OSUSER can create the temporary installation directory"
 sudo mkdir $HOME_DIR
 sudo chmod -R go+w $HOME_DIR
 RESULT=$([ -d $HOME_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
 if [ $RESULT == "Y" ]; then
-	echo "HERE: User can create a temp directory - placing installation details here $HOME_DIR"
+	echo "HERE: User can create temporary installation directory - placing temp installation details here $HOME_DIR"
 else
-	echo "HERE: User cannot create a temp directory"
+	echo "HERE: User cannot create the temporary installation directory"
+	exit 1
+fi
+
+# Check if you can create the chuboe folder
+# create a directory where chuboe related stuff will go. Including the helpful tips/hints/feedback file.
+echo "HERE: check if you can create the $CHUBOE_UTIL directory"
+sudo mkdir $CHUBOE_UTIL
+sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
+sudo chmod -R go+w $CHUBOE_UTIL
+RESULT=$([ -d $CHUBOE_UTIL ] && echo "Y" || echo "N")
+# echo $RESULT
+if [ $RESULT == "Y" ]; then
+	echo "HERE: User can create chuboe directory - placing installation details here $CHUBOE_UTIL"
+else
+	echo "HERE: User cannot create the chuboe directory"
 	exit 1
 fi
 
@@ -303,11 +319,6 @@ sudo updatedb
 
 # install useful utilities
 sudo apt-get --yes install unzip htop s3cmd expect
-
-# create a directory where iDempiere related stuff will go. Including the helpful tips/hints/feedback file.
-sudo mkdir $CHUBOE_UTIL
-sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
-sudo chmod -R go+w $CHUBOE_UTIL
 
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
@@ -959,4 +970,12 @@ echo "Congratulations - the script seems to have executed successfully.">>$READM
 mv $README $CHUBOE_UTIL
 
 sudo chmod -R go-w $HOME_DIR
+
+#utility scripts
+
+set_property (){
+SET_PROP_TARGET_PROPERTY=$1
+SET_PROP_REPLACEMENT_VALUE=$2
+sed -i "s/\($SET_PROP_TARGET_PROPERTY *= *\).*/\1$SET_PROP_REPLACEMENT_VALUE/" $SET_PROP_FILE
+}
 
