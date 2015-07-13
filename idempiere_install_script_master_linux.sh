@@ -220,9 +220,10 @@ else
 fi
 
 #turn args array into a properties file.
-#Merge the newly create properties file into chuboe.properties
 printf "%s\n" "${args[@]}" > $SCRIPTPATH/utils/install.properties
+#Merge the newly create properties file back into chuboe.properties
 awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties
+rm $SCRIPTPATH/utils/install.properties
 
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
@@ -855,9 +856,6 @@ echo "HERE END: Launching console-setup.sh"
 	cd $CHUBOE_UTIL
 	mv $SCRIPTPATH . 
     
-    #The below line was commented out. Now move instead of clone.
-    #hg clone https://bitbucket.org/cboecking/idempiere-installation-script
-
 	# create mercurial hgrc file for project.
 	echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "username = YourName <YourName@YourURL.com>">>$CHUBOE_UTIL_HG/.hg/hgrc
@@ -870,14 +868,6 @@ echo "HERE END: Launching console-setup.sh"
 	echo "[paths]">>$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "default = https://bitbucket.org/cboecking/idempiere-installation-script">>$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "default-push = /dev/null/">>$CHUBOE_UTIL_HG/.hg/hgrc
-
-	#ACTION DELETE THE NEXT TWO LINES AND THEIR FILES
-    #ACTION UPDATE ALL SCRIPTS ACCORDINGLY
-    sed -i "s|VALUE_GOES_HERE|$JENKINSPROJECT|" $CHUBOE_UTIL_HG_PROP/JENKINS_PROJECT.txt
-	sed -i "s|VALUE_GOES_HERE|$IDEMPIERE_VERSION|" $CHUBOE_UTIL_HG_PROP/IDEMPIERE_VERSION.txt
-
-    set_chuboe_property "CHUBOE_PROP_JENKINS_PROJECT" $JENKINSPROJECT
-    set_chuboe_property "CHUBOE_PROP_IDEMPIERE_VERSION" $IDEMPIERE_VERSION
 
 	cd $CHUBOE_UTIL_HG
 	hg commit -m "commit after installation - updated variables specific to this installation"
@@ -944,7 +934,7 @@ echo "HERE END: Launching console-setup.sh"
 	fi
 
 	# copy the iDempiere apache2 configuration file
-	sudo cp $SCRIPTPATH/web/000-webui.conf /etc/apache2/sites-enabled
+	sudo cp $CHUBOE_UTIL_HG/web/000-webui.conf /etc/apache2/sites-enabled
 	# remove the apache2 default site
 	sudo unlink /etc/apache2/sites-enabled/000-default.conf
 
@@ -975,8 +965,8 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "iDempiere is started and is set to start on system boot">>$README
-	sudo -u idempiere cp $SCRIPTPATH/stopServer.sh $INSTALLPATH/utils
-	sudo cp $SCRIPTPATH/$INITDNAME /etc/init.d/
+	sudo -u idempiere cp $CHUBOE_UTIL_HG/stopServer.sh $INSTALLPATH/utils
+	sudo cp $CHUBOE_UTIL_HG/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
 	sudo /etc/init.d/$INITDNAME start
@@ -992,6 +982,7 @@ sudo chmod -R go-w $TEMP_DIR
 
 #utility scripts
 
+#the following is not currently used; however, keeping for reference.
 set_chuboe_property (){
 SET_PROP_TARGET_PROPERTY=$1
 SET_PROP_REPLACEMENT_VALUE=$2
