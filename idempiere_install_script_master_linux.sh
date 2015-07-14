@@ -30,14 +30,14 @@ iDempiere components on a given server
 
 OPTIONS:
     -h	Help
-    -s	Prevent this server from running
+    -s	Only run services on this machine.
         services like accounting and workflow
-        (not implemented yet)
     -p 	No install postgresql - provide the
         IP for the postgresql server
     -e	Move the postgresql files
         to EBS - provide the drive name
     -i	No install iDempiere (DB only)
+    -I  Do not initialize iDempiere database - used when adding or replacine an iDempiere WebUI/App server.
     -P	DB password
     -l	Launch iDempiere as service
     -u	Adds this user to the iDempiere group (default: ubuntu)
@@ -93,12 +93,14 @@ then
 fi
 
 #initialize variables with default values - these values might be overwritten during the next section based on command options
+MY_IP = $(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
 IS_INSTALL_DB="Y"
-IS_INSTALL_SERVICE="Y"
 IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
 IS_LAUNCH_ID="N"
 IS_INSTALL_DESKTOP="N"
+IS_INITIALIZE_DB=$CHUBOE_PROP_DB_IS_INITIALIZE
+IS_SET_SERVICE_IP=$CHUBOE_PROP_IDEMPIERE_SET_SERVICE_IP
 PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
 DBPASS=$CHUBOE_PROP_DB_PASSWORD
@@ -107,7 +109,6 @@ TEMP_DIR="/tmp/chuboe-idempiere-server/"
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 #ACTION - Next action to replace use of below properties individual with consolidated one.
-CHUBOE_UTIL_HG_PROP="$CHUBOE_PROP_UTIL_HG_UTIL_PATH/properties/"
 CHUBOE_UTIL_HG_PROP_FILE="$CHUBOE_PROP_UTIL_HG_PROP_FILE"
 README="$CHUBOE_UTIL/idempiere_installer_feedback.txt"
 INITDNAME=$CHUBOE_PROP_IDEMPIERE_SERVICE_NAME
@@ -133,15 +134,14 @@ args=()
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BDj:J:v:r:" OPTION
+while getopts "hsp:e:ib:P:lu:BDj:J:v:r:I" OPTION
 do
 	case $OPTION in
 		h)	usage
 			exit 1;;
 
-		s)	#no install services like accounting and workflow
-			IS_INSTALL_SERVICE="N"
-			echo "NOTE: -s option Not implemented yet!!";;
+		s)	#set the database to only run services on this machine
+			IS_SET_SERVICE_IP="Y";;
 
 		p)	#no install postgresql
 			IS_INSTALL_DB="N"
@@ -185,7 +185,10 @@ do
 			IS_REPLICATION="Y"
 			REPLICATION_URL=$OPTARG;;
 
-	esac
+		I)	#do not initialize database
+			IS_INITIALIZE_DB="N";;
+	
+    esac
 done
 
 IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
@@ -243,10 +246,12 @@ sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $SCRIPTPATH/utils/chuboe.properties
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
+echo "My IP="$MY_IP
 echo "Install DB=" $IS_INSTALL_DB
 echo "Move DB="$IS_MOVE_DB
 echo "Install iDempiere="$IS_INSTALL_ID
-echo "Install iDempiere Services="$IS_INSTALL_SERVICE
+echo "Initialize Database with iDempire data="$IS_INITIALIZE_DB
+echo "Set this machine as only server to run service="$IS_SET_SERVICE_IP
 echo "Install Desktop="$IS_INSTALL_DESKTOP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
@@ -852,16 +857,32 @@ mail.dummy.com
 
 
 !
-cd utils
-sh RUN_ImportIdempiere.sh <<!
+#end of file input
+echo "HERE END: Launching console-setup.sh"
+    cd utils
+    
+    #Only run import script if parameter set accordingly
+    if [[ $IS_INITIALIZE_DB == "Y" ]]
+    then
+        echo "HERE: Launching RUN_ImportIdempiere.sh"
+        sh RUN_ImportIdempiere.sh <<!
 
 !
 #end of file input
-echo "HERE END: Launching console-setup.sh"
+        echo "HERE END: Launching RUN_ImportIdempiere.sh"
+    fi
+
 
 	# add pgcrypto to support apache based authentication
 	echo "HERE: pgcrypto extension"
 	sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
+
+    #update the database to only execute services on this machine
+    if [[ $IS_SET_SERVICE_IP == "Y" ]]
+    then
+	    sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "update ad_schedule set runonlyonip='$MY_IP'"
+        sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
+    fi
 
 	echo "HERE: Creating chuboe_utils"
 	echo "">>$README
@@ -999,6 +1020,7 @@ sudo chmod -R go-w $TEMP_DIR
 #utility scripts
 
 #the following is not currently used; however, keeping for reference.
+#update a proert file with a new value.
 set_chuboe_property (){
 SET_PROP_TARGET_PROPERTY=$1
 SET_PROP_REPLACEMENT_VALUE=$2
