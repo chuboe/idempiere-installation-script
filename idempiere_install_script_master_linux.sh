@@ -93,7 +93,7 @@ then
 fi
 
 #initialize variables with default values - these values might be overwritten during the next section based on command options
-MY_IP = $(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+MY_IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
 IS_INSTALL_DB="Y"
 IS_MOVE_DB="N"
 IS_INSTALL_ID="Y"
