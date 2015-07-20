@@ -55,8 +55,16 @@ else
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $IGNORENAME
 
 	cd $INSTALLPATH
-sudo -u $IDEMPIEREUSER hg add
+    sudo -u $IDEMPIEREUSER hg add
 	sudo -u $IDEMPIEREUSER hg commit -m "Initial Commit"
+
+    # In case you want to revert to a previous version
+    # Step 1: look at the log to determine the changeset you wish to use
+    ##  hg log
+    # Step 2: issue command to set the previous changeset to the current head/tip (without creating multiple heads)
+    ## hg revert --all --rev PUT_OLD/PREVIOUS_CHANGESET_HERE
+    # Step 3: commit your changes
+    ## hg commit -m "text to remind yourself what you did. Include old and new changeset details"
 
 fi #end if .hgrc file exists
 
