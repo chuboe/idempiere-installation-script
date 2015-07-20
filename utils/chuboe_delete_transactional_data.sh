@@ -32,6 +32,7 @@ else
     echo ademres: ------------------------------------------------------------------- >> "$LOGFILE"
     echo ademres: -------            STOPPING Not a Dev Envrionment           ------- >> "$LOGFILE"
     echo ademres: ------------------------------------------------------------------- >> "$LOGFILE"
+    echo STOPPING - Not a Dev Environment!!
     exit 1
 fi #end if dev environment check
 if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh &>> "$LOGFILE"
@@ -41,6 +42,7 @@ else
     echo adembak: ------------------------------------------------------------------- >> "$LOGFILE"
     echo adembak: -------          Local iDempiere Backup FAILED!             ------- >> "$LOGFILE"
     echo adembak: ------------------------------------------------------------------- >> "$LOGFILE"
+    echo STOPPING - Not a Dev Environment!!
     echo .
     exit 1
 fi
