@@ -11,12 +11,14 @@
 # If a hacker compromises your site, just unwind their changes using standard mercurial commands.
 ######################################
 
-INSTALLPATH="/opt/idempiere-server/"
+#Bring chuboe.properties into context
+source chuboe.properties
+INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
 IGNORENAME="$INSTALLPATH/.hgignore"
 HGNAME="$INSTALLPATH/.hg/hgrc"
-IDEMPIEREUSER="idempiere"
-CHUBOE_UTIL="/opt/chuboe_utils/"
-CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
+CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
+CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 CHUBOE_UTIL_HG_TEMP_HGRC="$CHUBOE_UTIL_HG/chuboe_temp/hgrc"
 CHUBOE_UTIL_HG_TEMP_IGNORE="$CHUBOE_UTIL_HG/chuboe_temp/.hgignore"
 

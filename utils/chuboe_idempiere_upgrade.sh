@@ -35,22 +35,24 @@ Outstanding actions:
 EOF
 }
 
-SERVER_DIR="/opt/idempiere-server"
-CHUBOE_UTIL="/opt/chuboe_utils/"
-CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
-CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
-IDEMPIEREUSER="idempiere"
-ID_DB_NAME="idempiere"
+#Bring in chuboe.properties into context
+source chuboe.properties
+
+SERVER_DIR=$CHUBOE_PROP_IDEMPIERE_PATH
+CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
+CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
+IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
+ID_DB_NAME=$CHUBOE_PROP_DB_NAME
 PG_CONNECT="NONE"
 MIGRATION_DIR=$CHUBOE_UTIL_HG"/chuboe_temp/migration"
-# get JENKINSPROJECT varialble from properties file
-JENKINSPROJECT=$(cat $CHUBOE_UTIL_HG_PROP/"JENKINS_PROJECT.txt")
-IDEMPIERE_VERSION=$(cat $CHUBOE_UTIL_HG_PROP/"IDEMPIERE_VERSION.txt")
+JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
+JENKINSURL=$CHUBOE_PROP_JENKINS_URL
+IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
-MIGRATION_DOWNLOAD="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
-P2="http://jenkins.idempiere.com/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/"
+MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
+P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/"
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -84,7 +86,7 @@ done
 
 if [[ $PG_CONNECT == "NONE" ]]
 then
-	PG_CONNECT="-h "$(sudo -u idempiere cat $SERVER_DIR/idempiereEnv.properties | grep "ADEMPIERE_DB_SERVER=" | cut -f2 -d'=')
+	PG_CONNECT="-h $CHUBOE_PROP_DB_HOST"
 fi
 
 # show variables to the user (debug)
@@ -101,9 +103,6 @@ echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
 echo "JENKINSPROJECT="$JENKINSPROJECT
 echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
-
-#TODO Check if idempiere is running
-#If running - notify user and exit
 
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
@@ -133,6 +132,17 @@ fi #end if IS_SKIP_BIN_UPGRADE = N
 # create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
 sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+
+# create a backup of the binary directory
+# In case you want to revert to a previous version
+# Step 1: look at the log to determine the changeset you wish to use
+##  hg log
+# Step 2: issue command to set the previous changeset to the current head/tip (without creating multiple heads)
+## hg revert --all --rev PUT_OLD/PREVIOUS_CHANGESET_HERE
+# Step 3: commit your changes
+## hg commit -m "text to remind yourself what you did. Include old and new changeset details"
+cd $CHUBOE_UTIL_HG/utils/
+./chuboe_hg_bindir.sh
 
 cd $CHUBOE_UTIL_HG/utils/
 
