@@ -1,14 +1,25 @@
-DATABASE=${1:-idempiere}
-USER=adempiere
-ADDPG=${2}   # i.e. "-h localhost -p 5432"
+#!/bin/bash
 
-MIGRATIONDIR=${3:-~/hgAdempiere/localosgi/migration}
+#bring chuboe.properties into context
+source chuboe.properties
+
+DATABASE=$CHUBOE_PROP_DB_NAME
+USER=$CHUBOE_PROP_DB_USERNAME
+ADDPG="-h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT"
+
+MIGRATIONDIR=${1:-~/hgAdempiere/localosgi/migration}
 cd $MIGRATIONDIR
 
 sudo -u idempiere psql -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
 
 > /tmp/lisFS.txt
-for FOLDER in i2.0 i2.0z i2.1 i2.1z
+FOLDERLIST="i2.0 i2.0z i2.1 i2.1z"
+if [[ $CHUBOE_PROP_IDEMPIERE_VERSION == "3.0" ]]
+then
+    FOLDERLIST=$FOLDERLIST" i3.0 i3.0z"
+fi
+
+for FOLDER in $FOLDERLIST
 do
     if [ -d ${FOLDER}/postgresql ]
     then
