@@ -113,6 +113,8 @@ CHUBOE_UTIL_HG_PROP_FILE="$CHUBOE_PROP_UTIL_HG_PROP_FILE"
 README="$CHUBOE_UTIL/idempiere_installer_feedback.txt"
 INITDNAME=$CHUBOE_PROP_IDEMPIERE_SERVICE_NAME
 IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
+IDEMPIERE_DB_NAME=$CHUBOE_PROP_DB_NAME
+IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
@@ -331,7 +333,7 @@ else
 	echo "IF you later create a sudoer user that you want to manage the chuboe_utils directory, issue the following commands:">>$README
 	echo "--->sudo chown -R YourNewUser:YourNewUser /opt/chuboe_utils/  #this makes you the owner.">>$README
 	echo "--->sudo usermod -a -G $IDEMPIEREUSER YourNewUser  #this adds your user to the $IDEMPIEREUSER group.">>$README
-	echo "--->sudo cp /home/idempiere/.pgpass /home/YourNewUser/  #this and the next line make connecting to psql much easier">>$README
+	echo "--->sudo cp /home/$IDEMPIEREUSER/.pgpass /home/YourNewUser/  #this and the next line make connecting to psql much easier">>$README
 	echo "--->sudo chown YourNewUser:YourNewUser /home/YourNewUser/.pgpass">>$README
 
 	# OSUSER was not available
@@ -704,16 +706,16 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "The script created an '$IDEMPIEREUSER' user without a password.">>$README
-	echo "You can use the 'sudo -u idempiere LinuxCommandHere' process to execute tasks as that user.">>$README
+	echo "You can use the 'sudo -u $IDEMPIEREUSER LinuxCommandHere' process to execute tasks as that user.">>$README
 	echo "You can use the 'sudo -i -u $IDEMPIEREUSER' to become the $IDEMPIEREUSER user.">>$README
 	echo "Logging in as $IDEMPIEREUSER is often easier than issuing a bunch of sudo commands.">>$README
 	echo "If you need to give $IDEMPIEREUSER a password, use the command 'sudo passwd $IDEMPIEREUSER'.">>$README
 	# create IDEMPIEREUSER user and group
-	# Note: we could create the iDempiere user as a system user; however, it is convenient to be able to "sudo -i -u idempiere" to perform tasks.
-	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "idempiere,none,none,none"
+	# Note: we could create the iDempiere user as a system user; however, it is convenient to be able to "sudo -i -u $IDEMPIEREUSER" to perform tasks.
+	sudo adduser $IDEMPIEREUSER --disabled-password --gecos "$IDEMPIEREUSER,none,none,none"
 
 	# create database password file for iDempiere user
-	sudo echo "*:*:*:adempiere:$DBPASS">>$TEMP_DIR/.pgpass
+	sudo echo "*:*:*:$IDEMPIERE_DB_USER:$DBPASS">>$TEMP_DIR/.pgpass
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $TEMP_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $TEMP_DIR/.pgpass
 	sudo mv $TEMP_DIR/.pgpass /home/$IDEMPIEREUSER/
@@ -721,7 +723,7 @@ then
 	# create database password file for OSUSER user
 	if [[ $OSUSER_EXISTS == "Y" ]]
 	then
-		sudo echo "*:*:*:adempiere:$DBPASS">>$TEMP_DIR/.pgpass
+		sudo echo "*:*:*:$IDEMPIERE_DB_USER:$DBPASS">>$TEMP_DIR/.pgpass
 		sudo chown $OSUSER:$OSUSER $TEMP_DIR/.pgpass
 		sudo -u $OSUSER chmod 600 $TEMP_DIR/.pgpass
 		sudo mv $TEMP_DIR/.pgpass $OSUSER_HOME/
@@ -847,8 +849,8 @@ sh console-setup.sh <<!
 2
 $PIP
 $PGPORT
-
-
+$IDEMPIERE_DB_NAME
+$IDEMPIERE_DB_USER
 $DBPASS
 $DBPASS
 mail.dummy.com
@@ -875,13 +877,13 @@ echo "HERE END: Launching console-setup.sh"
 
 	# add pgcrypto to support apache based authentication
 	echo "HERE: pgcrypto extension"
-	sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "CREATE EXTENSION pgcrypto"
+	sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "CREATE EXTENSION pgcrypto"
 
     #update the database to only execute services on this machine
     if [[ $IS_SET_SERVICE_IP == "Y" ]]
     then
-	    sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "update ad_schedule set runonlyonip='$MY_IP'"
-        sudo -u $IDEMPIEREUSER psql -U adempiere -d idempiere -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
+	    sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update ad_schedule set runonlyonip='$MY_IP'"
+        sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
     fi
 
 	echo "HERE: Creating chuboe_utils"
@@ -938,7 +940,7 @@ echo "HERE END: Launching console-setup.sh"
 		fi
 		echo "XMX="$XMX
 		sudo sed -i "s|-XX:MaxPermSize|-Xmx"$XMX"m -XX:MaxPermSize|" $INSTALLPATH/idempiere-server.sh
-		# use the following command to confirm the above setting took: sudo -u idempiere jps -v localhost
+		# use the following command to confirm the above setting took: sudo -u $IDEMPIEREUSER jps -v localhost
 		echo "HERE END: lots of memory and dedicated idempiere server"
 	fi
 
@@ -1002,7 +1004,7 @@ then
 	echo "">>$README
 	echo "">>$README
 	echo "iDempiere is started and is set to start on system boot">>$README
-	sudo -u idempiere cp $CHUBOE_UTIL_HG/stopServer.sh $INSTALLPATH/utils
+	sudo -u $IDEMPIEREUSER cp $CHUBOE_UTIL_HG/stopServer.sh $INSTALLPATH/utils
 	sudo cp $CHUBOE_UTIL_HG/$INITDNAME /etc/init.d/
 	sudo chmod +x /etc/init.d/$INITDNAME
 	sudo update-rc.d $INITDNAME defaults
