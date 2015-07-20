@@ -772,7 +772,8 @@ then
 	cd $TEMP_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
 	cp -r * $INSTALLPATH
 	cd $INSTALLPATH
-	sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_'date +%Y%m%d'.html
+    TEMP_NOW=$(date +"%Y%m%d_%T")
+	sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
 
 	echo "">>$README
 	echo "">>$README

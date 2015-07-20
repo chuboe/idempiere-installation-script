@@ -152,7 +152,8 @@ cd $CHUBOE_UTIL_HG/utils/
 ./syncApplied.sh $MIGRATION_DIR
 
 # get upgrade details (like build number)
-sudo wget $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O iDempiere_Build_Details_'date +%Y%m%d_%T'.html
+TEMP_NOW=$(date +"%Y%m%d_%T")
+sudo wget $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
