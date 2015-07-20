@@ -126,25 +126,30 @@ fi #end if IS_RESTART_SERVER = Y
 
 if [[ $IS_SKIP_BIN_UPGRADE == "N" ]]
 then
-	# update iDempiere binaries
+    # create a backup of the iDempiere folder before the upgrade
+    cd $CHUBOE_UTIL_HG/utils/
+    ./chuboe_hg_bindir.sh
+	
+    # update iDempiere binaries
 	cd $SERVER_DIR
 	sudo -u $IDEMPIEREUSER ./update.sh $P2
+
+    # create a backup of the binary directory after the upgrade
+    # In case you want to revert to a previous version
+    # Step 1: look at the log to determine the changeset you wish to use
+    ##  hg log
+    # Step 2: issue command to set the previous changeset to the current head/tip (without creating multiple heads)
+    ## hg revert --all --rev PUT_OLD/PREVIOUS_CHANGESET_HERE
+    # Step 3: commit your changes
+    ## hg commit -m "text to remind yourself what you did. Include old and new changeset details"
+    cd $CHUBOE_UTIL_HG/utils/
+    ./chuboe_hg_bindir.sh
+
 fi #end if IS_SKIP_BIN_UPGRADE = N
 
 # create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
 sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
-
-# create a backup of the binary directory
-# In case you want to revert to a previous version
-# Step 1: look at the log to determine the changeset you wish to use
-##  hg log
-# Step 2: issue command to set the previous changeset to the current head/tip (without creating multiple heads)
-## hg revert --all --rev PUT_OLD/PREVIOUS_CHANGESET_HERE
-# Step 3: commit your changes
-## hg commit -m "text to remind yourself what you did. Include old and new changeset details"
-cd $CHUBOE_UTIL_HG/utils/
-./chuboe_hg_bindir.sh
 
 cd $CHUBOE_UTIL_HG/utils/
 
