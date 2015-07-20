@@ -558,7 +558,12 @@ then
 	wget $ECLIPSESOURCEPATH -P $OSUSER_HOME/dev/downloads
 	tar -zxvf $OSUSER_HOME/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C $OSUSER_HOME/dev/
 
-	# Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
+	echo "">>$README
+	echo "">>$README
+	echo "NOTE: Creating an eclipse desktop shortcut.">>$README
+	echo "---> You probably want to set the -Xmx to 2g if you have enough memory - example: -Xmx2g">>$README
+	
+    # Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
 	echo "[Desktop Entry]">$OSUSER_HOME/dev/launchEclipse.desktop
 	echo "Encoding=UTF-8">> $OSUSER_HOME/dev/launchEclipse.desktop
 	echo "Type=Application">> $OSUSER_HOME/dev/launchEclipse.desktop
