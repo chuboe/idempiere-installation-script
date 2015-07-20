@@ -89,6 +89,8 @@ then
 	PG_CONNECT="-h $CHUBOE_PROP_DB_HOST"
 fi
 
+IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
+
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
@@ -148,6 +150,9 @@ cd $CHUBOE_UTIL_HG/utils/
 
 # run upgrade db script
 ./syncApplied.sh $ID_DB_NAME "$PG_CONNECT" $MIGRATION_DIR
+
+# get upgrade details (like build number)
+sudo wget $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O iDempiere_Build_Details_'date +%Y%m%d_%T'.html
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
