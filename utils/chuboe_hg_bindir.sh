@@ -68,10 +68,6 @@ else
 
 fi #end if .hgrc file exists
 
-# (2) when you create a private remote repository, uncommend the below command and update the URL
-# sudo -u $IDEMPIEREUSER hg push www.url_to_remote_repository
+# Uncomment the below command and update the URL
+# sudo -u $IDEMPIEREUSER hg push https://www.url_to_remote_repository.com/path
 
-# to see what has changed since the last commit, issue: hg status
-# if you ever want to undo a change that has not been committed, you can issue: hg revert --all (you can also use hg purge)
-# if you want to revert to a previous commit, you can use: hg revert --all --rev [xxx]
-# for more information, here is a great summary: http://stackoverflow.com/questions/2540454/mercurial-revert-back-to-old-version-and-continue-from-there
