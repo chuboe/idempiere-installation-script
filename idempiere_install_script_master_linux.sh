@@ -810,6 +810,34 @@ then
 	echo "To update your server's time zone, run this command:">>$README
 	echo "---> sudo dpkg-reconfigure tzdata">>$README
 
+	echo "HERE: Creating chuboe idempiere installation script directory"
+	echo "">>$README
+	echo "">>$README
+	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
+	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
+	cd $CHUBOE_UTIL
+	mv $SCRIPTPATH . 
+    
+    #Only run import script if parameter set accordingly
+    if [[ $IS_INITIALIZE_DB == "Y" ]]
+    then
+        echo "HERE: Initializing the database"
+        cd $CHUBOE_UTIL_HG/utils
+        ./chuboe_idempiere_initdb.sh $OSUSER
+        echo "HERE END: Initializing the database"
+    fi
+
+	# add pgcrypto to support apache based authentication
+	echo "HERE: pgcrypto extension"
+	sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "CREATE EXTENSION pgcrypto"
+
+    #update the database to only execute services on this machine
+    if [[ $IS_SET_SERVICE_IP == "Y" ]]
+    then
+	    sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update ad_schedule set runonlyonip='$MY_IP'"
+        sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
+    fi
+
 echo "HERE: Launching console-setup.sh"
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
@@ -871,34 +899,6 @@ Y
 #end of file input
 echo "HERE END: Launching console-setup.sh"
     
-	echo "HERE: Creating chuboe idempiere installation script directory"
-	echo "">>$README
-	echo "">>$README
-	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
-	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
-	cd $CHUBOE_UTIL
-	mv $SCRIPTPATH . 
-    
-    #Only run import script if parameter set accordingly
-    if [[ $IS_INITIALIZE_DB == "Y" ]]
-    then
-        echo "HERE: Initializing the database"
-        cd $CHUBOE_UTIL_HG/utils
-        ./chuboe_idempiere_initdb.sh $OSUSER
-        echo "HERE END: Initializing the database"
-    fi
-
-
-	# add pgcrypto to support apache based authentication
-	echo "HERE: pgcrypto extension"
-	sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "CREATE EXTENSION pgcrypto"
-
-    #update the database to only execute services on this machine
-    if [[ $IS_SET_SERVICE_IP == "Y" ]]
-    then
-	    sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update ad_schedule set runonlyonip='$MY_IP'"
-        sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
-    fi
 
 	# create mercurial hgrc file for project.
 	echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
