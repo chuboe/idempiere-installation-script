@@ -1022,6 +1022,7 @@ sudo chmod -R go-w $TEMP_DIR
 #the password can be retrieved from the idempiere properties file if needed.
 sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $CHUBOE_UTIL_HG_PROP_FILE
 
+exit 0
 
 #utility scripts
 
