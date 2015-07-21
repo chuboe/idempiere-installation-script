@@ -854,7 +854,7 @@ sh console-setup.sh <<!
 
 
 
-
+Y
 2
 $PIP
 $PGPORT
