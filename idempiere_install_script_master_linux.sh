@@ -104,6 +104,7 @@ IS_SET_SERVICE_IP=$CHUBOE_PROP_IDEMPIERE_SET_SERVICE_IP
 PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
 DBPASS=$CHUBOE_PROP_DB_PASSWORD
+DBPASS_SU=$CHUBOE_PROP_DB_PASSWORD_SU
 INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
 TEMP_DIR="/tmp/chuboe-idempiere-server/"
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
@@ -115,6 +116,7 @@ INITDNAME=$CHUBOE_PROP_IDEMPIERE_SERVICE_NAME
 IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
 IDEMPIERE_DB_NAME=$CHUBOE_PROP_DB_NAME
 IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
+IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
 ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
@@ -159,7 +161,9 @@ do
 
 		P)	#database password
             args+=("CHUBOE_PROP_DB_PASSWORD=\"$OPTARG\"")
-            DBPASS=$OPTARG;;
+            args+=("CHUBOE_PROP_DB_PASSWORD_SU=\"$OPTARG\"")
+            DBPASS=$OPTARG
+            DBPASS_SU=$OPTARG;;
 
 		l)	#launch iDempiere
 			IS_LAUNCH_ID="Y";;
@@ -254,6 +258,7 @@ echo "Install Desktop="$IS_INSTALL_DESKTOP
 echo "Database IP="$PIP
 echo "MoveDB Device Name="$DEVNAME
 echo "DB Password="$DBPASS
+echo "DB_SU Password="$DBPASS_SU
 echo "Launch iDempiere with nohup="$IS_LAUNCH_ID
 echo "Install Path="$INSTALLPATH
 echo "Chuboe_Util Path="$CHUBOE_UTIL
@@ -356,7 +361,7 @@ if [[ $IS_INSTALL_DB == "Y" ]]
 then
 	echo "HERE: Installing DB because IS_INSTALL_DB == Y"
 	sudo apt-get --yes install postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
-	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS"';"
+	sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS_SU"';"
 	sudo -u postgres service postgresql stop
 
 	# The following commands update postgresql to listen for all
@@ -393,7 +398,7 @@ then
 			# remove replication attribute from postgres user/role for added security
 			sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
 			# create a new replication user. Doing so gives you the ability to cut off replication without disabling the postgres user.
-			sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS"';"
+			sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS_SU"';"
 			sudo -u postgres service postgresql stop
 		fi
 
@@ -405,7 +410,7 @@ then
 		echo "HERE: Is Replication = Y AND Is Replication Master = N"
 
 		# create a .pgpass so that the replication does not need to ask for a password - you can also use key-based authentication
-		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS">>/tmp/.pgpass
+		sudo echo "$REPLICATION_URL:*:*:$REPLATION_ROLE:$DBPASS_SU">>/tmp/.pgpass
 		sudo chown postgres:postgres /tmp/.pgpass
 		sudo chmod 0600 /tmp/.pgpass
 		sudo mv /tmp/.pgpass /var/lib/postgresql/
@@ -717,6 +722,7 @@ then
 
 	# create database password file for iDempiere user
 	sudo echo "*:*:*:$IDEMPIERE_DB_USER:$DBPASS">>$TEMP_DIR/.pgpass
+	sudo echo "*:*:*:$IDEMPIERE_DB_USER_SU:$DBPASS_SU">>$TEMP_DIR/.pgpass
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $TEMP_DIR/.pgpass
 	sudo -u $IDEMPIEREUSER chmod 600 $TEMP_DIR/.pgpass
 	sudo mv $TEMP_DIR/.pgpass /home/$IDEMPIEREUSER/
@@ -725,6 +731,7 @@ then
 	if [[ $OSUSER_EXISTS == "Y" ]]
 	then
 		sudo echo "*:*:*:$IDEMPIERE_DB_USER:$DBPASS">>$TEMP_DIR/.pgpass
+		sudo echo "*:*:*:$IDEMPIERE_DB_USER_SU:$DBPASS_SU">>$TEMP_DIR/.pgpass
 		sudo chown $OSUSER:$OSUSER $TEMP_DIR/.pgpass
 		sudo -u $OSUSER chmod 600 $TEMP_DIR/.pgpass
 		sudo mv $TEMP_DIR/.pgpass $OSUSER_HOME/
@@ -854,7 +861,7 @@ $PGPORT
 $IDEMPIERE_DB_NAME
 $IDEMPIERE_DB_USER
 $DBPASS
-$DBPASS
+$DBPASS_SU
 mail.dummy.com
 
 
@@ -1020,7 +1027,7 @@ sudo chmod -R go-w $TEMP_DIR
 
 #remove passwords from chuboe.properties file.
 #the password can be retrieved from the idempiere properties file if needed.
-sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $CHUBOE_UTIL_HG_PROP_FILE
+#sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $CHUBOE_UTIL_HG_PROP_FILE
 
 exit 0
 
