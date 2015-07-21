@@ -241,10 +241,6 @@ awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe
 mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
 rm $SCRIPTPATH/utils/install.properties
 
-#remove passwords from chuboe.properties file.
-#the password can be retrieved from the idempiere properties file if needed.
-sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $SCRIPTPATH/utils/chuboe.properties 
-
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
@@ -867,17 +863,22 @@ mail.dummy.com
 !
 #end of file input
 echo "HERE END: Launching console-setup.sh"
-    cd utils
+    
+	echo "HERE: Creating chuboe idempiere installation script directory"
+	echo "">>$README
+	echo "">>$README
+	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
+	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
+	cd $CHUBOE_UTIL
+	mv $SCRIPTPATH . 
     
     #Only run import script if parameter set accordingly
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
-        echo "HERE: Launching RUN_ImportIdempiere.sh"
-        sh RUN_ImportIdempiere.sh <<!
-
-!
-#end of file input
-        echo "HERE END: Launching RUN_ImportIdempiere.sh"
+        echo "HERE: Initializing the database"
+        cd $CHUBOE_UTIL_HG/utils
+        ./chuboe_idempiere_initdb.sh
+        echo "HERE END: Initializing the database"
     fi
 
 
@@ -892,14 +893,6 @@ echo "HERE END: Launching console-setup.sh"
         sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
     fi
 
-	echo "HERE: Creating chuboe_utils"
-	echo "">>$README
-	echo "">>$README
-	echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
-	echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
-	cd $CHUBOE_UTIL
-	mv $SCRIPTPATH . 
-    
 	# create mercurial hgrc file for project.
 	echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
 	echo "username = YourName <YourName@YourURL.com>">>$CHUBOE_UTIL_HG/.hg/hgrc
@@ -1024,6 +1017,11 @@ echo "Congratulations - the script seems to have executed successfully.">>$READM
 
 #clean up activities
 sudo chmod -R go-w $TEMP_DIR
+
+#remove passwords from chuboe.properties file.
+#the password can be retrieved from the idempiere properties file if needed.
+sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $CHUBOE_UTIL_HG_PROP_FILE
+
 
 #utility scripts
 
