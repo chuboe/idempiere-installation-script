@@ -1,0 +1,2 @@
+The purpose of this file is to document thoughts and findings about the chuboe.properties values.
+1.  iDempiere hard codes the schema value to "adempiere". This is located in DB_PostgreSQL.java => getSchema()
