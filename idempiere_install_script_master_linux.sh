@@ -866,7 +866,7 @@ mail.dummy.com
 
 
 
-
+Y
 !
 #end of file input
 echo "HERE END: Launching console-setup.sh"
