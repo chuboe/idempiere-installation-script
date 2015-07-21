@@ -3,24 +3,27 @@
 #bring chuboe.properties into context
 source chuboe.properties
 
+OSUSER=${1:-$CHUBOE_PROP_IDEMPIERE_OS_USER}
+
+
 echo -------------------------------------
 echo Unjar seed file
 echo -------------------------------------
 cd $CHUBOE_PROP_IDEMPIERE_PATH/data/seed
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jar -xvf Adempiere_pg.jar
+sudo -u $OSUSER jar -xvf Adempiere_pg.jar
 
 # remove 'create schema' commands
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sed -i "/CREATE SCHEMA adempiere;/d" Adempiere_pg.dmp
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sed -i "/ALTER SCHEMA adempiere OWNER TO adempiere;/d" Adempiere_pg.dmp
+sudo -u $OSUSER sed -i "/CREATE SCHEMA adempiere;/d" Adempiere_pg.dmp
+sudo -u $OSUSER sed -i "/ALTER SCHEMA adempiere OWNER TO adempiere;/d" Adempiere_pg.dmp
 
 # set search_path (schema) 
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sed -i "s/SET search_path = adempiere, pg_catalog;/SET search_path = $CHUBOE_PROP_DB_SCHEMA, pg_catalog;/" Adempiere_pg.dmp
+sudo -u $OSUSER sed -i "s/SET search_path = adempiere, pg_catalog;/SET search_path = $CHUBOE_PROP_DB_SCHEMA, pg_catalog;/" Adempiere_pg.dmp
 
 # rename schema
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sed -i "s/adempiere\./$CHUBOE_PROP_DB_SCHEMA\./" Adempiere_pg.dmp
+sudo -u $OSUSER sed -i "s/adempiere\./$CHUBOE_PROP_DB_SCHEMA\./" Adempiere_pg.dmp
 
 # rename role
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sed -i "s/OWNER TO adempiere/OWNER TO $CHUBOE_PROP_DB_USERNAME/" Adempiere_pg.dmp
+sudo -u $OSUSER sed -i "s/OWNER TO adempiere/OWNER TO $CHUBOE_PROP_DB_USERNAME/" Adempiere_pg.dmp
 
 echo -------------------------------------
 echo Create user and database

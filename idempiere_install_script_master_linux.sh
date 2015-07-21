@@ -877,7 +877,7 @@ echo "HERE END: Launching console-setup.sh"
     then
         echo "HERE: Initializing the database"
         cd $CHUBOE_UTIL_HG/utils
-        ./chuboe_idempiere_initdb.sh
+        ./chuboe_idempiere_initdb.sh $OSUSER
         echo "HERE END: Initializing the database"
     fi
 
