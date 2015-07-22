@@ -8,7 +8,7 @@ To install all components of iDempiere on a single new Ubuntu 14.04 server, simp
 ```
 #!bash
 
-sudo apt-get -y install mercurial; hg clone https://bitbucket.org/cboecking/idempiere-installation-script; chmod 766 idempiere-installation-script/*.sh; ./idempiere-installation-script/idempiere_install_script_master_linux.sh -B -P Silly -l &>output.txt
+sudo apt-get -y install mercurial; hg clone https://bitbucket.org/cboecking/idempiere-installation-script; chmod 766 idempiere-installation-script/*.sh; ./idempiere-installation-script/idempiere_install_script_master_linux.sh -P Silly -l &>output.txt; nano /opt/chuboe/idempiere_installer_feedback.txt
 ```
 
 You can also use this script to install components separately. You can place the WebUI and database onto different servers. By choosing the correct command options, you choose what to install. To learn more about this script and how to use it, go to [www.chuckboecking.com](http://www.chuckboecking.com/blog/bid/296393/iDempiere-Open-Source-ERP-Linux-Installation-Really-Easy). 
