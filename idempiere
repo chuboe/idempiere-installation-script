@@ -17,10 +17,12 @@
 ### END INIT INFO
 
 # initialization
+# bring chuboe.properties into scope
+source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
 # adjust these variables to your environment
-IDEMPIERE_HOME=/opt/idempiere-server/
+IDEMPIERE_HOME=$CHUBOE_PROP_IDEMPIERE_PATH
 IDEMPIERE_LOG=$IDEMPIERE_HOME/log/
-IDEMPIEREUSER=idempiere
+IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 # Instead of using ENVFILE you can set JAVA_HOME, IDEMPIERE_HOME and add JAVA_HOME/bin to PATH
 # in this case you can comment the source lines for ENVFILE below
 # detected some problems with Hardy Heron ubuntu using the bash source command
