@@ -11,12 +11,14 @@
 # If a hacker compromises your site, just unwind their changes using standard mercurial commands.
 ######################################
 
-INSTALLPATH="/opt/idempiere-server/"
+#Bring chuboe.properties into context
+source chuboe.properties
+INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
 IGNORENAME="$INSTALLPATH/.hgignore"
 HGNAME="$INSTALLPATH/.hg/hgrc"
-IDEMPIEREUSER="idempiere"
-CHUBOE_UTIL="/opt/chuboe_utils/"
-CHUBOE_UTIL_HG="$CHUBOE_UTIL/idempiere-installation-script/"
+IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
+CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
+CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 CHUBOE_UTIL_HG_TEMP_HGRC="$CHUBOE_UTIL_HG/chuboe_temp/hgrc"
 CHUBOE_UTIL_HG_TEMP_IGNORE="$CHUBOE_UTIL_HG/chuboe_temp/.hgignore"
 
@@ -53,15 +55,19 @@ else
 	sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $IGNORENAME
 
 	cd $INSTALLPATH
-sudo -u $IDEMPIEREUSER hg add
+    sudo -u $IDEMPIEREUSER hg add
 	sudo -u $IDEMPIEREUSER hg commit -m "Initial Commit"
+
+    # In case you want to revert to a previous version
+    # Step 1: look at the log to determine the changeset you wish to use
+    ##  hg log
+    # Step 2: issue command to set the previous changeset to the current head/tip (without creating multiple heads)
+    ## hg revert --all --rev PUT_OLD/PREVIOUS_CHANGESET_HERE
+    # Step 3: commit your changes
+    ## hg commit -m "text to remind yourself what you did. Include old and new changeset details"
 
 fi #end if .hgrc file exists
 
-# (2) when you create a private remote repository, uncommend the below command and update the URL
-# sudo -u $IDEMPIEREUSER hg push www.url_to_remote_repository
+# Uncomment the below command and update the URL
+# sudo -u $IDEMPIEREUSER hg push https://www.url_to_remote_repository.com/path
 
-# to see what has changed since the last commit, issue: hg status
-# if you ever want to undo a change that has not been committed, you can issue: hg revert --all (you can also use hg purge)
-# if you want to revert to a previous commit, you can use: hg revert --all --rev [xxx]
-# for more information, here is a great summary: http://stackoverflow.com/questions/2540454/mercurial-revert-back-to-old-version-and-continue-from-there

@@ -1,0 +1,3 @@
+The purpose of this file is to document thoughts and findings about the chuboe.properties values.
+1.  iDempiere hard codes the schema value to "adempiere". This is located in DB_PostgreSQL.java => getSchema()
+2.  You cannot change the service name CHUBOE_PROP_IDEMPIERE_SERVICE_NAME
