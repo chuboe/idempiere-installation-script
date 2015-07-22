@@ -6,6 +6,8 @@
 # This script should only be executed from a development instance - NOT PRODUCTION.
 ######################################
 
+#Bring chuboe.properties into context
+source chuboe.properties
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
