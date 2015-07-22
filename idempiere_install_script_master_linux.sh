@@ -15,7 +15,15 @@
 # 1.7 added JVM and PostgreSQL performance enhancements when installing on dedicated boxes.
 # 1.8 Added ActiveMQ JMS installation script
 # 1.9 refactored to not use local user and install chuboe_utils beside idempiere - not inside
-# 2.0 removed ability to pull from sf.net - always pull from a Jenkens server.
+# 2.0 Removed ability to pull from sf.net - always pull from a Jenkens server.
+#     Pull iDempiere from any jenkins server/project
+#     Install directly on AWS RDS
+#     Created parameter file for advanced installation
+#     Added ability to install a services only server
+#     Change the DB name from "idempire" to something more secure
+#     Change the DB username from "adempire" to something more secure
+#     Install from development branch (3.0)
+#     Improved usage of support scripts (backup, restore, upgrade, etc...)
 
 
 # function to help the user better understand how the script works
