@@ -36,6 +36,12 @@ else
     exit 1
 fi #end if dev environment check
 
+#create a local backup just in case
+echo Creating a local backup just in case.
+echo NOTE: Ignore errors related to myEnvironment.sav.
+cd "$ADEMROOTDIR"/utils
+sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+
 if sudo service idempiere stop >> $LOGFILE
 then
     echo ademres: iDempiere Stopped >> $LOGFILE
@@ -45,9 +51,7 @@ then
         sudo rm ExpDat.dmp
         sudo -u $IDEMPIEREUSER jar xf "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/*.jar
         cd "$ADEMROOTDIR"/utils
-        
-        #create a local backup just in case
-        sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+        echo NOTE: Ignore errors related to myEnvironment.sav.
         if sudo -u $IDEMPIEREUSER ./RUN_DBRestore.sh <<!
 
 !

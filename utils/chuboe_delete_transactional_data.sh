@@ -36,6 +36,7 @@ else
     exit 1
 fi #end if dev environment check
 echo running script...
+echo NOTE: ignore errors relating to myEnvironment.sav
 if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh &>> "$LOGFILE"
 then
     echo adembak: Local Backup Succeeded.  >> "$LOGFILE"

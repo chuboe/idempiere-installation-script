@@ -149,6 +149,7 @@ fi #end if IS_SKIP_BIN_UPGRADE = N
 
 # create a database backup just in case things go badly
 cd $SERVER_DIR/utils/
+echo NOTE: Ignore errors related to myEnvironment.sav
 sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
 
 cd $CHUBOE_UTIL_HG/utils/

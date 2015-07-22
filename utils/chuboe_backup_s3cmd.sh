@@ -28,6 +28,7 @@ echo  -------          STARTING iDempiere Daily Backup            ------- >> "$L
 echo  ------------------------------------------------------------------- >> "$LOGFILE"
 echo  Executing RUN_DBExport.sh local backup utility. >> "$LOGFILE"
 if 
+    echo NOTE: ignore errors about myEnvironment.save
     sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$LOGFILE"
     cp "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$LOCALBACKDIR"/
     sudo rm "$ADEMROOTDIR"/data/ExpDat????????_??????.jar
