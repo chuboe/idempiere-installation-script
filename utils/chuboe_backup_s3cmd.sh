@@ -27,8 +27,12 @@ echo  ------------------------------------------------------------------- >> "$L
 echo  -------          STARTING iDempiere Daily Backup            ------- >> "$LOGFILE"
 echo  ------------------------------------------------------------------- >> "$LOGFILE"
 echo  Executing RUN_DBExport.sh local backup utility. >> "$LOGFILE"
+
+# Note: if you get a pg_dump server mismatch error when using RDS - read this to solve:
+# http://stackoverflow.com/questions/12836312/postgresql-9-2-pg-dump-version-mismatch
+
 if 
-    echo NOTE: ignore errors about myEnvironment.save
+    echo NOTE: ignore errors about myEnvironment.sav
     sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$LOGFILE"
     cp "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$LOCALBACKDIR"/
     sudo rm "$ADEMROOTDIR"/data/ExpDat????????_??????.jar
