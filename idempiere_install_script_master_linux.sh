@@ -829,16 +829,17 @@ then
 
 	# add pgcrypto to support apache based authentication
 	echo "HERE: pgcrypto extension"
-	sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "CREATE EXTENSION pgcrypto"
+	sudo -u $IDEMPIEREUSER psql -h $PIP -p $PGPORT -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "CREATE EXTENSION pgcrypto"
 
     #update the database to only execute services on this machine
     if [[ $IS_SET_SERVICE_IP == "Y" ]]
     then
-	    sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update ad_schedule set runonlyonip='$MY_IP'"
-        sudo -u $IDEMPIEREUSER psql -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
+	    sudo -u $IDEMPIEREUSER psql -h $PIP -p $PGPORT -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update ad_schedule set runonlyonip='$MY_IP'"
+        sudo -u $IDEMPIEREUSER psql -h $PIP -p $PGPORT -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
     fi
 
 echo "HERE: Launching console-setup.sh"
+cd $INSTALLPATH
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
 #HERE are the prompts:
