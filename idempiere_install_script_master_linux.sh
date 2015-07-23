@@ -24,7 +24,7 @@
 #     Change the DB username from "adempire" to something more secure
 #     Install from development branch (3.0)
 #     Improved usage of support scripts (backup, restore, upgrade, etc...)
-#     Added ability to launch a new WebUI server without intializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
+#     Added ability to launch a new WebUI server without initializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
 
 
 # function to help the user better understand how the script works
