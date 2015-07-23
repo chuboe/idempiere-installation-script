@@ -20,8 +20,8 @@
 #     Install directly on AWS RDS
 #     Created parameter file for advanced installation
 #     Added ability to install a services only server
-#     Change the DB name from "idempire" to something more secure
-#     Change the DB username from "adempire" to something more secure
+#     Change the DB name from "idempiere" to something more secure
+#     Change the DB username from "adempiere" to something more secure
 #     Install from development branch (3.0)
 #     Improved usage of support scripts (backup, restore, upgrade, etc...)
 #     Added ability to launch a new WebUI server without initializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
