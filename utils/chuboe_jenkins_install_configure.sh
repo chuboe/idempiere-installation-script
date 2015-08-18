@@ -76,6 +76,18 @@ sudo nano /etc/apache2/sites-available/000-default.conf
 
 sudo /etc/init.d/apache2 restart
 
+#####Configure Jenkins security (performed in jenkins UI)
+# Jenkins Menu => Manage Jenkins => Configure Global Security
+# Enable Security
+# Choose Jenkin's own database
+# Uncheck allow users to sign up
+# Save - this will prompt you to create a username password
+###
+# Jenkins Menu => Manage Jenkins => Configure Global Security
+# Choose Matrix Based security
+# Give Anonymous Overall=>Read (nothing else)
+# Add your user => check all check boxes for your user
+
 #####Install Jenkins plugins (performed in jenkins UI)
 # www.YourURL.com:8080
 # Jenkins Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
