@@ -9,14 +9,13 @@
 
 ## ASSUMPTIONS
 ## local OS username = ubuntu
+JENKINS_OS_USER="ubuntu"
 
 #####Install needed tools
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-6-jdk openjdk-7-jdk
-
-## NOTE: Jenkins now requires java 1.7. This script installs both - just in case you want to compile iDempiere in 1.6
+sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-7-jdk
 
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
@@ -25,15 +24,17 @@ sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-6-jdk o
 #####clone a local repository of iDempiere
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
 #  FYI - jenkins will create yet another clone for its build purposes
+cd /opt/
 mkdir source
+sudo chown $JENKINS_OS_USER:$JENKINS_OS_USER source
 cd source
-mkdir id
-cd id
+mkdir idempiere_source
+cd idempiere_source
 hg clone https://bitbucket.org/idempiere/idempiere
 
 #####Install Director and Buckminster
 sudo mkdir /opt/buckminster-headless-4.2
-sudo chown -R ubuntu:ubuntu /opt/buckminster-headless-4.2
+sudo chown -R $JENKINS_OS_USER:$JENKINS_OS_USER /opt/buckminster-headless-4.2
 cd /opt/buckminster-headless-4.2
 wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
 sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
@@ -93,7 +94,7 @@ sudo /etc/init.d/apache2 restart
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
-#    URL: /home/ubuntu/source/id/idempiere
+#    URL: /opt/source/idempiere_source/idempiere
 #    Revision Type: Branch
 #    Revision: release-2.1
 #  Add below build steps
