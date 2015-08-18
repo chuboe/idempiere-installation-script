@@ -15,7 +15,7 @@ JENKINS_OS_USER="ubuntu"
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-7-jdk
+sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-7-jdk
 
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
@@ -47,7 +47,8 @@ sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headles
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.core.headless.feature
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.pde.headless.feature
 
-#####Create web directories publishing p2
+#####Create web directories publishing p2 - only needed if you want to use apache instead of jenkins itself - otherwise, skip to the next step
+sudo apt-get -y install apache2
 sudo mkdir /opt/idempiere-builds
 sudo mkdir /opt/idempiere-builds/idempiere.p2
 sudo mkdir /opt/idempiere-builds/idempiere.migration
