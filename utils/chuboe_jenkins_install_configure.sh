@@ -25,7 +25,7 @@ sudo apt-get -y install jenkins zip mercurial htop apache2 s3cmd openjdk-7-jdk
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
 #  FYI - jenkins will create yet another clone for its build purposes
 cd /opt/
-mkdir source
+sudo mkdir source
 sudo chown $JENKINS_OS_USER:$JENKINS_OS_USER source
 cd source
 mkdir idempiere_source
