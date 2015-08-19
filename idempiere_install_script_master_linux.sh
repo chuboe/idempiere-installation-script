@@ -1007,6 +1007,12 @@ echo "HERE END: Launching console-setup.sh"
     sudo a2enmod authn_dbd
     sudo a2enmod ssl
     sudo service apache2 restart
+    
+    #Take a back up of the iDempiere binary installation directory
+    #HERE
+    
+    #Execute an update to get the latest version of the code and database
+    #HERE
 
     echo "HERE END: Installing iDempiere because IS_INSTALL_ID == Y"
 
