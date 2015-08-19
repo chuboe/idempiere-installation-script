@@ -116,7 +116,7 @@ sudo service apache2 restart
 ###
 # Jenkins Menu => Manage Jenkins => Configure Global Security
 # Choose Matrix Based security
-# Give Anonymous Overall=>Read (nothing else)
+# Give Anonymous Overall=>Read; Job=>Read; Job=>Workspace (nothing else - this will make all projects available to ananomous users)
 # Add your user => check all check boxes for your user
 
 #####Install Jenkins plugins (performed in jenkins UI)
