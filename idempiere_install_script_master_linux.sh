@@ -1009,10 +1009,19 @@ echo "HERE END: Launching console-setup.sh"
     sudo service apache2 restart
     
     #Take a back up of the iDempiere binary installation directory
-    #HERE
+    echo "HERE: create a backup of the iDempiere binaries"
+    cd $CHUBOE_UTIL_HG/utils
+    ./chuboe_hg_bindir.sh
+    echo "HERE END: create a backup of the iDempiere binaries"
     
     #Execute an update to get the latest version of the code and database
-    #HERE
+    if [[ $IS_INITIALIZE_DB == "Y" ]]
+    then
+        echo "HERE: updating database and binaries to latest version"
+        cd $CHUBOE_UTIL_HG/utils
+        ./chuboe_idempiere_upgrade.sh
+        echo "HERE END: updating database and binaries to latest version"
+    fi
 
     echo "HERE END: Installing iDempiere because IS_INSTALL_ID == Y"
 
