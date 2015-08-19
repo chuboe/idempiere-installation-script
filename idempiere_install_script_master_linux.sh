@@ -52,7 +52,7 @@ OPTIONS:
     -u  Adds this user to the iDempiere group (default: ubuntu)
     -D  Install desktop development tools
     -v  Specify iDempiere viersion - defaults to 2.1
-    -J  Specify Jenkins URL - defaults to http://jenkins.idempiere.com
+    -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
     -j  Specify Jenkins project name - defaults to iDempiere2.1Daily
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
