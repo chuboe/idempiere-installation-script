@@ -9,7 +9,7 @@
 
 ## ASSUMPTIONS
 ## local OS username = ubuntu
-JENKINS_OS_USER="ubuntu"
+#JENKINS_OS_USER="ubuntu"
 
 #####Install needed tools
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
@@ -21,27 +21,23 @@ sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-7-jdk
 ##    /etc/init.d/jenkins
 ##    https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu (search google for "install jenkins")
 
-# Change the default port
-sudo sed -i "s|HTTP_PORT=8080|HTTP_PORT=80|" /etc/default/jenkins
-sudo service jenkins restart
-
 #####clone a local repository of iDempiere
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
 #  FYI - jenkins will create yet another clone for its build purposes
 cd /opt/
 sudo mkdir source
-sudo chown $JENKINS_OS_USER:$JENKINS_OS_USER source
+#sudo chown $JENKINS_OS_USER:$JENKINS_OS_USER source
 cd source
-mkdir idempiere_source
+sudo mkdir idempiere_source
 cd idempiere_source
-hg clone https://bitbucket.org/idempiere/idempiere
+sudo hg clone https://bitbucket.org/idempiere/idempiere
 
 #####Install Director and Buckminster
 sudo mkdir /opt/buckminster-headless-4.2
-sudo chown -R $JENKINS_OS_USER:$JENKINS_OS_USER /opt/buckminster-headless-4.2
+#sudo chown -R $JENKINS_OS_USER:$JENKINS_OS_USER /opt/buckminster-headless-4.2
 cd /opt/buckminster-headless-4.2
-wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
-unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
+sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
+sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
 cd /opt/buckminster-headless-4.2/director
 
 sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.2/ -d /opt/buckminster-headless-4.2/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
@@ -50,34 +46,62 @@ sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headles
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.core.headless.feature
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.pde.headless.feature
 
+#####Using Apache as a reverse proxy to protect Jenkins
+sudo apt-get install -y apache2
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2dissite 000-default
+JENKINS_TEMP=~/jenkins_temp.conf
+JENKINS_CONF=/etc/apache2/sites-available/jenkins.conf
+cat >$JENKINS_TEMP <<EOL
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName ci.company.com
+        ServerAlias ci
+        ProxyRequests Off
+        <Proxy *>
+                Order deny,allow
+                Allow from all
+        </Proxy>
+        ProxyPreserveHost on
+        ProxyPass / http://localhost:8080/ nocanon
+        AllowEncodedSlashes NoDecode
+</VirtualHost>
+EOL
+sudo mv $JENKINS_TEMP $JENKINS_CONF
+sudo chown root:root $JENKINS_CONF
+sudo a2ensite jenkins
+sudo service apache2 restart
+
 #####Create web directories publishing p2 - only needed if you want to use apache instead of jenkins itself - otherwise, skip to the next step
-sudo apt-get -y install apache2
-sudo mkdir /opt/idempiere-builds
-sudo mkdir /opt/idempiere-builds/idempiere.p2
-sudo mkdir /opt/idempiere-builds/idempiere.migration
-sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.p2
-sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.migration
-
-cd /var/www
-sudo ln -s /opt/idempiere-builds/idempiere.p2
-sudo ln -s /opt/idempiere-builds/idempiere.migration
-
-sudo nano /etc/apache2/sites-available/000-default.conf
-
-	#Somewhere in your VirtualHost, add the following:
-		<Directory /var/www/idempiere.p2>
-			AllowOverride AuthConfig
-		</Directory>
-
-		<Directory /var/www/idempiere.migration>
-			AllowOverride AuthConfig
-		</Directory>
-
-		Alias /idempiere/p2 /var/www/idempiere.p2
-		Alias /idempiere/migration /var/www/idempiere.migration
-	#end: Somewhere in your VirtualHost, add the following:
-
-sudo /etc/init.d/apache2 restart
+## This section is commented out because I use apache to act as a reverse proxy
+#sudo apt-get -y install apache2
+#sudo mkdir /opt/idempiere-builds
+#sudo mkdir /opt/idempiere-builds/idempiere.p2
+#sudo mkdir /opt/idempiere-builds/idempiere.migration
+#sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.p2
+#sudo chown jenkins:www-data /opt/idempiere-builds/idempiere.migration
+#
+#cd /var/www
+#sudo ln -s /opt/idempiere-builds/idempiere.p2
+#sudo ln -s /opt/idempiere-builds/idempiere.migration
+#
+#sudo nano /etc/apache2/sites-available/000-default.conf
+#
+#	#Somewhere in your VirtualHost, add the following:
+#		<Directory /var/www/idempiere.p2>
+#			AllowOverride AuthConfig
+#		</Directory>
+#
+#		<Directory /var/www/idempiere.migration>
+#			AllowOverride AuthConfig
+#		</Directory>
+#
+#		Alias /idempiere/p2 /var/www/idempiere.p2
+#		Alias /idempiere/migration /var/www/idempiere.migration
+#	#end: Somewhere in your VirtualHost, add the following:
+#
+#sudo /etc/init.d/apache2 restart
 
 #####Configure Jenkins security (performed in jenkins UI)
 # Jenkins Menu => Manage Jenkins => Configure Global Security
