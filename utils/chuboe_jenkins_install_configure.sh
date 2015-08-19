@@ -138,7 +138,7 @@ sudo service apache2 restart
 # (1) buckminster
 # (2) mercurial
 
-#####Configure Jenkins System (performed in jenkins UI)
+#####Configure Jenkins System (performed in jenkins UI) - Version 4.2
 # Jenkins Menu => Manage Jenkins => Configure System
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.2
@@ -146,15 +146,36 @@ sudo service apache2 restart
 #   Installation Directory: /opt/buckminster-headless-4.2/
 #   Additonal Startup Parameters: -Xmx1024m
 
+#####Configure Jenkins System (performed in jenkins UI) - Version 4.4
+# Jenkins Menu => Manage Jenkins => Configure System
+#   Add Buckminster Button
+#   Buckminster Name: buckminster-headless-4.4
+#   Install Automatically: no (uncheck)
+#   Installation Directory: /opt/buckminster-headless-4.4/
+#   Additonal Startup Parameters: -Xmx1024m
+
 #####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere-2.1" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere2.1Daily" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
+#    Buckminster: 4.2
 #    URL: /opt/source/idempiere_source/idempiere
 #    Revision Type: Branch
 #    Revision: release-2.1
 #  Add below build steps
+
+#####Create New Item (new job in jenkins UI)
+# Jenkins Menu => New Item "iDempiere3.0Daily" of type "Build a freestyle Software Project" => OK
+#   NO SPACES IN NAME OF JOB!
+# Configuration
+#  Source Code Management => Mercurial
+#    Buckminster: 4.4
+#    URL: /opt/source/idempiere_source/idempiere
+#    Revision Type: Branch
+#    Revision: development
+#  Add below build steps
+
 
 #####Jenkins Build Steps (performed in jenkins UI)
 #1 Shell - clear workspace
