@@ -42,7 +42,6 @@ sudo chown -R $JENKINS_OS_USER:$JENKINS_OS_USER /opt/buckminster-headless-4.2
 cd /opt/buckminster-headless-4.2
 wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
 unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
-# sudo chmod +x -R /opt/buckminster-headless-4.2/*.sh
 cd /opt/buckminster-headless-4.2/director
 
 sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.2/ -d /opt/buckminster-headless-4.2/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
