@@ -72,6 +72,8 @@ cat >$JENKINS_TEMP <<EOL
 EOL
 sudo mv $JENKINS_TEMP $JENKINS_CONF
 sudo chown root:root $JENKINS_CONF
+# end of file creation and move
+
 sudo a2ensite jenkins
 sudo service apache2 restart
 
