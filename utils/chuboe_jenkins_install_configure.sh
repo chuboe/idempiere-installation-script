@@ -21,6 +21,10 @@ sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-7-jdk
 ##    /etc/init.d/jenkins
 ##    https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu (search google for "install jenkins")
 
+# Change the default port
+sudo sed -i "s|HTTP_PORT=8080|HTTP_PORT=80|" /etc/default/jenkins
+sudo service jenkins restart
+
 #####clone a local repository of iDempiere
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
 #  FYI - jenkins will create yet another clone for its build purposes
