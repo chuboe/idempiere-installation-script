@@ -51,6 +51,8 @@ sudo apt-get install -y apache2
 sudo a2enmod proxy
 sudo a2enmod proxy_http
 sudo a2dissite 000-default
+
+# The below is good for a bash script. If you are copying and pasting commands, just copy and paste the stuff inside the EOL to /etc/apache2/sites-available/jenkins.conf
 JENKINS_TEMP=~/jenkins_temp.conf
 JENKINS_CONF=/etc/apache2/sites-available/jenkins.conf
 cat >$JENKINS_TEMP <<EOL
