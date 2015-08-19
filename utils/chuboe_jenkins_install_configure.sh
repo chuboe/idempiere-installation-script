@@ -154,7 +154,7 @@ perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.bui
 # The first builds the p2 site
 # The second builds the product and zips it
 
-#3 Shell - copy results (site.ps) to webserver - only include this build step if you configured apache above
+#3 Shell - copy results (site.ps) to webserver - only include this build step if you configured apache above in the "Create web directories publishing p2" step
 rm -rf /opt/idempiere-builds/idempiere.p2/*
 rm -rf /opt/idempiere-builds/idempiere.migration/*
 cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.1.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
