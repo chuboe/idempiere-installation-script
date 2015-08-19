@@ -32,9 +32,8 @@ sudo mkdir idempiere_source
 cd idempiere_source
 sudo hg clone https://bitbucket.org/idempiere/idempiere
 
-#####Install Director and Buckminster
+#####Install Director and Buckminster 4.2 - used for iDempiere release2.1
 sudo mkdir /opt/buckminster-headless-4.2
-#sudo chown -R $JENKINS_OS_USER:$JENKINS_OS_USER /opt/buckminster-headless-4.2
 cd /opt/buckminster-headless-4.2
 sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
 sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
@@ -45,6 +44,20 @@ cd /opt/buckminster-headless-4.2
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.maven.headless.feature
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.core.headless.feature
 sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.pde.headless.feature
+
+#####Install Director and Buckminster 4.4 - used for iDempiere release3.0
+sudo mkdir /opt/buckminster-headless-4.4
+cd /opt/buckminster-headless-4.4
+sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
+sudo unzip /opt/buckminster-headless-4.4/director_latest.zip -d /opt/buckminster-headless-4.4/
+cd /opt/buckminster-headless-4.4/director
+
+sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.4/ -d /opt/buckminster-headless-4.4/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
+cd /opt/buckminster-headless-4.4
+sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.4/ org.eclipse.buckminster.maven.headless.feature
+sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.4/ org.eclipse.buckminster.core.headless.feature
+sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.4/ org.eclipse.buckminster.pde.headless.feature
+
 
 #####Using Apache as a reverse proxy to protect Jenkins
 sudo apt-get install -y apache2
