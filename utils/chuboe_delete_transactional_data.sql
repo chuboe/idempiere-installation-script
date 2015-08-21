@@ -21,13 +21,15 @@ set search_path to adempiere;
 	--     ad_org_id numeric
 	-- );
 
-	-- uncomment this statement
+	-- uncomment this statement - this and the next statement ensure a -1 entry exists before each script execution. You do not want this table to return null.
 	-- delete from chuboe_org_preserve
 	-- where ad_org_id = -1;
 
-	-- uncomment this statement
+	-- uncomment this statement - see comments for previous statement.
 	-- insert into chuboe_org_preserve
 	-- values (-1);
+	
+	-- Add any ord_id to chuboe_org_preserve you wish to preserve. You do not need to do this every time the script executes.
 
 	-- update all statements in the this file to include a where statement like this:
 	-- delete from ad_changelog where ad_client_id not in (select ad_org_id from chuboe_org_preserve);
