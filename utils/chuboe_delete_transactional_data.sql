@@ -13,6 +13,27 @@
 
 set search_path to adempiere;
 
+-- The below will help you limit what orgs you clean
+-- ENHANCEMENT COMMENT BEGIN
+
+	-- uncomment this statement
+	-- CREATE TABLE IF NOT EXISTS chuboe_org_preserve (
+	--     ad_org_id numeric
+	-- );
+
+	-- uncomment this statement
+	-- delete from chuboe_org_preserve
+	-- where ad_org_id = -1;
+
+	-- uncomment this statement
+	-- insert into chuboe_org_preserve
+	-- values (-1);
+
+	-- update all statements in the this file to include a where statement like this:
+	-- delete from ad_changelog where ad_client_id not in (select ad_org_id from chuboe_org_preserve);
+
+-- ENHANCEMENT COMMENT END
+
 --delete from ChuBoe_Replenish;
 --delete from ChuBoe_Replenish_Product_PO;
 --delete from chuboe_replenish_multiplier;
