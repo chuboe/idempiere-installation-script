@@ -365,8 +365,11 @@ sudo updatedb
 # install useful utilities
 sudo apt-get --yes install unzip htop s3cmd expect
 
-# if installing using virtualbox install the following before you install the guest additions
-# sudo apt-get install dkms gcc
+# if installing using virtualbox 
+# install the following before you install the guest additions
+#   sudo apt-get install dkms gcc
+# use the following instructions to prevent sudo timeout
+# http://apple.stackexchange.com/questions/10139/how-do-i-increase-sudo-password-remember-timeout
 
 # install database
 if [[ $IS_INSTALL_DB == "Y" ]]
