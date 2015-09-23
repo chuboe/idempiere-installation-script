@@ -1,30 +1,30 @@
 # This file contains many of the cron jobs you will need to support iDempiere.
 # Uncomment the ones you want to use, and execute the following command:
-#   "crontab /opt/idempiere-server/chuboe_utils/cronJobs.txt"
+#   "crontab /opt/chuboe/idempiere-installation-script/utils/cronJobs.txt"
 # Note: The above command will replace your existing cron jobs (if any).
 # Note: You can also issue "crontab -e" and paste the below commands to the end of your file.
 
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
-# 30 07 * * * /opt/idempiere-server/chuboe_utils/chuboe_backup_s3cmd.sh
+# 30 07 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_backup_s3cmd.sh
 
 # Perform an offsite restore at 8:30AM UTC every day. (DANGEROUS!!!!)
 #   This will drop your existing database and replace it with the offsite backup!!
 #   Only run this on a test or backup server.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
-# 30 08 * * * /opt/idempiere-server/chuboe_utils/chuboe_restore_s3cmd.sh
+# 30 08 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_restore_s3cmd.sh
 
 # Upgrade your iDempiere every Saturday
 # This process is not heavily tested. 
 # Please run on a test environment before deploying to production.
 # Runs at 8:30 UTC every Saturday.
-# 30 08 * * 6 /opt/idempiere-server/chuboe_utils/chuboe_idempiere_upgrade.sh &>> /opt/idempiere-server/log/chuboe_iD_upgrade.log
+# 30 08 * * 6 /opt/chuboe/idempiere-installation-script/utils/chuboe_idempiere_upgrade.sh &>> /opt/idempiere-server/log/chuboe_iD_upgrade.log
 
 # Upgrade your Ubuntu OS every Saturday
 # This process is not heavily tested.
 # Runs at 8:30 UTC every Saturday.
-# 30 08 * * 6 sudo /opt/idempiere-server/chuboe_utils/chuboe_ubuntu_upgrade.sh &>> /opt/idempiere-server/log/chuboe_ubuntu_upgrade.log
+# 30 08 * * 6 sudo /opt/chuboe/idempiere-installation-script/utils/chuboe_ubuntu_upgrade.sh &>> /opt/idempiere-server/log/chuboe_ubuntu_upgrade.log
 
 # Perform an offsite backup of your iDempeire directory at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
-# 30 07 * * * /opt/idempiere-server/chuboe_utils/chuboe_hg_bindir.sh
+# 30 07 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_hg_bindir.sh
