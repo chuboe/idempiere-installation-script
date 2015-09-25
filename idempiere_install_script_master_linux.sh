@@ -128,7 +128,7 @@ IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
 IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
-ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
+ECLIPSESOURCEPATH="http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-linux-gtk-x86_64.tar.gz&r=1"
 OSUSER=$CHUBOE_PROP_OS_USER
 OSUSER_EXISTS="N"
 OSUSER_HOME=""
@@ -645,7 +645,7 @@ then
     echo " ------> http://mercurialeclipse.eclipselabs.org.codespot.com/hg.wiki/update_site/stable">>$README
     echo " ------> choose mercurial but not windows binaries">>$README
     echo " ---> Buckminster">>$README
-    echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.3">>$README
+    echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.4">>$README
     echo " ------> choose Core, Maven, and PDE">>$README
     echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
     echo " ------> http://jasperstudio.sf.net/updates">>$README
