@@ -128,7 +128,7 @@ IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
 IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
-ECLIPSESOURCEPATH="http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-linux-gtk-x86_64.tar.gz&r=1"
+ECLIPSESOURCEPATH="https://s3.amazonaws.com/ChuckBoecking/install/eclipse-java-chuboe-luna-SR2-linux-gtk-x86_64.tar.gz"
 OSUSER=$CHUBOE_PROP_OS_USER
 OSUSER_EXISTS="N"
 OSUSER_HOME=""
