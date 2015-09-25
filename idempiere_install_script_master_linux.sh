@@ -128,7 +128,8 @@ IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
 IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
-ECLIPSESOURCEPATH="http://download.springsource.com/release/ECLIPSE/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz"
+ECLIPSESOURCEPATH_KEPLER="http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR2/eclipse-jee-kepler-SR2-linux-gtk-x86_64.tar.gz"
+ECLIPSESOURCEPATH_LUNA="http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-linux-gtk-x86_64.tar.gz"
 OSUSER=$CHUBOE_PROP_OS_USER
 OSUSER_EXISTS="N"
 OSUSER_HOME=""
