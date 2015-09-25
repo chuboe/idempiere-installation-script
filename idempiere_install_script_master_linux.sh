@@ -605,7 +605,7 @@ then
     #hg clone https://bitbucket.org/idempiere/idempiere
     
     #Note: if you already have a downloaded copy of iDempiere's hg repo zip, update the following URL
-    wget http://sourceforge.net/projects/idempiere/files/v2.1/source-repo/idempiere_hgrepo_v2.1.zip/download -O download.zip
+    wget https://s3.amazonaws.com/ChuckBoecking/install/idempiere-hg-download.zip -O download.zip
     unzip download.zip
     cd idempiere
     hg pull
