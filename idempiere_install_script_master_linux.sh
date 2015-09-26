@@ -661,6 +661,8 @@ then
     echo "Materialize the project. If you browse to org.adempiere.sdk-feature/adempiere.cquery (instead of MSPEC),">>$README
     echo " ---> eclipse will automatically build the workspace as part of the buckminster import process">>$README
     echo "If you get errors when running install.app, try cleaning the project. Menu->Project->Clean">>$README
+    echo "If you are materializing the development or 3.0 branch, you might get errors with the org.zkoss.zk.library project.">>$README
+    echo " ---> If so, right-click on the org.zkoss.zk.library, and choose Buckminster->Envoke Action... -> fetch.dependency.jars and -> buckminster.clean actions.">>$README
     echo "">>$README
     echo "">>$README
     echo "Important Note!">>$README
