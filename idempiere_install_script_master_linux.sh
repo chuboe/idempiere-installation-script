@@ -573,7 +573,7 @@ then
 
     # get eclipse IDE
     wget $ECLIPSESOURCEPATH -P $OSUSER_HOME/dev/downloads
-    tar -zxvf $OSUSER_HOME/dev/downloads/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz -C $OSUSER_HOME/dev/
+    tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSEFILENAME -C $OSUSER_HOME/dev/
 
     echo "">>$README
     echo "">>$README
