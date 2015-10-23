@@ -222,7 +222,7 @@ fi
 
 # Check if $OSUSER can create the temporary install folder
 echo "HERE: check if $OSUSER can create the temporary installation directory"
-sudo -u $OSUSER mkdir $TEMP_DIR
+sudo mkdir $TEMP_DIR
 sudo chmod -R go+w $TEMP_DIR
 RESULT=$([ -d $TEMP_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
@@ -765,15 +765,14 @@ then
     # make installpath
     # clone id_installer again to chuboe_installpath
 
-    sudo -u $OSUSER mkdir $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo -u $OSUSER mkdir $TEMP_DIR/installer_client_`date +%Y%m%d`
-    sudo -u $OSUSER mkdir $INSTALLPATH
+    mkdir $TEMP_DIR/installer_`date +%Y%m%d`
+    mkdir $TEMP_DIR/installer_client_`date +%Y%m%d`
+    sudo mkdir $INSTALLPATH
     sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
     sudo chmod -R go+w $INSTALLPATH
 
-    echo "HERE: wget iDempiere server and client source"
-    sudo -u $OSUSER wget $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo -u $OSUSER wget $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
+    sudo wget $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
+    sudo wget $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
 
     # check if file downloaded
     RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
@@ -790,12 +789,12 @@ then
         exit 1
     fi
 
-    sudo -u $OSUSER unzip $TEMP_DIR/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d $TEMP_DIR/installer_`date +%Y%m%d`
+    sudo unzip $TEMP_DIR/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d $TEMP_DIR/installer_`date +%Y%m%d`
     cd $TEMP_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
-    sudo -u $OSUSER cp -r * $INSTALLPATH
+    cp -r * $INSTALLPATH
     cd $INSTALLPATH
     TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
-    sudo -u $OSUSER  wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
+    sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
 
     echo "">>$README
     echo "">>$README
