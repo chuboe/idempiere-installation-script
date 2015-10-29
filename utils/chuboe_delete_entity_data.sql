@@ -2,6 +2,9 @@
 -- This file is not complete!!! It will take much work to get this script to execute the way you like.
 -- I am including this file to help you get started if needed.
 
+--here is a better solution for removing a specific client:
+--https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/src/stuff/DeleteAdempiereClient_pg.SQL
+
 delete from c_bp_relation;
 delete from c_poskey;
 delete from u_posterminal;
