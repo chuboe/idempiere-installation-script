@@ -159,23 +159,22 @@ sudo service apache2 restart
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
-#    Buckminster: 4.2
 #    URL: /opt/source/idempiere_source/idempiere
 #    Revision Type: Branch
 #    Revision: release-2.1
 #  Add below build steps
+#    using Buckminster: 4.2
 
 #####Create New Item (new job in jenkins UI)
 # Jenkins Menu => New Item "iDempiere3.0Daily" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
-#    Buckminster: 4.4
 #    URL: /opt/source/idempiere_source/idempiere
 #    Revision Type: Branch
 #    Revision: development
 #  Add below build steps
-
+#    using Buckminster: 4.4
 
 #####Jenkins Build Steps (performed in jenkins UI)
 #1 Shell - clear workspace
