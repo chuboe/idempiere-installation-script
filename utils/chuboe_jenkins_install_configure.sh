@@ -9,7 +9,7 @@
 
 ## ASSUMPTIONS
 ## local OS username = ubuntu
-#JENKINS_OS_USER="ubuntu"
+JENKINS_OS_USER="ubuntu"
 
 #####Install needed tools
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
