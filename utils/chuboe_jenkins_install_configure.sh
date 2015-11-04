@@ -26,7 +26,7 @@ sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-7-jdk
 #  FYI - jenkins will create yet another clone for its build purposes
 cd /opt/
 sudo mkdir source
-#sudo chown $JENKINS_OS_USER:$JENKINS_OS_USER source
+sudo chown $JENKINS_OS_USER:$JENKINS_OS_USER source
 cd source
 sudo mkdir idempiere_source
 cd idempiere_source
