@@ -188,7 +188,7 @@ sudo service apache2 restart
 #  Source Code Management => Mercurial
 #    URL: /opt/source/idempiere_source/idempiere
 #    Revision Type: Branch
-#    Revision: development
+#    Revision: release-3.1
 #    Advanced -> check clean build
 #  Add below build steps
 #    using Buckminster: 4.4
