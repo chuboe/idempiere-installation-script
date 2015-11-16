@@ -90,6 +90,21 @@ sudo chown root:root $JENKINS_CONF
 sudo a2ensite jenkins
 sudo service apache2 restart
 
+#Note - I could not get ubuntu to wget files from mavensync.zkoss.org
+#Instead, I had to create my own local copy. This section details the steps. Hopefully, you will not need to do this!!
+# get the copy of the maven direcotry here: https://drive.google.com/file/d/0Byf55-KOXmDrOHJqbExLS0lzWFE/view?usp=sharing -O maven2.tar.gz
+# untar it in /var/www/html/
+# make sure the reverse proxy is off (if enabled above): 
+ ###  bring down the proxy
+ #sudo a2dissite jenkins.conf
+ #sudo a2ensite 000-default.conf
+ #sudo service apache2 reload
+ ###  bring up the proxy
+ #sudo a2dissite 000-default.conf
+ #sudo a2ensite jenkins.conf
+ #sudo service apache2 reload
+#update /etc/hosts to point to your local machine 127.0.0.1 mavensync.zkoss.org
+
 #####Create web directories publishing p2 - only needed if you want to use apache instead of jenkins itself - otherwise, skip to the next step
 ## This section is commented out because I use apache to act as a reverse proxy
 #sudo apt-get -y install apache2
