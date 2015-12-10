@@ -609,8 +609,8 @@ then
     wget https://s3.amazonaws.com/ChuckBoecking/install/idempiere-hg-download.zip -O download.zip
     unzip download.zip
     cd idempiere
-    hg pull
-    hg update
+    # hg pull
+    # hg update
     
     # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
     cd $OSUSER_HOME/dev
