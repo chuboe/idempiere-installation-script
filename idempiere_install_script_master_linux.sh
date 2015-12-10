@@ -534,7 +534,7 @@ then
     # the below line will install a smaller footprint desktop. Comment out the ubuntu-mate-core ubuntu-mate-desktop line if you use it.
     # sudo apt-get install -y mate-desktop-environment
     sudo apt-get install -y ubuntu-mate-core ubuntu-mate-desktop
-    sudo apt-get install -y chromium-browser gimp xarchiver
+    sudo apt-get install -y chromium-browser gimp xarchiver gedit
     echo mate-session> ~/.xsession
     sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
     sudo service xrdp restart
