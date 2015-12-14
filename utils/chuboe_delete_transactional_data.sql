@@ -11,6 +11,9 @@
 
 -- thanks to Rumman to improving the script!!
 
+-- FYI - Carlos created a SQL script to completely remove a client:
+-- https://bitbucket.org/CarlosRuiz_globalqss/idempiere-stuff/src/stuff/DeleteAdempiereClient_pg.SQL
+
 set search_path to adempiere;
 
 -- The below will help you limit what orgs you clean
