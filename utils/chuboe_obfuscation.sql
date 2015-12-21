@@ -157,5 +157,13 @@ routingno = 'test',
 voiceauthcode = 'test'
 ;
 
+update ad_client 
+set 
+smtphost ='', 
+requestemail = '', 
+requestuser = '', 
+requestuserpw = '' 
+;
+
 -- Recreate index that were dropped above
 CREATE INDEX ad_user_email ON ad_user USING btree (email);
