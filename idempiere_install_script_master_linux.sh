@@ -609,8 +609,7 @@ then
     wget https://s3.amazonaws.com/ChuckBoecking/install/idempiere-hg-download.zip -O download.zip
     unzip download.zip
     cd idempiere
-    # hg pull
-    # hg update
+    hg pull
     
     # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
     cd $OSUSER_HOME/dev
@@ -628,6 +627,11 @@ then
         echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
         echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
         hg update -r release-"$IDEMPIERE_VERSION"
+        if [[ 3.1 == $IDEMPIERE_VERSION ]]
+        then
+            # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
+            hg update -r 2384b1629b60722d4e1358529e616fb68a4ad664
+        fi
     fi
 
     # go back to home directory
