@@ -7,7 +7,7 @@ OSUSER=${1:-$CHUBOE_PROP_IDEMPIERE_OS_USER}
 
 
 echo -------------------------------------
-echo Unjar seed file as $OSUSER (HERE)
+echo Unjar seed file as $OSUSER HERE:
 echo -------------------------------------
 cd $CHUBOE_PROP_IDEMPIERE_PATH/data/seed
 sudo -u $OSUSER jar -xvf Adempiere_pg.jar
