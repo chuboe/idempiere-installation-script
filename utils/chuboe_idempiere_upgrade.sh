@@ -165,7 +165,7 @@ cd $CHUBOE_UTIL_HG/utils/
 
 # get upgrade details (like build number)
 TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
-sudo wget $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
+sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
