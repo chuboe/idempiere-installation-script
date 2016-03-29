@@ -51,8 +51,9 @@ IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
-MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
-P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/"
+MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_AUTHCOMMAND $CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
+P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/*zip*/site.p2.zip"
+JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -105,6 +106,7 @@ echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
 echo "JENKINSPROJECT="$JENKINSPROJECT
 echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
+echo "CHUBOE_UTIL="$CHUBOE_UTIL
 
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
@@ -115,7 +117,7 @@ then
 		echo "HERE: migration.zip already exists"
 		rm -r migration*
 	fi #end if migration.zip exists
-	wget $MIGRATION_DOWNLOAD
+	wget $JENKINS_AUTHCOMMAND $MIGRATION_DOWNLOAD
 	unzip migration.zip
 fi #end if IS_GET_MIGRATION = Y
 
@@ -130,9 +132,13 @@ then
     cd $CHUBOE_UTIL_HG/utils/
     ./chuboe_hg_bindir.sh
 	
+	cd $CHUBOE_UTIL
+	rm -r site.p2*
+	wget $JENKINS_AUTHCOMMAND $P2
+	unzip site.p2.zip
     # update iDempiere binaries
 	cd $SERVER_DIR
-	sudo -u $IDEMPIEREUSER ./update.sh $P2
+	sudo -u $IDEMPIEREUSER ./update.sh file://$CHUBOE_UTIL/site.p2/
 
     # create a backup of the binary directory after the upgrade
     # In case you want to revert to a previous version
