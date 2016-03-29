@@ -142,7 +142,7 @@ IS_REPLICATION_MASTER="Y"
 REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
 REPLATION_ROLE="id_replicate_role"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.$PGPORT"
-
+JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 #create array of updated parameters to later update chuboe.properties
 args=()
 
@@ -775,8 +775,8 @@ then
     sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
     sudo chmod -R go+w $INSTALLPATH
 
-    sudo wget $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo wget $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
 
     # check if file downloaded
     RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
@@ -798,7 +798,7 @@ then
     cp -r * $INSTALLPATH
     cd $INSTALLPATH
     TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
-    sudo wget $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
+    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
 
     echo "">>$README
     echo "">>$README
@@ -1030,9 +1030,9 @@ echo "HERE END: Launching console-setup.sh"
     #Execute an update to get the latest version of the code and database
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
-        echo "HERE: updating database and binaries to latest version"
+        echo "HERE: updating database to latest version"
         cd $CHUBOE_UTIL_HG/utils
-        ./chuboe_idempiere_upgrade.sh
+        ./chuboe_idempiere_upgrade.sh -s -p
         echo "HERE END: updating database and binaries to latest version"
     fi
 

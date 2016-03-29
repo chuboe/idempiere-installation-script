@@ -28,6 +28,7 @@ OPTIONS:
 	-u	Upgrade URL to p2 directory
 	-r	Do not restart server
 	-s	Skip iDempiere binary upgrade
+	-p	Create a pristine copy of the database backup
 
 Outstanding actions:
 * check that a .hg file exists. If no, exit. They should have a backup to the binaries first.
@@ -51,12 +52,14 @@ IDEMPIERE_VERSION=$CHUBOE_PROP_IDEMPIERE_VERSION
 IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
-MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
-P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/"
+IS_CREATE_PRISTINE="N"
+MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_AUTHCOMMAND $CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
+P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/*zip*/site.p2.zip"
+JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hc:m:M:u:rs" OPTION
+while getopts "hc:m:M:u:rsp" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -81,6 +84,9 @@ do
 		s)	#Do not upgrade binaries
 			IS_RESTART_SERVER="N"
 			IS_SKIP_BIN_UPGRADE="Y";;
+
+		p)	#create pristine copy
+			IS_CREATE_PRISTINE="Y";;
 	esac
 done
 
@@ -105,6 +111,7 @@ echo "IS_GET_MIGRATION="$IS_GET_MIGRATION
 echo "IS_SKIP_BIN_UPGRADE="$IS_SKIP_BIN_UPGRADE
 echo "JENKINSPROJECT="$JENKINSPROJECT
 echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
+echo "CHUBOE_UTIL="$CHUBOE_UTIL
 
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
@@ -113,9 +120,9 @@ then
 	RESULT=$(ls -l migration.zip | wc -l)
 	if [ $RESULT -ge 1 ]; then
 		echo "HERE: migration.zip already exists"
-		rm -r migration*
+		sudo rm -r migration*
 	fi #end if migration.zip exists
-	wget $MIGRATION_DOWNLOAD
+	wget $JENKINS_AUTHCOMMAND $MIGRATION_DOWNLOAD
 	unzip migration.zip
 fi #end if IS_GET_MIGRATION = Y
 
@@ -130,9 +137,13 @@ then
     cd $CHUBOE_UTIL_HG/utils/
     ./chuboe_hg_bindir.sh
 	
+	cd $CHUBOE_UTIL
+	sudo rm -r site.p2*
+	wget $JENKINS_AUTHCOMMAND $P2
+	unzip site.p2.zip
     # update iDempiere binaries
 	cd $SERVER_DIR
-	sudo -u $IDEMPIEREUSER ./update.sh $P2
+	sudo -u $IDEMPIEREUSER ./update.sh file://$CHUBOE_UTIL/site.p2/
 
     # create a backup of the binary directory after the upgrade
     # In case you want to revert to a previous version
@@ -159,7 +170,16 @@ cd $CHUBOE_UTIL_HG/utils/
 
 # get upgrade details (like build number)
 TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
-sudo wget $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
+sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
+
+if [[ $IS_CREATE_PRISTINE == "Y" ]]
+then
+	# create a database backup after upgrade for future reference
+	cd $SERVER_DIR/utils/
+	sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+	cd $SERVER_DIR/data/
+	sudo -u $IDEMPIEREUSER cp ExpDat.dmp ExpDat_pristine.dmp
+fi #end if IS_CREATE_PRISTINE = Y
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
