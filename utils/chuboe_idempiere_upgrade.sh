@@ -133,7 +133,7 @@ then
     ./chuboe_hg_bindir.sh
 	
 	cd $CHUBOE_UTIL
-	rm -r site.p2*
+	sudo rm -r site.p2*
 	wget $JENKINS_AUTHCOMMAND $P2
 	unzip site.p2.zip
     # update iDempiere binaries
