@@ -115,7 +115,7 @@ then
 	RESULT=$(ls -l migration.zip | wc -l)
 	if [ $RESULT -ge 1 ]; then
 		echo "HERE: migration.zip already exists"
-		rm -r migration*
+		sudo rm -r migration*
 	fi #end if migration.zip exists
 	wget $JENKINS_AUTHCOMMAND $MIGRATION_DOWNLOAD
 	unzip migration.zip
