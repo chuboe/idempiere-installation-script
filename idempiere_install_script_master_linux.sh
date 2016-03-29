@@ -1030,9 +1030,9 @@ echo "HERE END: Launching console-setup.sh"
     #Execute an update to get the latest version of the code and database
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
-        echo "HERE: updating database and binaries to latest version"
+        echo "HERE: updating database to latest version"
         cd $CHUBOE_UTIL_HG/utils
-        ./chuboe_idempiere_upgrade.sh
+        ./chuboe_idempiere_upgrade.sh -s
         echo "HERE END: updating database and binaries to latest version"
     fi
 
