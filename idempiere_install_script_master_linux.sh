@@ -1032,7 +1032,7 @@ echo "HERE END: Launching console-setup.sh"
     then
         echo "HERE: updating database to latest version"
         cd $CHUBOE_UTIL_HG/utils
-        ./chuboe_idempiere_upgrade.sh -s
+        ./chuboe_idempiere_upgrade.sh -s -p
         echo "HERE END: updating database and binaries to latest version"
     fi
 
