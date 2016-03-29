@@ -167,6 +167,10 @@ cd $CHUBOE_UTIL_HG/utils/
 TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
 sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
 
+# create a database backup after upgrade for future reference
+cd $SERVER_DIR/utils/
+sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+
 if [[ $IS_RESTART_SERVER == "Y" ]]
 then
 	sudo service idempiere start
