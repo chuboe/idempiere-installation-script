@@ -383,8 +383,6 @@ sudo apt-get install python-setuptools
 sudo python setup.py install
 echo "HERE: Finished installing s3cmd"
 
-exit 1
-
 # if installing using virtualbox 
 # install the following before you install the guest additions
 #   sudo apt-get install dkms gcc
