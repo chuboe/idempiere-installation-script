@@ -25,6 +25,7 @@
 #     Install from development branch (3.0)
 #     Improved usage of support scripts (backup, restore, upgrade, etc...)
 #     Added ability to launch a new WebUI server without initializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
+# 2.1 Install the latest version of s3cmd
 
 
 # function to help the user better understand how the script works
@@ -143,6 +144,9 @@ REPLATION_BACKUP_NAME="ID_Backup_"`date +%Y%m%d`_`date +%H%M%S`
 REPLATION_ROLE="id_replicate_role"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.$PGPORT"
 JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
+S3CMD_VERSION="s3cmd-1.6.1"
+S3CMD_FILE_GZ=$S3CMD_VERSION".tar.gz"
+S3CMD_DOWNLOAD="https://s3.amazonaws.com/ChuckBoecking/install/$S3CMD_FILE_GZ"
 #create array of updated parameters to later update chuboe.properties
 args=()
 
@@ -364,7 +368,20 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop s3cmd expect
+# htop - useful process, cpu and memory graph
+# expect - used to stop idempiere - allows script to interact with telnet
+sudo apt-get --yes install unzip htop expect
+
+# install the latest version of s3cmd - tool to move files to an offsite AWS s3 bucket
+echo "HERE: Installing s3cmd"
+cd /tmp/
+wget $S3CMD_DOWNLOAD
+tar xzf $S3CMD_FILE_GZ
+cd $S3CMD_VERSION/
+# python-setuptools is needed to execute setup.py
+sudo apt-get install python-setuptools
+sudo python setup.py install
+echo "HERE: Finished installing s3cmd"
 
 # if installing using virtualbox 
 # install the following before you install the guest additions
