@@ -129,6 +129,7 @@ IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
 IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
+JENKINS_CURRENT_REV=11321
 ECLIPSEFILENAME="eclipse-java-chuboe-luna-SR2-linux-gtk-x86_64.tar.gz"
 ECLIPSESOURCEPATH="https://s3.amazonaws.com/ChuckBoecking/install/"$ECLIPSEFILENAME
 OSUSER=$CHUBOE_PROP_OS_USER
@@ -647,7 +648,7 @@ then
         if [[ 3.1 == $IDEMPIERE_VERSION ]]
         then
             # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
-            hg update -r 2384b1629b60722d4e1358529e616fb68a4ad664
+            hg update -r $JENKINS_CURRENT_REV
         fi
     fi
 
