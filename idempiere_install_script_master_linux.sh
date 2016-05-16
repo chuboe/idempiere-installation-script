@@ -665,7 +665,7 @@ then
     echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>$README
     echo "Add the mercurial and buckminster plugins.">>$README
     echo " ---> Mercurial">>$README
-    echo " ------> http://mercurialeclipse.eclipselabs.org.codespot.com/hg.wiki/update_site/stable">>$README
+    echo " ------> https://bitbucket.org/mercurialeclipse/update-site/raw/default/">>$README
     echo " ------> choose mercurial but not windows binaries">>$README
     echo " ---> Buckminster">>$README
     echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.4">>$README
