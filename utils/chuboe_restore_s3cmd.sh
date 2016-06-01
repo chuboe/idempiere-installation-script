@@ -45,7 +45,7 @@ sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
 if sudo service idempiere stop >> $LOGFILE
 then
     echo ademres: iDempiere Stopped >> $LOGFILE
-    if s3cmd sync --delete s3://"$S3BUCKET"/latest/ "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/ >> $LOGFILE
+    if s3cmd sync --delete-after s3://"$S3BUCKET"/latest/ "$CHUBOE_UTIL_HG"/"$LOCALBACKDIR"/ >> $LOGFILE
     then
         cd "$ADEMROOTDIR"/data
         sudo rm ExpDat.dmp
