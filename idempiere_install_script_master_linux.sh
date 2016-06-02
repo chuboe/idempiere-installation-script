@@ -863,7 +863,8 @@ then
     then
         echo "HERE: Initializing the database"
         cd $CHUBOE_UTIL_HG/utils
-        ./chuboe_idempiere_initdb.sh $OSUSER
+        # passing in root user to make the current user does not encounter permissions issues
+        ./chuboe_idempiere_initdb.sh root
         echo "HERE END: Initializing the database"
     fi
 
