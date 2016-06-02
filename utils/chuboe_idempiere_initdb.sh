@@ -25,6 +25,12 @@ sudo -u $OSUSER sed -i "s/adempiere\./$CHUBOE_PROP_DB_SCHEMA\./" Adempiere_pg.dm
 # rename role
 sudo -u $OSUSER sed -i "s/OWNER TO adempiere/OWNER TO $CHUBOE_PROP_DB_USERNAME/" Adempiere_pg.dmp
 
+# set permissions back to iDempiere user if needed
+if [[ $OSUSER == "root" ]]
+then
+	sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USER Adempiere_pg.dmp
+fi
+
 echo -------------------------------------
 echo Create user and database
 echo -------------------------------------
