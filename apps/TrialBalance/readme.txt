@@ -1,3 +1,9 @@
+***STOP***
+
+There exists an improved version of the trial balance here:
+http://scm.chuckboecking.com:8080/scm/#repositoryPanel;BBPX5z2p8C
+
+
 The Chuboe Trial Balance is a window to help you quickly determine the balance of a given GL account.
 
 Installation Instructions:
