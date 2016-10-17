@@ -28,3 +28,8 @@
 # Perform an offsite backup of your iDempeire directory at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
 # 30 07 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_hg_bindir.sh
+
+# Periodic reboot - only if needed
+# 0 0 * * * /sbin/shutdown -r now
+# http://serverfault.com/questions/155239/how-can-i-schedule-a-reboot-in-linux
+# http://unix.stackexchange.com/questions/64280/what-is-the-difference-between-reboot-init-6-and-shutdown-r-now
