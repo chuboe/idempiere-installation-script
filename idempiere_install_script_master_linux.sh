@@ -380,7 +380,7 @@ wget $S3CMD_DOWNLOAD
 tar xzf $S3CMD_FILE_GZ
 cd $S3CMD_VERSION/
 # python-setuptools is needed to execute setup.py
-sudo apt-get install python-setuptools
+sudo apt-get install --yes python-setuptools
 sudo python setup.py install
 echo "HERE: Finished installing s3cmd"
 
