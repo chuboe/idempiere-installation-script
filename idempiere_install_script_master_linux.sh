@@ -428,12 +428,12 @@ then
 
         if [[ $REPLATION_ROLE != "postgres" ]]
         then
-            sudo -u postgres service postgresql start
+            sudo service postgresql start
             # remove replication attribute from postgres user/role for added security
             sudo -u postgres psql -c "alter role postgres with NOREPLICATION;"
             # create a new replication user. Doing so gives you the ability to cut off replication without disabling the postgres user.
             sudo -u postgres psql -c "CREATE ROLE $REPLATION_ROLE REPLICATION LOGIN PASSWORD '"$DBPASS_SU"';"
-            sudo -u postgres service postgresql stop
+            sudo service postgresql stop
         fi
 
         echo "HERE END: Is Replication = Y"
@@ -514,7 +514,7 @@ then
     fi
 
     # start postgresql after all changes and before installing phppgadmin
-    sudo -u postgres service postgresql start
+    sudo service postgresql start
 
     # copy the phppgadmin apache2 configuration file that puts phppgadmin on port 8083
     sudo cp $SCRIPTPATH/web/000-phppgadmin.conf /etc/apache2/sites-enabled
@@ -715,7 +715,7 @@ then
     sudo mkdir -m 000 /vol
     sudo mount /vol
 
-    sudo -u postgres service postgresql stop
+    sudo service postgresql stop
 
     #map the data directory
     sudo mkdir /vol/var
@@ -731,7 +731,7 @@ then
     echo "/vol/etc/main /etc/postgresql/$PGVERSION/main     none bind" | sudo tee -a /etc/fstab
     sudo mount /etc/postgresql/$PGVERSION/main
 
-    sudo -u postgres service postgresql start
+    sudo service postgresql start
 
     echo "HERE END: Moving DB because IS_MOVE_DB == Y"
 
