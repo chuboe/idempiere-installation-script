@@ -522,6 +522,8 @@ then
     sudo unlink /etc/apache2/sites-enabled/000-default.conf
     # make apache listen on port 8083
     sudo sed -i '$ a\Listen 8083' /etc/apache2/ports.conf
+    # remove phpphadmin's conf file - we will be using the above one instead
+    sudo rm /etc/apache2/conf-enabled/phppgadmin.conf
 
     sudo service apache2 restart
 
