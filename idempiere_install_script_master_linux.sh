@@ -1076,6 +1076,12 @@ then
     sudo -u $IDEMPIEREUSER cp $CHUBOE_UTIL_HG/stopServer.sh $INSTALLPATH/utils
     sudo cp $CHUBOE_UTIL_HG/$INITDNAME /etc/init.d/
     sudo chmod +x /etc/init.d/$INITDNAME
+    # remove dependency on postgres if not installed on this machine
+    if [[ $IS_INSTALL_DB == "N" ]]
+    then
+        sudo sed -i "s|# Required-Start:	postgresql|# Required-Start:|" /etc/init.d/$INITDNAME
+        sudo sed -i "s|# Required-Stop:	postgresql|# Required-Stop:|" /etc/init.d/$INITDNAME
+    fi
     sudo update-rc.d $INITDNAME defaults
     sudo /etc/init.d/$INITDNAME start
     echo "HERE END: IS_LAUNCH_ID == Y"
