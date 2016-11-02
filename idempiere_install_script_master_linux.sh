@@ -489,9 +489,11 @@ then
 
         # Change 2 - postgresql.conf related changes
         # TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
-        sudo apt-get install -y pgtune
+        # pgtune is no longer available on ubuntu (as of 16.04)
+        # sudo apt-get install -y pgtune
         echo "">>$README
         echo "">>$README
+        echo "NOTE: see https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
         echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
         echo "--> See the chuboe_utils directory for installation directions">>$README
         
