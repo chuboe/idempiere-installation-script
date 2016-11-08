@@ -473,35 +473,25 @@ then
     if [[ $IS_INSTALL_ID == "N" ]]
     then
         #this is where we focus on database performance - when not installing tomcat/idempiere - just the database!
+        
+        #calculate memory
+        TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
+        echo "total memory in MB="$TOTAL_MEMORY
+        #assume that postgresql can use 85% of the system resources (pulled from chuboe.proprties)
+        AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*$CHUBOE_PROP_DB_OS_USAGE" | bc)
+        AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
+        echo "available memory in MB="$AVAIL_MEMORY
+        
+        #call on https://github.com/sebastianwebber/pgconfig-api webservice to get optimized pg parameters
+        sudo curl 'https://api.pgconfig.org/v1/tuning/get-config?env_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version=9.5&total_ram='$AVAIL_MEMORY'MB' >> /etc/postgresql/$PGVERSION/main/postgresql.conf
 
-        # Change 1 - turn on logging - requires little overhead and provides much information 
-        #   Remember most performance issues are application related - not necessarily database parameters
-        #   Logging gives you great insight into how the application is running.
-        sudo sed -i "$ a\log_destination = 'csvlog' # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\logging_collector = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_rotation_size = 1GB # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_connections = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_disconnections = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_lock_waits = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_temp_files = 0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_min_duration_statement = 1000 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\log_checkpoints = on # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
-
-        # Change 2 - postgresql.conf related changes
-        # TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
-        # pgtune is no longer available on ubuntu (as of 16.04)
-        # sudo apt-get install -y pgtune
         echo "">>$README
         echo "">>$README
-        echo "NOTE: see https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
+        echo "NOTE: this script uses https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
         echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
         echo "--> See the chuboe_utils directory for installation directions">>$README
-        
-        # The purpose of the next line is to support pgtune; however, pgtune is no longer available
-        # sudo -u postgres mv /etc/postgresql/$PGVERSION/main/postgresql.conf{,.orig}
-        # sudo -u postgres pgtune -i /etc/postgresql/$PGVERSION/main/postgresql.conf.orig -o /etc/postgresql/$PGVERSION/main/postgresql.conf
-        
-        sudo sed -i "$ a\random_page_cost = 2.0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
+                
+        # sudo sed -i "$ a\random_page_cost = 2.0 # chuboe `date +%Y%m%d`" /etc/postgresql/$PGVERSION/main/postgresql.conf
         
         # Be aware that pgtune has a reputation for being too generous with work_mem and shared_buffers. 
         #   Setting these values too high can cause degraded performance.
@@ -972,7 +962,7 @@ echo "HERE END: Launching console-setup.sh"
     # if server is dedicated to iDempiere, give it more java power
     TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
     echo "total memory in MB="$TOTAL_MEMORY
-    AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*0.70" | bc)
+    AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*$CHUBOE_PROP_DB_OS_USAGE" | bc)
     AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
     echo "available memory in MB="$AVAIL_MEMORY
     if [[ $AVAIL_MEMORY -gt 1000 && $IS_INSTALL_DB == "N" ]]
