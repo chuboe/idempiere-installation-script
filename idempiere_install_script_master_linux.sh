@@ -962,7 +962,7 @@ echo "HERE END: Launching console-setup.sh"
     # if server is dedicated to iDempiere, give it more java power
     TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
     echo "total memory in MB="$TOTAL_MEMORY
-    AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*$CHUBOE_PROP_DB_OS_USAGE" | bc)
+    AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*$CHUBOE_PROP_IDEMPIERE_OS_USAGE" | bc)
     AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
     echo "available memory in MB="$AVAIL_MEMORY
     if [[ $AVAIL_MEMORY -gt 1000 && $IS_INSTALL_DB == "N" ]]
