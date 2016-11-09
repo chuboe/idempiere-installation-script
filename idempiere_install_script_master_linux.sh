@@ -484,7 +484,7 @@ then
         echo "available memory in MB="$AVAIL_MEMORY
         
         #call on https://github.com/sebastianwebber/pgconfig-api webservice to get optimized pg parameters
-        curl 'https://api.pgconfig.org/v1/tuning/get-config?env_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB' >> $TEMP_DIR/pg.conf
+        curl 'https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB' >> $TEMP_DIR/pg.conf
         cat $TEMP_DIR/pg.conf | sudo tee -a /etc/postgresql/$PGVERSION/main/postgresql.conf
 
         echo "">>$README
