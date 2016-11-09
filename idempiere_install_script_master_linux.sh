@@ -27,6 +27,7 @@
 #     Added ability to launch a new WebUI server without initializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
 # 2.1 Install the latest version of s3cmd
 # 2.2 Support ubuntu 16.04 LTS 
+# 2.2.1 Added notes for key concepts "Key Concept"
 
 
 # function to help the user better understand how the script works
@@ -483,6 +484,7 @@ then
         AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
         echo "available memory in MB="$AVAIL_MEMORY
         
+        #Key Concept: how to pipe content with sudo priviledge - the >> operator does not keep sudo priviledges
         #call on https://github.com/sebastianwebber/pgconfig-api webservice to get optimized pg parameters
         curl 'https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB' >> $TEMP_DIR/pg.conf
         cat $TEMP_DIR/pg.conf | sudo tee -a /etc/postgresql/$PGVERSION/main/postgresql.conf
