@@ -26,6 +26,7 @@
 #     Improved usage of support scripts (backup, restore, upgrade, etc...)
 #     Added ability to launch a new WebUI server without initializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
 # 2.1 Install the latest version of s3cmd
+# 2.2 Support ubuntu 16.04 LTS 
 
 
 # function to help the user better understand how the script works
