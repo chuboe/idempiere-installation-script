@@ -60,7 +60,7 @@ Create or replace view chuboe_adv_search_bp_loc as
 select b.ad_client_id, b.ad_org_id,
 b.created, b.createdby, b.updated, b.updatedby,
 b.c_bpartner_id, b.name, b.name2,
-bl.name as LocationName,
+bl.name as chuboe_bp_LocationName,
 bl.isshipto, bl.isbillto, bl.isremitto, bl.ispayfrom,
 l.address1, l.address2, l.address3, l.address4,
 l.city, l.regionname
