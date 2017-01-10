@@ -15,7 +15,7 @@ JENKINS_OS_USER="ubuntu"
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-7-jdk
+sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-8-jdk
 
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
@@ -32,20 +32,7 @@ sudo mkdir idempiere_source
 cd idempiere_source
 sudo hg clone https://bitbucket.org/idempiere/idempiere
 
-#####Install Director and Buckminster 4.2 - used for iDempiere release2.1
-sudo mkdir /opt/buckminster-headless-4.2
-cd /opt/buckminster-headless-4.2
-sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
-sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
-cd /opt/buckminster-headless-4.2/director
-
-sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.2/ -d /opt/buckminster-headless-4.2/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
-cd /opt/buckminster-headless-4.2
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.maven.headless.feature
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.core.headless.feature
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.pde.headless.feature
-
-#####Install Director and Buckminster 4.4 - used for iDempiere release3.0
+#####Install Director and Buckminster 4.4 - used for iDempiere release3.x and release4.x
 sudo mkdir /opt/buckminster-headless-4.4
 cd /opt/buckminster-headless-4.4
 sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
