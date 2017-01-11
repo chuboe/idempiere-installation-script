@@ -141,7 +141,7 @@ sudo service apache2 restart
 # (2) mercurial
 
 #####Configure Jenkins System (performed in jenkins UI) - Version 4.2
-# Jenkins Menu => Manage Jenkins => Configure System
+# Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.2
 #   Install Automatically: no (uncheck)
@@ -149,7 +149,7 @@ sudo service apache2 restart
 #   Additonal Startup Parameters: -Xmx1024m
 
 #####Configure Jenkins System (performed in jenkins UI) - Version 4.4
-# Jenkins Menu => Manage Jenkins => Configure System
+# Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.4
 #   Install Automatically: no (uncheck)
