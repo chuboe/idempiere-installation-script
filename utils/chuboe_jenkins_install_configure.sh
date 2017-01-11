@@ -186,10 +186,10 @@ rm -rf ${WORKSPACE}/buckminster.output/ ${WORKSPACE}/buckminster.temp/ ${WORKSPA
 
 #2 Buckminster - build site.p2
 importtargetdefinition -A '${WORKSPACE}/org.adempiere.sdk-feature/build-target-platform.target'
-import '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
+import -P ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties -D 'org.eclipse.buckminster.core.maxParallelMaterializations=5' -D 'org.eclipse.buckminster.core.maxParallelResolutions=1' -D 'org.eclipse.buckminster.download.connectionRetryDelay=5' -D 'org.eclipse.buckminster.download.connectionRetryCount=5' '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
 build -t
-perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*   -D target.ws=*   -D target.arch=* -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   'org.adempiere.server:eclipse.feature#site.p2'
-perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.buildTimestamp.format='v'yyyyMMdd-HHmm"  -D 'target.os=linux'   -D 'target.ws=gtk'   -D 'target.arch=x86_64'  -D product.features=org.idempiere.eclipse.platform.feature.group   -D product.profile=DefaultProfile  -D product.id=org.adempiere.server.product   'org.adempiere.server:eclipse.feature#create.product.zip'
+perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*      -D target.ws=*     -D target.arch=*      -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   org.adempiere.server:eclipse.feature#site.p2
+perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=linux  -D target.ws=gtk   -D target.arch=x86_64 -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   org.adempiere.server:eclipse.feature#create.product.zip
 
 ## NOTE: regarding the two above "perform" statements
 # The first builds the p2 site
