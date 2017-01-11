@@ -8,6 +8,7 @@
 ## Execute this script: https://bitbucket.org/cboecking/idempiere-installation-script/src/default/utils/setHostName.sh
 
 ## ASSUMPTIONS
+## Ubuntu 16.04
 ## local OS username = ubuntu
 JENKINS_OS_USER="ubuntu"
 
@@ -123,6 +124,11 @@ sudo service apache2 restart
 #sudo /etc/init.d/apache2 restart
 
 #####Configure Jenkins security (performed in jenkins UI)
+# In the most recent version of Jenkins, a user is created as part of when Jenkins is first run.
+# By default, any user that is logged in as all priviledges. This is OK for many.
+# The next section describes how to use matrix based security - offers better user granularity
+
+#####Matrix Based Security (alternative to above)
 # Jenkins Menu => Manage Jenkins => Configure Global Security
 # Enable Security
 # Choose Jenkin's own database
@@ -140,14 +146,6 @@ sudo service apache2 restart
 # (1) buckminster
 # (2) mercurial
 
-#####Configure Jenkins System (performed in jenkins UI) - Version 4.2
-# Jenkins Menu => Manage Jenkins => Global Tool Configuration
-#   Add Buckminster Button
-#   Buckminster Name: buckminster-headless-4.2
-#   Install Automatically: no (uncheck)
-#   Installation Directory: /opt/buckminster-headless-4.2/
-#   Additonal Startup Parameters: -Xmx1024m
-
 #####Configure Jenkins System (performed in jenkins UI) - Version 4.4
 # Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
@@ -155,18 +153,6 @@ sudo service apache2 restart
 #   Install Automatically: no (uncheck)
 #   Installation Directory: /opt/buckminster-headless-4.4/
 #   Additonal Startup Parameters: -Xmx1024m
-
-#####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere2.1Daily" of type "Build a freestyle Software Project" => OK
-#   NO SPACES IN NAME OF JOB!
-# Configuration
-#  Source Code Management => Mercurial
-#    URL: /opt/source/idempiere_source/idempiere
-#    Revision Type: Branch
-#    Revision: release-2.1
-#    Advanced -> check clean build
-#  Add below build steps
-#    using Buckminster: 4.2
 
 #####Create New Item (new job in jenkins UI)
 # Jenkins Menu => New Item "iDempiere3.1Daily" of type "Build a freestyle Software Project" => OK
