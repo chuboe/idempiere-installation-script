@@ -646,12 +646,8 @@ then
         echo "">>$README
         echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
         echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-        hg update -r release-"$IDEMPIERE_VERSION"
-        if [[ 3.1 == $IDEMPIERE_VERSION ]]
-        then
-            # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
-            hg update -r $JENKINS_CURRENT_REV
-        fi
+        # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
+        hg update -r $JENKINS_CURRENT_REV
     fi
 
     # go back to home directory
