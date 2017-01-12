@@ -639,16 +639,12 @@ then
     mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
     echo "HERE END: Installing iDempiere via mercurial"
 
-    #this will not execute for the development branch. This is a good thing.
-    if [[ $JENKINSPROJECT == "iDempiere"$IDEMPIERE_VERSION"Daily" ]]
-    then
-        echo "">>$README
-        echo "">>$README
-        echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
-        echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-        # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
-        hg update -r $JENKINS_CURRENT_REV
-    fi
+    echo "">>$README
+    echo "">>$README
+    echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
+    echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
+    # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
+    hg update -r $JENKINS_CURRENT_REV
 
     # go back to home directory
     cd
