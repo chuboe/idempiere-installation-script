@@ -146,7 +146,7 @@ sudo service apache2 restart
 # (1) buckminster
 # (2) mercurial
 
-#####Configure Jenkins System (performed in jenkins UI) - Version 4.4
+#####Configure Jenkins System (performed in jenkins UI) - Buckminster Version 4.4
 # Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.4
@@ -155,13 +155,13 @@ sudo service apache2 restart
 #   Additonal Startup Parameters: -Xmx1024m
 
 #####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere3.1Daily" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere4.1Daily" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
 #    URL: /opt/source/idempiere_source/idempiere
-#    Revision Type: Branch
-#    Revision: release-3.1
+#    Revision Type: revset
+#    Revision: pick a specific changeset - this better than just getting what you get from the branch's head  (hg log --limit 1 -- example 11588)
 #    Advanced -> check clean build
 #  Add below build steps
 #    using Buckminster: 4.4
