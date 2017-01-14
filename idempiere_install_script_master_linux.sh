@@ -555,7 +555,7 @@ then
     # sudo apt-get install -y mate-desktop-environment
     sudo apt-get install -y ubuntu-mate-core ubuntu-mate-desktop
     sudo apt-get install -y chromium-browser gimp xarchiver gedit
-    echo mate-session> ~/.xsession
+    sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
     sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
     sudo service xrdp restart
 
