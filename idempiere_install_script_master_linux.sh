@@ -544,16 +544,15 @@ then
     echo "">>$README
     echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
 
-    # nice MATE desktop installation (compatible with 14.04)
+    # nice MATE desktop installation (http://c-nergy.be/blog/?p=9433 and http://c-nergy.be/blog/?p=8952)
     # http://wiki.mate-desktop.org/download)
-    echo "HERE:Installing xrdp and ubuntu-mate-desktop"
-    sudo apt-get install -y xrdp
-    sudo apt-add-repository -y ppa:ubuntu-mate-dev/ppa
-    sudo apt-add-repository -y ppa:ubuntu-mate-dev/trusty-mate
+    echo "HERE:Installing xrdp and mate-desktop"
+    sudo apt-get update
+    sudo apt-get install -y xrdp x11-xkb-utils pkg-config
     sudo apt-get update
     # the below line will install a smaller footprint desktop. Comment out the ubuntu-mate-core ubuntu-mate-desktop line if you use it.
     # sudo apt-get install -y mate-desktop-environment
-    sudo apt-get install -y ubuntu-mate-core ubuntu-mate-desktop
+    sudo apt-get install -y mate-core mate-desktop-environment mate-notification-daemon
     sudo apt-get install -y chromium-browser gimp xarchiver gedit
     sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
     sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
