@@ -28,6 +28,7 @@
 # 2.1 Install the latest version of s3cmd
 # 2.2 Support ubuntu 16.04 LTS 
 # 2.2.1 Added notes for key concepts "Key Concept"
+# 2.3 Support for iDempiere 4.1
 
 
 # function to help the user better understand how the script works
@@ -54,9 +55,9 @@ OPTIONS:
     -l  Launch iDempiere as service
     -u  Adds this user to the iDempiere group (default: ubuntu)
     -D  Install desktop development tools
-    -v  Specify iDempiere viersion - defaults to 2.1
+    -v  Specify iDempiere viersion - defaults to 4.1
     -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
-    -j  Specify Jenkins project name - defaults to iDempiere2.1Daily
+    -j  Specify Jenkins project name - defaults to iDempiere4.1Daily
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
@@ -131,7 +132,7 @@ IDEMPIERE_DB_USER=$CHUBOE_PROP_DB_USERNAME
 IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
-JENKINS_CURRENT_REV=11321
+JENKINS_CURRENT_REV=$CHUBOE_PROP_JENKINS_CURRENT_CHANGESET
 ECLIPSEFILENAME="eclipse-java-chuboe-luna-SR2-linux-gtk-x86_64.tar.gz"
 ECLIPSESOURCEPATH="https://s3.amazonaws.com/ChuckBoecking/install/"$ECLIPSEFILENAME
 OSUSER=$CHUBOE_PROP_OS_USER
@@ -544,18 +545,17 @@ then
     echo "">>$README
     echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
 
-    # nice MATE desktop installation (compatible with 14.04)
+    # nice MATE desktop installation (http://c-nergy.be/blog/?p=9433 and http://c-nergy.be/blog/?p=8952)
     # http://wiki.mate-desktop.org/download)
-    echo "HERE:Installing xrdp and ubuntu-mate-desktop"
-    sudo apt-get install -y xrdp
-    sudo apt-add-repository -y ppa:ubuntu-mate-dev/ppa
-    sudo apt-add-repository -y ppa:ubuntu-mate-dev/trusty-mate
+    echo "HERE:Installing xrdp and mate-desktop"
+    sudo apt-get update
+    sudo apt-get install -y xrdp x11-xkb-utils pkg-config
     sudo apt-get update
     # the below line will install a smaller footprint desktop. Comment out the ubuntu-mate-core ubuntu-mate-desktop line if you use it.
     # sudo apt-get install -y mate-desktop-environment
-    sudo apt-get install -y ubuntu-mate-core ubuntu-mate-desktop
+    sudo apt-get install -y mate-core mate-desktop-environment mate-notification-daemon
     sudo apt-get install -y chromium-browser gimp xarchiver gedit
-    echo mate-session> ~/.xsession
+    sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
     sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
     sudo service xrdp restart
 
@@ -639,20 +639,12 @@ then
     mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
     echo "HERE END: Installing iDempiere via mercurial"
 
-    #this will not execute for the development branch. This is a good thing.
-    if [[ $JENKINSPROJECT == "iDempiere"$IDEMPIERE_VERSION"Daily" ]]
-    then
-        echo "">>$README
-        echo "">>$README
-        echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
-        echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-        hg update -r release-"$IDEMPIERE_VERSION"
-        if [[ 3.1 == $IDEMPIERE_VERSION ]]
-        then
-            # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
-            hg update -r $JENKINS_CURRENT_REV
-        fi
-    fi
+    echo "">>$README
+    echo "">>$README
+    echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
+    echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
+    # this represents the current revision of the last jenkins.chuckboecking.com 4.1 build
+    hg update -r $JENKINS_CURRENT_REV
 
     # go back to home directory
     cd

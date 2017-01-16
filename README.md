@@ -3,7 +3,7 @@ iDempiere and Open Source ERP are quite possibly the biggest discontinuous chang
 All that power is of no good to you unless you can easily make use of it. This project and the [ERP Academy](http://erp-academy.chuckboecking.com) make open source ERP available to more organizations. You can provide open source ERP to your team for about $3 per user per month (the cost of hosting). This is true whether you are supporting a team of 2 or 200, 
 
 #Installation
-To install all components of iDempiere on a single new Ubuntu 16.04 server, simply copy and paste the below line, change the -p password, and hit enter. The script will do all the rest. After about 8 minutes, iDempiere will appear on your machine.
+To install all components of iDempiere 4.1 on a single new Ubuntu 16.04 server, simply copy and paste the below line, change the -p password, and hit enter. The script will do all the rest. After about 8 minutes, iDempiere will appear on your machine.
 
 ```
 #!bash

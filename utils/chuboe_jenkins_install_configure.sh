@@ -8,6 +8,7 @@
 ## Execute this script: https://bitbucket.org/cboecking/idempiere-installation-script/src/default/utils/setHostName.sh
 
 ## ASSUMPTIONS
+## Ubuntu 16.04
 ## local OS username = ubuntu
 JENKINS_OS_USER="ubuntu"
 
@@ -15,7 +16,7 @@ JENKINS_OS_USER="ubuntu"
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-7-jdk
+sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-8-jdk
 
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
@@ -32,20 +33,7 @@ sudo mkdir idempiere_source
 cd idempiere_source
 sudo hg clone https://bitbucket.org/idempiere/idempiere
 
-#####Install Director and Buckminster 4.2 - used for iDempiere release2.1
-sudo mkdir /opt/buckminster-headless-4.2
-cd /opt/buckminster-headless-4.2
-sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
-sudo unzip /opt/buckminster-headless-4.2/director_latest.zip -d /opt/buckminster-headless-4.2/
-cd /opt/buckminster-headless-4.2/director
-
-sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.2/ -d /opt/buckminster-headless-4.2/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
-cd /opt/buckminster-headless-4.2
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.maven.headless.feature
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.core.headless.feature
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.2/ org.eclipse.buckminster.pde.headless.feature
-
-#####Install Director and Buckminster 4.4 - used for iDempiere release3.0
+#####Install Director and Buckminster 4.4 - used for iDempiere release3.x and release4.x
 sudo mkdir /opt/buckminster-headless-4.4
 cd /opt/buckminster-headless-4.4
 sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
@@ -136,6 +124,11 @@ sudo service apache2 restart
 #sudo /etc/init.d/apache2 restart
 
 #####Configure Jenkins security (performed in jenkins UI)
+# In the most recent version of Jenkins, a user is created as part of when Jenkins is first run.
+# By default, any user that is logged in as all priviledges. This is OK for many.
+# The next section describes how to use matrix based security - offers better user granularity
+
+#####Matrix Based Security (alternative to above)
 # Jenkins Menu => Manage Jenkins => Configure Global Security
 # Enable Security
 # Choose Jenkin's own database
@@ -153,16 +146,8 @@ sudo service apache2 restart
 # (1) buckminster
 # (2) mercurial
 
-#####Configure Jenkins System (performed in jenkins UI) - Version 4.2
-# Jenkins Menu => Manage Jenkins => Configure System
-#   Add Buckminster Button
-#   Buckminster Name: buckminster-headless-4.2
-#   Install Automatically: no (uncheck)
-#   Installation Directory: /opt/buckminster-headless-4.2/
-#   Additonal Startup Parameters: -Xmx1024m
-
-#####Configure Jenkins System (performed in jenkins UI) - Version 4.4
-# Jenkins Menu => Manage Jenkins => Configure System
+#####Configure Jenkins System (performed in jenkins UI) - Buckminster Version 4.4
+# Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.4
 #   Install Automatically: no (uncheck)
@@ -170,25 +155,13 @@ sudo service apache2 restart
 #   Additonal Startup Parameters: -Xmx1024m
 
 #####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere2.1Daily" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere4.1Daily" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
 #    URL: /opt/source/idempiere_source/idempiere
-#    Revision Type: Branch
-#    Revision: release-2.1
-#    Advanced -> check clean build
-#  Add below build steps
-#    using Buckminster: 4.2
-
-#####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere3.1Daily" of type "Build a freestyle Software Project" => OK
-#   NO SPACES IN NAME OF JOB!
-# Configuration
-#  Source Code Management => Mercurial
-#    URL: /opt/source/idempiere_source/idempiere
-#    Revision Type: Branch
-#    Revision: release-3.1
+#    Revision Type: revset
+#    Revision: pick a specific changeset - this better than just getting what you get from the branch's head  (hg log --limit 1 -- example 11588)
 #    Advanced -> check clean build
 #  Add below build steps
 #    using Buckminster: 4.4
@@ -199,10 +172,10 @@ rm -rf ${WORKSPACE}/buckminster.output/ ${WORKSPACE}/buckminster.temp/ ${WORKSPA
 
 #2 Buckminster - build site.p2
 importtargetdefinition -A '${WORKSPACE}/org.adempiere.sdk-feature/build-target-platform.target'
-import '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
+import -P ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties -D 'org.eclipse.buckminster.core.maxParallelMaterializations=5' -D 'org.eclipse.buckminster.core.maxParallelResolutions=1' -D 'org.eclipse.buckminster.download.connectionRetryDelay=5' -D 'org.eclipse.buckminster.download.connectionRetryCount=5' '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
 build -t
-perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*   -D target.ws=*   -D target.arch=* -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   'org.adempiere.server:eclipse.feature#site.p2'
-perform -D 'qualifier.replacement.*=generator:buildTimestamp'  -D "generator.buildTimestamp.format='v'yyyyMMdd-HHmm"  -D 'target.os=linux'   -D 'target.ws=gtk'   -D 'target.arch=x86_64'  -D product.features=org.idempiere.eclipse.platform.feature.group   -D product.profile=DefaultProfile  -D product.id=org.adempiere.server.product   'org.adempiere.server:eclipse.feature#create.product.zip'
+perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*      -D target.ws=*     -D target.arch=*      -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   org.adempiere.server:eclipse.feature#site.p2
+perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=linux  -D target.ws=gtk   -D target.arch=x86_64 -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   org.adempiere.server:eclipse.feature#create.product.zip
 
 ## NOTE: regarding the two above "perform" statements
 # The first builds the p2 site
