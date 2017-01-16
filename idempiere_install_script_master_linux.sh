@@ -28,6 +28,7 @@
 # 2.1 Install the latest version of s3cmd
 # 2.2 Support ubuntu 16.04 LTS 
 # 2.2.1 Added notes for key concepts "Key Concept"
+# 2.3 Support for iDempiere 4.1
 
 
 # function to help the user better understand how the script works
@@ -54,9 +55,9 @@ OPTIONS:
     -l  Launch iDempiere as service
     -u  Adds this user to the iDempiere group (default: ubuntu)
     -D  Install desktop development tools
-    -v  Specify iDempiere viersion - defaults to 2.1
+    -v  Specify iDempiere viersion - defaults to 4.1
     -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
-    -j  Specify Jenkins project name - defaults to iDempiere2.1Daily
+    -j  Specify Jenkins project name - defaults to iDempiere4.1Daily
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
@@ -642,7 +643,7 @@ then
     echo "">>$README
     echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
     echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-    # this represents the revision of the last jenkins.chuckboecking.com 3.1 build
+    # this represents the current revision of the last jenkins.chuckboecking.com 4.1 build
     hg update -r $JENKINS_CURRENT_REV
 
     # go back to home directory
