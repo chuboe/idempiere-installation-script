@@ -398,8 +398,8 @@ if [[ $IS_INSTALL_DB == "Y" ]]
 then
     echo "HERE: Installing DB because IS_INSTALL_DB == Y"
     sudo apt-get --yes install postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
-    # sleep to ensure DB has time to come up
-    sleep 10
+    # note: some instances of ubuntu will not start postgresql automatically
+    sudo service postgresql start
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS_SU"';"
     sudo service postgresql stop
 
