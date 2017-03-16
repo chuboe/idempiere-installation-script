@@ -4,7 +4,7 @@
 source chuboe.properties
 
 OSUSER=${1:-$CHUBOE_PROP_IDEMPIERE_OS_USER}
-
+echo HERE:OSUSER=$OSUSER
 
 echo -------------------------------------
 echo Unjar seed file as $OSUSER HERE:
