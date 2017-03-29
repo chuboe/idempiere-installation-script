@@ -69,3 +69,16 @@ from c_bpartner b
 left outer join c_bpartner_location bl on b.c_bpartner_id = bl.c_bpartner_id
 left outer join c_location l on bl.c_location_id = l.c_location_id
 ;
+
+-- Created flattened search view for Requisitions
+CREATE OR REPLACE VIEW chuboe_adv_search_requisition AS 
+SELECT r.ad_client_id, r.ad_org_id, r.created,
+r.createdby, r.updated, r.updatedby, r.documentno, 
+r.priorityrule, r.m_requisition_id, r.ad_user_id,
+r.datedoc, r.daterequired, rl.m_requisitionline_id, 
+rl.c_orderline_id, rl.c_bpartner_id, rl.m_product_id,
+rl.c_charge_id, rl.line, rl.qty, rl.linenetamt, 
+COALESCE(rl.c_project_id, r.c_project_id) AS c_project_id
+FROM m_requisition r 
+JOIN m_requisitionline rl ON r.m_requisition_id = rl.m_requisition_id
+;
