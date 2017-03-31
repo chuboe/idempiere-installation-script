@@ -29,6 +29,7 @@ OPTIONS:
 	-r	Do not restart server
 	-s	Skip iDempiere binary upgrade
 	-p	Create a pristine copy of the database backup
+	-b	No DB Backup
 
 Outstanding actions:
 * check that a .hg file exists. If no, exit. They should have a backup to the binaries first.
@@ -53,13 +54,14 @@ IS_RESTART_SERVER="Y"
 IS_GET_MIGRATION="Y"
 IS_SKIP_BIN_UPGRADE="N"
 IS_CREATE_PRISTINE="N"
+IS_DB_BACKUP="Y"
 MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_AUTHCOMMAND $CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/migration/*zip*/migration.zip"
 P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/*zip*/site.p2.zip"
 JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hc:m:M:u:rsp" OPTION
+while getopts "hc:m:M:u:rspb" OPTION
 do
 	case $OPTION in
 		h)	usage
@@ -87,8 +89,13 @@ do
 
 		p)	#create pristine copy
 			IS_CREATE_PRISTINE="Y";;
+
+		b)	#No DB backup
+			IS_DB_BACKUP="N";;
 	esac
 done
+
+echo "Do backupDB "$IS_DB_BACKUP
 
 if [[ $PG_CONNECT == "NONE" ]]
 then
@@ -158,10 +165,15 @@ then
 
 fi #end if IS_SKIP_BIN_UPGRADE = N
 
-# create a database backup just in case things go badly
-cd $SERVER_DIR/utils/
-echo NOTE: Ignore errors related to myEnvironment.sav
-sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+if [[ $IS_DB_BACKUP == "Y" ]]
+then
+
+	# create a database backup just in case things go badly
+	cd $SERVER_DIR/utils/
+	echo NOTE: Ignore errors related to myEnvironment.sav
+	sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+
+fi #end of backup
 
 cd $CHUBOE_UTIL_HG/utils/
 
