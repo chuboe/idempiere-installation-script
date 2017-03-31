@@ -374,7 +374,7 @@ sudo updatedb
 # install useful utilities
 # htop - useful process, cpu and memory graph
 # expect - used to stop idempiere - allows script to interact with telnet
-sudo apt-get --yes install unzip htop expect bc
+sudo apt-get --yes install unzip htop expect bc telnet
 
 # install the latest version of s3cmd - tool to move files to an offsite AWS s3 bucket
 echo "HERE: Installing s3cmd"
