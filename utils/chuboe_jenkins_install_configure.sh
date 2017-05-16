@@ -143,8 +143,12 @@ sudo service apache2 restart
 #####Install Jenkins plugins (performed in jenkins UI)
 # www.YourURL.com:8080
 # Jenkins Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
+## required
 # (1) buckminster
 # (2) mercurial
+## optional
+# (3) Log Parser - scans logs for known issues - flags the build as a fail if issues found
+# (4) Naginator - automatically kicks off a re-build if a fail is encountered. This is helpful if mirrors are acting flakey.
 
 #####Configure Jenkins System (performed in jenkins UI) - Buckminster Version 4.4
 # Jenkins Menu => Manage Jenkins => Global Tool Configuration
