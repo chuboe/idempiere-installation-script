@@ -669,7 +669,7 @@ then
     echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
     echo " ------> http://jasperstudio.sf.net/updates">>$README
     echo " ------> note: use Report Design perspective when ready to create reports.">>$README
-    echo "More detailed instructions for the following can be found at http://www.globalqss.com/wiki/index.php/IDempiere/Install_Prerequisites_on_Ubuntu">>$README
+    echo "More detailed instructions for the following can be found at http://wiki.idempiere.org/en/Install_Development_Prerequisites">>$README
     echo "">>$README
     echo "">>$README
     echo "STEP 2">>$README
