@@ -5,6 +5,7 @@
 # This script creates the backup.
 # This differs from chuboe_backup_s3cmd.sh because it also move binaries.
 # This script series assumes that the chuboe installation script was used to install iD on both servers
+# Be aware that you need about 10GB of free space on the drive for the below to succeed.
 
 source chuboe.properties
 TMP_BACKUP_FILE_NAME=id.tar.gz
