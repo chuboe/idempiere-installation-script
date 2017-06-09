@@ -139,7 +139,7 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh <<!
 
 !
 
-# update SQL Sandbox
+# update SQL in restored database that might be specific to this server
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "Delete from AD_SysConfig where AD_SysConfig_ID=99999999999"
 
 # start idempiere  
