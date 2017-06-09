@@ -131,7 +131,14 @@ $CHUBOE_PROP_DB_HOST
 
 
 !
-#end of file input
+# end of file input
+
+# restore the database
+cd $CHUBOE_PROP_IDEMPIERE_PATH/utils/
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh
+
+# update SQL Sandbox
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "Delete from AD_SysConfig where AD_SysConfig_ID=99999999999"
 
 # start idempiere  
 echo "HERE: starting iDempiere"
