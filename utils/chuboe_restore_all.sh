@@ -73,7 +73,7 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER tar zxvf $TMP_BACKUP_FILE_NAME
 # replace files
 sudo mv $TMP_RESTORE_PATH_DIR/idempiere-server/ /opt/
 
-# uncomment below rm statements to remove DMS folders
+# uncomment below mv statements to replace DMS folders
 # sudo mv $TMP_RESTORE_PATH_DIR/DMS_Content/ /opt/
 # sudo mv $TMP_RESTORE_PATH_DIR/DMS_Thumbnails/ /opt/
 
