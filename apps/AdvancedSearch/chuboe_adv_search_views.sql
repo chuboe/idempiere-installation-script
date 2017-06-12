@@ -25,26 +25,26 @@ join c_orderline ol on o.c_order_id = ol.c_order_id
 ;
 
 Create or replace view chuboe_adv_search_inout as
-select o.ad_client_id, o.ad_org_id,
-o.created, o.createdby, o.updated, o.updatedby,
-o.documentno, o.m_inout_id, ol.m_inoutline_id,
-o.c_bpartner_id, o.c_bpartner_location_id,
-ol.m_product_id, ol.c_charge_id, o.movementdate,
-ol.line, o.issotrx
-from m_inout o
-join m_inoutline ol on o.m_inout_id= ol.m_inout_id
+select io.ad_client_id, io.ad_org_id,
+io.created, io.createdby, io.updated, io.updatedby,
+io.documentno, io.m_inout_id, iol.m_inoutline_id,
+io.c_bpartner_id, io.c_bpartner_location_id,
+iol.m_product_id, iol.c_charge_id, io.movementdate,
+iol.line, io.issotrx
+from m_inout io
+join m_inoutline iol on io.m_inout_id= iol.m_inout_id
 ;
 
 Create or replace view chuboe_adv_search_invoice as
-select o.ad_client_id, o.ad_org_id,
-o.created, o.createdby, o.updated, o.updatedby,
-o.documentno, o.c_invoice_id, ol.c_invoiceline_id,
-o.c_bpartner_id, o.c_bpartner_location_id,
-ol.m_product_id, ol.c_charge_id, o.dateinvoiced,
-o.dateacct,
-ol.line, o.issotrx
-from c_invoice o
-join c_invoiceline ol on o.c_invoice_id= ol.c_invoice_id
+select i.ad_client_id, i.ad_org_id,
+i.created, i.createdby, i.updated, i.updatedby,
+i.documentno, i.c_invoice_id, il.c_invoiceline_id,
+i.c_bpartner_id, i.c_bpartner_location_id,
+il.m_product_id, il.c_charge_id, i.dateinvoiced,
+i.dateacct,
+il.line, i.issotrx
+from c_invoice i
+join c_invoiceline il on i.c_invoice_id= il.c_invoice_id
 ;
 
 Create or replace view chuboe_adv_search_payment as
