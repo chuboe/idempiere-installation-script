@@ -15,6 +15,7 @@ drop INDEX ad_user_email;
 -- Business Partner 
 update C_BPartner bp
 set 
+value = 'bp' || bp.c_bpartner_id, 
 name = 'bp' || bp.c_bpartner_id, 
 description = null, 
 name2 = null, 
