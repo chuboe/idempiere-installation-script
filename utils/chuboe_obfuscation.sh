@@ -17,6 +17,8 @@ DATABASE=$CHUBOE_PROP_DB_NAME
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 USER=$CHUBOE_PROP_DB_USERNAME
 ADDPG="-h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT"
+DATABASE_OB="obfus"
+DATABASE_TMP_EXPORT="/tmp/obtempout.bak"
 
 echo LOGFILE=$LOGFILE >> $LOGFILE
 echo NOTE: writing logs here: $LOGFILE
@@ -49,7 +51,18 @@ else
     exit 1
 fi
 
-psql -d $DATABASE -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscation.sql >> $LOGFILE
+#drop the existing obfuscated database if present
+sudo -u postgres dropdb $DATABASE_OB
+#export the existing database
+sudo -u postgres pg_dump $DATABASE -Fc > $DATABASE_TMP_EXPORT
+#create the obfuscated database
+sudo -u postgres createdb $DATABASE_OB
+#restore existing database to obfuscated database
+sudo -u postgres pg_restore -Fc -d $DATABASE_OB $DATABASE_TMP_EXPORT
+#remove old database export file
+sudo rm $DATABASE_TMP_EXPORT
+
+psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscation.sql >> $LOGFILE
     echo adembak: ------------------------------------------------------------------- >> $LOGFILE
     echo edembak: -------         FINISHED iDempiere Obfuscation              ------- >> $LOGFILE
     echo adembak: ------------------------------------------------------------------- >> $LOGFILE
