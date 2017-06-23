@@ -66,6 +66,9 @@ psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscati
 #dump the obfuscated database
 pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
 
+#drop the obfuscated database -- no longer needed
+dropdb $ADDPG -U $USER $DATABASE_OB
+
 #jar export
 cd $EXPORT_DIR
 jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
