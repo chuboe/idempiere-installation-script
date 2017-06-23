@@ -39,7 +39,7 @@ fi #end if dev environment check
 echo NOTE: Ignore errors related to myEnvironment.sav
 if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh
 then
-    echo adembak: Local Backup Succeeded. 
+    echo Local Backup Succeeded. 
 else
     echo -------------------------------------------------------------------
     echo -------          Local iDempiere Backup FAILED!             -------
