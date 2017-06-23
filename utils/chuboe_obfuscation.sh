@@ -70,6 +70,7 @@ pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPOR
 cd $EXPORT_DIR
 jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
+sudo rm $EXPORT_DIR/$DATABASE_OB_EXPORT
 
 echo -------------------------------------------------------------------
 echo -------         FINISHED iDempiere Obfuscation              -------
