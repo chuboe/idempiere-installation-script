@@ -1,6 +1,6 @@
 #!/bin/bash
 #Version 1 - Chuck Boecking - created
-#Version 2 - Chuck Boecking - moved obfuscation to separate database
+#Version 2 - Chuck Boecking - moved obfuscation to separate database on the same instance
 
 #bring chuboe.properties into context
 source chuboe.properties
