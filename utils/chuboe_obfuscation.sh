@@ -1,6 +1,6 @@
 #!/bin/bash
-# Created Version 1 Chuck Boecking
-# Version 2 Chuck Boecking - moved obfuscation to separate database
+#Version 1 - Chuck Boecking - created
+#Version 2 - Chuck Boecking - moved obfuscation to separate database
 
 #bring chuboe.properties into context
 source chuboe.properties
@@ -22,18 +22,18 @@ DATABASE_OB_JAR="ExpDatObfus_"`date +%Y%m%d`_`date +%H%M%S`".jar"
 echo ADEMROOTDIR=$ADEMROOTDIR
 
 cd $ADEMROOTDIR/utils
-echo ademres: -------------------------------------------------------------------
-echo ademres: -------            STARTING iDempiere Obfuscation           -------
-echo ademres: -------------------------------------------------------------------
+echo -------------------------------------------------------------------
+echo -------            STARTING iDempiere Obfuscation           -------
+echo -------------------------------------------------------------------
 
 if [[ $CHUBOE_PROP_IS_TEST_ENV = "Y" ]]; then
-    echo ademres: -------------------------------------------------------------------
-    echo ademres: -------              This is a Dev Envrionment              -------
-    echo ademres: -------------------------------------------------------------------
+    echo -------------------------------------------------------------------
+    echo -------              This is a Dev Envrionment              -------
+    echo -------------------------------------------------------------------
 else
-    echo ademres: -------------------------------------------------------------------
-    echo ademres: -------            STOPPING Not a Dev Envrionment           -------
-    echo ademres: -------------------------------------------------------------------
+    echo -------------------------------------------------------------------
+    echo -------            STOPPING Not a Dev Envrionment           -------
+    echo -------------------------------------------------------------------
     exit 1
 fi #end if dev environment check
 echo NOTE: Ignore errors related to myEnvironment.sav
@@ -41,9 +41,9 @@ if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh
 then
     echo adembak: Local Backup Succeeded. 
 else
-    echo adembak: -------------------------------------------------------------------
-    echo adembak: -------          Local iDempiere Backup FAILED!             -------
-    echo adembak: -------------------------------------------------------------------
+    echo -------------------------------------------------------------------
+    echo -------          Local iDempiere Backup FAILED!             -------
+    echo -------------------------------------------------------------------
     echo  .
     exit 1
 fi
@@ -71,8 +71,8 @@ cd $EXPORT_DIR
 jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
 
-echo adembak: -------------------------------------------------------------------
-echo edembak: -------         FINISHED iDempiere Obfuscation              -------
-echo adembak: -------------------------------------------------------------------
+echo -------------------------------------------------------------------
+echo -------         FINISHED iDempiere Obfuscation              -------
+echo -------------------------------------------------------------------
 echo .
 exit 0
