@@ -40,4 +40,6 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER cp $CHUBOE_PROP_IDEMPIERE_PATH $TMP_BACKU
 echo "HERE: create tar file"
 cd $TMP_BACKUP_PATH
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER tar cvfz $TMP_BACKUP_FILE_NAME dirs/
+
+# keep the tar file but delete the directory to preserve space
 sudo rm -r $TMP_BACKUP_PATH_DIR
