@@ -64,6 +64,8 @@ sudo rm $CHUBOE_PROP_IDEMPIERE_PATH  -r
 
 # copy back up file from another location
 echo "HERE: copying remote backup file ($TMP_REMOTE_BACKUP_SERVER:$TMP_BACKUP_PATH) to $TMP_RESTORE_PATH"
+cd $TMP_RESTORE_PATH
+# note: you can replace the below scp command with a wget or curl if the file is coming from a web server or a local directory
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_REMOTE_BACKUP_USER@$TMP_REMOTE_BACKUP_SERVER:$TMP_BACKUP_PATH/$TMP_BACKUP_FILE_NAME $TMP_RESTORE_PATH/.
 
 # untar back up file
