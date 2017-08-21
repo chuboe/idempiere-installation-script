@@ -142,7 +142,10 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh <<!
 !
 
 # update SQL in restored database that might be specific to this server
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "Delete from AD_SysConfig where AD_SysConfig_ID=99999999999"
+# update system logos - you can also set them to something else like 'http://cdn6.bigcommerce.com/s-d8bzk61/images/stencil/200x100/products/1988/2724/safetyglassesusa_2267_30575914__24175.1448998397.jpg'
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set isactive = 'N' where upper(name) like 'ZK_LOGO%'"
+# disable email in test/sandbox system
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update ad_client set smtphost = '', issmtpauthorization = 'N', issecuresmtp = 'N', smtpport = null, requestuser = '', requestemail = ''"
 
 # start idempiere  
 echo "HERE: starting iDempiere"
