@@ -99,6 +99,8 @@ delete from c_orderline ;
 delete from c_ordertax ;
 update r_request set c_order_id = null, M_inout_id = null ;
 update r_requestaction set c_order_id = null, M_inout_id = null ;
+delete from c_orderlandedcostallocation;
+delete from c_orderlandedcost;
 delete from c_order ;
 delete from fact_acct ;
 delete from fact_acct_summary ;
