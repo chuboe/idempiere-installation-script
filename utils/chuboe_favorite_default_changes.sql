@@ -16,7 +16,7 @@ update ad_tab set issinglerow = 'N' where AD_Tab_ID in (200008);
 update ad_field set seqnogrid = seqnogrid+200 where ad_tab_id = 200008;
 update ad_field set seqnogrid = 10 where ad_field_id = 200214; --org
 update ad_field set seqnogrid = 20 where ad_field_id = 200216; --line
-update ad_field set seqnogrid = 30 where ad_field_id = 200217; --desc
+update ad_field set seqnogrid = 65 where ad_field_id = 200217; --desc
 update ad_field set seqnogrid = 40 where ad_field_id = 200223; --account
 update ad_field set seqnogrid = 50 where ad_field_id = 200244; --dr
 update ad_field set seqnogrid = 60 where ad_field_id = 200245; --cr
