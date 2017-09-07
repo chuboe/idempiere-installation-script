@@ -113,6 +113,7 @@ delete from m_storagereservation;
 delete from m_transaction ;
 delete from m_packageline ;
 delete from m_package ;
+update c_projectissue set m_inoutline_id = null;
 delete from m_inoutline ; 
 delete from m_inout ;
 delete from m_inoutconfirm ; 
