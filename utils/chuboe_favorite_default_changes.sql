@@ -8,11 +8,10 @@ update c_doctype set isdefault='N';
 -- doctype, 
 update ad_table set ishighvolume = 'Y' where ad_table_id in (217);
 
---make certian sub-tabs default to grid view.
--- GL Journal Line, 
-update ad_tab set issinglerow = 'N' where AD_Tab_ID in (200008);
+--make all tabs default to grid view.
+update ad_tab set issinglerow = 'N';
 
---make the GL Journal window more intuative
+--make the GL Journal window more intuative for editing in grid view
 update ad_field set seqnogrid = seqnogrid+200 where ad_tab_id = 200008;
 update ad_field set seqnogrid = 10 where ad_field_id = 200214; --org
 update ad_field set seqnogrid = 20 where ad_field_id = 200216; --line
