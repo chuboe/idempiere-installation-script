@@ -25,3 +25,18 @@ update ad_field set seqnogrid = 90 where ad_field_id = 200227; --campaign
 update ad_field set seqnogrid = 100 where ad_field_id = 200229; --project
 update ad_field set seqnogrid = 110 where ad_field_id = 200228; --sales region
 update ad_field set seqnogrid = 120 where ad_field_id = 200226; --activity
+
+--update Attribute Set Instance fields to be a drop	down instead of special popup box
+--actions:
+--move this section to a formal packin
+--update ad_column set AD_Reference_ID=18 where columnname = 'M_AttributeSetInstanceTo_ID';  --needs reference key
+--add m_product_id to M_AttributeSetInstance table to make choosing ASI more intuative
+update ad_column set AD_Reference_ID=19 where columnname = 'M_AttributeSetInstance_ID' ; -- table direct
+update ad_window set windowtype = 'M' where ad_window_id = 358; --make ASI window editable
+update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12252; --m_attributeset_id
+update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12255; --description
+update AD_Column set isidentifier='N', seqno = null where AD_Table_ID=559; --remove existing identifiers and set following
+update AD_Column set isidentifier='Y', seqno = 1 where AD_Column_ID = 8477; --m_attributeset
+update AD_Column set isidentifier='Y', seqno = 2 where AD_Column_ID = 8479; --description
+
+
