@@ -28,9 +28,12 @@ update ad_field set seqnogrid = 120 where ad_field_id = 200226; --activity
 
 --update Attribute Set Instance fields to be a drop	down instead of special popup box
 --actions:
---move this section to a formal packin
---update ad_column set AD_Reference_ID=18 where columnname = 'M_AttributeSetInstanceTo_ID';  --needs reference key
---add m_product_id to M_AttributeSetInstance table to make choosing ASI more intuative
+	--move this section to a formal packin
+	--update ad_column set AD_Reference_ID=18 where columnname = 'M_AttributeSetInstanceTo_ID';  --needs reference key
+	--add m_product_id to M_AttributeSetInstance table to make choosing ASI more intuative
+--notes:
+	--this section is handy if you want a simple lot system.
+	--this section reduces the flexibility and capabilies of Attribute Set Instances for the sake of simplicity
 update ad_column set AD_Reference_ID=19 where columnname = 'M_AttributeSetInstance_ID' ; -- table direct
 update ad_window set windowtype = 'M' where ad_window_id = 358; --make ASI window editable
 update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12252; --m_attributeset_id
