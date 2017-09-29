@@ -714,18 +714,11 @@ then
     sudo service postgresql stop
 
     #map the data directory
-    sudo mkdir /vol/var
     sudo mv /var/lib/postgresql/$PGVERSION/main /vol/var
-    sudo mkdir /var/lib/postgresql/$PGVERSION/main
-    echo "/vol/var/main /var/lib/postgresql/$PGVERSION/main     none bind" | sudo tee -a /etc/fstab
-    sudo mount /var/lib/postgresql/$PGVERSION/main
+    sudo chown -R postgres. /vol
 
-    #map the conf directory
-    sudo mkdir /vol/etc
-    sudo mv /etc/postgresql/$PGVERSION/main /vol/etc
-    sudo mkdir /etc/postgresql/$PGVERSION/main
-    echo "/vol/etc/main /etc/postgresql/$PGVERSION/main     none bind" | sudo tee -a /etc/fstab
-    sudo mount /etc/postgresql/$PGVERSION/main
+    # updating postgresql.conf setting the new path
+    sudo sed -i "s|data_directory.*|data_directory = '/vol/var'|" /etc/postgresql/$PGVERSION/main/postgresql.conf
 
     sudo service postgresql start
 
