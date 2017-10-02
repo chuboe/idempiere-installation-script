@@ -1,17 +1,17 @@
 -- run this script using the following command:
 -- psql -U adempiere -h localhost -d idempiere -f chuboe_favorite_default_changes.sql
 
---remove all default values from document types because they are not needed.
-update c_doctype set isdefault='N';
+-- performance indexes
+CREATE INDEX fact_acct_doc_chuboe_idx ON fact_acct USING btree (account_id, ad_table_id, record_id); -- improves BSD
+CREATE INDEX fas_pa_chuboe_idx ON fact_acct_summary USING btree (account_id, ad_org_id, dateacct, pa_reportcube_id); -- improves finReport
 
---make certain tables high volume to promote a search box when window is opened.
--- doctype, 
-update ad_table set ishighvolume = 'Y' where ad_table_id in (217);
+--make certain tables high volume to promote a search box when window is opened. 
+update ad_table set ishighvolume = 'Y' where ad_table_id in (217); -- doctype
 
 --make all tabs default to grid view.
-update ad_tab set issinglerow = 'N';
+update ad_tab set issinglerow = 'N'; -- better for teaching new users iDempiere
 
---make the GL Journal window more intuative for editing in grid view
+--make the GL Journal window more intuative for editing in grid view - Accountants love this
 update ad_field set seqnogrid = seqnogrid+200 where ad_tab_id = 200008;
 update ad_field set seqnogrid = 10 where ad_field_id = 200214; --org
 update ad_field set seqnogrid = 20 where ad_field_id = 200216; --line
@@ -26,14 +26,16 @@ update ad_field set seqnogrid = 100 where ad_field_id = 200229; --project
 update ad_field set seqnogrid = 110 where ad_field_id = 200228; --sales region
 update ad_field set seqnogrid = 120 where ad_field_id = 200226; --activity
 
---update Attribute Set Instance fields to be a drop	down instead of special popup box
+--update Attribute Set Instance fields to be a dropdown instead of special popup box
 --actions:
 	--move this section to a formal packin
 	--update ad_column set AD_Reference_ID=18 where columnname = 'M_AttributeSetInstanceTo_ID';  --needs reference key
 	--add m_product_id to M_AttributeSetInstance table to make choosing ASI more intuative
 --notes:
 	--this section is handy if you want a simple lot system.
-	--this section reduces the flexibility and capabilies of Attribute Set Instances for the sake of simplicity
+	--this section reduces the flexibility and capabilies of Attribute Set Instances for the sake of simple lot management
+	--if you are not happy with this change, change the ASI field back to the special form by using the next sql statement.
+		-- update ad_column set AD_Reference_ID=35 where columnname = 'M_AttributeSetInstance_ID';
 update ad_column set AD_Reference_ID=19 where columnname = 'M_AttributeSetInstance_ID' ; -- table direct
 update ad_window set windowtype = 'M' where ad_window_id = 358; --make ASI window editable
 update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12252; --m_attributeset_id
