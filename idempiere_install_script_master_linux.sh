@@ -976,8 +976,9 @@ echo "HERE END: Launching console-setup.sh"
             then XMX=32768
         fi
         echo "XMX="$XMX
-        sudo sed -i "s|-XX:MaxPermSize|-Xmx"$XMX"m -XX:MaxPermSize|" $INSTALLPATH/idempiere-server.sh
-        # use the following command to confirm the above setting took: sudo -u $IDEMPIEREUSER jps -v localhost
+        # sudo sed -i "s|-XX:MaxPermSize|-Xmx"$XMX"m -XX:MaxPermSize|" $INSTALLPATH/idempiereEnv.properties
+        sudo sed -i "s/Xmx.*/Xmx="$XMX"/g" $INSTALLPATH/idempiereEnv.properties
+	# use the following command to confirm the above setting took: sudo -u $IDEMPIEREUSER jps -v localhost
         echo "HERE END: lots of memory and dedicated idempiere server"
     fi
 
