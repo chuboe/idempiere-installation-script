@@ -26,6 +26,9 @@ update ad_field set seqnogrid = 100 where ad_field_id = 200229; --project
 update ad_field set seqnogrid = 110 where ad_field_id = 200228; --sales region
 update ad_field set seqnogrid = 120 where ad_field_id = 200226; --activity
 
+-- make process available via button
+update ad_column set istoolbarbutton = 'B' where AD_Column_ID=208442;
+
 --update Attribute Set Instance fields to be a dropdown instead of special popup box
 --actions:
 	--move this section to a formal packin
