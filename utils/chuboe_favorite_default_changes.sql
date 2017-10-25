@@ -26,8 +26,12 @@ update ad_field set seqnogrid = 100 where ad_field_id = 200229; --project
 update ad_field set seqnogrid = 110 where ad_field_id = 200228; --sales region
 update ad_field set seqnogrid = 120 where ad_field_id = 200226; --activity
 
--- make process available via button
-update ad_column set istoolbarbutton = 'B' where AD_Column_ID=208442; -- bank statement - create lines from batch
+-- Bank related changes
+update ad_column set istoolbarbutton = 'B' where AD_Column_ID=208442; -- bank statement - create lines from batch - show as button
+update ad_field set xposition = 5, name='Create Lines from Batch' where AD_Field_ID=201691;
+update AD_Menu set name = 'Bank' where AD_Menu_ID=171; -- remove the word cash
+update AD_Menu set name = 'Bank Statement' where AD_Menu_ID= 234; -- remove the word cash
+update AD_Menu set name = 'Bank Transfer' where AD_Menu_ID= 53190; -- remove the word cash
 
 --update Attribute Set Instance fields to be a dropdown instead of special popup box
 --actions:
