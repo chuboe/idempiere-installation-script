@@ -215,8 +215,8 @@ do
     esac
 done
 
-IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64"
+IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64"
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 #determine if IS_REPLICATION_MASTER should = N
@@ -782,13 +782,27 @@ then
     sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
     sudo chmod -R go+w $INSTALLPATH
 
-    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".zip -P $TEMP_DIR/installer_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".md5 -P $TEMP_DIR/installer_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERECLIENTPATH".zip -P $TEMP_DIR/installer_client_`date +%Y%m%d`
 
     # check if file downloaded
     RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
     if [ $RESULT -ge 1 ]; then
             echo "HERE: file exists"
+            # check if md5 checksum downloaded
+            RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.md5 | wc -l)
+            if [ $RESULT -ge 1 ]; then
+               echo "HERE: md5 exists"
+               #check if file valid
+               if [md5sum --status -c "$IDEMPIERESOURCEPATH".md5]; then
+                   echo "HERE: file is valid"
+               else
+                   echo "HERE: file is not valid - stopping script!"
+                   echo "ERROR: The iDempiere binary file download failed. The file did not pass md5 checksum. Stopping script!">>$README
+                   exit 1
+               fi
+            fi
     else
         echo "HERE: file does not exist. Stopping script!"
         echo "HERE: If pulling Bleeding Copy, check $JENKINSURL/job/$JENKINSPROJECT/ to see if the daily build failed"
