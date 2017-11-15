@@ -216,7 +216,8 @@ do
 done
 
 IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64"
-IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64"
+IDEMPIERESOURCENAME="idempiereServer.gtk.linux.x86_64"
+IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"$IDEMPIERESOURCENAME
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 #determine if IS_REPLICATION_MASTER should = N
@@ -787,15 +788,15 @@ then
     sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERECLIENTPATH".zip -P $TEMP_DIR/installer_client_`date +%Y%m%d`
 
     # check if file downloaded
-    RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
+    RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.zip | wc -l)
     if [ $RESULT -ge 1 ]; then
             echo "HERE: file exists"
             # check if md5 checksum downloaded
-            RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.md5 | wc -l)
+            RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.md5 | wc -l)
             if [ $RESULT -ge 1 ]; then
                echo "HERE: md5 exists"
                #check if file valid
-               if [md5sum --status -c "$IDEMPIERESOURCEPATH".md5]; then
+               if [md5sum --status -c $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.md5]; then
                    echo "HERE: file is valid"
                else
                    echo "HERE: file is not valid - stopping script!"
