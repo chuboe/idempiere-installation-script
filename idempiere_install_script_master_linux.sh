@@ -792,7 +792,7 @@ then
             if [ $RESULT -ge 1 ]; then
                echo "HERE: md5 exists"
                #check if file valid
-               if [md5sum --status -c $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.md5]; then
+               if md5sum --status -c $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.md5; then
                    echo "HERE: file is valid"
                else
                    echo "HERE: file is not valid - stopping script!"
