@@ -215,7 +215,6 @@ do
     esac
 done
 
-IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64"
 IDEMPIERESOURCENAME="idempiereServer.gtk.linux.x86_64"
 IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"$IDEMPIERESOURCENAME
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
@@ -289,7 +288,6 @@ echo "Temp Directory="$TEMP_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
-echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
 echo "PG Port="$PGPORT
@@ -785,7 +783,6 @@ then
 
     sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".zip -P $TEMP_DIR/installer_`date +%Y%m%d`
     sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".md5 -P $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERECLIENTPATH".zip -P $TEMP_DIR/installer_client_`date +%Y%m%d`
 
     # check if file downloaded
     RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.zip | wc -l)
