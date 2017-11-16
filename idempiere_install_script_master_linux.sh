@@ -215,8 +215,8 @@ do
     esac
 done
 
-IDEMPIERECLIENTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.ui.swing_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereClient.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCENAME="idempiereServer.gtk.linux.x86_64"
+IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"$IDEMPIERESOURCENAME
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 #determine if IS_REPLICATION_MASTER should = N
@@ -288,7 +288,6 @@ echo "Temp Directory="$TEMP_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
 echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
-echo "iDempiereClientPath="$IDEMPIERECLIENTPATH
 echo "EclipseSourcePath="$ECLIPSESOURCEPATH
 echo "PG Version="$PGVERSION
 echo "PG Port="$PGPORT
@@ -777,18 +776,31 @@ then
     # clone id_installer again to chuboe_installpath
 
     mkdir $TEMP_DIR/installer_`date +%Y%m%d`
-    mkdir $TEMP_DIR/installer_client_`date +%Y%m%d`
     sudo mkdir $INSTALLPATH
     sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
     sudo chmod -R go+w $INSTALLPATH
 
-    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATH -P $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERECLIENTPATH -P $TEMP_DIR/installer_client_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".zip -P $TEMP_DIR/installer_`date +%Y%m%d`
+    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".md5 -P $TEMP_DIR/installer_`date +%Y%m%d`
 
     # check if file downloaded
-    RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/*64.zip | wc -l)
+    RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.zip | wc -l)
     if [ $RESULT -ge 1 ]; then
             echo "HERE: file exists"
+            # check if md5 checksum downloaded
+            RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.md5 | wc -l)
+            if [ $RESULT -ge 1 ]; then
+               echo "HERE: md5 exists"
+               #check if file valid
+               cd $TEMP_DIR/installer_`date +%Y%m%d`/
+               if md5sum --status -c $IDEMPIERESOURCENAME.md5; then
+                   echo "HERE: file is valid"
+               else
+                   echo "HERE: file is not valid - stopping script!"
+                   echo "ERROR: The iDempiere binary file download failed. The file did not pass md5 checksum. Stopping script!">>$README
+                   exit 1
+               fi
+            fi
     else
         echo "HERE: file does not exist. Stopping script!"
         echo "HERE: If pulling Bleeding Copy, check $JENKINSURL/job/$JENKINSPROJECT/ to see if the daily build failed"
@@ -807,19 +819,6 @@ then
     TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
     sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
 
-    echo "">>$README
-    echo "">>$README
-    echo "The following section applies to the iDempiere Swing client.">>$README
-    echo "To use the swing client, unzip it by issuing the command:">>$README
-    echo "---> unzip $OSUSER_HOME/installer_client_`date +%Y%m%d`/idempiereClient.gtk.linux.x86_64.zip -d $OSUSER_HOME/installer_client_`date +%Y%m%d`">>$README
-    echo "---> change directory to your adempiere-client directory in your new unzipped folder.">>$README
-    echo "---> Launch the client using ./adempiere-client.sh">>$README
-    echo "---> At the login screen, click on the server field.">>$README
-    echo "---> In the server dialog, set the Application Host (for example: localhost) to your web server,">>$README
-    echo "------> and set the Application Port to 8443.">>$README
-    echo "------> Test the application server and database then click the green check.">>$README
-    echo "To install swing clients for other OS's, go to:">>$README
-    echo "---> http://www.globalqss.com/wiki/index.php/IDempiere/Downloading_Hot_Installers">>$README
     echo "">>$README
     echo "">>$README
     echo "This section applies to offsite backups.">>$README
