@@ -29,6 +29,11 @@
 # 2.2 Support ubuntu 16.04 LTS 
 # 2.2.1 Added notes for key concepts "Key Concept"
 # 2.3 Support for iDempiere 4.1
+# 2.4 Moved download to beginning, added Zip and GZip archive testing in addition to MD5
+# 2.4.1 Changed to delete previously downloaded files if they exist for the smaller installation files.  Larger downloaded files (.zip, .gz) will be verified, and if
+#       verification fails they will be deleted and re-downloaded
+# 2.4.2 Merged with Chucks changes to remove Client download.  Restored JENKINS_AUTHCOMMAND functionality
+# 2.4.3 Moved download below apt-get; need unzip for integrity check.
 
 
 # function to help the user better understand how the script works
@@ -114,12 +119,14 @@ IS_LAUNCH_ID="N"
 IS_INSTALL_DESKTOP="N"
 IS_INITIALIZE_DB=$CHUBOE_PROP_DB_IS_INITIALIZE
 IS_SET_SERVICE_IP=$CHUBOE_PROP_IDEMPIERE_SET_SERVICE_IP
+# In case a hapless user starts running this script just before midnight...
+INSTALL_DATE=`date +%Y%m%d`
 PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
 DBPASS=$CHUBOE_PROP_DB_PASSWORD
 DBPASS_SU=$CHUBOE_PROP_DB_PASSWORD_SU
 INSTALLPATH=$CHUBOE_PROP_IDEMPIERE_PATH
-TEMP_DIR="/tmp/chuboe-idempiere-server/"
+TEMP_DIR="/tmp/chuboe-idempiere-install-files-$INSTALL_DATE/"
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 #ACTION - Next action to replace use of below properties individual with consolidated one.
@@ -133,11 +140,11 @@ IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
 JENKINS_CURRENT_REV=$CHUBOE_PROP_JENKINS_CURRENT_CHANGESET
-ECLIPSEFILENAME="eclipse-jee-chuboe-luna-SR2-linux-gtk-x86_64.tar.gz"
-ECLIPSESOURCEPATH="https://s3.amazonaws.com/ChuckBoecking/install/"$ECLIPSEFILENAME
+ECLIPSE_SOURCE_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
+ECLIPSE_SOURCE_FILENAME="eclipse-jee-chuboe-luna-SR2-linux-gtk-x86_64.tar.gz"
 OSUSER=$CHUBOE_PROP_OS_USER
 OSUSER_EXISTS="N"
-OSUSER_HOME=""
+#OSUSER_HOME=""
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 PGVERSION=$CHUBOE_PROP_DB_VERSION
 PGPORT=$CHUBOE_PROP_DB_PORT
@@ -149,8 +156,13 @@ REPLATION_ROLE="id_replicate_role"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.$PGPORT"
 JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 S3CMD_VERSION="s3cmd-1.6.1"
-S3CMD_FILE_GZ=$S3CMD_VERSION".tar.gz"
-S3CMD_DOWNLOAD="https://s3.amazonaws.com/ChuckBoecking/install/$S3CMD_FILE_GZ"
+S3CMD_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
+S3CMD_FILENAME=$S3CMD_VERSION".tar.gz"
+IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
+IDEMPIERESOURCE_FILENAME_MD5="idempiereServer.gtk.linux.x86_64.md5"
+IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
+
 #create array of updated parameters to later update chuboe.properties
 args=()
 
@@ -215,9 +227,6 @@ do
     esac
 done
 
-IDEMPIERESOURCENAME="idempiereServer.gtk.linux.x86_64"
-IDEMPIERESOURCEPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"$IDEMPIERESOURCENAME
-IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
@@ -230,7 +239,8 @@ fi
 
 # Check if $OSUSER can create the temporary install folder
 echo "HERE: check if $OSUSER can create the temporary installation directory"
-sudo mkdir $TEMP_DIR
+[ -d $TEMP_DIR ] || sudo mkdir $TEMP_DIR || { echo "HERE: failed to create $TEMP_DIR"; exit 1; }
+
 sudo chmod -R go+w $TEMP_DIR
 RESULT=$([ -d $TEMP_DIR ] && echo "Y" || echo "N")
 # echo $RESULT
@@ -244,7 +254,7 @@ fi
 # Check if you can create the chuboe folder
 # create a directory where chuboe related stuff will go. Including the helpful tips/hints/feedback file.
 echo "HERE: check if you can create the $CHUBOE_UTIL directory"
-sudo mkdir $CHUBOE_UTIL
+[ -d $CHUBOE_UTIL ] || sudo mkdir $CHUBOE_UTIL || { echo "HERE: failed to create $CHUBOE_UTIL"; exit 1; }
 sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
 sudo chmod -R go+w $CHUBOE_UTIL
 RESULT=$([ -d $CHUBOE_UTIL ] && echo "Y" || echo "N")
@@ -255,6 +265,7 @@ else
     echo "HERE: User cannot create the chuboe directory"
     exit 1
 fi
+
 
 #turn args array into a properties file.
 printf "%s\n" "${args[@]}" > $SCRIPTPATH/utils/install.properties
@@ -287,8 +298,10 @@ echo "ScriptPath="$SCRIPTPATH
 echo "Temp Directory="$TEMP_DIR
 echo "OSUser="$OSUSER
 echo "iDempiere User="$IDEMPIEREUSER
-echo "iDempiereSourcePath="$IDEMPIERESOURCEPATH
-echo "EclipseSourcePath="$ECLIPSESOURCEPATH
+echo "iDempiereSource_Hostpath="$IDEMPIERESOURCE_HOSTPATH
+echo "iDempiereSource_Filename="$IDEMPIERESOURCE_FILENAME
+echo "Eclipse_Source_Hostpath="$ECLIPSE_SOURCE_HOSTPATH
+echo "Eclipse_Source_Filename="$ECLIPSE_SOURCE_FILENAME
 echo "PG Version="$PGVERSION
 echo "PG Port="$PGPORT
 echo "Jenkins Project="$JENKINSPROJECT
@@ -375,16 +388,108 @@ sudo updatedb
 # expect - used to stop idempiere - allows script to interact with telnet
 sudo apt-get --yes install unzip htop expect bc telnet
 
+###################################################################
+download() {
+# Arguments:
+#  1 - HOSTPATH including trailing /
+#  2 - Filename
+#  3 - local path prefix including trailing /
+#  4 - (Optional) Jenkins Auth command
+    # wget --unlink doesn't remove the file, must use rm
+    # Must remove the file because if it exists in a corrupted state wget will not fix it, instead it will make a new file named .1
+    if [ -e $3/$2 ]; then { rm $3/$2 ; } fi
+    # Remove the -nv if you want to see detailed downloading progress in output.txt
+    wget -nv $4 $1$2 -P $3 2>&1
+    if [ $? -ne 0 ]; then { echo "HERE: Can't download $1$2"; exit 1; } fi
+}
+downloadtestzip() {
+# Arguments:
+#  1 - HOSTPATH including trailing /
+#  2 - Filename
+#  3 - local path prefix including trailing /
+#  4 - (Optional) Jenkins Auth command
+    # If it exists, test integrity with unzip.  If unzip integrity check succeeds, we're done.
+    if [ -e $3/$2 ]; then
+        unzip -tq $3/$2
+        if [ $? -eq 0 ]; then
+            echo "HERE: downloadtestzip: $2 already downloaded"
+            return 0
+        fi
+    fi
+    echo "HERE: D/L zip " $1 $2 $3
+    download $1 $2 $3 $4
+    unzip -t $3/$2
+    if [ $? -ne 0 ]
+    then
+        echo "HERE: downloadtestzip: $2 downloaded incorrectly - retry"
+        exit 1
+    fi
+}
+downloadtestgz() {
+# Arguments:
+#  1 - HOSTPATH including trailing /
+#  2 - Filename
+#  3 - local path prefix including trailing /
+#  4 - (Optional) Jenkins Auth command
+    # If it exists, test integrity with gzip.  If gzip integrity check succeeds, we're done.
+    if [ -e $3/$2 ]; then
+        gzip -tq $3/$2
+        if [ $? -eq 0 ]; then
+            echo "HERE: downloadtestgz: $2 already downloaded"
+            return
+        fi
+    fi
+    echo "HERE: D/L gz " $1 $2 $3
+    download $1 $2 $3 $4
+    gzip -tq $3/$2
+    if [ $? -ne 0 ]
+    then
+        # DKA: If wget succeeds and unzip fails, then remove the downloaded file so they start the download over when user re-runs script 
+        # rm $3/$2
+        echo "HERE: downloadtestgz: $2 downloaded incorrectly - retry"
+        exit 1
+    fi
+}
+###################################################################
+# Download all files first
+downloadtestgz $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR
+
+if [[ $IS_INSTALL_DESKTOP == "Y" ]]
+then
+    downloadtestgz $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads
+    #Note: if you already have a downloaded copy of iDempiere's hg repo zip, update the following URL
+    downloadtestzip https://s3.amazonaws.com/ChuckBoecking/install/ idempiere-hg-download.zip $OSUSER_HOME/dev/
+    # mv $OSUSER_HOME/dev/idempiere-hg-download.zip $OSUSER_HOME/dev/download.zip
+    if [ $? -ne 0 ]; then { echo "HERE: Can't rename $OSUSER_HOME/dev/idempiere-hg-download.zip" ; exit 1 ; } fi
+fi
+if [[ $IS_INSTALL_ID == "Y" ]]
+then
+    download $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME_MD5 $TEMP_DIR $JENKINS_AUTHCOMMAND
+    downloadtestzip $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND
+    cd $TEMP_DIR
+    md5sum -c $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5
+    if [ $? -ne 0 ]; then { echo "HERE: MD5 sum of $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5 failed"; exit 1; } fi
+
+    TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
+    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
+    if [ $? -ne 0 ]
+    then
+        echo "HERE: Failed to download $IDEMPIERESOURCEPATHDETAIL"
+        exit 1
+    fi
+fi
+
+###################################################################
 # install the latest version of s3cmd - tool to move files to an offsite AWS s3 bucket
 echo "HERE: Installing s3cmd"
-cd /tmp/
-wget $S3CMD_DOWNLOAD
-tar xzf $S3CMD_FILE_GZ
+cd $TEMP_DIR
+tar xzf $S3CMD_FILENAME
 cd $S3CMD_VERSION/
 # python-setuptools is needed to execute setup.py
 sudo apt-get install --yes python-setuptools
 sudo python setup.py install
 echo "HERE: Finished installing s3cmd"
+cd $TEMP_DIR
 
 # if installing using virtualbox 
 # install the following before you install the guest additions
@@ -592,8 +697,6 @@ then
     mkdir $OSUSER_HOME/dev/downloads
     mkdir $OSUSER_HOME/dev/plugins
 
-    # get eclipse IDE
-    wget $ECLIPSESOURCEPATH -P $OSUSER_HOME/dev/downloads
     tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSEFILENAME -C $OSUSER_HOME/dev/
 
     echo "">>$README
@@ -626,9 +729,7 @@ then
     #Note: no longer perform the first clone - download the initial repo then clone.
     #hg clone https://bitbucket.org/idempiere/idempiere
     
-    #Note: if you already have a downloaded copy of iDempiere's hg repo zip, update the following URL
-    wget https://s3.amazonaws.com/ChuckBoecking/install/idempiere-hg-download.zip -O download.zip
-    unzip download.zip
+    unzip idempiere-hg-download.zip
     cd idempiere
     hg pull
     
@@ -775,49 +876,15 @@ then
     # make installpath
     # clone id_installer again to chuboe_installpath
 
-    mkdir $TEMP_DIR/installer_`date +%Y%m%d`
     sudo mkdir $INSTALLPATH
     sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
     sudo chmod -R go+w $INSTALLPATH
 
-    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".zip -P $TEMP_DIR/installer_`date +%Y%m%d`
-    sudo wget $JENKINS_AUTHCOMMAND "$IDEMPIERESOURCEPATH".md5 -P $TEMP_DIR/installer_`date +%Y%m%d`
-
-    # check if file downloaded
-    RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.zip | wc -l)
-    if [ $RESULT -ge 1 ]; then
-            echo "HERE: file exists"
-            # check if md5 checksum downloaded
-            RESULT=$(ls -l $TEMP_DIR/installer_`date +%Y%m%d`/$IDEMPIERESOURCENAME.md5 | wc -l)
-            if [ $RESULT -ge 1 ]; then
-               echo "HERE: md5 exists"
-               #check if file valid
-               cd $TEMP_DIR/installer_`date +%Y%m%d`/
-               if md5sum --status -c $IDEMPIERESOURCENAME.md5; then
-                   echo "HERE: file is valid"
-               else
-                   echo "HERE: file is not valid - stopping script!"
-                   echo "ERROR: The iDempiere binary file download failed. The file did not pass md5 checksum. Stopping script!">>$README
-                   exit 1
-               fi
-            fi
-    else
-        echo "HERE: file does not exist. Stopping script!"
-        echo "HERE: If pulling Bleeding Copy, check $JENKINSURL/job/$JENKINSPROJECT/ to see if the daily build failed"
-        echo "">>$README
-        echo "">>$README
-        echo "ERROR: The iDempiere binary file download failed. The file does not exist locally. Stopping script!">>$README
-        echo "Check $JENKINSURL/job/$JENKINSPROJECT/ to see if the daily build failed.">>$README
-        # nano $OSUSER_HOME/$README
-        exit 1
-    fi
-
-    sudo unzip $TEMP_DIR/installer_`date +%Y%m%d`/idempiereServer.gtk.linux.x86_64.zip -d $TEMP_DIR/installer_`date +%Y%m%d`
-    cd $TEMP_DIR/installer_`date +%Y%m%d`/idempiere.gtk.linux.x86_64/idempiere-server/
+    sudo unzip $TEMP_DIR/$IDEMPIERESOURCE_FILENAME -d $TEMP_DIR
+    # FIXME: TODO: Change idempiere.gtk.linux.x86_64 directory name into an equate, i.e. split up extension and filename
+    cd $TEMP_DIR/idempiere.gtk.linux.x86_64/idempiere-server/
     cp -r * $INSTALLPATH
     cd $INSTALLPATH
-    TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
-    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
 
     echo "">>$README
     echo "">>$README
