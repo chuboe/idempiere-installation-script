@@ -227,6 +227,8 @@ do
     esac
 done
 
+OSUSER=$(id -u -n)
+OSUSER_GROUP=$(id -g -n)
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
@@ -255,7 +257,7 @@ fi
 # create a directory where chuboe related stuff will go. Including the helpful tips/hints/feedback file.
 echo "HERE: check if you can create the $CHUBOE_UTIL directory"
 [ -d $CHUBOE_UTIL ] || sudo mkdir $CHUBOE_UTIL || { echo "HERE: failed to create $CHUBOE_UTIL"; exit 1; }
-sudo chown $OSUSER:$OSUSER $CHUBOE_UTIL
+sudo chown $OSUSER:$OSUSER_GROUP $CHUBOE_UTIL
 sudo chmod -R go+w $CHUBOE_UTIL
 RESULT=$([ -d $CHUBOE_UTIL ] && echo "Y" || echo "N")
 # echo $RESULT
@@ -297,6 +299,7 @@ echo "ScriptName="$SCRIPTNAME
 echo "ScriptPath="$SCRIPTPATH
 echo "Temp Directory="$TEMP_DIR
 echo "OSUser="$OSUSER
+echo "OSUser_Group="$OSUSER_GROUP
 echo "iDempiere User="$IDEMPIEREUSER
 echo "iDempiereSource_Hostpath="$IDEMPIERESOURCE_HOSTPATH
 echo "iDempiereSource_Filename="$IDEMPIERESOURCE_FILENAME
@@ -388,84 +391,23 @@ sudo updatedb
 # expect - used to stop idempiere - allows script to interact with telnet
 sudo apt-get --yes install unzip htop expect bc telnet
 
-###################################################################
-download() {
-# Arguments:
-#  1 - HOSTPATH including trailing /
-#  2 - Filename
-#  3 - local path prefix including trailing /
-#  4 - (Optional) Jenkins Auth command
-    # wget --unlink doesn't remove the file, must use rm
-    # Must remove the file because if it exists in a corrupted state wget will not fix it, instead it will make a new file named .1
-    if [ -e $3/$2 ]; then { rm $3/$2 ; } fi
-    # Remove the -nv if you want to see detailed downloading progress in output.txt
-    wget -nv $4 $1$2 -P $3 2>&1
-    if [ $? -ne 0 ]; then { echo "HERE: Can't download $1$2"; exit 1; } fi
-}
-downloadtestzip() {
-# Arguments:
-#  1 - HOSTPATH including trailing /
-#  2 - Filename
-#  3 - local path prefix including trailing /
-#  4 - (Optional) Jenkins Auth command
-    # If it exists, test integrity with unzip.  If unzip integrity check succeeds, we're done.
-    if [ -e $3/$2 ]; then
-        unzip -tq $3/$2
-        if [ $? -eq 0 ]; then
-            echo "HERE: downloadtestzip: $2 already downloaded"
-            return 0
-        fi
-    fi
-    echo "HERE: D/L zip " $1 $2 $3
-    download $1 $2 $3 $4
-    unzip -t $3/$2
-    if [ $? -ne 0 ]
-    then
-        echo "HERE: downloadtestzip: $2 downloaded incorrectly - retry"
-        exit 1
-    fi
-}
-downloadtestgz() {
-# Arguments:
-#  1 - HOSTPATH including trailing /
-#  2 - Filename
-#  3 - local path prefix including trailing /
-#  4 - (Optional) Jenkins Auth command
-    # If it exists, test integrity with gzip.  If gzip integrity check succeeds, we're done.
-    if [ -e $3/$2 ]; then
-        gzip -tq $3/$2
-        if [ $? -eq 0 ]; then
-            echo "HERE: downloadtestgz: $2 already downloaded"
-            return
-        fi
-    fi
-    echo "HERE: D/L gz " $1 $2 $3
-    download $1 $2 $3 $4
-    gzip -tq $3/$2
-    if [ $? -ne 0 ]
-    then
-        # DKA: If wget succeeds and unzip fails, then remove the downloaded file so they start the download over when user re-runs script 
-        # rm $3/$2
-        echo "HERE: downloadtestgz: $2 downloaded incorrectly - retry"
-        exit 1
-    fi
-}
-###################################################################
 # Download all files first
-downloadtestgz $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR
+$SCRIPTPATH/utils/downloadtestgz.sh $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR
+
+exit 0
 
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
-    downloadtestgz $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads
+    $SCRIPTPATH/utils/downloadtestgz $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads
     #Note: if you already have a downloaded copy of iDempiere's hg repo zip, update the following URL
-    downloadtestzip https://s3.amazonaws.com/ChuckBoecking/install/ idempiere-hg-download.zip $OSUSER_HOME/dev/
+    $SCRIPTPATH/utils/downloadtestzip https://s3.amazonaws.com/ChuckBoecking/install/ idempiere-hg-download.zip $OSUSER_HOME/dev/
     # mv $OSUSER_HOME/dev/idempiere-hg-download.zip $OSUSER_HOME/dev/download.zip
     if [ $? -ne 0 ]; then { echo "HERE: Can't rename $OSUSER_HOME/dev/idempiere-hg-download.zip" ; exit 1 ; } fi
 fi
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-    download $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME_MD5 $TEMP_DIR $JENKINS_AUTHCOMMAND
-    downloadtestzip $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND
+    $SCRIPTPATH/utils/download $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME_MD5 $TEMP_DIR $JENKINS_AUTHCOMMAND
+    $SCRIPTPATH/utils/downloadtestzip $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND
     cd $TEMP_DIR
     md5sum -c $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5
     if [ $? -ne 0 ]; then { echo "HERE: MD5 sum of $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5 failed"; exit 1; } fi
@@ -861,7 +803,7 @@ then
     then
         sudo echo "*:*:*:$IDEMPIERE_DB_USER:$DBPASS">>$TEMP_DIR/.pgpass
         sudo echo "*:*:*:$IDEMPIERE_DB_USER_SU:$DBPASS_SU">>$TEMP_DIR/.pgpass
-        sudo chown $OSUSER:$OSUSER $TEMP_DIR/.pgpass
+        sudo chown $OSUSER:$OSUSER_GROUP $TEMP_DIR/.pgpass
         sudo -u $OSUSER chmod 600 $TEMP_DIR/.pgpass
         sudo mv $TEMP_DIR/.pgpass $OSUSER_HOME/
     fi
@@ -1049,7 +991,7 @@ echo "HERE END: Launching console-setup.sh"
 
     #update ownership and write privileges after installation is complete
     sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
-    sudo chown -R $OSUSER:$OSUSER $CHUBOE_UTIL
+    sudo chown -R $OSUSER:$OSUSER_GROUP $CHUBOE_UTIL
     sudo chmod -R go-w $INSTALLPATH
     sudo chmod -R go-w $CHUBOE_UTIL
     sudo chmod u+x $CHUBOE_UTIL_HG/*.sh
