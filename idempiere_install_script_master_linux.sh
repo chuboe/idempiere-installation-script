@@ -393,7 +393,7 @@ sudo apt-get --yes install unzip htop expect bc telnet
 
 # Download all files first
 $SCRIPTPATH/utils/downloadtestgz.sh $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR || exit 1
-
+echo $(pwd)
 exit 0
 
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
