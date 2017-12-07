@@ -98,6 +98,7 @@ EOF
 #NOTE: all variables starting with CHUBOE_PROP... come from this file.
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
+cp $SCRIPTPATH/utils/chuboe.properties.orig $SCRIPTPATH/utils/chuboe.properties
 source $SCRIPTPATH/utils/chuboe.properties
 
 #check to see if the properties file specifies an alternative properties file
@@ -159,7 +160,6 @@ S3CMD_VERSION="s3cmd-1.6.1"
 S3CMD_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
 S3CMD_FILENAME=$S3CMD_VERSION".tar.gz"
 IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
-IDEMPIERESOURCE_FILENAME_MD5="idempiereServer.gtk.linux.x86_64.md5"
 IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
@@ -406,11 +406,7 @@ then
 fi
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-    $SCRIPTPATH/utils/download $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME_MD5 $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
     $SCRIPTPATH/utils/downloadtestzip $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
-    cd $TEMP_DIR
-    md5sum -c $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5
-    if [ $? -ne 0 ]; then { echo "HERE: MD5 sum of $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5 failed"; exit 1; } fi
 
     TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
     sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
