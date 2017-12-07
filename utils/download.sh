@@ -19,6 +19,8 @@
     if [ $? -ne 0 ]; then { echo "HERE: Can't download $1$2.md5. This is not a fatal error, but cannot verify download."; exit 0; } fi
 
     # Check download against md5
+    # NOTE: use the md5 command to create a test file. Note: use the same file name with a .md5 suffix.
+    #     Example: md5 s3cmd-1.6.1.tar.gz > s3cmd-1.6.1.tar.gz.md5
     cd $3
     md5sum -c $2.md5
     if [ $? -ne 0 ]; then { echo "HERE: MD5 sum of $3/$2 failed"; exit 1; } fi
