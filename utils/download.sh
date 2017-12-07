@@ -12,3 +12,4 @@
     wget -nv $4 $1$2 -P $3 2>&1
     if [ $? -ne 0 ]; then { echo "HERE: Can't download $1$2"; exit 1; } fi
 
+    # Need to automatically check for MD5 file here...

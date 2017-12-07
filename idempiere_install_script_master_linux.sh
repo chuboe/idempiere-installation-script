@@ -392,22 +392,22 @@ sudo updatedb
 sudo apt-get --yes install unzip htop expect bc telnet
 
 # Download all files first
-$SCRIPTPATH/utils/downloadtestgz.sh $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR
+$SCRIPTPATH/utils/downloadtestgz.sh $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR || exit 1
 
 exit 0
 
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
-    $SCRIPTPATH/utils/downloadtestgz $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads
+    $SCRIPTPATH/utils/downloadtestgz $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads || exit 1
     #Note: if you already have a downloaded copy of iDempiere's hg repo zip, update the following URL
-    $SCRIPTPATH/utils/downloadtestzip https://s3.amazonaws.com/ChuckBoecking/install/ idempiere-hg-download.zip $OSUSER_HOME/dev/
+    $SCRIPTPATH/utils/downloadtestzip https://s3.amazonaws.com/ChuckBoecking/install/ idempiere-hg-download.zip $OSUSER_HOME/dev/ || exit 1
     # mv $OSUSER_HOME/dev/idempiere-hg-download.zip $OSUSER_HOME/dev/download.zip
     if [ $? -ne 0 ]; then { echo "HERE: Can't rename $OSUSER_HOME/dev/idempiere-hg-download.zip" ; exit 1 ; } fi
 fi
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-    $SCRIPTPATH/utils/download $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME_MD5 $TEMP_DIR $JENKINS_AUTHCOMMAND
-    $SCRIPTPATH/utils/downloadtestzip $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND
+    $SCRIPTPATH/utils/download $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME_MD5 $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
+    $SCRIPTPATH/utils/downloadtestzip $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
     cd $TEMP_DIR
     md5sum -c $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5
     if [ $? -ne 0 ]; then { echo "HERE: MD5 sum of $TEMP_DIR/$IDEMPIERESOURCE_FILENAME_MD5 failed"; exit 1; } fi

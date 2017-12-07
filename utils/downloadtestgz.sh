@@ -8,7 +8,6 @@
     # If it exists, test integrity with gzip.  If gzip integrity check succeeds, we're done.
     DOWNLOAD_SCRIPTNAME=$(readlink -f "$0")
     DOWNLOAD_SCRIPTPATH=$(dirname "$DOWNLOAD_SCRIPTNAME")
-    echo "HERE: download script path: " $DOWNLOAD_SCRIPTPATH
     if [ -e $3/$2 ]; then
         gzip -tq $3/$2
         if [ $? -eq 0 ]; then
@@ -17,7 +16,7 @@
         fi
     fi
     echo "HERE: Downloading gz with params: " $1 $2 $3
-    $DOWNLOAD_SCRIPTPATH/download.sh $1 $2 $3 $4
+    $DOWNLOAD_SCRIPTPATH/download.sh $1 $2 $3 $4 || exit 1
     gzip -tq $3/$2
     if [ $? -ne 0 ]
     then
