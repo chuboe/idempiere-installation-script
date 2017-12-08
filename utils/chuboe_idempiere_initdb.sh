@@ -4,6 +4,8 @@
 source chuboe.properties
 
 OSUSER=${1:-$CHUBOE_PROP_IDEMPIERE_OS_USER}
+OSUSER_GROUP=${1:-$CHUBOE_PROP_IDEMPIERE_OS_USERGROUP}
+
 echo HERE:OSUSER=$OSUSER
 
 echo -------------------------------------
@@ -28,7 +30,7 @@ sudo -u $OSUSER sed -i "s/OWNER TO adempiere/OWNER TO $CHUBOE_PROP_DB_USERNAME/"
 # set permissions back to iDempiere user if needed
 if [[ $OSUSER == "root" ]]
 then
-	sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USER Adempiere_pg.dmp
+	sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USERGROUP Adempiere_pg.dmp
 fi
 
 echo -------------------------------------
