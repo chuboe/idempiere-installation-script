@@ -231,8 +231,6 @@ done
 # get the current user and group
 OSUSER=$(id -u -n)
 OSUSER_GROUP=$(id -g -n)
-args+=("CHUBOE_PROP_IDEMPIERE_OS_USER=\"$OSUSER\"")
-args+=("CHUBOE_PROP_IDEMPIERE_OS_USERGROUP=\"$OSUSER_GROUP\"")
 
 #determine if IS_REPLICATION_MASTER should = N
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
