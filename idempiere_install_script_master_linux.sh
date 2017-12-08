@@ -32,8 +32,6 @@
 # 2.4 Moved download to beginning, added Zip and GZip archive testing in addition to MD5
 # 2.4.1 Changed to delete previously downloaded files if they exist for the smaller installation files.  Larger downloaded files (.zip, .gz) will be verified, and if
 #       verification fails they will be deleted and re-downloaded
-# 2.4.2 Merged with Chucks changes to remove Client download.  Restored JENKINS_AUTHCOMMAND functionality
-# 2.4.3 Moved download below apt-get; need unzip for integrity check.
 
 
 # function to help the user better understand how the script works
@@ -58,7 +56,6 @@ OPTIONS:
     -I  Do not initialize iDempiere database - used when adding or replacine an iDempiere WebUI/App server.
     -P  DB password
     -l  Launch iDempiere as service
-    -u  Adds this user to the iDempiere group (default: ubuntu)
     -D  Install desktop development tools
     -v  Specify iDempiere viersion - defaults to 4.1
     -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
@@ -74,9 +71,6 @@ Outstanding actions:
      - add this information to the idempiere feedback file
 * Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
 * Create option to specify password during installation - as opposed to as a command line option
-* Create SQL script with Chucks Favorite changes:
-    - set files to be stored at the file system (not os) - see below drive for attachments
-    - Set Account Default field names to the more logical names like: "AP For Invoices, AP for Payments, Not Received Invoices, etc..)
 * When Replication is turned on, created and set archive files to appropriate place.
     * create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
 * Create drive options for WAL. Move logs to different location - not on DB or WAL drive. Can be local system drive.
