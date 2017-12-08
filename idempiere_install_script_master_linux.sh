@@ -337,30 +337,11 @@ if [ $RESULT -ge 0 ]; then
     OSUSER_EXISTS="Y"
     OSUSER_HOME=$(eval echo ~$OSUSER)
 else
-    if [[ $IS_INSTALL_DESKTOP == "Y" ]]
-    then
-        echo "ERROR: HERE: OSUser does not exist. Stopping script!"
-        echo "">>$README
-        echo "">>$README
-        echo "ERROR: OSUser does not exist. OSUser is needed when installing the development environment. Stopping script!">>$README
-        exit 1
-    fi
-    # nano $OSUSER_HOME/$README
-    echo "HERE: OSUser does not exist. Using $IDEMPIEREUSER instead. The script will use $IDEMPIEREUSER as the owner to the $CHUBOE_UTIL_HG directory."
+    echo "ERROR: HERE: OSUser does not exist. Stopping script!"
     echo "">>$README
     echo "">>$README
-    echo "ISSUE: The specified OS user ($OSUSER) does not exist.">>$README
-    echo "The script will use the $IDEMPIEREUSER OS user as the owner to the $CHUBOE_UTIL_HG directory.">>$README
-    echo "Please note that the $IDEMPIEREUSER user does not have sudo privileges. Therefore, it will not be able to execute some scripts.">>$README
-    echo "IF you later create a sudoer user that you want to manage the chuboe_utils directory, issue the following commands:">>$README
-    echo "--->sudo chown -R YourNewUser:YourNewUser /opt/chuboe_utils/  #this makes you the owner.">>$README
-    echo "--->sudo usermod -a -G $IDEMPIEREUSER YourNewUser  #this adds your user to the $IDEMPIEREUSER group.">>$README
-    echo "--->sudo cp /home/$IDEMPIEREUSER/.pgpass /home/YourNewUser/  #this and the next line make connecting to psql much easier">>$README
-    echo "--->sudo chown YourNewUser:YourNewUser /home/YourNewUser/.pgpass">>$README
-
-    # OSUSER was not available
-    OSUSER=$IDEMPIEREUSER
-    OSUSER_HOME=$(eval echo ~$OSUSER)
+    echo "ERROR: OSUser does not exist. Stopping script!">>$README
+    exit 1
 fi
 
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
