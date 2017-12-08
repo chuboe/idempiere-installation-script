@@ -160,7 +160,7 @@ args=()
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:iP:lDj:J:v:r:I" OPTION
+while getopts ":hsp:e:iP:lDj:J:v:r:I" OPTION
 do
     case $OPTION in
         h)  usage
