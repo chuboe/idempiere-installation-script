@@ -29,7 +29,7 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBExport.sh
 # create temp backup directory and copy all files
 echo "HERE: cp iD directory to temp folder"
 sudo mkdir -p $TMP_BACKUP_PATH_DIR
-sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USERGROUP $TMP_BACKUP_PATH -R
+sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USER $TMP_BACKUP_PATH -R
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER cp $CHUBOE_PROP_IDEMPIERE_PATH $TMP_BACKUP_PATH_DIR -R
 
 # uncomment below cp statements to move DMS folders if present
