@@ -160,7 +160,7 @@ args=()
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lBDj:J:v:r:I" OPTION
+while getopts "hsp:e:iP:lDj:J:v:r:I" OPTION
 do
     case $OPTION in
         h)  usage
@@ -211,6 +211,16 @@ do
 
         I)  #do not initialize database
             IS_INITIALIZE_DB="N";;
+
+        # Option error handling.
+
+        \?) valid=0
+            echo "HERE: An invalid option has been entered: $OPTARG"
+            ;;
+
+        :)  valid=0
+            echo "HERE: The additional argument for option $OPTARG was omitted."
+            ;;
     
     esac
 done
