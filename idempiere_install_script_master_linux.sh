@@ -143,9 +143,7 @@ JENKINSURL=$CHUBOE_PROP_JENKINS_URL
 JENKINS_CURRENT_REV=$CHUBOE_PROP_JENKINS_CURRENT_CHANGESET
 ECLIPSE_SOURCE_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
 ECLIPSE_SOURCE_FILENAME="eclipse-jee-chuboe-luna-SR2-linux-gtk-x86_64.tar.gz"
-OSUSER=$CHUBOE_PROP_OS_USER
 OSUSER_EXISTS="N"
-#OSUSER_HOME=""
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 PGVERSION=$CHUBOE_PROP_DB_VERSION
 PGPORT=$CHUBOE_PROP_DB_PORT
@@ -168,7 +166,7 @@ args=()
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
-while getopts "hsp:e:ib:P:lu:BDj:J:v:r:I" OPTION
+while getopts "hsp:e:ib:P:lBDj:J:v:r:I" OPTION
 do
     case $OPTION in
         h)  usage
@@ -197,10 +195,6 @@ do
 
         l)  #launch iDempiere
             IS_LAUNCH_ID="Y";;
-
-        u)  #user
-            args+=("CHUBOE_PROP_OS_USER=\"$OPTARG\"")
-            OSUSER=$OPTARG;;
 
         D)  #install desktop development components
             IS_INSTALL_DESKTOP="Y";;
