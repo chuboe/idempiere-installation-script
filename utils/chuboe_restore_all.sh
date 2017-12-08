@@ -38,7 +38,7 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBExport.sh
 # create temp backup directory and copy all files
 echo "HERE: cp current iD directory to $TMP_BACKUP_PATH folder."
 sudo mkdir -p $TMP_BACKUP_PATH_DIR
-sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USER $TMP_BACKUP_PATH -R
+sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USERGROUP $TMP_BACKUP_PATH -R
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER cp $CHUBOE_PROP_IDEMPIERE_PATH $TMP_BACKUP_PATH_DIR -R
 
 # create tar backup of old iDempiere instance.
@@ -53,7 +53,7 @@ sudo service idempiere stop
 
 # create temp restore directory
 sudo mkdir -p $TMP_RESTORE_PATH
-sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USER $TMP_RESTORE_PATH -R
+sudo chown $CHUBOE_PROP_IDEMPIERE_OS_USER:$CHUBOE_PROP_IDEMPIERE_OS_USERGROUP $TMP_RESTORE_PATH -R
 
 # remove current idempiere installation
 sudo rm $CHUBOE_PROP_IDEMPIERE_PATH  -r
