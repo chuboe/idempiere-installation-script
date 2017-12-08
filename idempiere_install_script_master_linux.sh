@@ -217,10 +217,12 @@ do
 
         \?) valid=0
             echo "HERE: An invalid option has been entered: $OPTARG"
+            exit 1
             ;;
 
         :)  valid=0
             echo "HERE: The additional argument for option $OPTARG was omitted."
+            exit 1
             ;;
     
     esac
