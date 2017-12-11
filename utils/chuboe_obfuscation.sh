@@ -18,6 +18,7 @@ DATABASE_OB="obfus"
 DATABASE_TMP_EXPORT="obtempout.bak"
 DATABASE_OB_EXPORT="ExpDatObfus.dmp"
 DATABASE_OB_JAR="ExpDatObfus_"`date +%Y%m%d`_`date +%H%M%S`".jar"
+CHUBOE_AWS_S3_BUCKET="s3://BucketName/SubBucketName/"
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 
@@ -74,6 +75,11 @@ cd $EXPORT_DIR
 jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
 sudo rm $EXPORT_DIR/$DATABASE_OB_EXPORT
+
+#push jar to S3
+#uncomment below if needed
+#echo Push $EXPORT_DIR/$DATABASE_OB_JAR to $CHUBOE_AWS_S3_BUCKET
+#aws s3 cp $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read
 
 echo -------------------------------------------------------------------
 echo -------         FINISHED iDempiere Obfuscation              -------
