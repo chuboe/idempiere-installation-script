@@ -16,6 +16,7 @@ TMP_RESTORE_PATH_DIR=$TMP_RESTORE_PATH/dirs/
 TMP_REMOTE_BACKUP_SERVER=localhost
 TMP_REMOTE_BACKUP_USER=ubuntu
 TMP_HOSTNAME=$(hostname)
+TMP_SSH_PEM=" -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem"
 
 # check to see if test server - else exit
 if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
@@ -66,7 +67,8 @@ sudo rm $CHUBOE_PROP_IDEMPIERE_PATH  -r
 echo "HERE: copying remote backup file ($TMP_REMOTE_BACKUP_SERVER:$TMP_BACKUP_PATH) to $TMP_RESTORE_PATH"
 cd $TMP_RESTORE_PATH
 # note: you can replace the below scp command with a wget or curl if the file is coming from a web server or a local directory
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_REMOTE_BACKUP_USER@$TMP_REMOTE_BACKUP_SERVER:$TMP_BACKUP_PATH/$TMP_BACKUP_FILE_NAME $TMP_RESTORE_PATH/.
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $TMP_REMOTE_BACKUP_USER@$TMP_REMOTE_BACKUP_SERVER:$TMP_BACKUP_PATH/$TMP_BACKUP_FILE_NAME $TMP_RESTORE_PATH/.
+
 
 # untar back up file
 cd $TMP_RESTORE_PATH
