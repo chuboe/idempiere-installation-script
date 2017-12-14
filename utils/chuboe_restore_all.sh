@@ -16,7 +16,8 @@ TMP_RESTORE_PATH_DIR=$TMP_RESTORE_PATH/dirs/
 TMP_REMOTE_BACKUP_SERVER=localhost
 TMP_REMOTE_BACKUP_USER=ubuntu
 TMP_HOSTNAME=$(hostname)
-TMP_SSH_PEM=" -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem"
+TMP_SSH_PEM=""
+#TMP_SSH_PEM=" -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem"
 
 # check to see if test server - else exit
 if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
