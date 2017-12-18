@@ -39,6 +39,12 @@ update ad_column_id set seqnoselection = 99 where ad_column_id in
 select ad_column_id from ad_column where isselectioncolumn = 'Y' and (seqnoselection is null or seqnoselection = 0)
 );
 
+-- Track changes on all tables
+--update ad_table set ischangelog = 'Y' where lower(tablename) like 'chuboe%';
+
+-- Make change log tracking default on all new tables
+update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
+
 --update Attribute Set Instance fields to be a dropdown instead of special popup box
 --actions:
 	--move this section to a formal packin
