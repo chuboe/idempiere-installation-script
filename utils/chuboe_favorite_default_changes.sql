@@ -4,6 +4,7 @@
 -- performance indexes
 CREATE INDEX fact_acct_doc_chuboe_idx ON fact_acct USING btree (account_id, ad_table_id, record_id); -- improves BSD
 CREATE INDEX fas_pa_chuboe_idx ON fact_acct_summary USING btree (account_id, ad_org_id, dateacct, pa_reportcube_id); -- improves finReport
+CREATE INDEX chuboe_journalline_hdr_idx ON gl_journalline USING btree (gl_journal_id)
 
 --make certain tables high volume to promote a search box when window is opened. 
 update ad_table set ishighvolume = 'Y' where ad_table_id in (217); -- doctype
