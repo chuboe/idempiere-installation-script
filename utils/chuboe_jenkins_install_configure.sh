@@ -33,19 +33,19 @@ sudo mkdir idempiere_source
 cd idempiere_source
 sudo hg clone https://bitbucket.org/idempiere/idempiere
 
-#####Install Director and Buckminster 4.4 - used for iDempiere release3.x and release4.x
-sudo mkdir /opt/buckminster-headless-4.4
-cd /opt/buckminster-headless-4.4
-sudo wget http://download.eclipse.org/tools/buckminster/products/director_latest.zip
-sudo unzip /opt/buckminster-headless-4.4/director_latest.zip -d /opt/buckminster-headless-4.4/
-cd /opt/buckminster-headless-4.4/director
+#####Install Director and Buckminster 4.5 - used for iDempiere release3.x and release4.x and release5.x
+sudo mkdir /opt/buckminster-headless-4.5
+cd /opt/buckminster-headless-4.5
+sudo wget https://github.com/hengsin/headless/raw/master/director_latest.zip
+sudo unzip /opt/buckminster-headless-4.5/director_latest.zip -d /opt/buckminster-headless-4.5/
 
-sudo ./director -r http://download.eclipse.org/tools/buckminster/headless-4.4/ -d /opt/buckminster-headless-4.4/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
-cd /opt/buckminster-headless-4.4
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.4/ org.eclipse.buckminster.maven.headless.feature
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.4/ org.eclipse.buckminster.core.headless.feature
-sudo ./buckminster install http://download.eclipse.org/tools/buckminster/headless-4.4/ org.eclipse.buckminster.pde.headless.feature
+cd /opt/buckminster-headless-4.5/director
+sudo ./director -r https://github.com/hengsin/headless/raw/master/4.5/ -d /opt/buckminster-headless-4.5/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
 
+cd /opt/buckminster-headless-4.5
+sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.core.headless.feature
+sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.pde.headless.feature
+sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.maven.headless.feature
 
 #####Using Apache as a reverse proxy to protect Jenkins
 sudo apt-get install -y apache2
@@ -153,13 +153,13 @@ sudo service apache2 restart
 #####Configure Jenkins System (performed in jenkins UI) - Buckminster Version 4.4
 # Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
-#   Buckminster Name: buckminster-headless-4.4
+#   Buckminster Name: buckminster-headless-4.5
 #   Install Automatically: no (uncheck)
-#   Installation Directory: /opt/buckminster-headless-4.4/
-#   Additonal Startup Parameters: -Xmx1024m
+#   Installation Directory: /opt/buckminster-headless-4.5/
+#   Additonal Startup Parameters: -Xmx2g
 
 #####Create New Item (new job in jenkins UI)
-# Jenkins Menu => New Item "iDempiere4.1Daily" of type "Build a freestyle Software Project" => OK
+# Jenkins Menu => New Item "iDempiere5.1Daily" of type "Build a freestyle Software Project" => OK
 #   NO SPACES IN NAME OF JOB!
 # Configuration
 #  Source Code Management => Mercurial
@@ -168,24 +168,38 @@ sudo service apache2 restart
 #    Revision: pick a specific changeset - this better than just getting what you get from the branch's head  (hg log --limit 1 -- example 11588)
 #    Advanced -> check clean build
 #  Add below build steps
-#    using Buckminster: 4.4
+#    using Buckminster: 4.5
 
 #####Jenkins Build Steps (performed in jenkins UI)
-#1 Shell - clear workspace
-rm -rf ${WORKSPACE}/buckminster.output/ ${WORKSPACE}/buckminster.temp/ ${WORKSPACE}/targetPlatform/
+#1 Shell - download common libraries
+rpl downloads.sourceforge.net netcologne.dl.sourceforge.net ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties
 
-#2 Buckminster - build site.p2
+#2 Invoke Ant
+#Targets: 
+copy -propertyfile ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties
+#Build File (click advanced button):
+${WORKSPACE}/org.adempiere.server-feature/copyjars.xml
+
+#3 Shell - clear workspace
+rm -rf ${WORKSPACE}/buckminster.output/ 
+#${WORKSPACE}/buckminster.temp/ ${WORKSPACE}/targetPlatform/
+
+#4 Buckminster - build iDempiere
+#Buckminster Installation:
+Buckminster Headless 4.5
+#Target Platform:
+None
+#Buckminster Log Level
+Debug
+#Commands
 importtargetdefinition -A '${WORKSPACE}/org.adempiere.sdk-feature/build-target-platform.target'
 import -P ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties -D 'org.eclipse.buckminster.core.maxParallelMaterializations=5' -D 'org.eclipse.buckminster.core.maxParallelResolutions=1' -D 'org.eclipse.buckminster.download.connectionRetryDelay=5' -D 'org.eclipse.buckminster.download.connectionRetryCount=5' '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
 build -t
-perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*      -D target.ws=*     -D target.arch=*      -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   org.adempiere.server:eclipse.feature#site.p2
-perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=linux  -D target.ws=gtk   -D target.arch=x86_64 -D product.features=org.idempiere.eclipse.platform.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product   org.adempiere.server:eclipse.feature#create.product.zip
+perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=*       -D target.ws=*     -D target.arch=*      -D product.features=org.idempiere.fitnesse.feature.group,org.idempiere.equinox.p2.director.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product,org.eclipse.equinox.p2.director   'org.adempiere.server:eclipse.feature#site.p2'
+perform -D qualifier.replacement.*=generator:buildTimestamp -D generator.buildTimestamp.format=\'v\'yyyyMMdd-HHmm -D target.os=linux   -D target.ws=gtk   -D target.arch=x86_64 -D product.features=org.idempiere.fitnesse.feature.group,org.idempiere.equinox.p2.director.feature.group -D product.profile=DefaultProfile -D product.id=org.adempiere.server.product,org.eclipse.equinox.p2.director   'org.adempiere.server:eclipse.feature#create.product.zip'
+#Script File (empty field...)
 
-## NOTE: regarding the two above "perform" statements
-# The first builds the p2 site
-# The second builds the product and zips it
-
-#3 Shell - copy results (site.ps) to webserver - only include this build step if you configured apache above in the "Create web directories publishing p2" step
+#5 Shell - copy results (site.ps) to webserver - only include this build step if you configured apache above in the "Create web directories publishing p2" step
 rm -rf /opt/idempiere-builds/idempiere.p2/*
 rm -rf /opt/idempiere-builds/idempiere.migration/*
 cp -fR ${WORKSPACE}/buckminster.output/org.adempiere.server_2.1.0-eclipse.feature/site.p2/* /opt/idempiere-builds/idempiere.p2
