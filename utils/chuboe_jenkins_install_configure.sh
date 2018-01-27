@@ -191,7 +191,7 @@ Buckminster Headless 4.5
 None
 #Buckminster Log Level
 Debug
-#Commands
+#Commands (Note: 5.1 commands changed quite a bit. See previous branches for 4.1 and 3.1 build commands.
 importtargetdefinition -A '${WORKSPACE}/org.adempiere.sdk-feature/build-target-platform.target'
 import -P ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties -D 'org.eclipse.buckminster.core.maxParallelMaterializations=5' -D 'org.eclipse.buckminster.core.maxParallelResolutions=1' -D 'org.eclipse.buckminster.download.connectionRetryDelay=5' -D 'org.eclipse.buckminster.download.connectionRetryCount=5' '${WORKSPACE}/org.adempiere.sdk-feature/adempiere.cquery'
 build -t
