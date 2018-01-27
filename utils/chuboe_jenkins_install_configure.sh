@@ -150,7 +150,7 @@ sudo service apache2 restart
 # (3) Log Parser - scans logs for known issues - flags the build as a fail if issues found
 # (4) Naginator - automatically kicks off a re-build if a fail is encountered. This is helpful if mirrors are acting flakey.
 
-#####Configure Jenkins System (performed in jenkins UI) - Buckminster Version 4.4
+#####Configure Jenkins System (performed in jenkins UI) - Buckminster Version 4.5
 # Jenkins Menu => Manage Jenkins => Global Tool Configuration
 #   Add Buckminster Button
 #   Buckminster Name: buckminster-headless-4.5
