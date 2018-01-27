@@ -33,6 +33,9 @@ sudo mkdir idempiere_source
 cd idempiere_source
 sudo hg clone https://bitbucket.org/idempiere/idempiere
 
+#Reference
+#http://wiki.idempiere.org/en/Building_iDempiere_without_Eclipse
+
 #####Install Director and Buckminster 4.5 - used for iDempiere release3.x and release4.x and release5.x
 sudo mkdir /opt/buckminster-headless-4.5
 cd /opt/buckminster-headless-4.5
