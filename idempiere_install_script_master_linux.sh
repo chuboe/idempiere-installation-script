@@ -631,7 +631,7 @@ then
     echo "Name=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
     echo "Name[en_US]=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
     echo "Icon=$OSUSER_HOME/dev/eclipse/icon.xpm">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Exec=$OSUSER_HOME/dev/eclipse/eclipse  -vmargs -Xmx512M">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Exec=$OSUSER_HOME/dev/eclipse/eclipse  -vmargs -Xmx2g">> $OSUSER_HOME/dev/launchEclipse.desktop
     echo "Comment[en_US]=">> $OSUSER_HOME/dev/launchEclipse.desktop
 
     # create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
