@@ -617,7 +617,7 @@ then
     mkdir $OSUSER_HOME/dev/downloads
     mkdir $OSUSER_HOME/dev/plugins
 
-    tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSEFILENAME -C $OSUSER_HOME/dev/
+    tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSE_SOURCE_FILENAME -C $OSUSER_HOME/dev/
 
     echo "">>$README
     echo "">>$README
