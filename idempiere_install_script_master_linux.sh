@@ -684,7 +684,7 @@ then
     echo " ------> https://bitbucket.org/mercurialeclipse/update-site/raw/default/">>$README
     echo " ------> choose mercurial but not windows binaries">>$README
     echo " ---> Buckminster">>$README
-    echo " ------> http://download.eclipse.org/tools/buckminster/updates-4.4">>$README
+    echo " ------> https://github.com/hengsin/bucky-updates-4.5/raw/master">>$README
     echo " ------> choose Core, Maven, and PDE">>$README
     echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
     echo " ------> http://jasperstudio.sf.net/updates">>$README
