@@ -29,9 +29,9 @@ cd /opt/
 sudo mkdir source
 sudo chown -R $JENKINS_OS_USER:$JENKINS_OS_USER source
 cd source
-sudo mkdir idempiere_source
+mkdir idempiere_source
 cd idempiere_source
-sudo hg clone https://bitbucket.org/idempiere/idempiere
+hg clone https://bitbucket.org/idempiere/idempiere
 
 #Reference
 #http://wiki.idempiere.org/en/Building_iDempiere_without_Eclipse
