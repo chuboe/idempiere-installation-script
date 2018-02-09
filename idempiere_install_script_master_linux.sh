@@ -152,9 +152,6 @@ JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 S3CMD_VERSION="s3cmd-1.6.1"
 S3CMD_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
 S3CMD_FILENAME=$S3CMD_VERSION".tar.gz"
-IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
-IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 #create array of updated parameters to later update chuboe.properties
 args=()
@@ -228,6 +225,10 @@ do
     
     esac
 done
+
+IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
+IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
 
 # get the current user and group
 OSUSER=$(id -u -n)
