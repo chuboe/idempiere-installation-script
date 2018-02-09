@@ -833,6 +833,7 @@ then
     echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
     cd $CHUBOE_UTIL
     mv $SCRIPTPATH . 
+    rm $CHUBOE_UTIL_HG/utils/chuboe.properties.orig
     
     #Only run import script if parameter set accordingly
     if [[ $IS_INITIALIZE_DB == "Y" ]]
