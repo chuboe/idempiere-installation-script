@@ -7,7 +7,10 @@
 ######################################
 
 #Bring chuboe.properties into context
-source chuboe.properties
+SCRIPTNAME=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPTNAME")
+source $SCRIPTPATH/chuboe.properties
+
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 CHUBOE_UTIL_HG_PROP="$CHUBOE_UTIL_HG/utils/properties/"
