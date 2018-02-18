@@ -5,7 +5,10 @@
 # Version 4 Chuck Boecking - fixed bug where script copied multiple files to latest
 
 #Bring chuboe.properties into context
-source chuboe.properties
+SCRIPTNAME=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPTNAME")
+source $SCRIPTPATH/chuboe.properties
+
 LOGFILE="$CHUBOE_PROP_LOG_PATH/chuboe_db_backup.log"
 ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
