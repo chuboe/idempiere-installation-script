@@ -10,6 +10,9 @@ CREATE INDEX chuboe_requpdate_req_idx ON r_requestupdate USING btree (r_request_
 --make certain tables high volume to promote a search box when window is opened. 
 update ad_table set ishighvolume = 'Y' where ad_table_id in (217); -- doctype
 
+--remove all references to '&' in the menu
+update ad_menu set name = replace(name, '&','and') where name like '%&%';
+
 --make all tabs default to grid view.
 update ad_tab set issinglerow = 'N'; -- better for teaching new users iDempiere
 
@@ -57,12 +60,13 @@ update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
 	--this section reduces the flexibility and capabilies of Attribute Set Instances for the sake of simple lot management
 	--if you are not happy with this change, change the ASI field back to the special form by using the next sql statement.
 		-- update ad_column set AD_Reference_ID=35 where columnname = 'M_AttributeSetInstance_ID';
-update ad_column set AD_Reference_ID=19 where columnname = 'M_AttributeSetInstance_ID' ; -- table direct
-update ad_window set windowtype = 'M' where ad_window_id = 358; --make ASI window editable
-update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12252; --m_attributeset_id
-update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12255; --description
-update AD_Column set isidentifier='N', seqno = null where AD_Table_ID=559; --remove existing identifiers and set following
-update AD_Column set isidentifier='Y', seqno = 1 where AD_Column_ID = 8477; --m_attributeset
-update AD_Column set isidentifier='Y', seqno = 2 where AD_Column_ID = 8479; --description
+	--uncomment the below if this feature is desired
+		--update ad_column set AD_Reference_ID=19 where columnname = 'M_AttributeSetInstance_ID' ; -- table direct
+		--update ad_window set windowtype = 'M' where ad_window_id = 358; --make ASI window editable
+		--update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12252; --m_attributeset_id
+		--update AD_Field set isreadonly = 'N', isquickentry='Y' where AD_Field_ID=12255; --description
+		--update AD_Column set isidentifier='N', seqno = null where AD_Table_ID=559; --remove existing identifiers and set following
+		--update AD_Column set isidentifier='Y', seqno = 1 where AD_Column_ID = 8477; --m_attributeset
+		--update AD_Column set isidentifier='Y', seqno = 2 where AD_Column_ID = 8479; --description
 
 
