@@ -35,13 +35,13 @@ echo  Executing RUN_DBExport.sh local backup utility. >> "$LOGFILE"
 # http://stackoverflow.com/questions/12836312/postgresql-9-2-pg-dump-version-mismatch
 
 if 
-    echo NOTE: ignore errors about myEnvironment.sav
+    echo NOTE: exporting database >> "$LOGFILE"
     sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$LOGFILE"
     cp "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$LOCALBACKDIR"/
     sudo rm "$ADEMROOTDIR"/data/ExpDat????????_??????.jar
 then
     echo Prepare latest directory >> "$LOGFILE"
-    echo Ignore error stating directory already exists.
+    echo Ignore error stating directory already exists. >> "$LOGFILE"
     mkdir "$LOCALBACKDIR"/latest/
     rm "$LOCALBACKDIR"/latest/*.jar
     cd "$LOCALBACKDIR"/
