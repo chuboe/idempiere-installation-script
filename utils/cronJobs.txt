@@ -6,12 +6,14 @@
 
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
+# Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
 # 30 07 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_backup_s3cmd.sh
 
 # Perform an offsite restore at 8:30AM UTC every day. (DANGEROUS!!!!)
 #   This will drop your existing database and replace it with the offsite backup!!
 #   Only run this on a test or backup server.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
+# Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
 # 30 08 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_restore_s3cmd.sh
 
 # Upgrade your iDempiere every Saturday
