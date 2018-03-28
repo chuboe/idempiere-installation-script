@@ -16,6 +16,9 @@ update ad_menu set name = replace(name, '&','and') where name like '%&%';
 --make all tabs default to grid view.
 update ad_tab set issinglerow = 'N'; -- better for teaching new users iDempiere
 
+--Fields to include in quick edit
+update AD_Field set isquickentry = 'Y' where AD_Field_ID in (9614,9623); -- bp customer and vendor checkbox
+
 --make the GL Journal window more intuative for editing in grid view - Accountants love this
 update ad_field set seqnogrid = seqnogrid+200 where ad_tab_id = 200008;
 update ad_field set seqnogrid = 10 where ad_field_id = 200214; --org
