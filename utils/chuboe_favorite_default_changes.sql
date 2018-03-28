@@ -39,7 +39,7 @@ update AD_Menu set name = 'Bank Statement' where AD_Menu_ID= 234; -- remove the 
 update AD_Menu set name = 'Bank Transfer' where AD_Menu_ID= 53190; -- remove the word cash
 
 -- Update Selection Columns to have a sequence of 99 instead of null or 0. This way all your new columns go to the top of the search list by default.
-update ad_column_id set seqnoselection = 99 where ad_column_id in
+update ad_column set seqnoselection = 99 where ad_column_id in
 (
 select ad_column_id from ad_column where isselectioncolumn = 'Y' and (seqnoselection is null or seqnoselection = 0)
 );
