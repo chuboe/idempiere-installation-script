@@ -57,10 +57,6 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER tar zxvf $TMP_BACKUP_FILE_NAME
 # replace files
 sudo mv $TMP_RESTORE_PATH_DIR/idempiere-server/ /opt/
 
-# uncomment below mv statements to replace DMS folders
-# sudo mv $TMP_RESTORE_PATH_DIR/DMS_Content/ /opt/
-# sudo mv $TMP_RESTORE_PATH_DIR/DMS_Thumbnails/ /opt/
-
 # run console-setup.sh
 # NOTE: commented out below assuming configuration (including AppServer IP 0.0.0.0) is the same.
 # echo "HERE: Launching console-setup.sh"
@@ -119,8 +115,11 @@ sudo mv $TMP_RESTORE_PATH_DIR/idempiere-server/ /opt/
 # end of file input - uncomment the above if needed
 
 # update system configuration (like XMX, XMS, etc...)
-# example: use sed command to update the idempiere-server.sh or idempiereENV.properties to update XMX and XMS
-# example: use sed command to update file to identify this server: 
+sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiere-server.sh
+sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
+VER_INFO_ZUL=$(find /opt/idempiere-server/ -name version-info.zul)
+echo $VER_INFO_ZUL
+echo "Update this file with WEBUI version number to help identify which server you are using behind the load balancer."
 
 # start idempiere  
 echo "HERE: starting iDempiere"
