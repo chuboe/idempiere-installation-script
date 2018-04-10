@@ -119,7 +119,7 @@ sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/ide
 sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
 VER_INFO_ZUL=$(find /opt/idempiere-server/ -name version-info.zul)
 echo $VER_INFO_ZUL
-echo "Update this file with WEBUI version number to help identify which server you are using behind the load balancer."
+sudo sed -i 's/\${desktop.execution.serverName}/WEBUI $CHUBOE_PROP_WEBUI_IDENTIFICATION/g' $VER_INFO_ZUL
 
 # start idempiere  
 echo "HERE: starting iDempiere"
