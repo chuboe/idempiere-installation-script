@@ -150,6 +150,8 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh <<!
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set isactive = 'N' where upper(name) like 'ZK_LOGO%'"
 # disable email in test/sandbox system
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update ad_client set smtphost = '', issmtpauthorization = 'N', issecuresmtp = 'N', smtpport = null, requestuser = '', requestemail = ''"
+# Prepend the browser tab with "TEST"
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set value = 'TEST_'||value where upper(name) = 'ZK_BROWSER_TITLE'"
 
 # start idempiere  
 echo "HERE: starting iDempiere"
