@@ -12,12 +12,12 @@
 
     # Remove the -nv if you want to see detailed downloading progress in output.txt
     echo "DOWNLOAD FILE: wget $4 $1$2 -P $3 2>&1"
-    wget -nv $4 $1$2 -P $3 2>&1
+    wget $4 $1$2 -P $3 2>&1
     if [ $? -ne 0 ]; then { echo "HERE: Can't download $1$2"; exit 1; } fi
 
     # Check to see if md5 exists. If so, downloaded md5 file
     echo "DOWNLOAD MD5: wget $4 $1$2.md5 -P $3 2>&1"
-    wget -nv $4 $1$2.md5 -P $3 2>&1
+    wget $4 $1$2.md5 -P $3 2>&1
     if [ $? -ne 0 ]; then { echo "HERE: Can't download $1$2.md5. This is not a fatal error, but cannot verify download."; exit 0; } fi
 
     # Check download against md5
