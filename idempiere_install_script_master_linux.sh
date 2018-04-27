@@ -226,9 +226,9 @@ do
     esac
 done
 
-IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
+IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/$CHUBOE_PROP_JENKINS_BUILD_NUMBER/ws/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
 IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/changes"
+IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/$CHUBOE_PROP_JENKINS_BUILD_NUMBER/changes"
 
 # get the current user and group
 OSUSER=$(id -u -n)
