@@ -3,7 +3,7 @@
 #The purpose of this script is to move files from jenkins to AWS S3.
 #The script keeps the S3 file path/name scheme the same so that you do not need to update the script to use S3.
 #Execute this script from your jenkins server.
-#Note: this script assumes you have already created your S3 Bucket and updated the varialble below.
+#Note: this script assumes you have already created your S3 Bucket and updated the varialbles below.
 
 IDEMPIERE_VERSION="5.1"
 IDEMPIERE_RELEASE="20180126"
@@ -32,7 +32,6 @@ mkdir -p $TEMP_P2_DIR
 wget -q ${SOURCE_URL}/${P2_URL}/${P2_FILE} -O ${TEMP_P2_DIR}/${P2_FILE}
 cd ${TEMP_P2_DIR}
 md5sum ${P2_FILE} > ${P2_FILE}.md5
-#create md5 here
 
 #idempiereServer.gtk.linux.x86_64.zip
 SERVER_FILE="idempiereServer.gtk.linux.x86_64.zip"
@@ -42,8 +41,6 @@ TEMP_SERVER_DIR="${TEMP_DIR}/${SERVER_URL}/"
 wget -q ${SOURCE_URL}/${SERVER_URL}/${SERVER_FILE} -O ${TEMP_SERVER_DIR}/${SERVER_FILE}
 cd ${TEMP_SERVER_DIR}
 md5sum ${SERVER_FILE} > ${SERVER_FILE}.md5
-
-#create md5 here
 
 #Changes - create my own with repo detail
 CHANGES_URL="/changes"
