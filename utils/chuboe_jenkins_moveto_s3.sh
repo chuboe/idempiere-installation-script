@@ -20,7 +20,7 @@ TEMP_DIR_BASE="/tmp/${S3_BUCKET}/"
 TEMP_DIR="${TEMP_DIR_BASE}/job/${JENKINS_JOB}/"
 
 #Remove older folders
-sudo rm -r ${TEMP_DIR}
+rm -r ${TEMP_DIR}
 #Create new folder
 mkdir -p ${TEMP_DIR}
 
@@ -43,7 +43,7 @@ cd ${TEMP_SERVER_DIR}
 md5sum ${SERVER_FILE} > ${SERVER_FILE}.md5
 
 #Changes - create my own with repo detail
-CHANGES_URL="/changes"
+CHANGES_URL="/ws/changes"
 cd ${WORKSPACE}; hg summary > ${TEMP_DIR}${CHANGES_URL}
 
 #Migration
@@ -56,11 +56,14 @@ cd ${TEMP_MIGRATION_DIR}
 md5sum ${MIGRATION_FILE} > ${MIGRATION_FILE}.md5
 
 #Create a build version directory
-cd ${TEMP_DIR}
-mkdir ${BUILD_NUMBER}
+mkdir -p ${TEMP_DIR}/ws/${BUILD_NUMBER}
+cd ${TEMP_DIR}/ws/
 mv * ./${BUILD_NUMBER}/
 cd ${BUILD_NUMBER}
 cp -r * ../.
 
 s3cmd sync -P ${TEMP_DIR_BASE} s3://${S3_BUCKET}/
 #Use "-J https://s3.amazonaws.com/chuboe-jenkins" (as example where chuboe-jenkins is the S3_BUCKET) in the installation scrip to install from S3 instead of jenkins.
+
+#Remove temp folders
+rm -r ${TEMP_DIR}
