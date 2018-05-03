@@ -61,7 +61,7 @@ OPTIONS:
     -v  Specify iDempiere viersion - defaults to 5.1
     -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
     -j  Specify Jenkins project name - defaults to iDempiere5.1Rel20180126
-    -b  Specify Jenkins build number
+    -b  Specify Jenkins build number - be sure to append / to end or build - Example: "5/"
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
@@ -202,6 +202,8 @@ do
             JENKINSURL=$OPTARG;;
 
         b)  #jenkins build
+            #user should append / to end or build - Example: "5/"
+            #user can also specify a directory if needed - Example: "builds/5/"
             args+=("CHUBOE_PROP_JENKINS_BUILD_NUMBER=\"$OPTARG\"")
             CHUBOE_PROP_JENKINS_BUILD_NUMBER=$OPTARG;;
 
