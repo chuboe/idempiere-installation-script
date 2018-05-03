@@ -16,7 +16,8 @@ BUILD_NUMBER=$(($NEXT_BUILD_NUMBER - 1))
 
 SOURCE_URL="http://localhost/job/${JENKINS_JOB}/"
 S3_BUCKET="chuboe-jenkins"
-TEMP_DIR_BASE="/tmp/${S3_BUCKET}/"
+OSUSER=$(id -u -n)
+TEMP_DIR_BASE="/tmp/${OSUSER}/${S3_BUCKET}/"
 TEMP_DIR="${TEMP_DIR_BASE}/job/${JENKINS_JOB}/"
 
 #Remove older folders
