@@ -61,6 +61,7 @@ OPTIONS:
     -v  Specify iDempiere viersion - defaults to 5.1
     -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
     -j  Specify Jenkins project name - defaults to iDempiere5.1Rel20180126
+    -b  Specify Jenkins build number
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
@@ -159,7 +160,7 @@ args=()
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
-while getopts ":hsp:e:iP:lDj:J:v:r:Iu:" OPTION
+while getopts ":hsp:e:iP:lDj:J:b:v:r:Iu:" OPTION
 do
     case $OPTION in
         h)  usage
@@ -199,6 +200,10 @@ do
         J)  #jenkins URL
             args+=("CHUBOE_PROP_JENKINS_URL=\"$OPTARG\"")
             JENKINSURL=$OPTARG;;
+
+        b)  #jenkins build
+            args+=("CHUBOE_PROP_JENKINS_BUILD_NUMBER=\"$OPTARG\"")
+            CHUBOE_PROP_JENKINS_BUILD_NUMBER=$OPTARG;;
 
         v)  #idempiere version
             args+=("CHUBOE_PROP_IDEMPIERE_VERSION=\"$OPTARG\"")
