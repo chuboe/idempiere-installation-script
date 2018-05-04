@@ -121,6 +121,16 @@ echo "JENKINSPROJECT="$JENKINSPROJECT
 echo "IDEMPIERE_VERSION="$IDEMPIERE_VERSION
 echo "CHUBOE_UTIL="$CHUBOE_UTIL
 
+if [[ $IS_DB_BACKUP == "Y" ]]
+then
+
+	# create a database backup just in case things go badly
+	cd $SERVER_DIR/utils/
+	echo NOTE: Ignore errors related to myEnvironment.sav
+	sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
+
+fi #end of backup
+
 # Get migration scripts from daily build if none specified
 if [[ $IS_GET_MIGRATION == "Y" ]]
 then
@@ -179,16 +189,6 @@ then
     ./chuboe_hg_bindir.sh
 
 fi #end if IS_SKIP_BIN_UPGRADE = N
-
-if [[ $IS_DB_BACKUP == "Y" ]]
-then
-
-	# create a database backup just in case things go badly
-	cd $SERVER_DIR/utils/
-	echo NOTE: Ignore errors related to myEnvironment.sav
-	sudo -u $IDEMPIEREUSER ./RUN_DBExport.sh
-
-fi #end of backup
 
 cd $CHUBOE_UTIL_HG/utils/
 
