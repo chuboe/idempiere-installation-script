@@ -129,6 +129,13 @@ then
 		echo "HERE: migration.zip already exists"
 		sudo rm -r migration*
 	fi #end if migration.zip exists
+	
+	# preprocess the URL to ensure no double forward slash exists except for ://
+    # remove double slashes = sed s#//*#/#g
+    # add back :// = sed s#:/#://#g
+    MIGRATION_DOWNLOAD=$(echo $MIGRATION_DOWNLOAD | sed 's|//*|/|g' | sed 's|:/|://|g')
+    echo "MIGRATION_DOWNLOAD="$MIGRATION_DOWNLOAD
+	
 	wget $JENKINS_AUTHCOMMAND $MIGRATION_DOWNLOAD
 	unzip migration.zip
 fi #end if IS_GET_MIGRATION = Y
@@ -146,7 +153,14 @@ then
 	
 	cd $CHUBOE_UTIL
 	sudo rm -r site.p2*
-	wget $JENKINS_AUTHCOMMAND $P2
+		
+	# preprocess the URL to ensure no double forward slash exists except for ://
+    # remove double slashes = sed s#//*#/#g
+    # add back :// = sed s#:/#://#g
+    P2_DOWNLOAD=$(echo $P2 | sed 's|//*|/|g' | sed 's|:/|://|g')
+    echo "P2_DOWNLOAD="$P2_DOWNLOAD
+	
+	wget $JENKINS_AUTHCOMMAND $P2_DOWNLOAD
 	unzip site.p2.zip
     # update iDempiere binaries
 	cd $SERVER_DIR
