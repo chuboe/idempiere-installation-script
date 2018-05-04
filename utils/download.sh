@@ -10,6 +10,7 @@
     # remove double slashes = sed s#//*#/#g
     # add back :// = sed s#:/#://#g
     HOSTPATH_URL=$(echo $1 | sed 's|//*|/|g' | sed 's|:/|://|g')
+    echo "HOSTPATH_URL="$HOSTPATH_URL
     
     # wget --unlink doesn't remove the file, must use rm
     # Must remove the file because if it exists in a corrupted state wget will not fix it, instead it will make a new file named .1
