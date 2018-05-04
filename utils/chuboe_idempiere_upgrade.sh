@@ -58,6 +58,7 @@ IS_DB_BACKUP="Y"
 MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_AUTHCOMMAND $CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/migration/*zip*/migration.zip"
 P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/*zip*/site.p2.zip"
 JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
+INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -195,8 +196,14 @@ cd $CHUBOE_UTIL_HG/utils/
 ./syncApplied.sh $MIGRATION_DIR
 
 # get upgrade details (like build number)
-TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
-sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$TEMP_NOW".html
+
+# preprocess the URL to ensure no double forward slash exists except for ://
+# remove double slashes = sed s#//*#/#g
+# add back :// = sed s#:/#://#g
+IDEMPIERESOURCEPATHDETAIL=$(echo $IDEMPIERESOURCEPATHDETAIL | sed 's|//*|/|g' | sed 's|:/|://|g')
+echo "IDEMPIERESOURCEPATHDETAIL="$IDEMPIERESOURCEPATHDETAIL
+
+sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $SERVER_DIR -O $SERVER_DIR\iDempiere_Build_Details_"$INSTALL_DATE".html
 
 if [[ $IS_CREATE_PRISTINE == "Y" ]]
 then
