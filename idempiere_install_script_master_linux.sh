@@ -59,8 +59,8 @@ OPTIONS:
     -l  Launch iDempiere as service
     -D  Install desktop development tools
     -v  Specify iDempiere viersion - defaults to 5.1
-    -J  Specify Jenkins URL - defaults to http://jenkins.chuckboecking.com
-    -j  Specify Jenkins project name - defaults to iDempiere5.1Rel20180126
+    -J  Specify Jenkins URL - See chuboe.properties for default
+    -j  Specify Jenkins project name - See chuboe.properties for default
     -b  Specify Jenkins build number - be sure to append / to end or build - Example: "5/"
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
