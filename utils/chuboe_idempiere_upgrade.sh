@@ -129,15 +129,15 @@ then
 		echo "HERE: migration.zip already exists"
 		sudo rm -r migration*
 	fi #end if migration.zip exists
-	
-	# preprocess the URL to ensure no double forward slash exists except for ://
+
+    # preprocess the URL to ensure no double forward slash exists except for ://
     # remove double slashes = sed s#//*#/#g
     # add back :// = sed s#:/#://#g
     MIGRATION_DOWNLOAD=$(echo $MIGRATION_DOWNLOAD | sed 's|//*|/|g' | sed 's|:/|://|g')
     echo "MIGRATION_DOWNLOAD="$MIGRATION_DOWNLOAD
 	
-	wget $JENKINS_AUTHCOMMAND $MIGRATION_DOWNLOAD
-	unzip migration.zip
+    wget $JENKINS_AUTHCOMMAND $MIGRATION_DOWNLOAD
+    unzip migration.zip
 fi #end if IS_GET_MIGRATION = Y
 
 if [[ $IS_RESTART_SERVER == "Y" ]]
@@ -153,8 +153,8 @@ then
 	
 	cd $CHUBOE_UTIL
 	sudo rm -r site.p2*
-		
-	# preprocess the URL to ensure no double forward slash exists except for ://
+
+    # preprocess the URL to ensure no double forward slash exists except for ://
     # remove double slashes = sed s#//*#/#g
     # add back :// = sed s#:/#://#g
     P2_DOWNLOAD=$(echo $P2 | sed 's|//*|/|g' | sed 's|:/|://|g')
