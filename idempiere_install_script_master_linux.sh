@@ -116,8 +116,7 @@ IS_LAUNCH_ID="N"
 IS_INSTALL_DESKTOP="N"
 IS_INITIALIZE_DB=$CHUBOE_PROP_DB_IS_INITIALIZE
 IS_SET_SERVICE_IP=$CHUBOE_PROP_IDEMPIERE_SET_SERVICE_IP
-# In case a hapless user starts running this script just before midnight...
-INSTALL_DATE=`date +%Y%m%d`
+INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
 DBPASS=$CHUBOE_PROP_DB_PASSWORD
@@ -398,12 +397,11 @@ if [[ $IS_INSTALL_ID == "Y" ]]
 then
     $SCRIPTPATH/utils/downloadtestzip.sh $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
 
-    TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
     # preprocess the URL to ensure no double forward slash exists except for ://
     # remove double slashes = sed s#//*#/#g
     # add back :// = sed s#:/#://#g
     IDEMPIERESOURCEPATHDETAIL=$(echo $IDEMPIERESOURCEPATHDETAIL | sed 's|//*|/|g' | sed 's|:/|://|g')
-    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
+    sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$INSTALL_DATE".html
     if [ $? -ne 0 ]
     then
         echo "HERE: Failed to download $IDEMPIERESOURCEPATHDETAIL"
