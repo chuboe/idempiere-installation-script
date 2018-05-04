@@ -61,7 +61,7 @@ OPTIONS:
     -v  Specify iDempiere viersion - defaults to 5.1
     -J  Specify Jenkins URL - See chuboe.properties for default
     -j  Specify Jenkins project name - See chuboe.properties for default
-    -b  Specify Jenkins build number - be sure to append / to end or build - Example: "5/"
+    -b  Specify Jenkins build number - See chuboe.properties for default
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
@@ -202,8 +202,8 @@ do
             JENKINSURL=$OPTARG;;
 
         b)  #jenkins build
-            #user should append / to end or build - Example: "5/"
-            #user can also specify a directory if needed - Example: "builds/5/"
+            #Example: "5"
+            #Example: "builds/5/"
             args+=("CHUBOE_PROP_JENKINS_BUILD_NUMBER=\"$OPTARG\"")
             CHUBOE_PROP_JENKINS_BUILD_NUMBER=$OPTARG;;
 
@@ -233,9 +233,9 @@ do
     esac
 done
 
-IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
+IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
 IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
-IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}changes"
+IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/changes"
 
 # get the current user and group
 OSUSER=$(id -u -n)
@@ -673,7 +673,7 @@ then
     echo "">>$README
     echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
     echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-    # this represents the current revision of the last jenkins.chuckboecking.com 4.1 build
+    # this represents the current revision of the last jenkins.chuckboecking.com $IDEMPIERE_VERSION build
     hg update -r $JENKINS_CURRENT_REV
 
     # go back to home directory
