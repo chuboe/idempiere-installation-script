@@ -399,6 +399,10 @@ then
     $SCRIPTPATH/utils/downloadtestzip.sh $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
 
     TEMP_NOW=$(date +"%Y%m%d_%H-%M-%S")
+    # preprocess the URL to ensure no double forward slash exists except for ://
+    # remove double slashes = sed s#//*#/#g
+    # add back :// = sed s#:/#://#g
+    IDEMPIERESOURCEPATHDETAIL=$(echo $IDEMPIERESOURCEPATHDETAIL | sed 's|//*|/|g' | sed 's|:/|://|g')
     sudo wget $JENKINS_AUTHCOMMAND $IDEMPIERESOURCEPATHDETAIL -P $INSTALLPATH -O iDempiere_Build_Details_"$TEMP_NOW".html
     if [ $? -ne 0 ]
     then
