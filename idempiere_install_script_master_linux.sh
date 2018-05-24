@@ -405,7 +405,7 @@ then
     if [ $? -ne 0 ]
     then
         echo "HERE: Failed to download $IDEMPIERESOURCEPATHDETAIL"
-        exit 1
+        #exit 1 - no need to exit just because it could not find the changes file.
     fi
 fi
 
