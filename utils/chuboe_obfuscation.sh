@@ -73,6 +73,11 @@ dropdb $ADDPG -U $USER $DATABASE_OB
 #jar export
 cd $EXPORT_DIR
 jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
+
+#add osgi plugin inventory to the jar file - useful for developers
+/$CHUBOE_PROP_UTIL_HG_UTIL_PATH/chuboe_osgi_ss.sh > osgi_inventory.txt
+jar -uf $DATABASE_OB_JAR osgi_inventory.txt
+
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
 sudo rm $EXPORT_DIR/$DATABASE_OB_EXPORT
 
