@@ -1,1 +1,2 @@
+# extract schema only definitions. This is useful when you need to edit objects like functions where many UI do not work as expected.
 pg_dump -U adempiere -d idempiere -t $1 --schema-only > ~/ddl_$1.sql
