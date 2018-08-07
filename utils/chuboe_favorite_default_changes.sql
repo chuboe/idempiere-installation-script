@@ -1,5 +1,6 @@
--- run this script using the following command:
--- psql -U adempiere -h localhost -d idempiere -f chuboe_favorite_default_changes.sql
+-- run this script using the following commands:
+-- source chuboe.properties
+-- psql -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -d $CHUBOE_PROP_DB_NAME -f chuboe_favorite_default_changes.sql
 
 -- performance indexes
 CREATE INDEX fact_acct_doc_chuboe_idx ON fact_acct USING btree (account_id, ad_table_id, record_id); -- improves BSD
