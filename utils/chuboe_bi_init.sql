@@ -1,12 +1,14 @@
 -- The purpose of this script is to help you create views that are easily used inside a BI or analytics tool.
--- There are two sections
+-- There are two sections.
+
 ----- Section 1 ----- create the necessary credintials for your BI tool to access your database (or your read replica)
 CREATE ROLE biaccess;
 GRANT USAGE ON SCHEMA adempiere TO biaccess;
 ALTER USER biaccess WITH PASSWORD 'SOMEPASSWORD897';
 ALTER USER biaccess WITH LOGIN;
 
--- the following SQL will generate the SQL needed to give read access to your BI views
+-- The following SQL will generate the SQL needed to give read access to your BI views.
+-- Execute this after the below views are created.
 SELECT   CONCAT('GRANT SELECT ON adempiere.', TABLE_NAME, ' to biaccess;')
 FROM     INFORMATION_SCHEMA.TABLES
 WHERE    TABLE_SCHEMA = 'adempiere'
