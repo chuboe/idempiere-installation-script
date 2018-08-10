@@ -170,8 +170,6 @@ SELECT o.*,
 	p.product_description,
 	p.product_documentnote,
 	p.product_category_name,
-	p.product_prodcode_name,
-	p.product_prodcode_description,
 	uom.c_uom_id,
 	uom.uom_name,
 	uom.uom_searchkey,
@@ -245,8 +243,6 @@ SELECT i.*,
 	p.product_description,
 	p.product_documentnote,
 	p.product_category_name,
-	p.product_prodcode_name,
-	p.product_prodcode_description,
 	il.description,
 	il.qtyinvoiced, 
 	il.priceactual,
@@ -379,8 +375,6 @@ p.product_description,
 p.product_documentnote,
 p.product_active,
 p.product_category_name,
-p.product_prodcode_name,
-p.product_prodcode_description,
 uom.uom_name, 
 uom.uom_searchkey, 
 iol.movementqty,
@@ -438,8 +432,6 @@ SELECT reqn.*,
 	p.product_description,
 	p.product_documentnote,
 	p.product_category_name,
-	p.product_prodcode_name,
-	p.product_prodcode_description,
 	rl.description,
 	rl.qty, 
 	rl.priceactual,
@@ -512,9 +504,7 @@ p.product_searchkey,
 p.product_name,
 p.product_description,
 p.product_documentnote,
-p.product_category_name,
-p.product_prodcode_name,
-p.product_prodcode_description
+p.product_category_name
 FROM r_request req
 JOIN r_requesttype reqtype ON req.r_requesttype_id = reqtype.r_requesttype_id
 LEFT JOIN r_category reqcat ON req.r_category_id=reqcat.r_category_id
@@ -526,62 +516,3 @@ JOIN bi_org o ON req.ad_org_id = o.ad_org_id
 LEFT JOIN bi_order ord ON req.c_order_id=ord.c_order_id
 LEFT JOIN bi_product p ON req.m_product_id=p.m_product_id
 ;
-
-CREATE VIEW bi_fact_summary AS
-SELECT fa.ad_client_id,
-    fa.ad_org_id,
-    fa.ad_orgtrx_id,
-    fa.account_id,
-    fa.amtacctcr,
-    fa.amtacctdr,
-    fa.amtacctdr - fa.amtacctcr AS amtacct,
-    fa.c_acctschema_id,
-    fa.c_activity_id,
-    fa.c_bpartner_id,
-    fa.c_campaign_id,
-    fa.c_period_id,
-    fa.c_project_id,
-    fa.c_salesregion_id,
-    fa.created,
-    fa.createdby,
-    fa.gl_budget_id,
-    fa.postingtype,
-    fa.m_product_id,
-    fa.pa_reportcube_id,
-    fa.updated,
-    fa.updatedby,
-    fa.user1_id,
-    fa.user2_id,
-    fa.userelement1_id,
-    fa.userelement2_id,
-    fa.dateacct,
-    ( SELECT sum(fax.amtacctdr) AS sum
-           FROM fact_acct_summary fax
-          WHERE fax.pa_reportcube_id = fa.pa_reportcube_id AND fax.ad_org_id = fa.ad_org_id AND fax.c_acctschema_id = fa.c_acctschema_id AND fax.account_id = fa.account_id AND fax.postingtype = fa.postingtype AND fax.dateacct <= fa.dateacct AND fax.dateacct >=
-                CASE
-                    WHEN ev.accounttype = ANY (ARRAY['A'::bpchar, 'L'::bpchar, 'O'::bpchar]) THEN to_timestamp(0::double precision)
-                    ELSE y.startdate::timestamp with time zone
-                END) AS chuboe_amtacctdr_rtotal,
-    ( SELECT sum(fax.amtacctcr) AS sum
-           FROM fact_acct_summary fax
-          WHERE fax.pa_reportcube_id = fa.pa_reportcube_id AND fax.ad_org_id = fa.ad_org_id AND fax.c_acctschema_id = fa.c_acctschema_id AND fax.account_id = fa.account_id AND fax.postingtype = fa.postingtype AND fax.dateacct <= fa.dateacct AND fax.dateacct >=
-                CASE
-                    WHEN ev.accounttype = ANY (ARRAY['A'::bpchar, 'L'::bpchar, 'O'::bpchar]) THEN to_timestamp(0::double precision)
-                    ELSE y.startdate::timestamp with time zone
-                END) AS chuboe_amtacctcr_rtotal,
-    ( SELECT sum(fax.amtacctdr - fax.amtacctcr) AS sum
-           FROM fact_acct_summary fax
-          WHERE fax.pa_reportcube_id = fa.pa_reportcube_id AND fax.ad_org_id = fa.ad_org_id AND fax.c_acctschema_id = fa.c_acctschema_id AND fax.account_id = fa.account_id AND fax.postingtype = fa.postingtype AND fax.dateacct <= fa.dateacct AND fax.dateacct >=
-                CASE
-                    WHEN ev.accounttype = ANY (ARRAY['A'::bpchar, 'L'::bpchar, 'O'::bpchar]) THEN to_timestamp(0::double precision)
-                    ELSE y.startdate::timestamp with time zone
-                END) AS chuboe_amtacct_rtotal,
-    cal.c_calendar_id,
-    to_char(fa.dateacct, 'yyyymm'::text) AS yearmonth,
-    to_char(fa.dateacct, 'yyyy'::text) AS chuboe_yeartext,
-    to_char(fa.dateacct, 'mm'::text) AS chuboe_monthtext
-   FROM fact_acct_summary fa
-     JOIN c_period p ON fa.c_period_id = p.c_period_id
-     JOIN c_year y ON p.c_year_id = y.c_year_id
-     JOIN c_calendar cal ON y.c_calendar_id = cal.c_calendar_id
-     JOIN c_elementvalue ev ON fa.account_id = ev.c_elementvalue_id;
