@@ -23,6 +23,7 @@ CREATE VIEW bi_client AS
 SELECT c.name AS client_name,
     c.ad_client_id
    FROM ad_client c;
+-- SELECT 'c.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_client';
 
 CREATE VIEW bi_org AS
 SELECT o.name AS org_name,
@@ -32,6 +33,7 @@ SELECT o.name AS org_name,
 	o.ad_client_id
 	FROM ad_org o
 	WHERE o.issummary = 'N'::bpchar;
+-- SELECT 'o.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_org';
 
 CREATE VIEW bi_uom AS
 SELECT uom.c_uom_id, 
@@ -41,6 +43,7 @@ SELECT uom.c_uom_id,
 	uom.isactive AS uom_active
 FROM c_uom uom
 	JOIN bi_client c on uom.ad_client_id=c.ad_client_id;
+-- SELECT 'uom.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_uom';
 	
 CREATE VIEW bi_bpartner AS
 SELECT
@@ -56,6 +59,7 @@ bp.isemployee AS bpartner_employee
 from c_bpartner bp
 join bi_client c on bp.ad_client_id = c.ad_client_id
 ;
+-- SELECT 'bp.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_bpartner';
 
 CREATE VIEW bi_bploc AS
 SELECT
@@ -76,6 +80,7 @@ JOIN bi_client c ON bpl.ad_client_id = c.ad_client_id
 LEFT JOIN c_location l ON bpl.c_location_id = l.c_location_id
 JOIN c_country country ON l.c_country_id = country.c_country_id
 ;
+-- SELECT 'bploc.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_bploc';
 
 CREATE VIEW bi_charge AS
 SELECT 
@@ -87,6 +92,7 @@ SELECT
 	chg.isactive as chg_active
 FROM c_charge chg
 	JOIN bi_client c on chg.ad_client_id=c.ad_client_id;
+-- SELECT 'chg.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_charge';
 
 CREATE VIEW bi_product AS
 SELECT
@@ -104,6 +110,7 @@ join m_product_category pc on p.m_product_category_id = pc.m_product_category_id
 join bi_uom uom on p.c_uom_id = uom.c_uom_id
 join bi_client c on c.ad_client_id = p.ad_client_id
 ;
+-- SELECT 'prod.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_product';
 
 CREATE VIEW bi_order AS
 SELECT
@@ -144,6 +151,7 @@ join bi_client c on ord.ad_client_id = c.ad_client_id
 join bi_org o on ord.ad_org_id = o.ad_org_id
 join c_doctype dt on ord.c_doctype_id = dt.c_doctype_id
 ;
+-- SELECT 'order.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_order';
 
 CREATE VIEW bi_orderline AS
 SELECT o.*,
@@ -177,6 +185,7 @@ FROM c_orderline ol
 	LEFT JOIN bi_charge chg ON ol.c_charge_id = chg.c_charge_id
 	JOIN bi_uom uom on ol.c_uom_id=uom.c_uom_id
 ;
+-- SELECT 'orderline.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_orderline';
 
 CREATE VIEW bi_invoice AS
 SELECT
@@ -217,6 +226,7 @@ JOIN bi_client c ON inv.ad_client_id = c.ad_client_id
 JOIN bi_org o ON inv.ad_org_id = o.ad_org_id
 JOIN c_doctype dt ON inv.c_doctype_id = dt.c_doctype_id
 ;
+-- SELECT 'invoice.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_invoice';
 
 CREATE VIEW bi_invoiceline AS
 SELECT i.*,
@@ -259,6 +269,7 @@ FROM c_invoiceline il
 	LEFT JOIN bi_uom uom ON il.c_uom_id=uom.c_uom_id
 	LEFT JOIN bi_charge chg ON il.c_charge_id=chg.c_charge_id
 ;
+-- SELECT 'invoiceline.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_invoiceline';
 
 CREATE VIEW bi_inout AS
 SELECT 
@@ -323,6 +334,7 @@ LEFT JOIN bi_order ord ON io.c_order_id=ord.c_order_id
 LEFT JOIN bi_invoice inv ON io.c_invoice_id=inv.c_invoice_id
 LEFT JOIN bi_charge chg ON io.c_charge_id=chg.c_charge_id
 ;
+-- SELECT 'inout.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_inout';
 
 CREATE VIEW bi_inoutline AS 
 SELECT
@@ -383,6 +395,7 @@ LEFT JOIN bi_uom uom ON iol.c_uom_id=uom.c_uom_id
 JOIN bi_client c ON iol.ad_client_id = c.ad_client_id
 JOIN bi_org o ON iol.ad_org_id = o.ad_org_id
 ;
+-- SELECT 'inoutline.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_inoutline';
 
 CREATE VIEW bi_requisition AS
 SELECT
@@ -406,6 +419,7 @@ JOIN bi_client c ON reqn.ad_client_id = c.ad_client_id
 JOIN bi_org o ON reqn.ad_org_id = o.ad_org_id
 JOIN c_doctype dt ON reqn.c_doctype_id = dt.c_doctype_id
 ;
+-- SELECT 'requisition.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_requisition';
 
 CREATE VIEW bi_requisitionline AS
 SELECT reqn.*,
@@ -449,6 +463,7 @@ FROM m_requisitionline rl
 	LEFT JOIN bi_uom uom ON rl.c_uom_id=uom.c_uom_id
 	LEFT JOIN bi_bpartner bp ON rl.c_bpartner_id=bp.c_bpartner_id
 ;
+-- SELECT 'requisitionline.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_requisitionline';
 
 CREATE VIEW bi_request AS
 SELECT req.r_request_id,
@@ -501,3 +516,4 @@ JOIN bi_org o ON req.ad_org_id = o.ad_org_id
 LEFT JOIN bi_order ord ON req.c_order_id=ord.c_order_id
 LEFT JOIN bi_product p ON req.m_product_id=p.m_product_id
 ;
+-- SELECT 'request.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_request';
