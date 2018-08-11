@@ -1,6 +1,12 @@
 -- The purpose of this script is to help you create views that are easily used inside a BI or analytics tool.
 
+--Missing Tables
+-- tax
+-- locator
+
 ----- Section 2 ----- Create the views needed to resolve keys into human readable words
+DROP VIEW IF EXISTS bi_productionline;
+DROP VIEW IF EXISTS bi_production;
 DROP VIEW IF EXISTS bi_request;
 DROP VIEW IF EXISTS bi_requisitionline;
 DROP VIEW IF EXISTS bi_requisition;
@@ -28,8 +34,7 @@ CREATE VIEW bi_org AS
 SELECT o.name AS org_name,
     o.value AS org_searchkey,
     o.ad_org_id,
-    o.isactive AS org_active,
-	o.ad_client_id
+    o.isactive AS org_active
 	FROM ad_org o
 	WHERE o.issummary = 'N'::bpchar;
 -- SELECT 'o.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_org';
@@ -262,8 +267,8 @@ SELECT
 io.m_inout_id,
 io.issotrx AS InOut_Sales_Transaction,
 io.documentno AS InOut_DocumentNo,
-io.docaction AS InOut_doc_action,
-io.docstatus AS InOut_doc_status,
+io.docaction AS InOut_document_action,
+io.docstatus AS InOut_document_status,
 dt.name AS InOut_doctype_name,
 io.description AS InOut_description,
 io.dateordered AS InOut_date_ordered,
@@ -320,8 +325,8 @@ iol.movementqty as inoutline_movement_qty,
 io.m_inout_id,
 io.InOut_Sales_Transaction,
 io.InOut_DocumentNo,
-io.InOut_doc_action,
-io.InOut_doc_status,
+io.InOut_document_action,
+io.InOut_document_status,
 io.InOut_doctype_name,
 io.InOut_description,
 io.InOut_date_ordered,
@@ -367,7 +372,7 @@ reqn.documentno AS requisition_documentno,
 reqn.description AS requisition_description,
 reqn.totallines AS requisition_total_lines,
 reqn.daterequired AS requisition_date_required,
-reqn.docstatus AS requisition_doc_status,
+reqn.docstatus AS requisition_document_status,
 reqn.datedoc AS requisition_date_doc,
 c.*,
 o.ad_org_id,
@@ -453,3 +458,116 @@ LEFT JOIN bi_order ord ON req.c_order_id=ord.c_order_id
 LEFT JOIN bi_product p ON req.m_product_id=p.m_product_id
 ;
 -- SELECT 'request.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_request';
+
+CREATE VIEW bi_production as 
+SELECT
+c.*,
+o.*,
+production.m_production_id,
+production.documentno as production_documentno,
+production.name as production_name,
+production.description as production_description,
+production.datepromised as production_date_promised,
+production.movementdate as production_movement_date,
+production.m_product_id,
+production.m_locator_id,
+
+-- add locator here
+
+production.productionqty as production_qty,
+production.iscreated as production_records_created,
+production.isactive as production_active,
+production.docstatus as production_document_status,
+production.c_orderline_id, 
+
+orderline.order_documentno,
+orderline.order_grand_total,
+orderline.order_sales_transaction,
+orderline.order_document_status,
+orderline.order_date_ordered,
+orderline.doctype_name,
+orderline.orderline_lineno,
+orderline.orderline_qty_ordered,
+orderline.orderline_qty_entered,
+orderline.orderline_qty_invoiced,
+orderline.orderline_qty_delivered,
+orderline.orderline_description,
+orderline.orderline_price_entered,
+orderline.orderline_linenetamt,
+
+prod.product_searchkey,
+prod.product_name,
+prod.product_description,
+prod.product_document_note,
+prod.product_active,
+prod.product_category_name,
+prod.uom_name,
+
+bp.bpartner_searchkey,
+bp.bpartner_name,
+bp.bpartner_name2,
+bp.bpartner_created,
+bp.bpartner_customer,
+bp.bpartner_vendor
+
+from M_Production production
+left join bi_product prod on production.m_product_id = prod.m_product_id
+join bi_client c on production.ad_client_id = c.ad_client_id
+join bi_org o on production.ad_org_id = o.ad_org_id
+left join bi_orderline orderline on production.c_orderline_id = orderline.c_orderline_id
+left join bi_bpartner bp on production.c_bpartner_id = bp.c_bpartner_id
+;
+-- SELECT 'production.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_production';
+
+
+CREATE VIEW bi_productionline as
+select 
+production.client_name,
+production.ad_client_id,
+production.org_name,
+production.org_searchkey,
+production.ad_org_id,
+production.org_active,
+production.m_production_id,
+production.production_documentno,
+production.production_name,
+production.production_description,
+production.production_date_promised,
+production.production_movement_date,
+production.m_product_id,
+production.production_qty,
+production.production_records_created,
+production.production_active,
+production.production_document_status,
+
+productionline.m_productionline_id,
+productionline.line as producitonline_lineno,
+productionline.isendproduct as productionline_end_product,
+productionline.isactive as productionline_active,
+productionline.plannedqty as productionline_qty_planned,
+productionline.qtyused as productionline_qty_used,
+productionline.description as productionline_description,
+
+productionline.m_locator_id,
+-- insert locator here
+
+prod.product_searchkey,
+prod.product_name,
+prod.product_description,
+prod.product_document_note,
+prod.product_active,
+prod.product_category_name,
+prod.uom_name
+
+from m_productionline productionline
+join bi_production production on productionline.m_production_id = production.m_production_id
+left join bi_product prod on productionline.m_product_id = prod.m_product_id
+;
+-- SELECT 'productionline.'||column_name||',' FROM information_schema.columns WHERE  table_name   = 'bi_productionline';
+
+-- show all SQL to update BI access
+SELECT   CONCAT('GRANT SELECT ON adempiere.', TABLE_NAME, ' to biaccess;')
+FROM     INFORMATION_SCHEMA.TABLES
+WHERE    TABLE_SCHEMA = 'adempiere'
+    AND TABLE_NAME LIKE 'bi_%'
+;
