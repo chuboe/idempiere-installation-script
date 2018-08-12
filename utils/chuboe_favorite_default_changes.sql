@@ -16,6 +16,7 @@ update ad_menu set name = replace(name, '&','and') where name like '%&%';
 
 --make all tabs default to grid view.
 update ad_tab set issinglerow = 'N'; -- better for teaching new users iDempiere
+--TODO make this field default to N for future tabs
 
 --Fields to include in quick edit
 update AD_Field set isquickentry = 'Y' where AD_Field_ID in (9614,9623); -- bp customer and vendor checkbox
