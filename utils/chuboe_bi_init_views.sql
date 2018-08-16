@@ -37,6 +37,7 @@ SELECT c.name AS client_name,
 c.ad_client_id as client_id
 FROM ad_client c;
 SELECT 'c.'||column_name||',' as client FROM information_schema.columns WHERE  table_name   = 'bi_client';
+SELECT COUNT(*) as client_count FROM bi_client;
 
 CREATE VIEW bi_org AS
 SELECT 
@@ -46,6 +47,7 @@ o.isactive AS org_active
 FROM ad_org o
 WHERE o.issummary = 'N'::bpchar;
 SELECT 'o.'||column_name||',' as org FROM information_schema.columns WHERE  table_name   = 'bi_org';
+SELECT COUNT(*) as org_count FROM bi_org;
 
 CREATE VIEW bi_tax_category as
 SELECT
@@ -57,6 +59,7 @@ tc.description as tax_category_description
 from c_taxcategory tc
 join bi_client c on tc.ad_client_id = c.client_id;
 SELECT 'tc.'||column_name||',' as tax_category FROM information_schema.columns WHERE  table_name   = 'bi_tax_category';
+SELECT COUNT(*) as tax_cat_count FROM bi_tax_category;
 
 CREATE VIEW bi_tax as
 SELECT
@@ -74,6 +77,7 @@ JOIN bi_client c on t.ad_client_id = c.client_id
 JOIN bi_tax_category tc on t.c_taxcategory_id = tc.tax_category_id
 ;
 SELECT 't.'||column_name||',' as tax FROM information_schema.columns WHERE  table_name   = 'bi_tax';
+SELECT COUNT(*) as tax_count FROM bi_tax;
 
 
 CREATE VIEW bi_uom AS
@@ -86,6 +90,7 @@ uom.isactive AS uom_active
 FROM c_uom uom
 JOIN bi_client c on uom.ad_client_id=c.client_id;
 SELECT 'uom.'||column_name||',' as uom FROM information_schema.columns WHERE  table_name   = 'bi_uom';
+SELECT COUNT(*) as uom_count FROM bi_uom;
 
 CREATE VIEW bi_bpartner AS
 SELECT
@@ -105,6 +110,7 @@ join bi_client c on bp.ad_client_id = c.client_id
 join bi_org o on bp.ad_org_id = o.org_id
 ;
 SELECT 'bp.'||column_name||',' as bpartner FROM information_schema.columns WHERE  table_name   = 'bi_bpartner';
+SELECT COUNT(*) as bp_count FROM bi_bpartner;
 
 CREATE VIEW bi_location AS
 SELECT
@@ -121,6 +127,7 @@ FROM c_location l
 JOIN c_country country ON l.c_country_id = country.c_country_id
 ;
 SELECT 'loc.'||column_name||',' as loc FROM information_schema.columns WHERE  table_name   = 'bi_location';
+SELECT COUNT(*) as loc_count FROM bi_location;
 
 CREATE VIEW bi_bploc AS
 SELECT
@@ -157,6 +164,7 @@ JOIN bi_org o on bpl.ad_org_id = o.org_id
 join bi_location loc on bpl.c_location_id = loc.loc_id
 ;
 SELECT 'bploc.'||column_name||',' as bploc FROM information_schema.columns WHERE  table_name   = 'bi_bploc';
+SELECT COUNT(*) as bploc_count FROM bi_bploc;
 
 CREATE VIEW bi_user AS
 SELECT
@@ -192,12 +200,11 @@ bploc.bploc_country_name as user_bploc_country_name
 
 FROM ad_user u
 JOIN bi_client c on u.ad_client_id = c.client_id
-JOIN bi_bpartner bp on u.c_bpartner_id = bp.bpartner_id
-JOIN bi_bploc bploc on u.c_bpartner_location_id = bploc.bpartner_location_id
+LEFT JOIN bi_bpartner bp on u.c_bpartner_id = bp.bpartner_id
+LEFT JOIN bi_bploc bploc on u.c_bpartner_location_id = bploc.bpartner_location_id
 ;
 SELECT 'u.'||column_name||',' as user FROM information_schema.columns WHERE  table_name   = 'bi_user';
-
-
+SELECT COUNT(*) as user_count FROM bi_user;
 
 CREATE VIEW bi_warehouse AS
 SELECT
@@ -226,6 +233,7 @@ join bi_org o on w.ad_org_id = o.org_id
 left join bi_location loc on w.c_location_id = loc.loc_id
 ;
 SELECT 'wh.'||column_name||',' as warehouse FROM information_schema.columns WHERE  table_name   = 'bi_warehouse';
+SELECT COUNT(*) as wh_count FROM bi_warehouse;
 
 CREATE VIEW bi_locator AS
 SELECT
@@ -242,6 +250,7 @@ JOIN bi_warehouse wh on locator.m_warehouse_id = wh.warehouse_id
 JOIN M_LocatorType mt on locator.M_LocatorType_id = mt.M_LocatorType_id
 ;
 SELECT 'locator.'||column_name||',' as locator FROM information_schema.columns WHERE  table_name   = 'bi_locator';
+SELECT COUNT(*) as locator_count FROM bi_locator;
 
 CREATE VIEW bi_charge AS
 SELECT 
@@ -255,6 +264,7 @@ chg.updated as charge_updated
 FROM c_charge chg
 JOIN bi_client c on chg.ad_client_id=c.client_id;
 SELECT 'chg.'||column_name||',' as charge FROM information_schema.columns WHERE  table_name   = 'bi_charge';
+SELECT COUNT(*) as charge_count FROM bi_charge;
 
 CREATE VIEW bi_product AS
 SELECT
@@ -277,6 +287,7 @@ join bi_uom uom on p.c_uom_id = uom.uom_id
 join bi_client c on p.ad_client_id = c.client_id
 ;
 SELECT 'prod.'||column_name||',' as product FROM information_schema.columns WHERE  table_name   = 'bi_product';
+SELECT COUNT(*) as product_count FROM bi_product;
 
 CREATE VIEW bi_project AS
 SELECT
@@ -335,6 +346,7 @@ LEFT JOIN bi_warehouse wh on proj.m_warehouse_id = wh.warehouse_id
 LEFT JOIN AD_Ref_List level on proj.projectlinelevel = level.value AND level.AD_Reference_ID=384
 ;
 SELECT 'proj.'||column_name||',' as project FROM information_schema.columns WHERE  table_name   = 'bi_project';
+SELECT COUNT(*) as project_count FROM bi_project;
 
 CREATE VIEW bi_order AS
 SELECT
@@ -412,9 +424,9 @@ wh.warehouse_loc_country_name as order_warehouse_loc_country_name
 
 from c_order ord
 join bi_bpartner bp on ord.c_bpartner_id = bp.bpartner_id
-join bi_bpartner bpinv on ord.bill_bpartner_id = bp.bpartner_id
+join bi_bpartner bpinv on ord.bill_bpartner_id = bpinv.bpartner_id
 join bi_bploc bploc on ord.c_bpartner_location_id = bploc.bpartner_location_id
-join bi_bploc bplocinv on ord.bill_location_id = bploc.bpartner_location_id
+join bi_bploc bplocinv on ord.bill_location_id = bplocinv.bpartner_location_id
 join bi_client c on ord.ad_client_id = c.client_id
 join bi_org o on ord.ad_org_id = o.org_id
 join c_doctype dt on ord.c_doctype_id = dt.c_doctype_id
@@ -423,6 +435,7 @@ left join AD_Ref_List invrule on ord.invoicerule = invrule.value and invrule.AD_
 left join bi_warehouse wh on ord.m_warehouse_id = wh.warehouse_id
 ;
 SELECT 'order.'||column_name||',' as order FROM information_schema.columns WHERE  table_name   = 'bi_order';
+SELECT COUNT(*) as order_count FROM bi_order;
 
 CREATE VIEW bi_order_line AS
 SELECT 
@@ -472,14 +485,15 @@ bploc.bploc_country_code as order_line_bploc_country_code,
 bploc.bploc_country_name as order_line_bploc_country_name
 
 FROM c_orderline ol
-JOIN bi_order o ON ol.c_order_id=o.order_id
+JOIN bi_order o ON ol.c_order_id = o.order_id
 LEFT JOIN bi_product prod on ol.m_product_id = prod.product_id
 LEFT JOIN bi_charge chg ON ol.c_charge_id = chg.charge_id
-JOIN bi_uom uom on ol.c_uom_id=uom.uom_id
+JOIN bi_uom uom on ol.c_uom_id = uom.uom_id
 JOIN bi_bploc bploc on ol.c_bpartner_location_id = bploc.bpartner_location_id
 LEFT JOIN bi_tax t on ol.c_tax_id = t.tax_id
 ;
 SELECT 'orderline.'||column_name||',' as orderline FROM information_schema.columns WHERE  table_name   = 'bi_order_line';
+SELECT COUNT(*) as order_line_count FROM bi_order_line;
 
 CREATE VIEW bi_invoice AS
 SELECT
@@ -523,6 +537,7 @@ JOIN bi_org o ON inv.ad_org_id = o.org_id
 JOIN c_doctype dt ON inv.c_doctype_id = dt.c_doctype_id
 ;
 SELECT 'invoice.'||column_name||',' as invoice FROM information_schema.columns WHERE  table_name   = 'bi_invoice';
+SELECT COUNT(*) as invoice_count FROM bi_invoice;
 
 CREATE VIEW bi_invoice_line AS
 SELECT 
@@ -599,11 +614,12 @@ JOIN bi_client c on il.ad_client_id = c.client_id
 JOIN bi_org o on il.ad_org_id = o.org_id
 JOIN bi_invoice invoice ON il.c_invoice_id = invoice.invoice_id
 LEFT JOIN bi_product prod ON il.m_product_id = prod.product_id
-LEFT JOIN bi_uom uom ON il.c_uom_id=uom.uom_id
-LEFT JOIN bi_charge chg ON il.c_charge_id=chg.charge_id
+LEFT JOIN bi_uom uom ON il.c_uom_id = uom.uom_id
+LEFT JOIN bi_charge chg ON il.c_charge_id = chg.charge_id
 LEFT JOIN bi_tax t on il.c_tax_id = t.tax_id
 ;
 SELECT 'invoiceline.'||column_name||',' as invoiceline FROM information_schema.columns WHERE  table_name   = 'bi_invoice_line';
+SELECT COUNT(*) as invoice_line_count FROM bi_invoice_line;
 
 CREATE VIEW bi_inout AS
 SELECT 
@@ -663,15 +679,16 @@ inv.Invoice_date_invoiced
 
 FROM m_inout io
 JOIN bi_bpartner bp ON io.c_bpartner_id = bp.bpartner_id
-JOIN bi_bploc bpl ON io.c_bpartner_location_id = bpl.bpartner_location_id
+LEFT JOIN bi_bploc bpl ON io.c_bpartner_location_id = bpl.bpartner_location_id
 JOIN bi_client c ON io.ad_client_id = c.client_id
 JOIN bi_org o ON io.ad_org_id = o.org_id
 JOIN c_doctype dt ON io.c_doctype_id = dt.c_doctype_id
-LEFT JOIN bi_order ord ON io.c_order_id=ord.order_id
-LEFT JOIN bi_invoice inv ON io.c_invoice_id=inv.invoice_id
+LEFT JOIN bi_order ord ON io.c_order_id = ord.order_id
+LEFT JOIN bi_invoice inv ON io.c_invoice_id = inv.invoice_id
 LEFT JOIN bi_warehouse wh on io.m_warehouse_id = wh.warehouse_id
 ;
 SELECT 'inout.'||column_name||',' as inout FROM information_schema.columns WHERE  table_name   = 'bi_inout';
+SELECT COUNT(*) as inout_count FROM bi_inout;
 
 CREATE VIEW bi_inout_line AS 
 SELECT
@@ -738,13 +755,14 @@ FROM m_inoutline iol
 JOIN bi_inout io ON iol.m_inout_id=io.inout_id
 LEFT JOIN bi_charge chg ON iol.c_charge_id=chg.charge_id
 LEFT JOIN bi_order_line ol ON iol.c_orderline_id = ol.orderline_id
-LEFT JOIN bi_product p ON iol.m_product_id=p.product_id
-LEFT JOIN bi_uom uom ON iol.c_uom_id=uom.uom_id
+LEFT JOIN bi_product p ON iol.m_product_id = p.product_id
+LEFT JOIN bi_uom uom ON iol.c_uom_id = uom.uom_id
 JOIN bi_client c ON iol.ad_client_id = c.client_id
 JOIN bi_org o ON iol.ad_org_id = o.org_id
 LEFT JOIN bi_locator locator on iol.m_locator_id = locator.locator_id
 ;
 SELECT 'inoutline.'||column_name||',' as inoutline FROM information_schema.columns WHERE  table_name   = 'bi_inout_line';
+SELECT COUNT(*) as inout_line_count FROM bi_inout_line;
 
 CREATE VIEW bi_requisition AS
 SELECT
@@ -785,6 +803,7 @@ JOIN c_doctype dt ON reqn.c_doctype_id = dt.c_doctype_id
 JOIN bi_warehouse wh on reqn.m_warehouse_id = wh.warehouse_id
 ;
 SELECT 'requisition.'||column_name||',' as requisition FROM information_schema.columns WHERE  table_name   = 'bi_requisition';
+SELECT COUNT(*) as requisition_count FROM bi_requisition;
 
 CREATE VIEW bi_requisition_line AS
 SELECT
@@ -880,6 +899,7 @@ LEFT JOIN bi_uom uom ON rl.c_uom_id = uom.uom_id
 LEFT JOIN bi_bpartner bp ON rl.c_bpartner_id=bp.bpartner_id
 ;
 SELECT 'requisitionline.'||column_name||',' as requisitionline FROM information_schema.columns WHERE  table_name   = 'bi_requisition_line';
+SELECT COUNT(*) as requisition_line_count FROM bi_requisition_line;
 
 CREATE VIEW bi_request AS
 SELECT 
@@ -931,6 +951,7 @@ LEFT JOIN c_invoice inv on req.c_invoice_id = inv.c_invoice_id
 LEFT JOIN c_payment pay on req.c_payment_id = pay.c_payment_id
 ;
 SELECT 'request.'||column_name||',' as request FROM information_schema.columns WHERE  table_name   = 'bi_request';
+SELECT COUNT(*) as request_count FROM bi_request;
 
 CREATE VIEW bi_production as 
 SELECT
@@ -985,6 +1006,7 @@ left join bi_order_line orderline on production.c_orderline_id = orderline.order
 left join bi_bpartner bp on production.c_bpartner_id = bp.bpartner_id
 ;
 SELECT 'production.'||column_name||',' as production FROM information_schema.columns WHERE  table_name   = 'bi_production';
+SELECT COUNT(*) as production_count FROM bi_production;
 
 
 CREATE VIEW bi_production_line as
@@ -1072,6 +1094,7 @@ LEFT JOIN bi_product prod on productionline.m_product_id = prod.product_id
 LEFT JOIN bi_locator locator on productionline.m_locator_id = locator.locator_id
 ;
 SELECT 'productionline.'||column_name||',' as produtionline FROM information_schema.columns WHERE  table_name   = 'bi_production_line';
+SELECT COUNT(*) as production_line_count FROM bi_production_line;
 
 -- show all SQL to update BI access
 SELECT   CONCAT('GRANT SELECT ON adempiere.', TABLE_NAME, ' to biaccess;')

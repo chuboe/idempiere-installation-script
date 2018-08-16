@@ -1,5 +1,18 @@
 -- the purpose of this file is to create views from the most useful queries in PostgreSQL to resolve issues.
 
+-- show running queries
+create or replace view chuboe_running_query as
+SELECT pid, age(clock_timestamp(), query_start), usename, query
+FROM pg_stat_activity
+WHERE query != '<IDLE>' AND query NOT ILIKE '%pg_stat_activity%'
+ORDER BY query_start desc;
+
+-- kill running query
+-- SELECT pg_cancel_backend(procpid);
+
+-- kill idle query
+-- SELECT pg_terminate_backend(procpid);
+
 -- shows SQL statement from blocking and blocked statements
 Create or replace view chuboe_lock_detail_v as
 SELECT blocked_locks.pid     AS blocked_pid,
