@@ -909,7 +909,12 @@ req.r_request_id as request_id,
 req.documentno as request_documentno,
 reqtype.name AS request_type,
 reqcat.name AS request_category,
+
 reqstat.name AS request_status,
+reqstat.isopen as request_status_open,
+reqstat.isclosed as request_status_close,
+reqstat.isfinalclose as request_status_final_close,
+
 resol.name AS request_resolution,
 req.priority as request_priority,
 req.summary as request_summary,
