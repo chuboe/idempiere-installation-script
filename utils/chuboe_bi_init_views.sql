@@ -688,76 +688,143 @@ SELECT 'inoutline.'||column_name||',' as inoutline FROM information_schema.colum
 CREATE VIEW bi_requisition AS
 SELECT
 c.*,
-o.ad_org_id,
-o.org_name,
-o.org_search_key,
-o.org_active,
-reqn.m_requisition_id,
+o.*,
+reqn.m_requisition_id as requisition_id,
 reqn.documentno AS requisition_documentno,
 reqn.description AS requisition_description,
 reqn.totallines AS requisition_total_lines,
 reqn.daterequired AS requisition_date_required,
-reqn.docstatus AS requisition_document_status,
 reqn.datedoc AS requisition_date_doc,
+reqn.docstatus AS requisition_document_status,
 reqn.created as requisition_created,
 reqn.updated as requisition_updated,
-dt.name AS doctype_name
+dt.name AS doctype_name,
+
+wh.warehouse_search_key as requisition_warehouse_search_key,
+wh.warehouse_name as requisition_warehouse_name,
+wh.warehouse_description as requisition_warehouse_description,
+wh.warehouse_active as requisition_warehouse_active,
+wh.warehouse_in_transit as requisition_warehouse_in_transit,
+wh.warehouse_prevent_negative_inventory as requisition_warehouse_prevent_negative_inventory,
+wh.warehouse_loc_address1 as requisition_warehouse_loc_address1,
+wh.warehouse_loc_address2 as requisition_warehouse_loc_address2,
+wh.warehouse_loc_address3 as requisition_warehouse_loc_address3,
+wh.warehouse_loc_address4 as requisition_warehouse_loc_address4,
+wh.warehouse_loc_city as requisition_warehouse_loc_city,
+wh.warehouse_loc_state as requisition_warehouse_loc_state,
+wh.warehouse_loc_country_code as requisition_warehouse_loc_country_code,
+wh.warehouse_loc_country_name as requisition_warehouse_loc_country_name
+
+-- needs price list
+
 FROM m_requisition reqn
-JOIN bi_client c ON reqn.ad_client_id = c.ad_client_id
-JOIN bi_org o ON reqn.ad_org_id = o.ad_org_id
+JOIN bi_client c ON reqn.ad_client_id = c.client_id
+JOIN bi_org o ON reqn.ad_org_id = o.org_id
 JOIN c_doctype dt ON reqn.c_doctype_id = dt.c_doctype_id
+JOIN bi_warehouse wh on reqn.m_warehouse_id = wh.warehouse_id
 ;
 SELECT 'requisition.'||column_name||',' as requisition FROM information_schema.columns WHERE  table_name   = 'bi_requisition';
 
 CREATE VIEW bi_requisition_line AS
-SELECT reqn.*,
-rl.m_requisitionline_id,
+SELECT
+
+rl.m_requisitionline_id as requisitionline_id,
+
+requisition.requisition_documentno,
+requisition.requisition_description,
+requisition.requisition_total_lines,
+requisition.requisition_date_required,
+requisition.requisition_date_doc,
+requisition.requisition_document_status,
+requisition.requisition_created,
+requisition.requisition_updated,
+requisition.doctype_name,
+requisition.requisition_warehouse_search_key,
+requisition.requisition_warehouse_name,
+requisition.requisition_warehouse_description,
+requisition.requisition_warehouse_active,
+requisition.requisition_warehouse_in_transit,
+requisition.requisition_warehouse_prevent_negative_inventory,
+requisition.requisition_warehouse_loc_address1,
+requisition.requisition_warehouse_loc_address2,
+requisition.requisition_warehouse_loc_address3,
+requisition.requisition_warehouse_loc_address4,
+requisition.requisition_warehouse_loc_city,
+requisition.requisition_warehouse_loc_state,
+requisition.requisition_warehouse_loc_country_code,
+requisition.requisition_warehouse_loc_country_name,
+
 rl.line as requisition_line_lineno,
-p.m_product_id,
-p.product_search_key,
-p.product_name,
-p.product_description,
-p.product_document_note,
-p.product_category_name,
 rl.description as requisition_line_description,
 rl.qty as requisition_line_qty, 
 rl.priceactual as requisition_line_price,
 rl.linenetamt as requisition_line_linenetamt, 
-uom.c_uom_id,
-uom.uom_name,
-uom.uom_search_key,
-ol.c_orderline_id,
-ol.order_line_qty_ordered,
-ol.order_line_qty_invoiced,
-ol.order_line_description,
-ol.order_line_linenetamt,
-ol.c_tax_id,
--- need tax data here
-bp.c_bpartner_id,
-bp.bpartner_search_key,
-bp.bpartner_name,
-bp.bpartner_name2,
-bp.bpartner_created,
-bp.bpartner_customer,
-bp.bpartner_vendor,
-bp.bpartner_employee
+
+p.product_search_key as reqiusition_line_product_search_key,
+p.product_name as reqiusition_line_product_name,
+p.product_description as reqiusition_line_product_description,
+p.product_document_note as reqiusition_line_product_document_note,
+p.product_category_name as reqiusition_line_product_category_name,
+
+uom.uom_name as reqiusition_line_uom_name,
+uom.uom_search_key as reqiusition_line_uom_search_key,
+
+
+orderline.order_documentno,
+orderline.order_grand_total,
+orderline.order_document_status,
+orderline.order_created,
+orderline.order_updated,
+orderline.order_ship_bpartner_search_key,
+orderline.order_ship_bpartner_name,
+orderline.order_ship_bpartner_name2,
+orderline.order_ship_bpartner_created,
+orderline.order_ship_bpartner_updated,
+orderline.order_ship_bpartner_customer,
+orderline.order_ship_bpartner_vendor,
+orderline.order_ship_bpartner_employee,
+orderline.order_ship_bploc_name,
+orderline.order_ship_bploc_address1,
+orderline.order_ship_bploc_address2,
+orderline.order_ship_bploc_address3,
+orderline.order_ship_bploc_address4,
+orderline.order_ship_bploc_city,
+orderline.order_ship_bploc_state,
+orderline.order_ship_bploc_country_code,
+orderline.order_ship_bploc_country_name,
+orderline.order_line_lineno,
+orderline.order_line_qty_ordered,
+orderline.order_line_qty_entered,
+orderline.order_line_qty_invoiced,
+orderline.order_line_qty_delivered,
+orderline.order_line_description,
+orderline.order_line_price_entered,
+orderline.order_line_linenetamt,
+orderline.order_line_created,
+orderline.order_line_updated,
+
+bp.bpartner_search_key as reqiusition_line_bpartner_search_key,
+bp.bpartner_name as reqiusition_line_bpartner_name,
+bp.bpartner_name2 as reqiusition_line_bpartner_name2,
+bp.bpartner_created as reqiusition_line_bpartner_created,
+bp.bpartner_customer as reqiusition_line_bpartner_customer,
+bp.bpartner_vendor as reqiusition_line_bpartner_vendor,
+bp.bpartner_employee as reqiusition_line_bpartner_employee
+
 FROM m_requisitionline rl
-JOIN bi_requisition reqn ON rl.m_requisition_id=reqn.m_requisition_id
-LEFT JOIN bi_order_line ol ON rl.c_orderline_id = ol.c_orderline_id
-LEFT JOIN bi_product p ON rl.m_product_id = p.m_product_id
-LEFT JOIN bi_uom uom ON rl.c_uom_id=uom.c_uom_id
-LEFT JOIN bi_bpartner bp ON rl.c_bpartner_id=bp.c_bpartner_id
+JOIN bi_requisition requisition ON rl.m_requisition_id = requisition.requisition_id
+LEFT JOIN bi_order_line orderline ON rl.c_orderline_id = orderline.orderline_id
+LEFT JOIN bi_product p ON rl.m_product_id = p.product_id
+LEFT JOIN bi_uom uom ON rl.c_uom_id = uom.uom_id
+LEFT JOIN bi_bpartner bp ON rl.c_bpartner_id=bp.bpartner_id
 ;
 SELECT 'requisitionline.'||column_name||',' as requisitionline FROM information_schema.columns WHERE  table_name   = 'bi_requisition_line';
 
 CREATE VIEW bi_request AS
 SELECT 
 c.*,
-o.ad_org_id,
-o.org_name,
-o.org_search_key,
-o.org_active,
-req.r_request_id,
+o.*,
+req.r_request_id as request_id,
 req.documentno as request_documentno,
 reqtype.name AS request_type,
 reqcat.name AS request_category,
@@ -771,17 +838,36 @@ req.lastresult as request_lastresult,
 req.startdate as request_startdate,
 req.closedate as request_closedate,
 req.created as request_created,
-req.updated as request_updated
+req.updated as request_updated,
+
+sr.name as request_user,
+role.name as request_role,
+bp.name as bpartner_name,
+bp.value as bpartner_search_key,
+ord.documentno as order_documentno,
+p.value as product_search_key,
+p.name as product_name,
+proj.name as project_name,
+proj.value as project_search_key,
+inv.documentno as invoice_documentno,
+pay.documentno as payment_documentno
+
+
 FROM r_request req
 JOIN r_requesttype reqtype ON req.r_requesttype_id = reqtype.r_requesttype_id
 LEFT JOIN r_category reqcat ON req.r_category_id=reqcat.r_category_id
 LEFT JOIN r_status reqstat ON req.r_status_id=reqstat.r_status_id
 LEFT JOIN r_resolution resol ON req.r_resolution_id=resol.r_resolution_id
-LEFT JOIN bi_bpartner bp ON req.c_bpartner_id = bp.c_bpartner_id
-JOIN bi_client c ON req.ad_client_id = c.ad_client_id
-JOIN bi_org o ON req.ad_org_id = o.ad_org_id
-LEFT JOIN bi_order ord ON req.c_order_id=ord.c_order_id
-LEFT JOIN bi_product p ON req.m_product_id=p.m_product_id
+LEFT JOIN c_bpartner bp ON req.c_bpartner_id = bp.c_bpartner_id
+JOIN bi_client c ON req.ad_client_id = c.client_id
+JOIN bi_org o ON req.ad_org_id = o.org_id
+LEFT JOIN c_order ord ON req.c_order_id=ord.c_order_id
+LEFT JOIN m_product p ON req.m_product_id=p.m_product_id
+LEFT JOIN ad_user sr on req.salesrep_id = sr.ad_user_id
+LEFT JOIN ad_role role on req.ad_role_id = role.ad_role_id
+LEFT JOIN c_project proj on req.c_project_id = proj.c_project_id
+LEFT JOIN c_invoice inv on req.c_invoice_id = inv.c_invoice_id
+LEFT JOIN c_payment pay on req.c_payment_id = pay.c_payment_id
 ;
 SELECT 'request.'||column_name||',' as request FROM information_schema.columns WHERE  table_name   = 'bi_request';
 
@@ -789,31 +875,23 @@ CREATE VIEW bi_production as
 SELECT
 c.*,
 o.*,
-production.m_production_id,
+production.m_production_id as production_id,
 production.documentno as production_documentno,
 production.name as production_name,
 production.description as production_description,
 production.datepromised as production_date_promised,
 production.movementdate as production_movement_date,
-production.m_product_id,
-production.m_locator_id,
-
--- add locator here
-
-production.productionqty as production_qty,
 production.iscreated as production_records_created,
-production.isactive as production_active,
 production.docstatus as production_document_status,
 production.created as production_created,
 production.updated as production_updated,
-production.c_orderline_id, 
 
 orderline.order_documentno,
 orderline.order_grand_total,
 orderline.order_sales_transaction,
 orderline.order_document_status,
 orderline.order_date_ordered,
-orderline.doctype_name,
+orderline.order_document_type,
 orderline.order_line_lineno,
 orderline.order_line_qty_ordered,
 orderline.order_line_qty_entered,
@@ -823,13 +901,13 @@ orderline.order_line_description,
 orderline.order_line_price_entered,
 orderline.order_line_linenetamt,
 
-prod.product_search_key,
-prod.product_name,
-prod.product_description,
-prod.product_document_note,
-prod.product_active,
-prod.product_category_name,
-prod.uom_name,
+prod.product_search_key as production_product_search_key,
+prod.product_name as production_product_name,
+prod.product_description as production_product_description,
+prod.product_document_note as production_product_document_note,
+prod.product_active as production_product_active,
+prod.product_category_name as production_product_category_name,
+prod.uom_name as production_uom_name,
 
 bp.bpartner_search_key,
 bp.bpartner_name,
@@ -839,37 +917,57 @@ bp.bpartner_customer,
 bp.bpartner_vendor
 
 from M_Production production
-left join bi_product prod on production.m_product_id = prod.m_product_id
-join bi_client c on production.ad_client_id = c.ad_client_id
-join bi_org o on production.ad_org_id = o.ad_org_id
-left join bi_order_line orderline on production.c_orderline_id = orderline.c_orderline_id
-left join bi_bpartner bp on production.c_bpartner_id = bp.c_bpartner_id
+left join bi_product prod on production.m_product_id = prod.product_id
+join bi_client c on production.ad_client_id = c.client_id
+join bi_org o on production.ad_org_id = o.org_id
+left join bi_order_line orderline on production.c_orderline_id = orderline.orderline_id
+left join bi_bpartner bp on production.c_bpartner_id = bp.bpartner_id
 ;
 SELECT 'production.'||column_name||',' as production FROM information_schema.columns WHERE  table_name   = 'bi_production';
 
 
 CREATE VIEW bi_production_line as
 select 
-production.client_name,
-production.ad_client_id,
-production.org_name,
-production.org_search_key,
-production.ad_org_id,
-production.org_active,
-production.m_production_id,
+
 production.production_documentno,
 production.production_name,
 production.production_description,
 production.production_date_promised,
 production.production_movement_date,
-production.m_product_id,
-production.production_qty,
 production.production_records_created,
-production.production_active,
 production.production_document_status,
+production.production_created,
+production.production_updated,
+production.order_documentno,
+production.order_grand_total,
+production.order_sales_transaction,
+production.order_document_status,
+production.order_date_ordered,
+production.order_document_type,
+production.order_line_lineno,
+production.order_line_qty_ordered,
+production.order_line_qty_entered,
+production.order_line_qty_invoiced,
+production.order_line_qty_delivered,
+production.order_line_description,
+production.order_line_price_entered,
+production.order_line_linenetamt,
+production.production_product_search_key,
+production.production_product_name,
+production.production_product_description,
+production.production_product_document_note,
+production.production_product_active,
+production.production_product_category_name,
+production.production_uom_name,
+production.bpartner_search_key,
+production.bpartner_name,
+production.bpartner_name2,
+production.bpartner_created,
+production.bpartner_customer,
+production.bpartner_vendor,
 
-productionline.m_productionline_id,
-productionline.line as producitonline_lineno,
+productionline.m_productionline_id as productionline_id,
+productionline.line as produciton_line_lineno,
 productionline.isendproduct as production_line_end_product,
 productionline.isactive as production_line_active,
 productionline.plannedqty as production_line_qty_planned,
@@ -878,20 +976,39 @@ productionline.description as production_line_description,
 productionline.created as production_line_created,
 productionline.updated as production_line_updated,
 
-productionline.m_locator_id,
--- insert locator here
+locator.warehouse_search_key,
+locator.warehouse_name,
+locator.warehouse_description,
+locator.warehouse_active,
+locator.warehouse_in_transit,
+locator.warehouse_prevent_negative_inventory,
+locator.warehouse_loc_address1,
+locator.warehouse_loc_address2,
+locator.warehouse_loc_address3,
+locator.warehouse_loc_address4,
+locator.warehouse_loc_city,
+locator.warehouse_loc_state,
+locator.warehouse_loc_country_code,
+locator.warehouse_loc_country_name,
+locator.locator_id,
+locator.locator_search_key,
+locator.locator_x,
+locator.locator_y,
+locator.locator_z,
+locator.locator_type,
 
-prod.product_search_key,
-prod.product_name,
-prod.product_description,
-prod.product_document_note,
-prod.product_active,
-prod.product_category_name,
-prod.uom_name
+prod.product_search_key as production_line_product_search_key,
+prod.product_name as production_line_product_name,
+prod.product_description as production_line_product_description,
+prod.product_document_note as production_line_product_document_note,
+prod.product_active as production_line_product_active,
+prod.product_category_name as production_line_product_category_name,
+prod.uom_name as production_line_uom_name
 
-from m_productionline productionline
-join bi_production production on productionline.m_production_id = production.m_production_id
-left join bi_product prod on productionline.m_product_id = prod.m_product_id
+FROM m_productionline productionline
+JOIN bi_production production on productionline.m_production_id = production.production_id
+LEFT JOIN bi_product prod on productionline.m_product_id = prod.product_id
+LEFT JOIN bi_locator locator on productionline.m_locator_id = locator.locator_id
 ;
 SELECT 'productionline.'||column_name||',' as produtionline FROM information_schema.columns WHERE  table_name   = 'bi_production_line';
 
