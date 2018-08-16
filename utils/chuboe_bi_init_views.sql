@@ -7,6 +7,38 @@
 -- price list
 -- currency
 
+------ convenience functions -------
+
+--
+-- Name: doctypemultiplier(numeric); Type: FUNCTION; Schema: adempiere; Owner: adempiere
+--
+CREATE OR REPLACE FUNCTION adempiere.doctypemultiplier(numeric) RETURNS numeric
+    LANGUAGE sql
+    AS $_$
+-- used to determine a Document Type is a credit memo
+Select CASE
+            WHEN charat(docbasetype::character varying, 3)::text = 'C'::text THEN (-1.0)
+            ELSE 1.0 END
+from c_doctype
+where c_doctype_id = $1
+$_$;
+ALTER FUNCTION adempiere.doctypemultiplier(numeric) OWNER TO adempiere;
+
+--
+-- Name: doctypemultiplierap(numeric); Type: FUNCTION; Schema: adempiere; Owner: adempiere
+--
+CREATE OR REPLACE FUNCTION adempiere.doctypemultiplierap(numeric) RETURNS numeric
+    LANGUAGE sql
+    AS $_$
+-- used to determine a Document Type is a AP (-) or AR (+)
+Select CASE
+            WHEN charat(docbasetype::character varying, 2)::text = 'P'::text THEN (-1.0)
+            ELSE 1.0 END 
+from c_doctype
+where c_doctype_id = $1
+$_$;
+ALTER FUNCTION adempiere.doctypemultiplierap(numeric) OWNER TO adempiere;
+
 ----- Section 2 ----- Create the views needed to resolve keys into human readable words
 DROP VIEW IF EXISTS bi_production_line;
 DROP VIEW IF EXISTS bi_production;
