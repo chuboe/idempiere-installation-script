@@ -17,6 +17,7 @@ DROP VIEW IF EXISTS bi_invoice_line;
 DROP VIEW IF EXISTS bi_invoice;
 DROP VIEW IF EXISTS bi_order_line;
 DROP VIEW IF EXISTS bi_order;
+DROP VIEW IF EXISTS bi_project;
 DROP VIEW IF EXISTS bi_product;
 DROP VIEW IF EXISTS bi_charge;
 DROP VIEW IF EXISTS bi_locator;
@@ -196,6 +197,8 @@ JOIN bi_bploc bploc on u.c_bpartner_location_id = bploc.bpartner_location_id
 ;
 SELECT 'u.'||column_name||',' as user FROM information_schema.columns WHERE  table_name   = 'bi_user';
 
+
+
 CREATE VIEW bi_warehouse AS
 SELECT
 c.*,
@@ -274,6 +277,64 @@ join bi_uom uom on p.c_uom_id = uom.uom_id
 join bi_client c on p.ad_client_id = c.client_id
 ;
 SELECT 'prod.'||column_name||',' as product FROM information_schema.columns WHERE  table_name   = 'bi_product';
+
+CREATE VIEW bi_project AS
+SELECT
+c.*,
+o.*,
+proj.c_project_id as project_id,
+proj.value as project_search_key,
+proj.name as project_name,
+proj.description as project_description,
+proj.isactive as project_active,
+proj.issummary as project_summary,
+proj.note as project_note,
+proj.datecontract as project_date_contract,
+proj.datefinish as project_date_finish,
+level.name as project_line_level,
+
+bp.bpartner_search_key as project_bpartner_search_key,
+bp.bpartner_name as project_bpartner_name,
+bp.bpartner_name2 as project_bpartner_name2,
+bp.bpartner_created as project_bpartner_created,
+bp.bpartner_updated as project_bpartner_updated,
+bp.bpartner_customer as project_bpartner_customer,
+bp.bpartner_vendor as project_bpartner_vendor,
+bp.bpartner_employee as project_bpartner_employee,
+
+bpsr.bpartner_search_key as project_agent_search_key,
+bpsr.bpartner_name as project_agent_name,
+bpsr.bpartner_name2 as project_agent_name2,
+bpsr.bpartner_created as project_agent_created,
+bpsr.bpartner_updated as project_agent_updated,
+bpsr.bpartner_customer as project_agent_customer,
+bpsr.bpartner_vendor as project_agent_vendor,
+bpsr.bpartner_employee as project_agent_employee,
+
+wh.warehouse_search_key as project_warehouse_search_key,
+wh.warehouse_name as project_warehouse_name,
+wh.warehouse_description as project_warehouse_description,
+wh.warehouse_active as project_warehouse_active,
+wh.warehouse_in_transit as project_warehouse_in_transit,
+wh.warehouse_prevent_negative_inventory as project_warehouse_prevent_negative_inventory,
+wh.warehouse_loc_address1 as project_warehouse_loc_address1,
+wh.warehouse_loc_address2 as project_warehouse_loc_address2,
+wh.warehouse_loc_address3 as project_warehouse_loc_address3,
+wh.warehouse_loc_address4 as project_warehouse_loc_address4,
+wh.warehouse_loc_city as project_warehouse_loc_city,
+wh.warehouse_loc_state as project_warehouse_loc_state,
+wh.warehouse_loc_country_code as project_warehouse_loc_country_code,
+wh.warehouse_loc_country_name as project_warehouse_loc_country_name
+
+FROM c_project proj
+JOIN bi_client c on proj.ad_client_id = c.client_id
+JOIN bi_org o on proj.ad_org_id = o.org_id
+LEFT JOIN bi_bpartner bp on proj.c_bpartner_id = bp.bpartner_id
+LEFT JOIN bi_bpartner bpsr on proj.c_bpartnersr_id = bp.bpartner_id
+LEFT JOIN bi_warehouse wh on proj.m_warehouse_id = wh.warehouse_id
+LEFT JOIN AD_Ref_List level on proj.projectlinelevel = level.value AND level.AD_Reference_ID=384
+;
+SELECT 'proj.'||column_name||',' as project FROM information_schema.columns WHERE  table_name   = 'bi_project';
 
 CREATE VIEW bi_order AS
 SELECT
