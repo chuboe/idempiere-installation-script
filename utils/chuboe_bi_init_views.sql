@@ -1,12 +1,9 @@
 -- The purpose of this script is to help you create views that are easily used inside a BI or analytics tool.
 
 --Missing Tables
--- tax
 -- locator
--- document type
 -- price list
 -- currency
--- user
 
 ----- Section 2 ----- Create the views needed to resolve keys into human readable words
 DROP VIEW IF EXISTS bi_production_line;
@@ -28,6 +25,7 @@ DROP VIEW IF EXISTS bi_bploc;
 DROP VIEW IF EXISTS bi_location;
 DROP VIEW IF EXISTS bi_bpartner;
 DROP VIEW IF EXISTS bi_uom;
+DROP VIEW IF EXISTS bi_tax;
 DROP VIEW IF EXISTS bi_tax_category;
 DROP VIEW IF EXISTS bi_org;
 DROP VIEW IF EXISTS bi_client;
@@ -41,8 +39,7 @@ SELECT 'c.'||column_name||',' as client FROM information_schema.columns WHERE  t
 CREATE VIEW bi_org AS
 SELECT 
 o.name AS org_name,
-o.value AS org_search_key,
-o.ad_org_id as org_id,
+o.value AS org_search_key, o.ad_org_id as org_id,
 o.isactive AS org_active
 FROM ad_org o
 WHERE o.issummary = 'N'::bpchar;
@@ -58,6 +55,24 @@ tc.description as tax_category_description
 from c_taxcategory tc
 join bi_client c on tc.ad_client_id = c.client_id;
 SELECT 'tc.'||column_name||',' as tax_category FROM information_schema.columns WHERE  table_name   = 'bi_tax_category';
+
+CREATE VIEW bi_tax as
+SELECT
+c.*,
+t.c_tax_id as tax_id,
+t.name as tax_name,
+t.description as tax_description,
+t.isactive as tax_active,
+t.rate as tax_rate,
+t.taxindicator as tax_indicator,
+tc.tax_category_name,
+tc.tax_category_description
+FROM c_tax t
+JOIN bi_client c on t.ad_client_id = c.client_id
+JOIN bi_tax_category tc on t.c_taxcategory_id = tc.tax_category_id
+;
+SELECT 't.'||column_name||',' as tax FROM information_schema.columns WHERE  table_name   = 'bi_tax';
+
 
 CREATE VIEW bi_uom AS
 SELECT uom.c_uom_id as uom_id,
@@ -108,11 +123,9 @@ SELECT 'loc.'||column_name||',' as loc FROM information_schema.columns WHERE  ta
 CREATE VIEW bi_bploc AS
 SELECT
 c.*,
-o.*,
 
 bpl.c_bpartner_location_id as bpartner_location_id,
 
-bp.bpartner_id,
 bp.bpartner_search_key,
 bp.bpartner_name,
 bp.bpartner_name2,
@@ -147,6 +160,7 @@ CREATE VIEW bi_user AS
 SELECT
 c.*,
 -- assuming no org needed
+u.ad_user_id as user_id,
 u.value as user_search_key,
 u.name as user_name,
 u.description as user_description,
@@ -265,58 +279,58 @@ ord.docstatus as Order_document_status,
 ord.created as order_created,
 ord.updated as order_updated,
 
-bp.bpartner_search_key as ship_bpartner_search_key,
-bp.bpartner_name as ship_bpartner_name,
-bp.bpartner_name2 as ship_bpartner_name2,
-bp.bpartner_created as ship_bpartner_created,
-bp.bpartner_updated as ship_bpartner_updated,
-bp.bpartner_customer as ship_bpartner_customer,
-bp.bpartner_vendor as ship_bpartner_vendor,
-bp.bpartner_employee as ship_bpartner_employee,
+bp.bpartner_search_key as order_ship_bpartner_search_key,
+bp.bpartner_name as order_ship_bpartner_name,
+bp.bpartner_name2 as order_ship_bpartner_name2,
+bp.bpartner_created as order_ship_bpartner_created,
+bp.bpartner_updated as order_ship_bpartner_updated,
+bp.bpartner_customer as order_ship_bpartner_customer,
+bp.bpartner_vendor as order_ship_bpartner_vendor,
+bp.bpartner_employee as order_ship_bpartner_employee,
 
-bploc.bploc_name as ship_bploc_name,
-bploc.bploc_address1 as ship_bploc_address1,
-bploc.bploc_address2 as ship_bploc_address2,
-bploc.bploc_address3 as ship_bploc_address3,
-bploc.bploc_address4 as ship_bploc_address4,
-bploc.bploc_city as ship_bploc_city,
-bploc.bploc_state as ship_bploc_state,
-bploc.bploc_country_code as ship_bploc_country_code,
-bploc.bploc_country_name as ship_bploc_country_name,
+bploc.bploc_name as order_ship_bploc_name,
+bploc.bploc_address1 as order_ship_bploc_address1,
+bploc.bploc_address2 as order_ship_bploc_address2,
+bploc.bploc_address3 as order_ship_bploc_address3,
+bploc.bploc_address4 as order_ship_bploc_address4,
+bploc.bploc_city as order_ship_bploc_city,
+bploc.bploc_state as order_ship_bploc_state,
+bploc.bploc_country_code as order_ship_bploc_country_code,
+bploc.bploc_country_name as order_ship_bploc_country_name,
 
-bpinv.bpartner_search_key as invoice_bpartner_search_key,
-bpinv.bpartner_name as invoice_bpartner_name,
-bpinv.bpartner_name2 as invoice_bpartner_name2,
-bpinv.bpartner_created as invoice_bpartner_created,
-bpinv.bpartner_updated as invoice_bpartner_updated,
-bpinv.bpartner_customer as invoice_bpartner_customer,
-bpinv.bpartner_vendor as invoice_bpartner_vendor,
-bpinv.bpartner_employee as invoice_bpartner_employee,
+bpinv.bpartner_search_key as order_invoice_bpartner_search_key,
+bpinv.bpartner_name as order_invoice_bpartner_name,
+bpinv.bpartner_name2 as order_invoice_bpartner_name2,
+bpinv.bpartner_created as order_invoice_bpartner_created,
+bpinv.bpartner_updated as order_invoice_bpartner_updated,
+bpinv.bpartner_customer as order_invoice_bpartner_customer,
+bpinv.bpartner_vendor as order_invoice_bpartner_vendor,
+bpinv.bpartner_employee as order_invoice_bpartner_employee,
 
-bplocinv.bploc_name as invoice_bploc_name,
-bplocinv.bploc_address1 as invoice_bploc_address1,
-bplocinv.bploc_address2 as invoice_bploc_address2,
-bplocinv.bploc_address3 as invoice_bploc_address3,
-bplocinv.bploc_address4 as invoice_bploc_address4,
-bplocinv.bploc_city as invoice_bploc_city,
-bplocinv.bploc_state as invoice_bploc_state,
-bplocinv.bploc_country_code as invoice_bploc_country_code,
-bplocinv.bploc_country_name as invoice_bploc_country_name,
+bplocinv.bploc_name as order_invoice_bploc_name,
+bplocinv.bploc_address1 as order_invoice_bploc_address1,
+bplocinv.bploc_address2 as order_invoice_bploc_address2,
+bplocinv.bploc_address3 as order_invoice_bploc_address3,
+bplocinv.bploc_address4 as order_invoice_bploc_address4,
+bplocinv.bploc_city as order_invoice_bploc_city,
+bplocinv.bploc_state as order_invoice_bploc_state,
+bplocinv.bploc_country_code as order_invoice_bploc_country_code,
+bplocinv.bploc_country_name as order_invoice_bploc_country_name,
 
-wh.warehouse_search_key,
-wh.warehouse_name,
-wh.warehouse_description,
-wh.warehouse_active,
-wh.warehouse_in_transit,
-wh.warehouse_prevent_negative_inventory,
-wh.warehouse_loc_address1,
-wh.warehouse_loc_address2,
-wh.warehouse_loc_address3,
-wh.warehouse_loc_address4,
-wh.warehouse_loc_city,
-wh.warehouse_loc_state,
-wh.warehouse_loc_country_code,
-wh.warehouse_loc_country_name
+wh.warehouse_search_key as order_warehouse_search_key,
+wh.warehouse_name as order_warehouse_name,
+wh.warehouse_description as order_warehouse_description,
+wh.warehouse_active as order_warehouse_active,
+wh.warehouse_in_transit as order_warehouse_in_transit,
+wh.warehouse_prevent_negative_inventory as order_warehouse_prevent_negative_inventory,
+wh.warehouse_loc_address1 as order_warehouse_loc_address1,
+wh.warehouse_loc_address2 as order_warehouse_loc_address2,
+wh.warehouse_loc_address3 as order_warehouse_loc_address3,
+wh.warehouse_loc_address4 as order_warehouse_loc_address4,
+wh.warehouse_loc_city as order_warehouse_loc_city,
+wh.warehouse_loc_state as order_warehouse_loc_state,
+wh.warehouse_loc_country_code as order_warehouse_loc_country_code,
+wh.warehouse_loc_country_name as order_warehouse_loc_country_name
 
 from c_order ord
 join bi_bpartner bp on ord.c_bpartner_id = bp.bpartner_id
@@ -333,18 +347,10 @@ left join bi_warehouse wh on ord.m_warehouse_id = wh.warehouse_id
 SELECT 'order.'||column_name||',' as order FROM information_schema.columns WHERE  table_name   = 'bi_order';
 
 CREATE VIEW bi_order_line AS
-SELECT o.*,
-ol.c_orderline_id,
+SELECT 
+o.*,
+ol.c_orderline_id as orderline_id,
 ol.line as order_line_lineno,
-prod.m_product_id,
-prod.product_search_key,
-prod.product_name,
-prod.product_description,
-prod.product_document_note,
-prod.product_category_name,
-uom.c_uom_id,
-uom.uom_name,
-uom.uom_search_key,
 ol.qtyordered as order_line_qty_ordered,
 ol.qtyentered as order_line_qty_entered,
 ol.qtyinvoiced as order_line_qty_invoiced,
@@ -354,64 +360,125 @@ ol.priceentered as order_line_price_entered,
 ol.linenetamt as order_line_linenetamt,
 ol.created as order_line_created,
 ol.updated as order_line_updated,
-chg.charge_name,
-chg.charge_description,
-ol.c_tax_id
--- needs tax details here
+
+prod.product_search_key as order_line_product_search_key,
+prod.product_name as order_line_product_name,
+prod.product_description as order_line_product_description,
+prod.product_document_note as order_line_product_document_note,
+prod.product_category_name as order_line_product_category_name,
+
+uom.uom_name as order_line_uom_name,
+uom.uom_search_key as order_line_uom_search_key,
+
+chg.charge_name as order_line_charge_name,
+chg.charge_description as order_line_charge_description,
+
+t.tax_name as order_line_tax_name,
+t.tax_description as order_line_tax_description,
+t.tax_active as order_line_tax_active,
+t.tax_rate as order_line_tax_rate,
+t.tax_indicator as order_line_tax_indicator ,
+t.tax_category_name as order_line_tax_category_name,
+t.tax_category_description as order_line_tax_category_description,
+
+bploc.bploc_name as order_line_bploc_name,
+bploc.bploc_created as order_line_bploc_created,
+bploc.bploc_updated as order_line_bploc_updated,
+bploc.bploc_address1 as order_line_bploc_address1,
+bploc.bploc_address2 as order_line_bploc_address2,
+bploc.bploc_address3 as order_line_bploc_address3,
+bploc.bploc_address4 as order_line_bploc_address4,
+bploc.bploc_city as order_line_bploc_city,
+bploc.bploc_state as order_line_bploc_state,
+bploc.bploc_country_code as order_line_bploc_country_code,
+bploc.bploc_country_name as order_line_bploc_country_name
+
 FROM c_orderline ol
-JOIN bi_order o ON ol.c_order_id=o.c_order_id
-LEFT JOIN bi_product prod on ol.m_product_id = prod.m_product_id
-LEFT JOIN bi_charge chg ON ol.c_charge_id = chg.c_charge_id
-JOIN bi_uom uom on ol.c_uom_id=uom.c_uom_id
+JOIN bi_order o ON ol.c_order_id=o.order_id
+LEFT JOIN bi_product prod on ol.m_product_id = prod.product_id
+LEFT JOIN bi_charge chg ON ol.c_charge_id = chg.charge_id
+JOIN bi_uom uom on ol.c_uom_id=uom.uom_id
+JOIN bi_bploc bploc on ol.c_bpartner_location_id = bploc.bpartner_location_id
+LEFT JOIN bi_tax t on ol.c_tax_id = t.tax_id
 ;
 SELECT 'orderline.'||column_name||',' as orderline FROM information_schema.columns WHERE  table_name   = 'bi_order_line';
 
 CREATE VIEW bi_invoice AS
 SELECT
 c.*,
-inv.c_invoice_id,
+o.*,
+inv.c_invoice_id as invoice_id,
 inv.documentno as Invoice_DocumentNo,
+dt.name as invoice_doctype_name,
+inv.description as invoice_description,
+inv.poreference as invoice_order_reference,
 inv.grandtotal AS Invoice_Grand_total,
 inv.issotrx as Invoice_Sales_Transaction,
 inv.docstatus as Invoice_document_status,
 inv.dateinvoiced as Invoice_date_invoiced,
+inv.dateacct as Invoice_date_acct,
 inv.created as invoice_created,
 inv.updated as invoice_updated,
-o.ad_org_id,
-o.org_name,
-o.org_search_key,
-o.org_active,
-bp.c_bpartner_id,
-bp.bpartner_search_key,
-bp.bpartner_name,
-bp.bpartner_name2,
-bp.bpartner_created,
-bp.bpartner_customer,
-bp.bpartner_vendor,
-bp.bpartner_employee,
-bpl.c_bpartner_location_id,
-bpl.bploc_name,
-bpl.bploc_address1,
-bpl.bploc_address2,
-bpl.bploc_address3,
-bpl.bploc_address4,
-bpl.bploc_city,
-bpl.bploc_state,
-bpl.bploc_country_code,
-bpl.bploc_country_name,
-dt.name as doctype_name
+
+bp.bpartner_search_key as invoice_bpartner_search_key,
+bp.bpartner_name as invoice_bpartner_name,
+bp.bpartner_name2 as invoice_bpartner_name2,
+bp.bpartner_created as invoice_bpartner_created,
+bp.bpartner_customer as invoice_bpartner_customer,
+bp.bpartner_vendor as invoice_bpartner_vendor,
+bp.bpartner_employee as invoice_bpartner_employee,
+bpl.bploc_name as invoice_bploc_name,
+bpl.bploc_address1 as invoice_bploc_address1,
+bpl.bploc_address2 as invoice_bploc_address2,
+bpl.bploc_address3 as invoice_bploc_address3,
+bpl.bploc_address4 as invoice_bploc_address4,
+bpl.bploc_city as invoice_bploc_city,
+bpl.bploc_state as invoice_bploc_state,
+bpl.bploc_country_code as invoice_bploc_country_code,
+bpl.bploc_country_name as invoice_bploc_country_name
+
 FROM c_invoice inv
-JOIN bi_bpartner bp ON inv.c_bpartner_id = bp.c_bpartner_id
-JOIN bi_bploc bpl ON inv.c_bpartner_location_id = bpl.c_bpartner_location_id
-JOIN bi_client c ON inv.ad_client_id = c.ad_client_id
-JOIN bi_org o ON inv.ad_org_id = o.ad_org_id
+JOIN bi_bpartner bp ON inv.c_bpartner_id = bp.bpartner_id
+JOIN bi_bploc bpl ON inv.c_bpartner_location_id = bpl.bpartner_location_id
+JOIN bi_client c ON inv.ad_client_id = c.client_id
+JOIN bi_org o ON inv.ad_org_id = o.org_id
 JOIN c_doctype dt ON inv.c_doctype_id = dt.c_doctype_id
 ;
 SELECT 'invoice.'||column_name||',' as invoice FROM information_schema.columns WHERE  table_name   = 'bi_invoice';
 
 CREATE VIEW bi_invoice_line AS
-SELECT i.*,
-il.c_invoiceline_id,
+SELECT 
+c.*,
+o.*,
+invoice.invoice_documentno,
+invoice.invoice_doctype_name,
+invoice.invoice_description,
+invoice.invoice_order_reference,
+invoice.invoice_grand_total,
+invoice.invoice_sales_transaction,
+invoice.invoice_document_status,
+invoice.invoice_date_invoiced,
+invoice.invoice_date_acct,
+invoice.invoice_created,
+invoice.invoice_updated,
+invoice.invoice_bpartner_search_key,
+invoice.invoice_bpartner_name,
+invoice.invoice_bpartner_name2,
+invoice.invoice_bpartner_created,
+invoice.invoice_bpartner_customer,
+invoice.invoice_bpartner_vendor,
+invoice.invoice_bpartner_employee,
+invoice.invoice_bploc_name,
+invoice.invoice_bploc_address1,
+invoice.invoice_bploc_address2,
+invoice.invoice_bploc_address3,
+invoice.invoice_bploc_address4,
+invoice.invoice_bploc_city,
+invoice.invoice_bploc_state,
+invoice.invoice_bploc_country_code,
+invoice.invoice_bploc_country_name,
+
+il.c_invoiceline_id as invoiceline_id,
 il.line as invoice_line_lineno,
 il.description as invoice_line_description,
 il.qtyinvoiced as invoice_line_qty_invoiced, 
@@ -421,26 +488,42 @@ il.linetotalamt as invoice_line_linetotalamt,
 il.linenetamt as invoice_line_linenetamt, 
 il.created as invoice_line_created,
 il.updated as invoice_line_updated,
-p.m_product_id,
-p.product_search_key,
-p.product_name,
-p.product_description,
-p.product_document_note,
-p.product_category_name,
-chg.charge_name,
-chg.charge_description, 
-il.c_tax_id,
--- heed tax details here
-uom.c_uom_id,
-uom.uom_name,
-uom.uom_search_key
--- orderline details go here
+
+prod.product_search_key as invoice_line_product_search_key,
+prod.product_created as invoice_line_product_created,
+prod.product_updated as invoice_line_product_updated,
+prod.product_name as invoice_line_product_name,
+prod.product_description as invoice_line_product_description,
+prod.product_document_note as invoice_line_product_document_note,
+prod.product_active as invoice_line_product_active,
+prod.product_type as invoice_line_product_type,
+prod.product_category_name as invoice_line_product_category_name,
+
+chg.charge_name as invoice_line_charge_name,
+chg.charge_description as invoice_line_charge_description,
+chg.charge_active as invoice_line_charge_active,
+chg.charge_created as invoice_line_charge_created,
+chg.charge_updated as invoice_line_charge_updated,
+
+t.tax_name as invoice_line_tax_name,
+t.tax_description as invoice_line_tax_description,
+t.tax_active as invoice_line_tax_active,
+t.tax_rate as invoice_line_tax_rate,
+t.tax_indicator as invoice_line_tax_indicator,
+t.tax_category_name as invoice_line_tax_category_name,
+t.tax_category_description as invoice_line_tax_category_description,
+
+uom.uom_name as invoice_line_uom_name,
+uom.uom_search_key as invoice_line_uom_search_key
+
 FROM c_invoiceline il 
-JOIN bi_invoice i ON il.c_invoice_id=i.c_invoice_id
-LEFT JOIN bi_order_line ol ON il.c_orderline_id = ol.c_orderline_id
-LEFT JOIN bi_product p ON il.m_product_id = p.m_product_id
-LEFT JOIN bi_uom uom ON il.c_uom_id=uom.c_uom_id
-LEFT JOIN bi_charge chg ON il.c_charge_id=chg.c_charge_id
+JOIN bi_client c on il.ad_client_id = c.client_id
+JOIN bi_org o on il.ad_org_id = o.org_id
+JOIN bi_invoice invoice ON il.c_invoice_id = invoice.invoice_id
+LEFT JOIN bi_product prod ON il.m_product_id = prod.product_id
+LEFT JOIN bi_uom uom ON il.c_uom_id=uom.uom_id
+LEFT JOIN bi_charge chg ON il.c_charge_id=chg.charge_id
+LEFT JOIN bi_tax t on il.c_tax_id = t.tax_id
 ;
 SELECT 'invoiceline.'||column_name||',' as invoiceline FROM information_schema.columns WHERE  table_name   = 'bi_invoice_line';
 
