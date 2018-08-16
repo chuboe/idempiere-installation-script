@@ -552,7 +552,29 @@ bpl.bploc_address4 as invoice_bploc_address4,
 bpl.bploc_city as invoice_bploc_city,
 bpl.bploc_state as invoice_bploc_state,
 bpl.bploc_country_code as invoice_bploc_country_code,
-bpl.bploc_country_name as invoice_bploc_country_name
+bpl.bploc_country_name as invoice_bploc_country_name,
+
+ord.order_ship_bpartner_search_key,
+ord.order_ship_bpartner_name,
+ord.order_ship_bpartner_name2,
+ord.order_ship_bpartner_created,
+ord.order_ship_bpartner_updated,
+ord.order_ship_bpartner_customer,
+ord.order_ship_bpartner_vendor,
+ord.order_ship_bpartner_employee,
+ord.order_ship_bpartner_group_search_key,
+ord.order_ship_bpartner_group_name,
+ord.order_ship_bpartner_group_description,
+
+ord.order_ship_bploc_name,
+ord.order_ship_bploc_address1,
+ord.order_ship_bploc_address2,
+ord.order_ship_bploc_address3,
+ord.order_ship_bploc_address4,
+ord.order_ship_bploc_city,
+ord.order_ship_bploc_state,
+ord.order_ship_bploc_country_code,
+ord.order_ship_bploc_country_name
 
 FROM c_invoice inv
 JOIN bi_bpartner bp ON inv.c_bpartner_id = bp.bpartner_id
@@ -560,6 +582,7 @@ JOIN bi_bploc bpl ON inv.c_bpartner_location_id = bpl.bpartner_location_id
 JOIN bi_client c ON inv.ad_client_id = c.client_id
 JOIN bi_org o ON inv.ad_org_id = o.org_id
 JOIN c_doctype dt ON inv.c_doctype_id = dt.c_doctype_id
+LEFT JOIN bi_order ord on inv.c_order_id = ord.order_id
 ;
 SELECT 'invoice.'||column_name||',' as invoice FROM information_schema.columns WHERE  table_name   = 'bi_invoice';
 --SELECT COUNT(*) as invoice_count FROM bi_invoice;
