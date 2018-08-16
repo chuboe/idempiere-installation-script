@@ -19,6 +19,7 @@ DROP VIEW IF EXISTS bi_order_line;
 DROP VIEW IF EXISTS bi_order;
 DROP VIEW IF EXISTS bi_product;
 DROP VIEW IF EXISTS bi_charge;
+DROP VIEW IF EXISTS bi_locator;
 DROP VIEW IF EXISTS bi_warehouse;
 DROP VIEW IF EXISTS bi_user;
 DROP VIEW IF EXISTS bi_bploc;
@@ -222,6 +223,22 @@ join bi_org o on w.ad_org_id = o.org_id
 left join bi_location loc on w.c_location_id = loc.loc_id
 ;
 SELECT 'wh.'||column_name||',' as warehouse FROM information_schema.columns WHERE  table_name   = 'bi_warehouse';
+
+CREATE VIEW bi_locator AS
+SELECT
+wh.*,
+locator.m_locator_id as locator_id,
+locator.value as locator_search_key,
+locator.x as locator_x,
+locator.y as locator_y,
+locator.z as locator_z,
+mt.name as locator_type
+
+FROM m_locator locator
+JOIN bi_warehouse wh on locator.m_warehouse_id = wh.warehouse_id
+JOIN M_LocatorType mt on locator.M_LocatorType_id = mt.M_LocatorType_id
+;
+SELECT 'locator.'||column_name||',' as locator FROM information_schema.columns WHERE  table_name   = 'bi_locator';
 
 CREATE VIEW bi_charge AS
 SELECT 
@@ -530,11 +547,8 @@ SELECT 'invoiceline.'||column_name||',' as invoiceline FROM information_schema.c
 CREATE VIEW bi_inout AS
 SELECT 
 c.*,
-o.ad_org_id,
-o.org_name,
-o.org_search_key,
-o.org_active,
-io.m_inout_id,
+o.*,
+io.m_inout_id as inout_id,
 io.issotrx AS InOut_Sales_Transaction,
 io.documentno AS InOut_DocumentNo,
 io.docaction AS InOut_document_action,
@@ -545,58 +559,65 @@ io.dateordered AS InOut_date_ordered,
 io.movementdate as inout_movement_date,
 io.created as inout_created,
 io.updated as inout_updated,
+bp.bpartner_search_key as inout_bpartner_search_key,
+bp.bpartner_name as inout_bpartner_name,
+bp.bpartner_name2 as inout_bpartner_name2,
+bp.bpartner_created as inout_bpartner_created,
+bp.bpartner_customer as inout_bpartner_customer,
+bp.bpartner_vendor as inout_bpartner_vendor,
+bp.bpartner_employee as inout_bpartner_employee,
+bpl.bploc_name as inout_bploc_name,
+bpl.bploc_address1 as inout_bploc_address1,
+bpl.bploc_address2 as inout_bploc_address2,
+bpl.bploc_address3 as inout_bploc_address3,
+bpl.bploc_address4 as inout_bploc_address4,
+bpl.bploc_city as inout_bploc_city,
+bpl.bploc_state as inout_bploc_state,
+bpl.bploc_country_code as inout_bploc_country_code,
+bpl.bploc_country_name as inout_bploc_country_name,
+
+wh.warehouse_search_key as inout_warehouse_search_key,
+wh.warehouse_name as inout_warehouse_name,
+wh.warehouse_description as inout_warehouse_description,
+wh.warehouse_active as inout_warehouse_active,
+wh.warehouse_in_transit as inout_warehouse_in_transit,
+wh.warehouse_prevent_negative_inventory as inout_warehouse_prevent_negative_inventory,
+wh.warehouse_loc_address1 as inout_warehouse_loc_address1,
+wh.warehouse_loc_address2 as inout_warehouse_loc_address2,
+wh.warehouse_loc_address3 as inout_warehouse_loc_address3,
+wh.warehouse_loc_address4 as inout_warehouse_loc_address4,
+wh.warehouse_loc_city as inout_warehouse_loc_city,
+wh.warehouse_loc_state as inout_warehouse_loc_state,
+wh.warehouse_loc_country_code as inout_warehouse_loc_country_code,
+wh.warehouse_loc_country_name as inout_warehouse_loc_country_name,
+
 ord.order_DocumentNo,
 ord.order_Grand_total,
 ord.order_date_ordered,
-inv.c_invoice_id,
 inv.Invoice_DocumentNo,
 inv.Invoice_Grand_total,
 inv.Invoice_Sales_Transaction,
 inv.Invoice_document_status,
-inv.Invoice_date_invoiced,
-bp.c_bpartner_id,
-bp.bpartner_search_key,
-bp.bpartner_name,
-bp.bpartner_name2,
-bp.bpartner_created,
-bp.bpartner_customer,
-bp.bpartner_vendor,
-bp.bpartner_employee,
-bpl.c_bpartner_location_id,
-bpl.bploc_name,
-bpl.bploc_address1,
-bpl.bploc_address2,
-bpl.bploc_address3,
-bpl.bploc_address4,
-bpl.bploc_city,
-bpl.bploc_state,
-bpl.bploc_country_code,
-bpl.bploc_country_name
+inv.Invoice_date_invoiced
+
 FROM m_inout io
-JOIN bi_bpartner bp ON io.c_bpartner_id = bp.c_bpartner_id
-JOIN bi_bploc bpl ON io.c_bpartner_location_id = bpl.c_bpartner_location_id
-JOIN bi_client c ON io.ad_client_id = c.ad_client_id
-JOIN bi_org o ON io.ad_org_id = o.ad_org_id
+JOIN bi_bpartner bp ON io.c_bpartner_id = bp.bpartner_id
+JOIN bi_bploc bpl ON io.c_bpartner_location_id = bpl.bpartner_location_id
+JOIN bi_client c ON io.ad_client_id = c.client_id
+JOIN bi_org o ON io.ad_org_id = o.org_id
 JOIN c_doctype dt ON io.c_doctype_id = dt.c_doctype_id
-LEFT JOIN bi_order ord ON io.c_order_id=ord.c_order_id
-LEFT JOIN bi_invoice inv ON io.c_invoice_id=inv.c_invoice_id
+LEFT JOIN bi_order ord ON io.c_order_id=ord.order_id
+LEFT JOIN bi_invoice inv ON io.c_invoice_id=inv.invoice_id
+LEFT JOIN bi_warehouse wh on io.m_warehouse_id = wh.warehouse_id
 ;
 SELECT 'inout.'||column_name||',' as inout FROM information_schema.columns WHERE  table_name   = 'bi_inout';
 
 CREATE VIEW bi_inout_line AS 
 SELECT
 c.*,
-o.ad_org_id,
 o.org_name,
 o.org_search_key,
-o.org_active,
-iol.m_inoutline_id,
-iol.line as inout_line_lineno,
-iol.description as inout_line_description,
-iol.movementqty as inout_line_movement_qty,
-iol.created as inout_line_created,
-iol.updated as inout_line_updated,
-io.m_inout_id,
+
 io.InOut_Sales_Transaction,
 io.InOut_DocumentNo,
 io.InOut_document_action,
@@ -605,32 +626,62 @@ io.InOut_doctype_name,
 io.InOut_description,
 io.InOut_date_ordered,
 io.InOut_movement_date,
-ol.c_orderline_id,
+
 ol.order_line_lineno,
 ol.order_line_qty_ordered,
 ol.order_line_qty_invoiced,
 ol.order_line_description,
 ol.order_line_linenetamt,
-p.m_product_id,
-p.product_search_key,
-p.product_name,
-p.product_description,
-p.product_document_note,
-p.product_active,
-p.product_category_name,
-uom.uom_name, 
-uom.uom_search_key, 
-chg.c_charge_id,
-chg.charge_name,
-chg.charge_description
+
+iol.m_inoutline_id as inoutline_id,
+iol.line as inout_line_lineno,
+iol.description as inout_line_description,
+iol.movementqty as inout_line_movement_qty,
+iol.created as inout_line_created,
+iol.updated as inout_line_updated,
+
+p.product_search_key as inout_line_product_search_key,
+p.product_name as inout_line_product_name,
+p.product_description as inout_line_product_description,
+p.product_document_note as inout_line_product_document_note,
+p.product_active as inout_line_product_active,
+p.product_category_name as inout_line_product_category_name,
+
+uom.uom_name as inout_line_uom_name, 
+uom.uom_search_key as inout_line_uom_search_key, 
+
+chg.charge_name as inout_line_charge_name,
+chg.charge_description as inout_line_charge_description,
+
+locator.warehouse_search_key as inout_line_warehouse_search_key,
+locator.warehouse_name as inout_line_warehouse_name,
+locator.warehouse_description as inout_line_warehouse_description,
+locator.warehouse_active as inout_line_warehouse_active,
+locator.warehouse_in_transit as inout_line_warehouse_in_transit,
+locator.warehouse_prevent_negative_inventory as inout_line_warehouse_prevent_negative_inventory,
+locator.warehouse_loc_address1 as inout_line_warehouse_loc_address1,
+locator.warehouse_loc_address2 as inout_line_warehouse_loc_address2,
+locator.warehouse_loc_address3 as inout_line_warehouse_loc_address3,
+locator.warehouse_loc_address4 as inout_line_warehouse_loc_address4,
+locator.warehouse_loc_city as inout_line_warehouse_loc_city,
+locator.warehouse_loc_state as inout_line_warehouse_loc_state,
+locator.warehouse_loc_country_code as inout_line_warehouse_loc_country_code,
+locator.warehouse_loc_country_name as inout_line_warehouse_loc_country_name,
+locator.locator_search_key as inout_line_locator_search_key,
+locator.locator_x as inout_line_locator_x,
+locator.locator_y as inout_line_locator_y,
+locator.locator_z as inout_line_locator_z,
+locator.locator_type as inout_line_locator_type
+
 FROM m_inoutline iol
-JOIN bi_inout io ON iol.m_inout_id=io.m_inout_id
-LEFT JOIN bi_charge chg ON iol.c_charge_id=chg.c_charge_id
-LEFT JOIN bi_order_line ol ON iol.c_orderline_id = ol.c_orderline_id
-LEFT JOIN bi_product p ON iol.m_product_id=p.m_product_id
-LEFT JOIN bi_uom uom ON iol.c_uom_id=uom.c_uom_id
-JOIN bi_client c ON iol.ad_client_id = c.ad_client_id
-JOIN bi_org o ON iol.ad_org_id = o.ad_org_id
+JOIN bi_inout io ON iol.m_inout_id=io.inout_id
+LEFT JOIN bi_charge chg ON iol.c_charge_id=chg.charge_id
+LEFT JOIN bi_order_line ol ON iol.c_orderline_id = ol.orderline_id
+LEFT JOIN bi_product p ON iol.m_product_id=p.product_id
+LEFT JOIN bi_uom uom ON iol.c_uom_id=uom.uom_id
+JOIN bi_client c ON iol.ad_client_id = c.client_id
+JOIN bi_org o ON iol.ad_org_id = o.org_id
+LEFT JOIN bi_locator locator on iol.m_locator_id = locator.locator_id
 ;
 SELECT 'inoutline.'||column_name||',' as inoutline FROM information_schema.columns WHERE  table_name   = 'bi_inout_line';
 
