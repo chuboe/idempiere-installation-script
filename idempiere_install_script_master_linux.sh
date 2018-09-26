@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Release Details
+#{{{
 # Author
 #   Chuck Boecking
 #   chuck@chuboe.com
@@ -26,16 +28,17 @@
 #     Improved usage of support scripts (backup, restore, upgrade, etc...)
 #     Added ability to launch a new WebUI server without initializing the database - used when adding a new server to the loadbalanced WebUI farm or when replacing the existing WebUI server.
 # 2.1 Install the latest version of s3cmd
-# 2.2 Support ubuntu 16.04 LTS 
+# 2.2 Support ubuntu 16.04 LTS
 # 2.2.1 Added notes for key concepts "Key Concept"
 # 2.3 Support for iDempiere 4.1
 # 2.4 Moved download to beginning, added Zip and GZip archive testing in addition to MD5
 # 2.4.1 Changed to delete previously downloaded files if they exist for the smaller installation files.  Larger downloaded files (.zip, .gz) will be verified, and if
 #       verification fails they will be deleted and re-downloaded
 # 2.5 Support for iDempiere 5.1
+#}}}
 
-
-# function to help the user better understand how the script works
+# Usage help
+# {{{
 usage()
 {
 cat << EOF
@@ -89,7 +92,10 @@ Outstanding actions:
 
 EOF
 }
+# }}}
 
+# Initialize variables
+# {{{
 #pull in variables from properties file
 #NOTE: all variables starting with CHUBOE_PROP... come from this file.
 SCRIPTNAME=$(readlink -f "$0")
@@ -155,7 +161,10 @@ S3CMD_FILENAME=$S3CMD_VERSION".tar.gz"
 
 #create array of updated parameters to later update chuboe.properties
 args=()
+# }}}
 
+# Read input flags
+# {{{
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
@@ -228,10 +237,13 @@ do
             echo "HERE: The additional argument for option $OPTARG was omitted."
             exit 1
             ;;
-    
+
     esac
 done
+# }}}
 
+# Process variables after flags
+# {{{
 IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
 IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/changes"
@@ -239,8 +251,10 @@ IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENK
 # get the current user and group
 OSUSER=$(id -u -n)
 OSUSER_GROUP=$(id -g -n)
+# }}}
 
-#determine if IS_REPLICATION_MASTER should = N
+# Determine if IS_REPLICATION_MASTER should = N
+# {{{
 #  if not installing iDempiere and the user DID specify a URL to replicate from, then this instance is not a master.
 echo "HERE: check if IS_REPLICATION_MASTER should = N"
 if [[ $IS_INSTALL_ID == "N" && $REPLICATION_URL != "Master" ]]
@@ -248,8 +262,10 @@ then
     echo "HERE: Check if Is Replication Master"
     IS_REPLICATION_MASTER="N"
 fi
+# }}}
 
 # Check if $OSUSER can create the temporary install folder
+# {{{
 echo "HERE: check if $OSUSER can create the temporary installation directory"
 [ -d $TEMP_DIR ] || sudo mkdir $TEMP_DIR || { echo "HERE: failed to create $TEMP_DIR"; exit 1; }
 
@@ -262,8 +278,10 @@ else
     echo "HERE: User cannot create the temporary installation directory"
     exit 1
 fi
+# }}}
 
 # Check if you can create the chuboe folder
+# {{{
 # create a directory where chuboe related stuff will go. Including the helpful tips/hints/feedback file.
 echo "HERE: check if you can create the $CHUBOE_UTIL directory"
 [ -d $CHUBOE_UTIL ] || sudo mkdir $CHUBOE_UTIL || { echo "HERE: failed to create $CHUBOE_UTIL"; exit 1; }
@@ -277,9 +295,10 @@ else
     echo "HERE: User cannot create the chuboe directory"
     exit 1
 fi
+# }}}
 
-
-#turn args array into a properties file.
+# Turn args array into a properties file and echo values.
+# {{{
 printf "%s\n" "${args[@]}" > $SCRIPTPATH/utils/install.properties
 #Merge the newly create properties file back into chuboe.properties
 awk -F= '!a[$1]++' $SCRIPTPATH/utils/install.properties $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
@@ -328,8 +347,10 @@ echo "Replication Role="$REPLATION_ROLE
 echo "Replication Trigger="$REPLATION_TRIGGER
 echo "HERE: Distro details:"
 cat /etc/*-release
+# }}}
 
 # Create file to give user feedback about installation
+# {{{
 echo "Welcome to the iDempiere community.">$README
 echo "The purpose of this file is to help you understand what this script accomplished.">>$README
 echo "In the future, you can find this file in the $README directory.">>$README
@@ -337,8 +358,10 @@ echo "Press Ctrl+x to close this file and return to the prompt.">>$README
 echo "If anything went wrong during the installation, you will see line in this file that begins with ERROR:">>$README
 echo "If any part of this process is not clear, step-by-step instructions and video demonstrations are available in the site.">>$README
 echo "---->http://erp-academy.chuckboecking.com">>$README
+# }}}
 
 # Check to ensure DB password is set
+# {{{
 if [[ $DBPASS == "NONE" && $IS_INSTALL_DB == "Y"  ]]
 then
     echo "HERE: Must set DB Password if installing DB!!"
@@ -347,8 +370,10 @@ then
     echo "ERROR: Must set DB Password if installing DB!! Stopping script!">>$README
     exit 1
 fi
+# }}}
 
 # Check if OS user exists
+# {{{
 RESULT=$(id -u $OSUSER)
 if [ $RESULT -ge 0 ]; then
     echo "HERE: OSUser exists"
@@ -365,7 +390,10 @@ else
     echo "ERROR: OSUser does not exist. Stopping script!">>$README
     exit 1
 fi
+# }}}
 
+# Ubuntu prep
+# {{{
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
 # If you are not running in AWS VPC, you can comment these lines out.
 sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
@@ -381,8 +409,10 @@ sudo updatedb
 # htop - useful process, cpu and memory graph
 # expect - used to stop idempiere - allows script to interact with telnet
 sudo apt-get --yes install unzip htop expect bc telnet
+# }}}
 
 # Download all files first
+# {{{
 $SCRIPTPATH/utils/downloadtestgz.sh $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR || exit 1
 
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
@@ -408,9 +438,10 @@ then
         #exit 1 - no need to exit just because it could not find the changes file.
     fi
 fi
+# }}}
 
-###################################################################
-# install the latest version of s3cmd - tool to move files to an offsite AWS s3 bucket
+# Install the latest version of s3cmd - tool to move files to an offsite AWS s3 bucket
+# {{{
 echo "HERE: Installing s3cmd"
 cd $TEMP_DIR
 tar xzf $S3CMD_FILENAME
@@ -419,15 +450,19 @@ cd $S3CMD_VERSION/
 sudo apt-get install --yes python-setuptools
 sudo python setup.py install
 echo "HERE: Finished installing s3cmd"
-cd $TEMP_DIR
+# }}}
 
-# if installing using virtualbox 
+# Virtualbox notes
+# {{{
+# if installing using virtualbox
 # install the following before you install the guest additions
 #   sudo apt-get install dkms gcc
 # use the following instructions to prevent sudo timeout
 # http://apple.stackexchange.com/questions/10139/how-do-i-increase-sudo-password-remember-timeout
+# }}}
 
-# install database
+# Install database
+# {{{
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
     echo "HERE: Installing DB because IS_INSTALL_DB == Y"
@@ -443,12 +478,14 @@ then
     echo "">>$README
     echo "">>$README
     echo "PostgreSQL installed.">>$README
-    echo "The script installed the phppgadmin tool to help you administer your database.">>$README 
+    echo "The script installed the phppgadmin tool to help you administer your database.">>$README
     echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users.">>$README
     sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
     sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
     sudo sed -i '$ a\listen_addresses = '"'"'*'"'"' # chuboe '$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
 
+    # IS_Replication
+    # {{{
     if [[ $IS_REPLICATION == "Y" ]]
     then
         echo "HERE: Is Replication = Y"
@@ -508,11 +545,14 @@ then
 
         echo "HERE END: Is Replication = Y AND Is Replication Master = N"
     fi
+    # }}}
 
+    # Is_Install_ID
+    # {{{
     if [[ $IS_INSTALL_ID == "N" ]]
     then
         #this is where we focus on database performance - when not installing tomcat/idempiere - just the database!
-        
+
         #calculate memory
         TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
         echo "total memory in MB="$TOTAL_MEMORY
@@ -520,7 +560,7 @@ then
         AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*$CHUBOE_PROP_DB_OS_USAGE" | bc)
         AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
         echo "available memory in MB="$AVAIL_MEMORY
-        
+
         #Key Concept: how to pipe content with sudo priviledge - the >> operator does not keep sudo priviledges
         #call on https://github.com/sebastianwebber/pgconfig-api webservice to get optimized pg parameters
         curl 'https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB' >> $TEMP_DIR/pg.conf
@@ -531,16 +571,16 @@ then
         echo "NOTE: this script uses https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
         echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
         echo "--> See the chuboe_utils directory for installation directions">>$README
-                
+
         # sudo sed -i "$ a\random_page_cost = 2.0 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
-        
-        # Be aware that pgtune has a reputation for being too generous with work_mem and shared_buffers. 
+
+        # Be aware that pgtune has a reputation for being too generous with work_mem and shared_buffers.
         #   Setting these values too high can cause degraded performance.
         #   This is especially true if you perform high volumes of simple queries.
         # For more information about creating a highly available and fast database, consult:
-        # --> http://www.amazon.com/PostgreSQL-9-High-Availability-Cookbook/dp/1849516960 -- chapter 
+        # --> http://www.amazon.com/PostgreSQL-9-High-Availability-Cookbook/dp/1849516960 -- chapter
 
-        # Change 3 - kill the linux OOM    Killer. You hope your database takes up almost all the memory on your server. 
+        # Change 3 - kill the linux OOM    Killer. You hope your database takes up almost all the memory on your server.
         #    This section assumes that the database is the only application on this server.
 
         # Do this only after you vet and adjust the above settings. I am not convinced this step is the right thing to do.
@@ -549,6 +589,7 @@ then
         # This step is handled manually.
 
     fi
+    # }}}
 
     # start postgresql after all changes and before installing phppgadmin
     sudo service postgresql start
@@ -572,8 +613,10 @@ then
     echo "HERE END: Installing DB because IS_INSTALL_DB == Y"
 
 fi #end if IS_INSTALL_DB==Y
+# }}}
 
-# install desktop components
+# Install desktop components
+# {{{
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
     echo "HERE: Install desktop components because IS_INSTALL_DESKTOP == Y"
@@ -633,7 +676,7 @@ then
     echo "">>$README
     echo "NOTE: Creating an eclipse desktop shortcut.">>$README
     echo "---> You probably want to set the -Xmx to 2g if you have enough memory - example: -Xmx2g">>$README
-    
+
     # Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
     echo "[Desktop Entry]">$OSUSER_HOME/dev/launchEclipse.desktop
     echo "Encoding=UTF-8">> $OSUSER_HOME/dev/launchEclipse.desktop
@@ -655,14 +698,14 @@ then
     # get idempiere code
     echo "HERE: Installing iDempiere via mercurial"
     cd $OSUSER_HOME/dev
-    
+
     #Note: no longer perform the first clone - download the initial repo then clone.
     #hg clone https://bitbucket.org/idempiere/idempiere
-    
+
     unzip idempiere-hg-download.zip
     cd idempiere
     hg pull
-    
+
     # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
     cd $OSUSER_HOME/dev
     hg clone idempiere myexperiment
@@ -720,9 +763,10 @@ then
     echo "HERE END: Install desktop components because IS_INSTALL_DESKTOP == Y"
 
 fi #end if IS_INSTALL_DESKTOP = Y
-
+# }}}
 
 # Move postgresql files to a separate device.
+# {{{
 # This is incredibly useful if you are running in AWS where if the server dies, you lose your work.
 # By moving the DB files to an EBS drive, you help ensure your data will survive a server crash or shutdown.
 # Make note that Ubuntu renames the device from s.. to xv.. For example, device sdh will get renamed to xvdh.
@@ -755,8 +799,10 @@ then
     echo "HERE END: Moving DB because IS_MOVE_DB == Y"
 
 fi #end if IS_MOVE_DB==Y
+# }}}
 
 # Install iDempiere
+# {{{
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
     echo "HERE: Installing iDempiere because IS_INSTALL_ID == Y"
@@ -841,9 +887,9 @@ then
     echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
     echo "This utils directory has scripts that make supporting and maintaining iDempiere much much easier.">>$README
     cd $CHUBOE_UTIL
-    mv $SCRIPTPATH . 
+    mv $SCRIPTPATH .
     rm $CHUBOE_UTIL_HG/utils/chuboe.properties.orig
-    
+
     #Only run import script if parameter set accordingly
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
@@ -926,7 +972,7 @@ Y
 !
 #end of file input
 echo "HERE END: Launching console-setup.sh"
-    
+
 
     # create mercurial hgrc file for project.
     echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
@@ -1002,7 +1048,7 @@ echo "HERE END: Launching console-setup.sh"
     echo "HERE: configure apache to present webui on port 80 - reverse proxy"
     # install apache2 if missed during db/phpgadmin
     if [[ $IS_INSTALL_DB == "N" ]]
-    then 
+    then
         sudo apt-get install -y apache2
     fi
 
@@ -1025,13 +1071,13 @@ echo "HERE END: Launching console-setup.sh"
     sudo a2enmod authn_dbd
     sudo a2enmod ssl
     sudo service apache2 restart
-    
+
     #Take a back up of the iDempiere binary installation directory
     echo "HERE: create a backup of the iDempiere binaries"
     cd $CHUBOE_UTIL_HG/utils
     ./chuboe_hg_bindir.sh
     echo "HERE END: create a backup of the iDempiere binaries"
-    
+
     #Execute an update to get the latest version of the code and database
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
@@ -1044,8 +1090,10 @@ echo "HERE END: Launching console-setup.sh"
     echo "HERE END: Installing iDempiere because IS_INSTALL_ID == Y"
 
 fi #end if $IS_INSTALL_ID == "Y"
+# }}}
 
 # Run iDempiere
+# {{{
 if [[ $IS_LAUNCH_ID == "Y" ]]
 then
     echo "HERE: IS_LAUNCH_ID == Y"
@@ -1066,7 +1114,10 @@ then
     sudo /etc/init.d/$INITDNAME start
     echo "HERE END: IS_LAUNCH_ID == Y"
 fi
+# }}}
 
+# Cleanup and exit
+# {{{
 echo "">>$README
 echo "">>$README
 echo "Congratulations - the script seems to have executed successfully.">>$README
@@ -1079,9 +1130,10 @@ sudo chmod -R go-w $TEMP_DIR
 #sed -i "/CHUBOE_PROP_DB_PASSWORD/d" $CHUBOE_UTIL_HG_PROP_FILE
 
 exit 0
+# }}}
 
-#utility scripts
-
+# Utity scripts
+# {{{
 #the following is not currently used; however, keeping for reference.
 #update a proert file with a new value.
 set_chuboe_property (){
@@ -1089,4 +1141,5 @@ SET_PROP_TARGET_PROPERTY=$1
 SET_PROP_REPLACEMENT_VALUE=$2
 sed -i "s/\($SET_PROP_TARGET_PROPERTY *= *\).*/\1$SET_PROP_REPLACEMENT_VALUE/" $CHUBOE_UTIL_HG_PROP_FILE
 }
+# }}}
 
