@@ -805,6 +805,8 @@ fi #end if IS_MOVE_DB==Y
 # {{{
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
+    # create user documentation
+    # {{{
     echo "HERE: Installing iDempiere because IS_INSTALL_ID == Y"
     echo "">>$README
     echo "">>$README
@@ -821,11 +823,16 @@ then
     echo "You can use the 'sudo -i -u $IDEMPIEREUSER' to become the $IDEMPIEREUSER user.">>$README
     echo "Logging in as $IDEMPIEREUSER is often easier than issuing a bunch of sudo commands.">>$README
     echo "If you need to give $IDEMPIEREUSER a password, use the command 'sudo passwd $IDEMPIEREUSER'.">>$README
+    # }}}
+
     # create IDEMPIEREUSER user and group
+    # {{{
     # Note: we could create the iDempiere user as a system user; however, it is convenient to be able to "sudo -i -u $IDEMPIEREUSER" to perform tasks.
     sudo adduser $IDEMPIEREUSER --disabled-password --gecos "$IDEMPIEREUSER,none,none,none"
+    # }}}
 
     # create database password file for iDempiere user
+    # {{{
     sudo echo "*:*:*:$IDEMPIERE_DB_USER:$DBPASS">>$TEMP_DIR/.pgpass
     sudo echo "*:*:*:$IDEMPIERE_DB_USER_SU:$DBPASS_SU">>$TEMP_DIR/.pgpass
     sudo chown $IDEMPIEREUSER:$IDEMPIEREUSER $TEMP_DIR/.pgpass
@@ -841,6 +848,7 @@ then
         sudo -u $OSUSER chmod 600 $TEMP_DIR/.pgpass
         sudo mv $TEMP_DIR/.pgpass $OSUSER_HOME/
     fi
+    # }}}
 
     sudo apt-get --yes install openjdk-8-jdk
     if [[ $IS_INSTALL_DB == "N" ]]
@@ -849,7 +857,8 @@ then
         sudo apt-get -y install postgresql-client
     fi
 
-    # make installpath
+    # make installpath and copy
+    # {{{
     # clone id_installer again to chuboe_installpath
 
     sudo mkdir $INSTALLPATH
@@ -861,7 +870,10 @@ then
     cd $TEMP_DIR/idempiere.gtk.linux.x86_64/idempiere-server/
     cp -r * $INSTALLPATH
     cd $INSTALLPATH
+    # }}}
 
+    # user documentation
+    # {{{
     echo "">>$README
     echo "">>$README
     echo "This section applies to offsite backups.">>$README
@@ -880,8 +892,10 @@ then
     echo "">>$README
     echo "To update your server's time zone, run this command:">>$README
     echo "---> sudo dpkg-reconfigure tzdata">>$README
+    # }}}
 
     echo "HERE: Creating chuboe idempiere installation script directory"
+    # {{{
     echo "">>$README
     echo "">>$README
     echo "The script is installing the ChuBoe idempiere installation script and utilties in $CHUBOE_UTIL_HG.">>$README
@@ -889,8 +903,10 @@ then
     cd $CHUBOE_UTIL
     mv $SCRIPTPATH .
     rm $CHUBOE_UTIL_HG/utils/chuboe.properties.orig
+    # }}}
 
-    #Only run import script if parameter set accordingly
+    #Only run import script if $IS_INITIALIZE_DB parameter set accordingly
+    # {{{
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
         echo "HERE: Initializing the database"
@@ -899,19 +915,25 @@ then
         ./chuboe_idempiere_initdb.sh root
         echo "HERE END: Initializing the database"
     fi
+    # }}}
 
     # add pgcrypto to support apache based authentication
+    # {{{
     echo "HERE: pgcrypto extension"
     sudo -u $IDEMPIEREUSER psql -h $PIP -p $PGPORT -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "CREATE EXTENSION pgcrypto"
+    # }}}
 
     #update the database to only execute services on this machine
+    # {{{
     if [[ $IS_SET_SERVICE_IP == "Y" ]]
     then
         sudo -u $IDEMPIEREUSER psql -h $PIP -p $PGPORT -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update ad_schedule set runonlyonip='$MY_IP'"
         sudo -u $IDEMPIEREUSER psql -h $PIP -p $PGPORT -U $IDEMPIERE_DB_USER -d $IDEMPIERE_DB_NAME -c "update AD_SysConfig set value='Q' where AD_SysConfig_ID=50034"
     fi
+    # }}}
 
-echo "HERE: Launching console-setup.sh"
+    echo "HERE: Launching console-setup.sh"
+    # {{{
 cd $INSTALLPATH
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
@@ -972,9 +994,11 @@ Y
 !
 #end of file input
 echo "HERE END: Launching console-setup.sh"
+# }}}
 
 
-    # create mercurial hgrc file for project.
+    # create mercurial hgrc file for project and create first commit.
+    # {{{
     echo "[ui]">$CHUBOE_UTIL_HG/.hg/hgrc
     echo "username = YourName <YourName@YourURL.com>">>$CHUBOE_UTIL_HG/.hg/hgrc
     echo "">>$CHUBOE_UTIL_HG/.hg/hgrc
@@ -989,11 +1013,13 @@ echo "HERE END: Launching console-setup.sh"
 
     cd $CHUBOE_UTIL_HG
     hg commit -m "commit after installation - updated variables specific to this installation"
+    # }}}
 
     #prevent the backup's annoying 30 second delay
     sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
 
     # if server is dedicated to iDempiere, give it more java power
+    # {{{
     TOTAL_MEMORY=$(grep MemTotal /proc/meminfo | awk '{printf("%.0f\n", $2 / 1024)}')
     echo "total memory in MB="$TOTAL_MEMORY
     AVAIL_MEMORY=$(echo "$TOTAL_MEMORY*$CHUBOE_PROP_IDEMPIERE_OS_USAGE" | bc)
@@ -1023,8 +1049,10 @@ echo "HERE END: Launching console-setup.sh"
         # use the following command to confirm the above setting took: sudo -u $IDEMPIEREUSER jps -v localhost
         echo "HERE END: lots of memory and dedicated idempiere server"
     fi
+    # }}}
 
     #update ownership and write privileges after installation is complete
+    # {{{
     sudo chown -R $IDEMPIEREUSER:$IDEMPIEREUSER $INSTALLPATH
     sudo chown -R $OSUSER:$OSUSER_GROUP $CHUBOE_UTIL
     sudo chmod -R go-w $INSTALLPATH
@@ -1033,8 +1061,10 @@ echo "HERE END: Launching console-setup.sh"
     sudo chmod u+x $CHUBOE_UTIL_HG/utils/*.sh
     sudo chmod 600 $INSTALLPATH/idempiereEnv.properties
     sudo chmod 600 $CHUBOE_UTIL_HG/utils/chuboe.properties
+    # }}}
 
     # add OSUSER to IDEMPIEREUSER group
+    # {{{
     if [[ $IDEMPIEREUSER != $OSUSER ]]
     then
         echo "HERE: adding $OSUSER to $IDEMPIEREUSER group"
@@ -1044,8 +1074,10 @@ echo "HERE END: Launching console-setup.sh"
         echo "Your user ($OSUSER) has been added to the $IDEMPIEREUSER group.">>$README
         echo "You must restart your current SSH session for this setting to take effect.">>$README
     fi
+    # }}}
 
     echo "HERE: configure apache to present webui on port 80 - reverse proxy"
+    # {{{
     # install apache2 if missed during db/phpgadmin
     if [[ $IS_INSTALL_DB == "N" ]]
     then
@@ -1071,14 +1103,18 @@ echo "HERE END: Launching console-setup.sh"
     sudo a2enmod authn_dbd
     sudo a2enmod ssl
     sudo service apache2 restart
+    # }}}
 
     #Take a back up of the iDempiere binary installation directory
+    # {{{
     echo "HERE: create a backup of the iDempiere binaries"
     cd $CHUBOE_UTIL_HG/utils
     ./chuboe_hg_bindir.sh
     echo "HERE END: create a backup of the iDempiere binaries"
+    # }}}
 
     #Execute an update to get the latest version of the code and database
+    # {{{
     if [[ $IS_INITIALIZE_DB == "Y" ]]
     then
         echo "HERE: updating database to latest version"
@@ -1086,6 +1122,7 @@ echo "HERE END: Launching console-setup.sh"
         ./chuboe_idempiere_upgrade.sh -s -p
         echo "HERE END: updating database and binaries to latest version"
     fi
+    # }}}
 
     echo "HERE END: Installing iDempiere because IS_INSTALL_ID == Y"
 
