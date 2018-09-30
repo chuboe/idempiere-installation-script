@@ -850,12 +850,15 @@ then
     fi
     # }}}
 
+    # install jdk and psql if $IS_INSTALL_DB == "N"
+    # {{{
     sudo apt-get --yes install openjdk-8-jdk
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         echo "HERE: install postgresql client tools"
         sudo apt-get -y install postgresql-client
     fi
+    # }}}
 
     # make installpath and copy
     # {{{
