@@ -50,8 +50,8 @@ select ad_column_id from ad_column where isselectioncolumn = 'Y' and (seqnoselec
 );
 
 -- Track changes on all tables
---update ad_table set ischangelog = 'Y' where lower(tablename) like 'chuboe%';
---TODO: move the above SQL to AD_Column. AD_Table changelog value is not respected
+update ad_table set ischangelog = 'Y'; -- note this field is not respected; however, it does default to the column.
+update ad_column set isallowlogging = 'Y';
 
 -- Make change log tracking default on all new tables
 update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
