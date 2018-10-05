@@ -56,6 +56,9 @@ update ad_column set isallowlogging = 'Y';
 -- Make change log tracking default on all new tables
 update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
 
+-- update passwords from default
+-- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
+
 --update Attribute Set Instance fields to be a dropdown instead of special popup box
 --actions:
 	--move this section to a formal packin
