@@ -57,7 +57,7 @@ update ad_column set isallowlogging = 'Y';
 update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
 
 -- Make Window, Tab Field => Tab subtab => Single Row Layout default to N
-update ad_field set defaultvalue = 'N' where AD_Field_ID=124;
+update ad_column set defaultvalue = 'N' where AD_Column_ID=166;
 
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
