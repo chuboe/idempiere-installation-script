@@ -56,6 +56,9 @@ update ad_column set isallowlogging = 'Y';
 -- Make change log tracking default on all new tables
 update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
 
+-- Make Window, Tab Field => Tab subtab => Single Row Layout default to N
+update ad_field set defaultvalue = 'N' where AD_Field_ID=124;
+
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
 
