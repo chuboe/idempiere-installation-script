@@ -59,6 +59,13 @@ update AD_Column set defaultvalue = 'Y' where AD_Column_ID=8564;
 -- Make Window, Tab Field => Tab subtab => Single Row Layout default to N
 update ad_column set defaultvalue = 'N' where AD_Column_ID=166;
 
+-- Default all records to *
+update ad_column set defaultvalue = '0' 
+where defaultvalue = '@#AD_Org_ID@'
+and ad_table_id not in 
+(select ad_table_id from ad_table where lower(tablename) in ('c_order', 'c_invoice', 'gl_journal', 'm_inout', 'm_requisition', 'm_inventory', 'm_movement')
+);
+
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
 
