@@ -66,6 +66,9 @@ and ad_table_id not in
 (select ad_table_id from ad_table where lower(tablename) in ('c_order', 'c_invoice', 'gl_journal', 'm_inout', 'm_requisition', 'm_inventory', 'm_movement')
 );
 
+-- Make Request Calendar show for all clients
+update PA_DashboardContent set ad_client_id = 0 where PA_DashboardContent_ID=50004;
+
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
 
