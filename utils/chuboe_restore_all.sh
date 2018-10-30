@@ -13,11 +13,12 @@ TMP_BACKUP_PATH=/tmp/id_back/
 TMP_RESTORE_PATH=/tmp/id_restore_new/
 TMP_BACKUP_PATH_DIR=$TMP_BACKUP_PATH/dirs/
 TMP_RESTORE_PATH_DIR=$TMP_RESTORE_PATH/dirs/
-TMP_REMOTE_BACKUP_SERVER=localhost
+TMP_REMOTE_BACKUP_SERVER=NameOfYourBackupSourceServer
 TMP_REMOTE_BACKUP_USER=ubuntu
 TMP_HOSTNAME=$(hostname)
 TMP_SSH_PEM="" # example: " -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem"
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
+# In most cases, /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ is usually /home/idempiere/.ssh/
 # make sure to chmod 400 the pem
 
 # check to see if test server - else exit
