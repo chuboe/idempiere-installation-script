@@ -4,7 +4,7 @@
 
 # Use the following command to launch bashdb and ensure file paths are preserved
 # 	bash --debugger ./idempiere-installation-script/idempiere_install_script_master_linux.sh -- -P Silly -u ubuntu -l &>output.txt
-# NOTE: the -- before the script arguments - this tells bash to use the arguements for your script - not bash itself
+#   NOTE: the above is not correct - need to figure out how to pass variable into script - currently being ignored
 # http://bashdb.sourceforge.net/bashdb.html#Having-bash-invoke-the-debugger-and-your-shell-script
 
 sudo apt-get -y update
