@@ -61,7 +61,7 @@ OPTIONS:
     -P  DB password
     -l  Launch iDempiere as service
     -D  Install desktop development tools
-    -v  Specify iDempiere viersion - defaults to 5.1
+    -v  Specify iDempiere version - defaults to 5.1
     -J  Specify Jenkins URL - See chuboe.properties for default
     -j  Specify Jenkins project name - See chuboe.properties for default
     -b  Specify Jenkins build number - See chuboe.properties for default
