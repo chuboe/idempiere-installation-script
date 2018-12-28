@@ -852,7 +852,7 @@ then
 
     # install jdk and psql if $IS_INSTALL_DB == "N"
     # {{{
-    sudo apt-get --yes install openjdk-11-jdk
+    sudo apt-get --yes install openjdk-8-jdk
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         echo "HERE: install postgresql client tools"
