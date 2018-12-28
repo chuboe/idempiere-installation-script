@@ -852,6 +852,7 @@ then
 
     # install jdk and psql if $IS_INSTALL_DB == "N"
     # {{{
+    # update script to use jdk 11 when upgrading script to use iDempiere 6+
     sudo apt-get --yes install openjdk-8-jdk
     if [[ $IS_INSTALL_DB == "N" ]]
     then
