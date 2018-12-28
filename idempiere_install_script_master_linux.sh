@@ -976,8 +976,8 @@ sh console-setup.sh <<!
 
 
 
-
-
+CA
+US
 
 
 
