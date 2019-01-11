@@ -3,7 +3,12 @@
 
 --use this script to update gardenworld names to reflect your company
 CREATE OR REPLACE FUNCTION chuboe_demo_name () RETURNS text AS $$
-SELECT 'ChangeMe'::text --put your company's name here 
+SELECT 'ChangeMe'::text --put your company's name here - example: GeorgeDistribution
+$$ LANGUAGE sql;
+
+--use this script to update gardenworld names to reflect your company
+CREATE OR REPLACE FUNCTION chuboe_demo_abbv () RETURNS text AS $$
+SELECT 'ChangeMe'::text --put your company's abbreviation here - example: GDist
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION chuboe_demo_client () RETURNS numeric AS $$
@@ -16,6 +21,12 @@ set value = chuboe_demo_name(),
 name = chuboe_demo_name(),
 description = chuboe_demo_name()
 where ad_client_id = chuboe_demo_client();
+
+--update passwords to append abbreviation
+update ad_user
+set password = password || '_' || chuboe_demo_abbv()
+where password is not null 
+and ad_client_id in (chuboe_demo_client(),0);
 
 --update calendar
 update C_Calendar
