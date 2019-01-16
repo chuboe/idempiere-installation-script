@@ -43,6 +43,7 @@ set search_path to adempiere;
 --delete from ChuBoe_Replenish_Product_PO;
 --delete from chuboe_replenish_multiplier;
 
+delete from t_combinedaging;
 delete from ad_changelog;
 delete from c_allocationline;
 delete from c_allocationhdr;
