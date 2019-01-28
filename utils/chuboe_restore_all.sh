@@ -154,6 +154,11 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere
 # Prepend the browser tab with "TEST"
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set value = 'T_'||value where upper(name) = 'ZK_BROWSER_TITLE'"
 
+# remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
+sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
+# alternatively, you could set the value accordingly
+# sudo sed -i 's|-Xms.G -Xmx.G|-Xms2G -Xmx2G|g' /opt/idempiere-server/idempiere-server.sh
+
 # start idempiere  
 echo "HERE: starting iDempiere"
 sudo service idempiere start
