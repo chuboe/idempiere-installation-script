@@ -852,8 +852,9 @@ then
 
     # install jdk and psql if $IS_INSTALL_DB == "N"
     # {{{
-    # update script to use jdk 11 when upgrading script to use iDempiere 6+
-    sudo apt-get --yes install openjdk-8-jdk
+    sudo add-apt-repository ppa:openjdk-r/ppa -y
+    sudo apt-get update
+    sudo apt-get install openjdk-11-jdk -y
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         echo "HERE: install postgresql client tools"
