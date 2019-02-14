@@ -244,8 +244,8 @@ done
 
 # Process variables after flags
 # {{{
-IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/"
-IDEMPIERESOURCE_FILENAME="idempiereServer.gtk.linux.x86_64.zip"
+IDEMPIERESOURCE_HOSTPATH="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/org.idempiere.p2/target/products/org.adempiere.server.product/"
+IDEMPIERESOURCE_FILENAME="idempiereServer"$IDEMPIERE_VERSION"Daily.gtk.linux.x86_64.zip"
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/changes"
 
 # get the current user and group
