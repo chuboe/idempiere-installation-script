@@ -742,6 +742,8 @@ then
     echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
     echo " ------> http://jasperstudio.sf.net/updates">>$README
     echo " ------> note: use Report Design perspective when ready to create reports.">>$README
+    echo " ---> Vrapper (vim editor)">>$README
+    echo " ------> http://vrapper.sourceforge.net/update-site/stable">>$README
     echo "More detailed instructions for the following can be found at http://wiki.idempiere.org/en/Install_Development_Prerequisites">>$README
     echo "">>$README
     echo "">>$README
