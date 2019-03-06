@@ -156,8 +156,9 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere
 
 # remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
 sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
-# alternatively, you could set the value accordingly
+# alternatively, you could set the value accordingly to either of the following:
 # sudo sed -i 's|-Xms.G -Xmx.G|-Xms2G -Xmx2G|g' /opt/idempiere-server/idempiere-server.sh
+# sudo sed -i 's|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS -Xmx2048m -Xms2048m|g' /opt/idempiere-server/idempiere-server.sh
 
 # start idempiere  
 echo "HERE: starting iDempiere"
