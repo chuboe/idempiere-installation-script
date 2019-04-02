@@ -623,6 +623,10 @@ then
     echo "">>$README
     echo "">>$README
     echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
+    
+    echo "HERE:Install maven"
+    sudo apt-get update
+    sudo apt-get install -y maven
 
     # nice MATE desktop installation (http://c-nergy.be/blog/?p=9433 and http://c-nergy.be/blog/?p=8952)
     # http://wiki.mate-desktop.org/download)
