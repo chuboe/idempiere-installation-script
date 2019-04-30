@@ -81,10 +81,20 @@ jar -uf $DATABASE_OB_JAR osgi_inventory.txt
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
 sudo rm $EXPORT_DIR/$DATABASE_OB_EXPORT
 
-#push jar to S3
+#push jar to S3 directly from this server
 #uncomment below if needed
 #echo Push $EXPORT_DIR/$DATABASE_OB_JAR to $CHUBOE_AWS_S3_BUCKET
 #aws s3 cp $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read
+
+echo -------------------------------------------------------------------
+echo COPY PASTE THE FOLLOWING TO UPLOAD TO S3 FROM YOUR HOME COMPUTER
+echo -------------------------------------------------------------------
+echo exit
+echo scp_its ubuntu@\$IP_ITS_2TEST_APP:$EXPORT_DIR/$DATABASE_OB_JAR \~/Downloads/.
+echo cd \~/Downloads/
+echo aws s3 cp $DATABASE_OB_JAR s3://BUCKETNAMEHERE/FOLDERNAMEHERE/ --acl public-read-write
+
+
 
 echo -------------------------------------------------------------------
 echo -------         FINISHED iDempiere Obfuscation              -------
