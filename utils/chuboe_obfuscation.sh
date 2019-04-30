@@ -18,7 +18,8 @@ DATABASE_OB="obfus"
 DATABASE_TMP_EXPORT="obtempout.bak"
 DATABASE_OB_EXPORT="ExpDatObfus.dmp"
 DATABASE_OB_JAR="ExpDatObfus_"`date +%Y%m%d`_`date +%H%M%S`".jar"
-CHUBOE_AWS_S3_BUCKET="s3://BucketName/SubBucketName/"
+CHUBOE_AWS_S3_BUCKET_SUB="BucketName/SubBucketName"
+CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 
@@ -93,6 +94,7 @@ echo exit
 echo scp_its ubuntu@\$IP_ITS_2TEST_APP:$EXPORT_DIR/$DATABASE_OB_JAR \~/Downloads/.
 echo cd \~/Downloads/
 echo aws s3 cp $DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read-write
+echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/ExpDatObfus_20190430_222303.jar
 
 
 
