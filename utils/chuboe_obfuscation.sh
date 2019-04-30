@@ -92,7 +92,7 @@ echo -------------------------------------------------------------------
 echo exit
 echo scp_its ubuntu@\$IP_ITS_2TEST_APP:$EXPORT_DIR/$DATABASE_OB_JAR \~/Downloads/.
 echo cd \~/Downloads/
-echo aws s3 cp $DATABASE_OB_JAR s3://BUCKETNAMEHERE/FOLDERNAMEHERE/ --acl public-read-write
+echo aws s3 cp $DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read-write
 
 
 
