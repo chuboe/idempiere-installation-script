@@ -4,6 +4,10 @@
 # Note: The above command will replace your existing cron jobs (if any).
 # Note: You can also issue "crontab -e" and paste the below commands to the end of your file.
 
+# Only keep last 20 backups - delete others. 
+# Note: while this ensures you do not build up lots of backups (hogging space), this does not ensure the backups are valid
+# 20 07 * * * cd /opt/chuboe/idempiere-installation-script/chuboe_backup/; ls -1tr  Exp* | head -n -20 | xargs -d  '\n' rm -f --
+
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
 # Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
