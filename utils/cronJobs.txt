@@ -1,8 +1,9 @@
-# This file contains many of the cron jobs you will need to support iDempiere.
+# WARNING: edit the source file - Do not edit these settings using crontab -e
 # Uncomment the ones you want to use, and execute the following command:
 #   "crontab /opt/chuboe/idempiere-installation-script/utils/cronJobs.txt"
 # Note: The above command will replace your existing cron jobs (if any).
-# Note: You can also issue "crontab -e" and paste the below commands to the end of your file.
+
+# This file contains many of the cron jobs you will need to support iDempiere.
 
 # Only keep last 20 backups - delete others. 
 # Note: while this ensures you do not build up lots of backups (hogging space), this does not ensure the backups are valid
