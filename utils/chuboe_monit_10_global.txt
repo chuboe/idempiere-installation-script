@@ -1,3 +1,6 @@
+# NOTE: edit this file instead of editing the /etc/monit/monitrc file
+# NOTE: please let me know if you finsitd cool and better ways to monitor iDempiere related processes and resources!
+
 # STEP: 1 - install monit service:
 # sudo apt udpate
 # sudo apt install monit
