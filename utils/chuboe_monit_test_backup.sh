@@ -12,7 +12,7 @@ then
    test $AGE_IN_SECONDS -lt 90000 # exits with non 0 if older than 24 hours
 
    # size
-   MINIMIM_SIZE=30000000
+   MINIMIM_SIZE=30000000 # about 30MB
    ACTUAL_SIZE=$(wc -c <"$FILE")
    echo "actual file size: "$ACTUAL_SIZE
    test $ACTUAL_SIZE -gt $MINIMIM_SIZE
