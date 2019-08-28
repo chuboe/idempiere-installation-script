@@ -1,0 +1,11 @@
+# Check Apache
+check process apache with pidfile /var/run/apache2/apache2.pid 
+    if failed host localhost port 80 protocol http
+       then alert
+
+# Check iDempiere
+check process idempiere 
+	matching "java -Xms"
+    if failed host localhost port 8080 protocol http
+       then alert 
+    group server
