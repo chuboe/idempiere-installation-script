@@ -7,3 +7,15 @@
 check host localhost
     if failed icmp type echo count 3 with timeout 3 seconds then alert
     if failed port 5432 protocol pgsql with timeout 15 seconds then alert
+
+# Make sure there is enough room
+# Use the following command to see which devices you need to monitor: df -h
+# NOTE: that if you installed the DB on a separate drive, you will need to update the /dev accordingly
+# Ubuntu on AWS uses xvda, xvdb, etc ... naming convention
+check filesystem primary_db_disk with path /dev/xvda1
+    if failed permission 660 then unmonitor
+    if failed uid "root" then unmonitor
+    if failed gid "disk" then unmonitor
+    if space usage > 80% for 5 times within 15 cycles then alert
+    if space usage > 99% then stop
+    group server
