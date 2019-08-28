@@ -1,3 +1,6 @@
+# Install monit if not already installed - see chuboe_monit_10_global.txt for instructions
+# Copy this file as root to /etc/monit/conf.d/ if this server runs iDempiere
+
 # Check Apache
 check process apache with pidfile /var/run/apache2/apache2.pid 
     if failed host localhost port 80 protocol http
