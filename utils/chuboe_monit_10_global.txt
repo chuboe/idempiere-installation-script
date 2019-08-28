@@ -19,8 +19,8 @@ set mailserver smtp.gmail.com port 587 #UPDATE to reflect your mailserver
     using tlsv12
 
 check system $HOST 
-    if loadavg (1min) > 4 then alert
-    if loadavg (5min) > 2 then alert
+    if loadavg (1min) > 1 then alert
+    if loadavg (5min) > 1 then alert
     if memory usage > 75% then alert
     if swap usage > 25% then alert
     if cpu usage (user) > 70% then alert
