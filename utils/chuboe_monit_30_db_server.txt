@@ -1,3 +1,6 @@
+# NOTE: edit this file instead of editing the /etc/monit/monitrc file
+# NOTE: please let me know if you find cool and better ways to monitor iDempiere related processes and resources!
+
 # Install monit if not already installed - see chuboe_monit_10_global.txt for instructions
 # Copy this file as root to /etc/monit/conf.d/ if this server has a database
 
