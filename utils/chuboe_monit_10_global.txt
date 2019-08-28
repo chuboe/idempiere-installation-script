@@ -1,0 +1,19 @@
+# STEP: 1 - install monit service:
+# sudo apt udpate
+# sudo apt install monit
+
+# STEP: 2 - update the below lines with "#UPDATE" comments
+
+# STEP: 3 - copy this file to /etc/monit/conf.d/
+
+# Details:
+set alert YOUR@EMAIL.COM not on { instance, action } #UPDATE to reflect your email address
+
+# enable website portal to view details
+set httpd port 2812 and
+     allow admin:CHANGEME      # require user 'admin' with password 'CHANGEME' #UPDATE password accordingly
+
+# reference: http://xmodulo.com/send-email-notifications-gmail-smtp-server-linux.html
+set mailserver smtp.gmail.com port 587 #UPDATE to reflect your mailserver
+    username "<your-gmail-ID>" password "<gmail-password>"
+    using tlsv12
