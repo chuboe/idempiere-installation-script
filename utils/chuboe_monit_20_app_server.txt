@@ -11,13 +11,24 @@ check process apache with pidfile /var/run/apache2/apache2.pid
 
 # Check iDempiere
 check process idempiere 
-	matching "java -Xms"
+    matching "java -Xms"
     if failed host localhost port 8080 protocol http
        then alert 
     group server
  
- # Check backup process to see if ExpDat.dmp is new enough and big enough to be valid
- check program backup_valid with path /opt/chuboe/idempiere-installation-script/utils/chuboe_monit_test_backup.sh /opt/idempiere-server/data/ExpDat.dmp
-     if status != 0
-         then alert
-     group server
+# Check backup process to see if ExpDat.dmp is new enough and big enough to be valid
+check program backup_valid with path /opt/chuboe/idempiere-installation-script/utils/chuboe_monit_test_backup.sh /opt/idempiere-server/data/ExpDat.dmp
+    if status != 0
+        then alert
+    group server
+
+# Make sure there is enough room
+# Use the following command to see which devices you need to monitor: df -h
+# Ubuntu on AWS uses xvda, xvdb, etc ... naming convention
+check filesystem primary_app_disk with path /dev/xvda1
+    if failed permission 660 then unmonitor
+    if failed uid "root" then unmonitor
+    if failed gid "disk" then unmonitor
+    if space usage > 60% for 5 times within 15 cycles then alert
+    if space usage > 99% then stop
+    group server
