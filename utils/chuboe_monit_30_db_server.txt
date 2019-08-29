@@ -4,7 +4,7 @@
 # Install monit if not already installed - see chuboe_monit_10_global.txt for instructions
 # Copy this file as root to /etc/monit/conf.d/ if this server has a database
 
-check host localhost
+check host localhost with address localhost
     if failed icmp type echo count 3 with timeout 3 seconds then alert
     if failed port 5432 protocol pgsql with timeout 15 seconds then alert
 
