@@ -676,9 +676,7 @@ then
 
     unzip idempiere-hg-download.zip
     cd idempiere
-    # TODO: need the ability to set the source (Logilite vs core iDempiere)
-    # Hardcoded to logilite for now - just for testing
-    hg pull https://bitbucket.org/logilite/idempiere/
+    hg pull $CHUBOE_PROP_REPO_URL
 
     # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
     cd $OSUSER_HOME/dev
