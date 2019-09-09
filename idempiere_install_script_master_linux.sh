@@ -628,8 +628,6 @@ then
     sudo apt-get update
     sudo apt-get install -y maven
 
-    # nice MATE desktop installation (http://c-nergy.be/blog/?p=9433 and http://c-nergy.be/blog/?p=8952)
-    # http://wiki.mate-desktop.org/download)
     echo "HERE:Installing desktop"
     sudo apt-get update
     sudo apt install -y --without-install-recommends ubuntu-gnome-desktop
@@ -644,27 +642,6 @@ then
     # sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
     # sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
     # sudo service xrdp restart
-
-    echo "HERE: set the ubuntu password using passwd command to log in remotely"
-    echo "">>$README
-    echo "">>$README
-    echo "ACTION REQUIRED: before you can log in using remote desktop, you must set the ubuntu password using 'passwd' command.">>$README
-    echo "---> to set the password for the ubuntu user: 'sudo passwd $OSUSER'">>$README
-    echo "---> the script installed 'xrdp' which allows you to use Windows Remote Desktop to connect.">>$README
-    echo "">>$README
-    echo "">>$README
-    echo "NOTE: Use the following linux command to see what XRDP/VNC sessions are open:">>$README
-    echo "---> wvnc -> which is short for: sudo netstat -tulpn | grep Xvnc">>$README
-    echo "---> It is usually 5910 the first time you connect.">>$README
-    echo "NOTE: Desktop niceties - right-click on desktop -> change desktop background:">>$README
-    echo "---> set desktop wallpaper to top-left gradient">>$README
-    echo "---> set theme to menta">>$README
-    echo "---> set fixed width font to monospace">>$README
-    echo "NOTE: Command/Terminal niceties - edit -> Profile Preferences:">>$README
-    echo "---> General Tab -> turn off the terminal bell">>$README
-    echo "---> Colors tab -> Choose White on Black">>$README
-    echo "Other niceties: http://community.linuxmint.com/tutorial/view/1395">>$README
-    echo "NOTE: If the remote desktop ever seems locked or will not accept keystrokes, press the alt key. When you alt+tab away, the alt key stays pressed.">>$README
 
     mkdir $OSUSER_HOME/dev
     mkdir $OSUSER_HOME/dev/downloads
@@ -687,10 +664,6 @@ then
     echo "Exec=$OSUSER_HOME/dev/eclipse/eclipse  -vmargs -Xmx2g">> $OSUSER_HOME/dev/launchEclipse.desktop
     echo "Comment[en_US]=">> $OSUSER_HOME/dev/launchEclipse.desktop
 
-    # create a shortcut to see what vnc sessions are open (used for XRDP remote desktop)
-    sudo sed -i "$ a\alias wvnc='sudo netstat -tulpn | grep Xvnc'" $OSUSER_HOME/.bashrc
-    sudo sed -i "$ a\alias mateout='mate-session-save --force-logout'" $OSUSER_HOME/.bashrc
-
     echo "">>$README
     echo "">>$README
     echo "A clean or pristine copy of the iDempiere code is downloaded to $OSUSER_HOME/dev/idempiere">>$README
@@ -704,6 +677,7 @@ then
 
     unzip idempiere-hg-download.zip
     cd idempiere
+    # TODO: need the ability to set the source (Logilite vs core iDempiere)
     hg pull
 
     # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
