@@ -630,24 +630,20 @@ then
 
     # nice MATE desktop installation (http://c-nergy.be/blog/?p=9433 and http://c-nergy.be/blog/?p=8952)
     # http://wiki.mate-desktop.org/download)
-    echo "HERE:Installing xrdp and mate-desktop"
+    echo "HERE:Installing desktop"
     sudo apt-get update
-    sudo apt-get install -y xrdp x11-xkb-utils pkg-config
-    sudo apt-get update
-    # the below line will install a smaller footprint desktop. Comment out the ubuntu-mate-core ubuntu-mate-desktop line if you use it.
-    # sudo apt-get install -y mate-desktop-environment
-    sudo apt-get install -y mate-core mate-desktop-environment mate-notification-daemon
-    sudo apt-get install -y chromium-browser gimp xarchiver gedit
-    sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
-    sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
-    sudo service xrdp restart
+    sudo apt install -y --without-install-recommends ubuntu-gnome-desktop
+    sudo apt-get install -y chromium-browser gimp xarchiver gedit zip firefox
 
-    #new desktop installation (compatible with 14.04) - alternative to Mate Desktop
-    #sudo apt-get install -y xrdp lxde
-    #sudo apt-get install -y chromium-browser leafpad xarchiver gimp
-    #echo lxsession -s LXDE -e LXDE >$OSUSER_HOME/.xsession
-    #sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
-    #sudo service xrdp restart
+    # install if you want to use pop theme
+    # sudo apt install -y pop-gtk-theme pop-icon-theme gnome-tweak-tool
+
+    # uncomment if need xrdp
+    # sudo apt-get install -y xrdp x11-xkb-utils pkg-config
+    # sudo apt-get update
+    # sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
+    # sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
+    # sudo service xrdp restart
 
     echo "HERE: set the ubuntu password using passwd command to log in remotely"
     echo "">>$README
