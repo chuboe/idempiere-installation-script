@@ -634,14 +634,13 @@ then
     sudo apt-get install -y chromium-browser gimp xarchiver gedit zip firefox
 
     # install if you want to use pop theme
+    # sudo add-apt-repository ppa:system76/pop
+    # sudo apt update
     # sudo apt install -y pop-gtk-theme pop-icon-theme gnome-tweak-tool
-
-    # uncomment if need xrdp
-    # sudo apt-get install -y xrdp x11-xkb-utils pkg-config
-    # sudo apt-get update
-    # sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
-    # sudo sed -i "s|port=-1|port=ask-1|" /etc/xrdp/xrdp.ini
-    # sudo service xrdp restart
+    
+    # remove sudo timeout
+    # sudo visudo
+    # add line: Defaults timestamp_timeout=-1
 
     mkdir $OSUSER_HOME/dev
     mkdir $OSUSER_HOME/dev/downloads
