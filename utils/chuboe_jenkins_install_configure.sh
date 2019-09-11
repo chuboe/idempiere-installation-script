@@ -1,22 +1,21 @@
 ## NOTE: this is not an automated isntall script (not yet)
 ## The below steps help you create an independent jenkins machine to build iDempiere and your plugins
 ## Because Jenkins runs on port 8080 by default, you will probably want to install the below on a dedicated machine
-## This script was last successfully run on Ubuntu 14.04
-
-## NOTE: if you are installing this in an AWS VPC and you are getting the following error:
-##    sudo: unable to resolve host
-## Execute this script: https://bitbucket.org/cboecking/idempiere-installation-script/src/default/utils/setHostName.sh
 
 ## ASSUMPTIONS
-## Ubuntu 16.04
+## Ubuntu 18.04
 ## local OS username = ubuntu
 JENKINS_OS_USER="ubuntu"
 
 #####Install needed tools
+sudo add-apt-repository ppa:openjdk-r/ppa -y
+sudo apt-get update
+sudo apt-get install openjdk-11-jdk -y
+
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-8-jdk rpl ant
+sudo apt-get -y install jenkins zip mercurial htop s3cmd rpl ant
 
 ## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 ##    /etc/init.d/jenkins
@@ -85,7 +84,7 @@ sudo service apache2 restart
 #Instead, I had to create my own local copy. This section details the steps. Hopefully, you will not need to do this!!
 # get the copy of the maven direcotry here: https://drive.google.com/file/d/0Byf55-KOXmDrOHJqbExLS0lzWFE/view?usp=sharing -O maven2.tar.gz
 # untar it in /var/www/html/
-# make sure the reverse proxy is off (if enabled above): 
+# make sure the reverse proxy is off (if enabled above):
  ###  bring down the proxy
  #sudo a2dissite jenkins.conf
  #sudo a2ensite 000-default.conf
@@ -178,13 +177,13 @@ sudo service apache2 restart
 rpl downloads.sourceforge.net netcologne.dl.sourceforge.net ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties
 
 #2 Invoke Ant
-#Targets: 
+#Targets:
 copy -propertyfile ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties
 #Build File (click advanced button):
 ${WORKSPACE}/org.adempiere.server-feature/copyjars.xml
 
 #3 Shell - clear workspace
-rm -rf ${WORKSPACE}/buckminster.output/ 
+rm -rf ${WORKSPACE}/buckminster.output/
 #${WORKSPACE}/buckminster.temp/ ${WORKSPACE}/targetPlatform/
 
 #4 Buckminster - build iDempiere
