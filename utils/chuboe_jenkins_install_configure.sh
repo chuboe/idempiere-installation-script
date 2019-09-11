@@ -17,10 +17,6 @@ sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources
 sudo apt-get update
 sudo apt-get -y install jenkins zip mercurial htop s3cmd rpl ant maven
 
-## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
-##    /etc/init.d/jenkins
-##    https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu (search google for "install jenkins")
-
 #####clone a local repository of iDempiere
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
 #  FYI - jenkins will create yet another clone for its build purposes
@@ -32,22 +28,42 @@ mkdir idempiere_source
 cd idempiere_source
 hg clone https://bitbucket.org/idempiere/idempiere
 
-#Reference
-#http://wiki.idempiere.org/en/Building_iDempiere_without_Eclipse
+## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 
-#####Install Director and Buckminster 4.5 - used for iDempiere release3.x and release4.x and release5.x
-sudo mkdir /opt/buckminster-headless-4.5
-cd /opt/buckminster-headless-4.5
-sudo wget https://github.com/hengsin/headless/raw/master/director_latest.zip
-sudo unzip /opt/buckminster-headless-4.5/director_latest.zip -d /opt/buckminster-headless-4.5/
+#####Install Jenkins plugins (performed in jenkins UI)
+# navigate to: www.YourURL.com:8080
+# follow the instructions to create your admin account
+# Jenkins Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
+## required
+# (1) mercurial
+# (2) maven integration
+# (3) pipeline maven integration
+## optional
+# (3) Log Parser - scans logs for known issues - flags the build as a fail if issues found
+# (4) Naginator - automatically kicks off a re-build if a fail is encountered. This is helpful if mirrors are acting flakey.
 
-cd /opt/buckminster-headless-4.5/director
-sudo ./director -r https://github.com/hengsin/headless/raw/master/4.5/ -d /opt/buckminster-headless-4.5/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
+#####Configure Maven
+# Jenkins Menu => Manage Jenkins => Global Tool Configuration => Maven section
+# Add Maven button
+# Name: Maven
+# Install automatically: checked
+# Version: 3.6.0
 
-cd /opt/buckminster-headless-4.5
-sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.core.headless.feature
-sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.pde.headless.feature
-sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.maven.headless.feature
+#####Create a new 'idempiere62' maven project
+# Source Code Management => Mercurial with:
+# URL: /opt/source/idempiere_source/idempiere
+# Revsion Type: Branch
+# Revision: release-6.2
+#
+# PreStep: Execute shell with:
+# rm -rf ${WORKSPACE}/org.idempiere.p2/target/products
+#
+# Build with:
+# Root POM: pom.xml
+# Goals and options: verify -U
+
+
+
 
 #####Using Apache as a reverse proxy to protect Jenkins
 sudo apt-get install -y apache2
