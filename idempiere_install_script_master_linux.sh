@@ -676,7 +676,7 @@ then
 
     unzip idempiere-hg-download.zip
     cd idempiere
-    hg pull $CHUBOE_PROP_REPO_URL
+    hg pull $CHUBOE_PROP_JENKINS_REPO_URL
 
     # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
     cd $OSUSER_HOME/dev
