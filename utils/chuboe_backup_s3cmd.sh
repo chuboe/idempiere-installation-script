@@ -52,7 +52,7 @@ then
     echo Local Backup Succeeded.  Copying to S3 bucket. >> "$LOGFILE"
     if 
         # fully qualified path to support running from cron
-        /usr/local/bin/s3cmd sync --delete-removed "$LOCALBACKDIR"/ s3://"$S3BUCKET"/ >> "$LOGFILE"
+        /usr/local/bin/s3cmd sync "$LOCALBACKDIR"/ s3://"$S3BUCKET"/ >> "$LOGFILE"
         /usr/local/bin/s3cmd sync --delete-removed --delete-after "$LOCALBACKDIR"/latest/ s3://"$S3BUCKET"/latest/ >> "$LOGFILE"
     then
         echo Copy of backup files to S3 succeeded. >> "$LOGFILE"
