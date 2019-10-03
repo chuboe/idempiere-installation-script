@@ -461,6 +461,128 @@ echo "HERE: Finished installing s3cmd"
 # http://apple.stackexchange.com/questions/10139/how-do-i-increase-sudo-password-remember-timeout
 # }}}
 
+# Install desktop components
+# {{{
+if [[ $IS_INSTALL_DESKTOP == "Y" ]]
+then
+    echo "HERE: Install desktop components because IS_INSTALL_DESKTOP == Y"
+    echo "">>$README
+    echo "">>$README
+    echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
+
+    echo "HERE:Install maven"
+    sudo apt-get update
+    sudo apt-get install -y maven
+
+    echo "HERE:Installing desktop"
+    sudo apt-get update
+    sudo apt install -y --without-install-recommends ubuntu-gnome-desktop
+    sudo apt-get install -y chromium-browser gimp xarchiver gedit zip firefox
+
+    # install if you want to use pop theme
+    # sudo add-apt-repository ppa:system76/pop
+    # sudo apt update
+    # sudo apt install -y pop-gtk-theme pop-icon-theme gnome-tweak-tool
+
+    # remove sudo timeout
+    # sudo visudo
+    # add line: Defaults timestamp_timeout=-1
+
+    mkdir $OSUSER_HOME/dev
+    mkdir $OSUSER_HOME/dev/downloads
+    mkdir $OSUSER_HOME/dev/plugins
+
+    tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSE_SOURCE_FILENAME -C $OSUSER_HOME/dev/
+
+    echo "">>$README
+    echo "">>$README
+    echo "NOTE: Creating an eclipse desktop shortcut.">>$README
+    echo "---> You probably want to set the -Xmx to 2g if you have enough memory - example: -Xmx2g">>$README
+
+    # Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
+    echo "[Desktop Entry]">$OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Encoding=UTF-8">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Type=Application">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Name=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Name[en_US]=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Icon=$OSUSER_HOME/dev/eclipse/icon.xpm">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Exec=$OSUSER_HOME/dev/eclipse/eclipse  -vmargs -Xmx2g">> $OSUSER_HOME/dev/launchEclipse.desktop
+    echo "Comment[en_US]=">> $OSUSER_HOME/dev/launchEclipse.desktop
+
+    echo "">>$README
+    echo "">>$README
+    echo "A clean or pristine copy of the iDempiere code is downloaded to $OSUSER_HOME/dev/idempiere">>$README
+    echo "A working copy of iDempiere's code is downloaded to $OSUSER_HOME/dev/myexperiment">>$README
+    # get idempiere code
+    echo "HERE: Installing iDempiere via mercurial"
+    cd $OSUSER_HOME/dev
+
+    #Note: no longer perform the first clone - download the initial repo then clone.
+    #hg clone https://bitbucket.org/idempiere/idempiere
+
+    unzip idempiere-hg-download.zip
+    cd idempiere
+    hg pull $CHUBOE_PROP_JENKINS_REPO_URL
+
+    # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
+    cd $OSUSER_HOME/dev
+    hg clone idempiere myexperiment
+    cd $OSUSER_HOME/dev/myexperiment
+    # create a targetPlatform directory for eclipse - used when materializing the project
+    mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
+    echo "HERE END: Installing iDempiere via mercurial"
+
+    echo "">>$README
+    echo "">>$README
+    echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
+    echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
+    # this represents the current revision of the last jenkins.chuckboecking.com $IDEMPIERE_VERSION build
+    hg update -r $JENKINS_CURRENT_REV
+
+    # go back to home directory
+    cd
+
+    echo "">>$README
+    echo "">>$README
+    echo "This section discusses how to build iDempiere in Eclipse">>$README
+    echo "STEP 1">>$README
+    echo "To launch eclipse, copy the file named launchEclipse in the $OSUSER_HOME/dev/ folder to your desktop.">>$README
+    echo "Open Eclipse.">>$README
+    echo "Choose the myexperiment folder as your workspace when eclipse launches.">>$README
+    echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>$README
+    echo "Add the mercurial and buckminster plugins.">>$README
+    echo " ---> Mercurial">>$README
+    echo " ------> https://bitbucket.org/mercurialeclipse/update-site/raw/default/">>$README
+    echo " ------> choose mercurial but not windows binaries">>$README
+    echo " ---> Buckminster">>$README
+    echo " ------> https://github.com/hengsin/bucky-updates-4.5/raw/master">>$README
+    echo " ------> choose Core, Maven, and PDE">>$README
+    echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
+    echo " ------> http://jasperstudio.sf.net/updates">>$README
+    echo " ------> note: use Report Design perspective when ready to create reports.">>$README
+    echo "More detailed instructions for the following can be found at http://wiki.idempiere.org/en/Install_Development_Prerequisites">>$README
+    echo "">>$README
+    echo "">>$README
+    echo "STEP 2">>$README
+    echo "Click on Window > Preferences > Plug-in Development > Target Platform.">>$README
+    echo "Create your target platform.">>$README
+    echo "Click on File > Import > Buckminster > Materialize from Buckminster CQUERY.">>$README
+    echo "Materialize the project. If you browse to org.adempiere.sdk-feature/adempiere.cquery (instead of MSPEC),">>$README
+    echo " ---> eclipse will automatically build the workspace as part of the buckminster import process">>$README
+    echo "If you get errors when running install.app, try cleaning the project. Menu->Project->Clean">>$README
+    echo "If you are materializing the development or 3.0 branch, you might get errors with the org.zkoss.zk.library project.">>$README
+    echo " ---> If so, right-click on the org.zkoss.zk.library, and choose Buckminster->Envoke Action... -> fetch.dependency.jars and -> buckminster.clean actions.">>$README
+    echo "">>$README
+    echo "">>$README
+    echo "Important Note!">>$README
+    echo "iDempiere is installed twice: first as a service, and second in eclipse.">>$README
+    echo "If you run the iDempiere server through eclipse, make sure you stop the iDempiere service using 'sudo service idempiere stop' first.">>$README
+
+    echo "HERE END: Install desktop components because IS_INSTALL_DESKTOP == Y"
+
+fi #end if IS_INSTALL_DESKTOP = Y
+# }}}
+
 # Install database
 # {{{
 if [[ $IS_INSTALL_DB == "Y" ]]
@@ -613,128 +735,6 @@ then
     echo "HERE END: Installing DB because IS_INSTALL_DB == Y"
 
 fi #end if IS_INSTALL_DB==Y
-# }}}
-
-# Install desktop components
-# {{{
-if [[ $IS_INSTALL_DESKTOP == "Y" ]]
-then
-    echo "HERE: Install desktop components because IS_INSTALL_DESKTOP == Y"
-    echo "">>$README
-    echo "">>$README
-    echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
-
-    echo "HERE:Install maven"
-    sudo apt-get update
-    sudo apt-get install -y maven
-
-    echo "HERE:Installing desktop"
-    sudo apt-get update
-    sudo apt install -y --without-install-recommends ubuntu-gnome-desktop
-    sudo apt-get install -y chromium-browser gimp xarchiver gedit zip firefox
-
-    # install if you want to use pop theme
-    # sudo add-apt-repository ppa:system76/pop
-    # sudo apt update
-    # sudo apt install -y pop-gtk-theme pop-icon-theme gnome-tweak-tool
-
-    # remove sudo timeout
-    # sudo visudo
-    # add line: Defaults timestamp_timeout=-1
-
-    mkdir $OSUSER_HOME/dev
-    mkdir $OSUSER_HOME/dev/downloads
-    mkdir $OSUSER_HOME/dev/plugins
-
-    tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSE_SOURCE_FILENAME -C $OSUSER_HOME/dev/
-
-    echo "">>$README
-    echo "">>$README
-    echo "NOTE: Creating an eclipse desktop shortcut.">>$README
-    echo "---> You probably want to set the -Xmx to 2g if you have enough memory - example: -Xmx2g">>$README
-
-    # Create shortcut with appropriate command arguments in base eclipse directory - copy this file to your Desktop when you login.
-    echo "[Desktop Entry]">$OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Encoding=UTF-8">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Type=Application">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Name=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Name[en_US]=eclipse">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Icon=$OSUSER_HOME/dev/eclipse/icon.xpm">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Exec=$OSUSER_HOME/dev/eclipse/eclipse  -vmargs -Xmx2g">> $OSUSER_HOME/dev/launchEclipse.desktop
-    echo "Comment[en_US]=">> $OSUSER_HOME/dev/launchEclipse.desktop
-
-    echo "">>$README
-    echo "">>$README
-    echo "A clean or pristine copy of the iDempiere code is downloaded to $OSUSER_HOME/dev/idempiere">>$README
-    echo "A working copy of iDempiere's code is downloaded to $OSUSER_HOME/dev/myexperiment">>$README
-    # get idempiere code
-    echo "HERE: Installing iDempiere via mercurial"
-    cd $OSUSER_HOME/dev
-
-    #Note: no longer perform the first clone - download the initial repo then clone.
-    #hg clone https://bitbucket.org/idempiere/idempiere
-
-    unzip idempiere-hg-download.zip
-    cd idempiere
-    hg pull $CHUBOE_PROP_JENKINS_REPO_URL
-
-    # create a copy of the idempiere code named myexperiment. Use the myexperiment repository and not the idempiere (pristine)
-    cd $OSUSER_HOME/dev
-    hg clone idempiere myexperiment
-    cd $OSUSER_HOME/dev/myexperiment
-    # create a targetPlatform directory for eclipse - used when materializing the project
-    mkdir $OSUSER_HOME/dev/myexperiment/targetPlatform
-    echo "HERE END: Installing iDempiere via mercurial"
-
-    echo "">>$README
-    echo "">>$README
-    echo "The working copy of iDempiere code in $OSUSER_HOME/dev/myexperiment has been updated to version $IDEMPIERE_VERSION">>$README
-    echo "The script downloaded binaries from the jenkins build: $JENKINSPROJECT">>$README
-    # this represents the current revision of the last jenkins.chuckboecking.com $IDEMPIERE_VERSION build
-    hg update -r $JENKINS_CURRENT_REV
-
-    # go back to home directory
-    cd
-
-    echo "">>$README
-    echo "">>$README
-    echo "This section discusses how to build iDempiere in Eclipse">>$README
-    echo "STEP 1">>$README
-    echo "To launch eclipse, copy the file named launchEclipse in the $OSUSER_HOME/dev/ folder to your desktop.">>$README
-    echo "Open Eclipse.">>$README
-    echo "Choose the myexperiment folder as your workspace when eclipse launches.">>$README
-    echo "Click on Help menu ==> Add New Software menu item ==> click the Add button.">>$README
-    echo "Add the mercurial and buckminster plugins.">>$README
-    echo " ---> Mercurial">>$README
-    echo " ------> https://bitbucket.org/mercurialeclipse/update-site/raw/default/">>$README
-    echo " ------> choose mercurial but not windows binaries">>$README
-    echo " ---> Buckminster">>$README
-    echo " ------> https://github.com/hengsin/bucky-updates-4.5/raw/master">>$README
-    echo " ------> choose Core, Maven, and PDE">>$README
-    echo " ---> JasperStudio (Optional for Jasper Reports)">>$README
-    echo " ------> http://jasperstudio.sf.net/updates">>$README
-    echo " ------> note: use Report Design perspective when ready to create reports.">>$README
-    echo "More detailed instructions for the following can be found at http://wiki.idempiere.org/en/Install_Development_Prerequisites">>$README
-    echo "">>$README
-    echo "">>$README
-    echo "STEP 2">>$README
-    echo "Click on Window > Preferences > Plug-in Development > Target Platform.">>$README
-    echo "Create your target platform.">>$README
-    echo "Click on File > Import > Buckminster > Materialize from Buckminster CQUERY.">>$README
-    echo "Materialize the project. If you browse to org.adempiere.sdk-feature/adempiere.cquery (instead of MSPEC),">>$README
-    echo " ---> eclipse will automatically build the workspace as part of the buckminster import process">>$README
-    echo "If you get errors when running install.app, try cleaning the project. Menu->Project->Clean">>$README
-    echo "If you are materializing the development or 3.0 branch, you might get errors with the org.zkoss.zk.library project.">>$README
-    echo " ---> If so, right-click on the org.zkoss.zk.library, and choose Buckminster->Envoke Action... -> fetch.dependency.jars and -> buckminster.clean actions.">>$README
-    echo "">>$README
-    echo "">>$README
-    echo "Important Note!">>$README
-    echo "iDempiere is installed twice: first as a service, and second in eclipse.">>$README
-    echo "If you run the iDempiere server through eclipse, make sure you stop the iDempiere service using 'sudo service idempiere stop' first.">>$README
-
-    echo "HERE END: Install desktop components because IS_INSTALL_DESKTOP == Y"
-
-fi #end if IS_INSTALL_DESKTOP = Y
 # }}}
 
 # Move postgresql files to a separate device.
