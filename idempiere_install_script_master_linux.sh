@@ -142,8 +142,8 @@ IDEMPIERE_DB_USER_SU=$CHUBOE_PROP_DB_USERNAME_SU
 JENKINSPROJECT=$CHUBOE_PROP_JENKINS_PROJECT
 JENKINSURL=$CHUBOE_PROP_JENKINS_URL
 JENKINS_CURRENT_REV=$CHUBOE_PROP_JENKINS_CURRENT_CHANGESET
-ECLIPSE_SOURCE_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
-ECLIPSE_SOURCE_FILENAME="eclipse-jee-chuboe-2018-09-linux-gtk-x86_64.tar.gz"
+ECLIPSE_SOURCE_HOSTPATH=$CHUBOE_PROP_ECLIPSE_SOURCE_HOSTPATH
+ECLIPSE_SOURCE_FILENAME=$CHUBOE_PROP_ECLIPSE_SOURCE_FILENAME
 OSUSER_EXISTS="N"
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 PGVERSION=$CHUBOE_PROP_DB_VERSION
@@ -623,7 +623,7 @@ then
     echo "">>$README
     echo "">>$README
     echo "Installing desktop components because IS_INSTALL_DESKTOP == Y">>$README
-    
+
     echo "HERE:Install maven"
     sudo apt-get update
     sudo apt-get install -y maven
@@ -637,7 +637,7 @@ then
     # sudo add-apt-repository ppa:system76/pop
     # sudo apt update
     # sudo apt install -y pop-gtk-theme pop-icon-theme gnome-tweak-tool
-    
+
     # remove sudo timeout
     # sudo visudo
     # add line: Defaults timestamp_timeout=-1
