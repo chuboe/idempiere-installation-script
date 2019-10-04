@@ -104,6 +104,7 @@ cp $SCRIPTPATH/utils/chuboe.properties.orig $SCRIPTPATH/utils/chuboe.properties
 source $SCRIPTPATH/utils/chuboe.properties
 
 #check to see if the properties file specifies an alternative properties file
+#this is the first property merge of two.
 if [[ $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH != "NONE" ]]
 then
     #load the variables
@@ -123,6 +124,7 @@ IS_INSTALL_DESKTOP="N"
 IS_INITIALIZE_DB=$CHUBOE_PROP_DB_IS_INITIALIZE
 IS_SET_SERVICE_IP=$CHUBOE_PROP_IDEMPIERE_SET_SERVICE_IP
 INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
+ALTERNATE_PROP_FILE="NONE"
 PIP=$CHUBOE_PROP_DB_HOST
 DEVNAME="NONE"
 DBPASS=$CHUBOE_PROP_DB_PASSWORD
@@ -168,7 +170,7 @@ args=()
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
-while getopts ":hsp:e:iP:lDj:J:b:v:r:Iu:" OPTION
+while getopts ":hsp:e:iP:lDj:J:b:v:a:r:Iu:" OPTION
 do
     case $OPTION in
         h)  usage
@@ -219,6 +221,9 @@ do
             args+=("CHUBOE_PROP_IDEMPIERE_VERSION=\"$OPTARG\"")
             IDEMPIERE_VERSION=$OPTARG;;
 
+        a)  #alternate properties file
+            ALTERNATE_PROP_FILE=$OPTARG;;
+
         r)  #replication
             IS_REPLICATION="Y"
             REPLICATION_URL=$OPTARG;;
@@ -251,6 +256,19 @@ IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENK
 # get the current user and group
 OSUSER=$(id -u -n)
 OSUSER_GROUP=$(id -g -n)
+
+
+#update variables based on property file passed in.
+#this is the second property merge of two.
+if [[ $ALTERNATE_PROP_FILE != "NONE" ]]
+then
+    #load the variables
+    source $ALTERNATE_PROP_FILE
+    #merge new variables back to chuboe.properties file
+    awk -F= '!a[$1]++' $ALTERNATE_PROP_FILE $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
+    mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
+fi
+
 # }}}
 
 # Determine if IS_REPLICATION_MASTER should = N
