@@ -35,6 +35,8 @@
 # 2.4.1 Changed to delete previously downloaded files if they exist for the smaller installation files.  Larger downloaded files (.zip, .gz) will be verified, and if
 #       verification fails they will be deleted and re-downloaded
 # 2.5 Support for iDempiere 5.1
+# 2.6 Support for 18.04 and iDempiere 6.2
+# 2.6.1 Added support for alternate properties file passed in as parameter
 #}}}
 
 # Usage help
