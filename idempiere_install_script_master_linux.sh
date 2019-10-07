@@ -67,6 +67,7 @@ OPTIONS:
     -J  Specify Jenkins URL - See chuboe.properties for default
     -j  Specify Jenkins project name - See chuboe.properties for default
     -b  Specify Jenkins build number - See chuboe.properties for default
+    -a  Specify an alternate properties file
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
 Outstanding actions:
