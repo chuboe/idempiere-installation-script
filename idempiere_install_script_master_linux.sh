@@ -63,10 +63,10 @@ OPTIONS:
     -P  DB password
     -l  Launch iDempiere as service
     -D  Install desktop development tools
-    -v  Specify iDempiere version - defaults to 5.1
-    -J  Specify Jenkins URL - See chuboe.properties for default
-    -j  Specify Jenkins project name - See chuboe.properties for default
-    -b  Specify Jenkins build number - See chuboe.properties for default
+    -v  Specify iDempiere version - defaults to 6.2
+    -J  Specify Jenkins URL - See chuboe.properties.orig for default
+    -j  Specify Jenkins project name - See chuboe.properties.orig for default
+    -b  Specify Jenkins build number - See chuboe.properties.orig for default
     -a  Specify an alternate properties file
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
 
@@ -265,6 +265,15 @@ OSUSER_GROUP=$(id -g -n)
 #this is the second property merge of two.
 if [[ $ALTERNATE_PROP_FILE != "NONE" ]]
 then
+	
+	if [ ! -f $ALTERNATE_PROP_FILE ]; then
+    	#if alternate file not exist then check is it in script location
+		if [ -f $SCRIPTPATH/utils/$ALTERNATE_PROP_FILE ]; then
+		ALTERNATE_PROP_FILE=$SCRIPTPATH/utils/$ALTERNATE_PROP_FILE
+	else
+		echo "$ALTERNATE_PROP_FILE does not exists"	
+	fi
+    fi
     #load the variables
     source $ALTERNATE_PROP_FILE
     #merge new variables back to chuboe.properties file
