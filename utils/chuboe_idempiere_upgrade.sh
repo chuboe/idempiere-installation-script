@@ -56,7 +56,7 @@ IS_SKIP_BIN_UPGRADE="N"
 IS_CREATE_PRISTINE="N"
 IS_DB_BACKUP="Y"
 MIGRATION_DOWNLOAD="$CHUBOE_PROP_JENKINS_AUTHCOMMAND $CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/migration/*zip*/migration.zip"
-P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/buckminster.output/org.adempiere.server_"$IDEMPIERE_VERSION".0-eclipse.feature/site.p2/*zip*/site.p2.zip"
+P2="$CHUBOE_PROP_JENKINS_URL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/org.idempiere.p2/target/repository/*zip*/repository.zip"
 JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
 INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 
@@ -163,7 +163,7 @@ then
     ./chuboe_hg_bindir.sh
 	
 	cd $CHUBOE_UTIL
-	sudo rm -r site.p2*
+	sudo rm -r repository*
 
     # preprocess the URL to ensure no double forward slash exists except for ://
     # remove double slashes = sed s#//*#/#g
@@ -172,10 +172,10 @@ then
     echo "P2_DOWNLOAD="$P2_DOWNLOAD
 	
 	wget $JENKINS_AUTHCOMMAND $P2_DOWNLOAD
-	unzip site.p2.zip
+	unzip repository.zip
     # update iDempiere binaries
 	cd $SERVER_DIR
-	sudo -u $IDEMPIEREUSER ./update.sh file://$CHUBOE_UTIL/site.p2/
+	sudo -u $IDEMPIEREUSER ./update.sh file://$CHUBOE_UTIL/repository/
 
     # create a backup of the binary directory after the upgrade
     # In case you want to revert to a previous version
