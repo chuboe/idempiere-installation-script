@@ -2,6 +2,9 @@
 -- source chuboe.properties
 -- psql -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -d $CHUBOE_PROP_DB_NAME -f chuboe_favorite_default_changes.sql
 
+-- Need to account for the following:
+-- Add Created and Updated fields to Table, Column, Window, Tab, Field
+
 -- performance indexes
 CREATE INDEX fact_acct_doc_chuboe_idx ON fact_acct USING btree (account_id, ad_table_id, record_id); -- improves BSD
 CREATE INDEX fas_pa_chuboe_idx ON fact_acct_summary USING btree (account_id, ad_org_id, dateacct, pa_reportcube_id); -- improves finReport
