@@ -425,7 +425,7 @@ then
 fi
 if [[ $IS_INSTALL_ID == "Y" ]]
 then
-    $SCRIPTPATH/utils/downloadtestzip.sh $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR $JENKINS_AUTHCOMMAND || exit 1
+    $SCRIPTPATH/utils/downloadtestzip.sh $IDEMPIERESOURCE_HOSTPATH $IDEMPIERESOURCE_FILENAME $TEMP_DIR "$JENKINS_AUTHCOMMAND" || exit 1
 
     # preprocess the URL to ensure no double forward slash exists except for ://
     # remove double slashes = sed s#//*#/#g
