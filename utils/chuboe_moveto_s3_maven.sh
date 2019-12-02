@@ -18,7 +18,7 @@ fi
 #set current build here...
 BUILD_NUMBER=`date +"%Y%m%d%H%M%S"`
 
-S3_BUCKET="technologicsellswordmaventos3"
+S3_BUCKET="chuboe-jenkins"
 OSUSER=$(id -u -n)
 TEMP_DIR_BASE="/tmp/${OSUSER}/${S3_BUCKET}/"
 TEMP_DIR="${TEMP_DIR_BASE}/job/${CHUBOE_PROP_JENKINS_PROJECT}/ws/"
