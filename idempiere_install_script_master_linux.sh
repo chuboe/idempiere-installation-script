@@ -629,7 +629,7 @@ fi #end if IS_INSTALL_DESKTOP = Y
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
     echo "HERE: Installing DB because IS_INSTALL_DB == Y"
-    sudo apt-get --yes install postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
+    sudo apt-get --yes install apache2 postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
     # note: some instances of ubuntu will not start postgresql automatically
     sudo service postgresql start
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS_SU"';"
