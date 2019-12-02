@@ -1,26 +1,21 @@
 ## NOTE: this is not an automated isntall script (not yet)
 ## The below steps help you create an independent jenkins machine to build iDempiere and your plugins
 ## Because Jenkins runs on port 8080 by default, you will probably want to install the below on a dedicated machine
-## This script was last successfully run on Ubuntu 14.04
-
-## NOTE: if you are installing this in an AWS VPC and you are getting the following error:
-##    sudo: unable to resolve host
-## Execute this script: https://bitbucket.org/cboecking/idempiere-installation-script/src/default/utils/setHostName.sh
 
 ## ASSUMPTIONS
-## Ubuntu 16.04
+## Ubuntu 18.04
 ## local OS username = ubuntu
 JENKINS_OS_USER="ubuntu"
 
 #####Install needed tools
+sudo add-apt-repository ppa:openjdk-r/ppa -y
+sudo apt-get update
+sudo apt-get install openjdk-11-jdk -y
+
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-sudo apt-get -y install jenkins zip mercurial htop s3cmd openjdk-8-jdk rpl ant
-
-## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
-##    /etc/init.d/jenkins
-##    https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu (search google for "install jenkins")
+sudo apt-get -y install jenkins zip mercurial htop s3cmd rpl ant maven
 
 #####clone a local repository of iDempiere
 #  doing so insulates you (and jenkins) from the many changes that happen in the main bitbucket repository
@@ -33,22 +28,42 @@ mkdir idempiere_source
 cd idempiere_source
 hg clone https://bitbucket.org/idempiere/idempiere
 
-#Reference
-#http://wiki.idempiere.org/en/Building_iDempiere_without_Eclipse
+## NOTE: Jenkins will be launched as a daemon up on start. See the following for more detail:
 
-#####Install Director and Buckminster 4.5 - used for iDempiere release3.x and release4.x and release5.x
-sudo mkdir /opt/buckminster-headless-4.5
-cd /opt/buckminster-headless-4.5
-sudo wget https://github.com/hengsin/headless/raw/master/director_latest.zip
-sudo unzip /opt/buckminster-headless-4.5/director_latest.zip -d /opt/buckminster-headless-4.5/
+#####Install Jenkins plugins (performed in jenkins UI)
+# navigate to: www.YourURL.com:8080
+# follow the instructions to create your admin account
+# Jenkins Menu => Manage Jenkins => Manage Plugins => Available tab => Choose following plugins => "Install Without Restart"
+## required
+# (1) mercurial
+# (2) maven integration
+# (3) pipeline maven integration
+## optional
+# (3) Log Parser - scans logs for known issues - flags the build as a fail if issues found
+# (4) Naginator - automatically kicks off a re-build if a fail is encountered. This is helpful if mirrors are acting flakey.
 
-cd /opt/buckminster-headless-4.5/director
-sudo ./director -r https://github.com/hengsin/headless/raw/master/4.5/ -d /opt/buckminster-headless-4.5/ -p Buckminster -i org.eclipse.buckminster.cmdline.product
+#####Configure Maven
+# Jenkins Menu => Manage Jenkins => Global Tool Configuration => Maven section
+# Add Maven button
+# Name: Maven
+# Install automatically: checked
+# Version: 3.6.0
 
-cd /opt/buckminster-headless-4.5
-sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.core.headless.feature
-sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.pde.headless.feature
-sudo ./buckminster install https://github.com/hengsin/headless/raw/master/4.5/ org.eclipse.buckminster.maven.headless.feature
+#####Create a new 'idempiere62' maven project
+# Source Code Management => Mercurial with:
+# URL: /opt/source/idempiere_source/idempiere
+# Revsion Type: Branch
+# Revision: release-6.2
+#
+# PreStep: Execute shell with:
+# rm -rf ${WORKSPACE}/org.idempiere.p2/target/products
+#
+# Build with:
+# Root POM: pom.xml
+# Goals and options: verify -U
+
+
+
 
 #####Using Apache as a reverse proxy to protect Jenkins
 sudo apt-get install -y apache2
@@ -85,7 +100,7 @@ sudo service apache2 restart
 #Instead, I had to create my own local copy. This section details the steps. Hopefully, you will not need to do this!!
 # get the copy of the maven direcotry here: https://drive.google.com/file/d/0Byf55-KOXmDrOHJqbExLS0lzWFE/view?usp=sharing -O maven2.tar.gz
 # untar it in /var/www/html/
-# make sure the reverse proxy is off (if enabled above): 
+# make sure the reverse proxy is off (if enabled above):
  ###  bring down the proxy
  #sudo a2dissite jenkins.conf
  #sudo a2ensite 000-default.conf
@@ -178,13 +193,13 @@ sudo service apache2 restart
 rpl downloads.sourceforge.net netcologne.dl.sourceforge.net ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties
 
 #2 Invoke Ant
-#Targets: 
+#Targets:
 copy -propertyfile ${WORKSPACE}/org.adempiere.sdk-feature/materialize.properties
 #Build File (click advanced button):
 ${WORKSPACE}/org.adempiere.server-feature/copyjars.xml
 
 #3 Shell - clear workspace
-rm -rf ${WORKSPACE}/buckminster.output/ 
+rm -rf ${WORKSPACE}/buckminster.output/
 #${WORKSPACE}/buckminster.temp/ ${WORKSPACE}/targetPlatform/
 
 #4 Buckminster - build iDempiere
