@@ -16,7 +16,7 @@
         fi
     fi
     echo "HERE: Download zip with params: " $1 $2 $3
-    $DOWNLOAD_SCRIPTPATH/download.sh $1 $2 $3 $4 || exit 1
+    $DOWNLOAD_SCRIPTPATH/download.sh $1 $2 $3 "$4" || exit 1
     unzip -t $3/$2
     if [ $? -ne 0 ]
     then
