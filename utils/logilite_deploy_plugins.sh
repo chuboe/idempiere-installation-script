@@ -11,8 +11,9 @@ This script helps you launch the appropriate iDempiere Plug-Ins/components on a 
 
 OPTIONS:
     -h  Help
-    -i  Install Plug-Ins
-    -r  Active Plug-Ins (Providing Plug-In/s is/are alredy installed)
+    -I  (1) No Install/Update plug-ins (2) Start plug-ins (3) Restart iDempiere
+    -S  (1) Install/Update plug-ins (2) Not Start plug-ins (3) Restart iDempiere
+    -R  (1) Install/Update plug-ins (2) Start plug-ins (3) No Restart iDempiere
 EOF
 }
 
@@ -24,7 +25,8 @@ source $SCRIPTPATH/chuboe.properties
 
 #initialize variables with default values - these values might be overwritten during the next section based on command options
 IS_INSTALL_PLUGINS="Y"
-IS_START_PLUGINS="N"
+IS_START_PLUGINS="Y"
+IS_ID_RESTART="Y"
 PLUGINS_SCAN_PATH="$CHUBOE_PROP_PLUGINS_SCAN_PATH"
 CUSTOM_PLUGINS_PATH="$CHUBOE_PROP_CUSTOM_PLUGINS_PATH"
 IDEMPIERE_USER="$CHUBOE_PROP_IDEMPIERE_OS_USER"
@@ -35,15 +37,17 @@ CHUBOE_UTIL_HG="$CHUBOE_PROP_UTIL_HG_PATH"
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
-while getopts ":hir" OPTION
+while getopts ":hISR" OPTION
 do
     case $OPTION in
         h)  usage
             exit 1;;
 
-        i)  IS_INSTALL_PLUGINS="N";;
+        I)  IS_INSTALL_PLUGINS="N";;
 
-        r)  IS_START_PLUGINS="Y";;
+        R)  IS_START_PLUGINS="N";;
+
+        S)  IS_ID_RESTART="N";;
 
         # Option error handling.
         \?) valid=0
@@ -72,7 +76,10 @@ cat /etc/*-release
 # Save plugins inventory in file.
 sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
 
-# Change permission
+# Wait for a moment to generate plugins-list.txt inventory file.
+sleep 4
+
+# Set/Change permission
 sudo chmod + $SCRIPTPATH/*.sh
 
 if [[ $IS_INSTALL_PLUGINS == "Y" ]]
@@ -143,9 +150,15 @@ then
 
         PLUGIN_NAME=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1 | sed 's/$/_/')
         START_LEVEL_PLUGIN=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1)
-        EXIST_PLUGIN_NAME=$(grep -n "$PLUGIN_NAME" $IDEMPIERE_PATH/plugins-list.txt)
+        
+        PlUGINSTATUS=
+        getpluginstatus() {
+            PLUGINSTATUSSTRING=$(grep -n "$PLUGIN_NAME" $IDEMPIERE_PATH/plugins-list.txt)
+            PlUGINSTATUS=$?
+        }
 
-        if [ ! -z "$EXIST_PLUGIN_NAME" ];
+        getpluginstatus
+        if [ $PlUGINSTATUS -eq 0 ];
         then
             echo "Plugin $plugins exist..."
 
@@ -192,7 +205,7 @@ then
     done
 fi
 
-if [[ $IS_INSTALL_PLUGINS == "Y" ]]
+if [[ $IS_ID_RESTART == "Y" ]]
 then
     echo "Here: Restarting iDempiere Service"
     sudo service idempiere restart
