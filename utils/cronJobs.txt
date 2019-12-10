@@ -9,6 +9,9 @@
 # Note: while this ensures you do not build up lots of backups (hogging space), this does not ensure the backups are valid
 # 20 07 * * * cd /opt/chuboe/idempiere-installation-script/chuboe_backup/; ls -1tr  Exp* | head -n -20 | xargs -d  '\n' rm -f --
 
+# only keep last 40 log files - delete others.
+# 20 07 * * * cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -20 | xargs -d  '\n' rm -f --
+
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
 # Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
