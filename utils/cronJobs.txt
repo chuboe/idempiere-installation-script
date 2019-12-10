@@ -10,7 +10,7 @@
 # 20 07 * * * cd /opt/chuboe/idempiere-installation-script/chuboe_backup/; ls -1tr  Exp* | head -n -20 | xargs -d  '\n' rm -f --
 
 # only keep last 40 log files - delete others.
-# 20 07 * * * cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -20 | xargs -d  '\n' rm -f --
+# 20 07 * * * cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -40 | xargs -d  '\n' rm -f --
 
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
