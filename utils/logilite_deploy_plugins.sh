@@ -102,7 +102,7 @@ then
     if [ -d "$CUSTOM_PLUGINS_PATH" ]; then
         echo "$CUSTOM_PLUGINS_PATH Directory Exist"
     else
-        sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir $CUSTOM_PLUGINS_PATH
+        sudo -u $IDEMPIERE_USER mkdir $CUSTOM_PLUGINS_PATH
     fi
 
 
