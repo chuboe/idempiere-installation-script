@@ -95,7 +95,7 @@ then
         echo "Please create Directory deploy-jar under $IDEMPIERE_PATH and copy your all jar in same folder."
         exit 0
     fi
-
+    
     # Checking plugins locate or not in deploy-jar
     if ls $PLUGINS_SCAN_PATH/*.jar 1> /dev/null 2>&1; then
         echo "Found vailid plug-In in $PLUGINS_SCAN_PATH"
@@ -103,6 +103,9 @@ then
         echo "Could not found any plug-In in $PLUGINS_SCAN_PATH"
         exit 0
     fi
+
+    # make sure all plugins files are owned by iDempiere before we start
+    sudo chown -R $IDEMPIERE_USER:$IDEMPIERE_USER $PLUGINS_SCAN_PATH
 
     # Checking customization-jar folder exist or not.
     if [ -d "$CUSTOM_PLUGINS_PATH" ]; then
