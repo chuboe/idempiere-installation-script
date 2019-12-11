@@ -17,6 +17,9 @@ OPTIONS:
 EOF
 }
 
+echo "You are about to update your system - you have 10 seconds to press ctrl+c to stop this script"
+sleep 10
+
 #pull in variables from properties file
 #NOTE: all variables starting with CHUBOE_PROP... come from this file.
 SCRIPTNAME=$(readlink -f "$0")
@@ -33,6 +36,9 @@ IDEMPIERE_USER="$CHUBOE_PROP_IDEMPIERE_OS_USER"
 IDEMPIERE_PATH="$CHUBOE_PROP_IDEMPIERE_PATH"
 CHUBOE_UTIL_HG="$CHUBOE_PROP_UTIL_HG_PATH"
 
+# Create a backup of the iDempiere folder before deployed plugins
+cd $CHUBOE_UTIL_HG/utils/
+./chuboe_hg_bindir.sh
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -260,13 +266,17 @@ then
     # Remove plugins list and deployed jar from deploy-jar folder
     sudo rm -rf $PLUGINS_SCAN_PATH/*.jar /tmp/plugins*
     sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
+    
+    # wait 10 seconds for the deployment to finish before taking a backup
+    sleep 10
 
     # Create a backup of the iDempiere folder after deployed plugins
     cd $CHUBOE_UTIL_HG/utils/
     ./chuboe_hg_bindir.sh
 
     # Change idempiere-server folder permission to avoid any conflict.
-    sudo chown -R $IDEMPIERE_USER:$IDEMPIERE_USER $IDEMPIERE_PATH
+    # CHUCK: this should not be necessary and it is potentially dangerous in that it can mask issues.
+    #sudo chown -R $IDEMPIERE_USER:$IDEMPIERE_USER $IDEMPIERE_PATH
 
     echo "##############################################################################################"
     echo $counter "Plugins is deployed, Please verify plugins status in $IDEMPIERE_PATH/plugins-list.txt"
