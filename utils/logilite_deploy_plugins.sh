@@ -79,9 +79,6 @@ sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.
 # Wait for a moment to generate plugins-list.txt inventory file.
 sleep 4
 
-# Set/Change permission
-sudo chmod + $SCRIPTPATH/*.sh
-
 if [[ $IS_INSTALL_PLUGINS == "Y" ]]
 then
 
