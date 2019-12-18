@@ -727,13 +727,18 @@ then
         #Key Concept: how to pipe content with sudo priviledge - the >> operator does not keep sudo priviledges
         #call on https://github.com/sebastianwebber/pgconfig-api webservice to get optimized pg parameters
         curl 'https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB' >> $TEMP_DIR/pg.conf
-        cat $TEMP_DIR/pg.conf | sudo tee -a /etc/postgresql/$PGVERSION/main/postgresql.conf
-
-        echo "">>$README
-        echo "">>$README
-        echo "NOTE: this script uses https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
-        echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
-        echo "--> See the chuboe_utils directory for installation directions">>$README
+	if [ $? -eq 0 ]
+	then
+		cat $TEMP_DIR/pg.conf | sudo tee -a /etc/postgresql/$PGVERSION/main/postgresql.conf
+		
+		echo "">>$README
+		echo "">>$README
+		echo "NOTE: this script uses https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
+		echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
+		echo "--> See the chuboe_utils directory for installation directions">>$README
+	else      
+		echo 'HERE ERROR: Failed to curl https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB'
+	fi
 
         # sudo sed -i "$ a\random_page_cost = 2.0 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
 
