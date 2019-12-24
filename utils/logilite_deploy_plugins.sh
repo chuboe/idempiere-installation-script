@@ -14,6 +14,8 @@ OPTIONS:
     -I  (1) No Install/Update plug-ins (2) Start plug-ins (3) Restart iDempiere
     -S  (1) Install/Update plug-ins (2) Not Start plug-ins (3) Restart iDempiere
     -R  (1) Install/Update plug-ins (2) Start plug-ins (3) No Restart iDempiere
+    -m  Also installed/Update plugins, which is already installed on server.
+    -D  Will not delete source jar.
 EOF
 }
 
@@ -30,6 +32,8 @@ source $SCRIPTPATH/chuboe.properties
 IS_INSTALL_PLUGINS="Y"
 IS_START_PLUGINS="Y"
 IS_ID_RESTART="Y"
+SKIP_DEPLOYED_PG="Y"
+IS_DELETE_FROM_SCAN="Y"
 PLUGINS_SCAN_PATH="$CHUBOE_PROP_DEPLOY_PLUGINS_PATH"
 CUSTOM_PLUGINS_PATH="$CHUBOE_PROP_CUSTOM_PLUGINS_PATH"
 IDEMPIERE_USER="$CHUBOE_PROP_IDEMPIERE_OS_USER"
@@ -43,7 +47,7 @@ cd $CHUBOE_UTIL_HG/utils/
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
-while getopts ":hISR" OPTION
+while getopts ":hISRmD" OPTION
 do
     case $OPTION in
         h)  usage
@@ -54,6 +58,10 @@ do
         R)  IS_START_PLUGINS="N";;
 
         S)  IS_ID_RESTART="N";;
+
+        m)  SKIP_DEPLOYED_PG="N";;
+
+        D)  IS_DELETE_FROM_SCAN="N";;
 
         # Option error handling.
         \?) valid=0
@@ -155,8 +163,29 @@ then
         echo "We're Deploying: $plugins"
 
         PLUGIN_NAME=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1 | sed 's/$/_/')
-        START_LEVEL_PLUGIN=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1)
-        
+        PLUGIN_NAME_WITHOUT_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1)
+        PLUGIN_NAME_WITH_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | sed 's/.\{4\}$//')
+
+        # Checking, Same version plugin already installed or not,
+        # If already installed same verseion plugin then skip and continue with next one.
+        if [[ $SKIP_DEPLOYED_PG == "Y" ]]
+        then          
+            CHECKING_PLUGIN=
+            checkingplugin() {
+                CHECKINGPLUGINSTRING=$(grep -n "$PLUGIN_NAME_WITH_VERSION" $IDEMPIERE_PATH/plugins-list.txt)
+                CHECKING_PLUGIN=$?
+            }
+            
+            checkingplugin
+            if [ $CHECKING_PLUGIN -eq 0 ];
+            then
+                echo "Same plugins already deployed in iDempiere, So skip that plugin."
+                continue
+            fi
+        fi
+
+        # Check plugin already installed or,
+        # If already installed plugin with older version then update that plugin or plugin is not installed on server then it will going to install.
         PlUGINSTATUS=
         getpluginstatus() {
             PLUGINSTATUSSTRING=$(grep -n "$PLUGIN_NAME" $IDEMPIERE_PATH/plugins-list.txt)
@@ -172,7 +201,10 @@ then
             sleep 2
             EXIST_PLUGIN_ID=$(cat /tmp/plugins-list-exist-$PLUGIN_NAME.txt | grep $PLUGIN_NAME | cut -f 1)
             
-            START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $START_LEVEL_PLUGIN | cut -d ',' -f 2)
+            Startlevel_CSV="$SCRIPTPATH/logilite_plugins_startlevel.csv"
+            if [ -f "$Startlevel_CSV" ]; then
+                START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $PLUGIN_NAME_WITHOUT_VERSION | cut -d ',' -f 2)
+            fi
             
             echo "Plugin $EXIST_PLUGIN_ID ID of existing $plugins"
 
@@ -198,7 +230,10 @@ then
             PLUGIN_ID=$(cat /tmp/plugins-list-exist-$PLUGIN_NAME.txt | grep $PLUGIN_NAME | cut -f 1)
             echo "Plugin $PLUGIN_ID ID of $PLUGIN_NAME"
 
-            START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $START_LEVEL_PLUGIN | cut -d ',' -f 2)
+            Startlevel_CSV="$SCRIPTPATH/logilite_plugins_startlevel.csv"
+            if [ -f "$Startlevel_CSV" ]; then
+                START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $PLUGIN_NAME_WITHOUT_VERSION | cut -d ',' -f 2)
+            fi
             
             ./logilite_telnet_set_bundlelevel.sh $PLUGIN_ID $START_LEVEL
             counter=$((counter + 1))
@@ -267,7 +302,12 @@ fi
 if [[ $IS_INSTALL_PLUGINS == "Y" ]]
 then
     # Remove plugins list and deployed jar from deploy-jar folder
-    sudo rm -rf $PLUGINS_SCAN_PATH/*.jar /tmp/plugins*
+    if [[ $IS_DELETE_FROM_SCAN == "Y" ]]
+    then
+        sudo rm -rf $PLUGINS_SCAN_PATH/*.jar
+    fi
+    
+    sudo rm -rf /tmp/plugins*
     sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
     
     # wait 10 seconds for the deployment to finish before taking a backup
