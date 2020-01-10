@@ -48,6 +48,8 @@ else
 	echo "HERE: creating $IGNORENAME file"
 	echo "syntax: glob" > $CHUBOE_UTIL_HG_TEMP_IGNORE
 	echo "log" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
+	echo "migration" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
+	echo "deploy-jar" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
 	echo "data/*.jar" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
 	echo "data/*.dmp" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
 	echo "*.tmp*" >>  $CHUBOE_UTIL_HG_TEMP_IGNORE
