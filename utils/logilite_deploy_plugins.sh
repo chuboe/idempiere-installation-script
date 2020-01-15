@@ -310,8 +310,8 @@ then
     sudo rm -rf /tmp/plugins*
     sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
     
-    # wait 10 seconds for the deployment to finish before taking a backup
-    sleep 10
+    # wait 100 seconds for the deployment to finish before taking a backup
+    sleep 100
 
     # Create a backup of the iDempiere folder after deployed plugins
     cd $CHUBOE_UTIL_HG/utils/
