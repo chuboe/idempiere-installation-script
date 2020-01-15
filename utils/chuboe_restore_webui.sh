@@ -117,9 +117,14 @@ sudo mv $TMP_RESTORE_PATH_DIR/idempiere-server/ /opt/
 # update system configuration (like XMX, XMS, etc...)
 sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiere-server.sh
 sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
-VER_INFO_ZUL=$(find /opt/idempiere-server/ -name version-info.zul)
-echo $VER_INFO_ZUL
-sudo sed -i "s|\${desktop.execution.serverName}|$CHUBOE_PROP_WEBUI_IDENTIFICATION|g" $VER_INFO_ZUL
+
+# update the login screen to show the desired hostname
+find /opt/idempiere-server/ -name version-info.zul |
+while read filename
+do
+    sudo sed -i "s|\${desktop.execution.serverName}|$CHUBOE_PROP_WEBUI_IDENTIFICATION|g" $filename
+done
+
 
 # start idempiere  
 echo "HERE: starting iDempiere"
