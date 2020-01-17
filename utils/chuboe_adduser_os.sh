@@ -20,5 +20,5 @@ sudo -u $USER_TO_ADD cat $TEMP_DIR/$USER_TO_ADD.pub | sudo tee --append /home/$U
 sudo chmod 600 /home/$USER_TO_ADD/.ssh/authorized_keys
 sudo chown $USER_TO_ADD:$USER_TO_ADD /home/$USER_TO_ADD/.ssh/authorized_keys
 
-mv $TEMP_DIR /home/$USER/.
-rm /home/$USER/"$USER_TO_ADD".pem/*.pub
+mv $TEMP_DIR/$USER_TO_ADD.pem /home/$USER/.
+rm -r $TEMP_DIR
