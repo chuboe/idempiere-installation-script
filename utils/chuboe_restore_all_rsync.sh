@@ -8,6 +8,7 @@
 # This differs from chuboe_restore_s3cmd.sh because it also moves binaries.
 
 source chuboe.properties
+echo HERE:: setting variables 
 TMP_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
 TMP_HOSTNAME=0.0.0.0 # this does not change - name of local machine
 TMP_SSH_PEM="" # example: "ssh -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
@@ -16,6 +17,7 @@ TMP_SSH_PEM="" # example: "ssh -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR
 TMP_DMS_CONTENT_PATH=/opt/DMS/DMS_Content/
 TMP_DMS_THUMBNAILS_PATH=/opt/DMS/DMS_Thumbnails/
 
+echo HERE:: testing for test server 
 # check to see if test server - else exit
 if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
     echo "Not a test environment - exiting now!"
@@ -23,23 +25,27 @@ if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
     exit 1
 fi
 
+echo HERE:: stopping idempiere
 # stop idempiere
 sudo service idempiere stop
 
+echo HERE:: starting rsync for idempiere folder
 # rsync goes here
-sudo rsync --exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P -e $TMP_SSH_PEM -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH
+sudo rsync --exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P -e \"$TMP_SSH_PEM\" -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH
 
+echo HERE:: copying over ExpDat.dmp
 # copy ExpDat.dmp goes here
 cd $CHUBOE_PROP_IDEMPIERE_PATH/data/
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:$CHUBOE_PROP_IDEMPIERE_PATH/data/ExpDat.dmp .
 
 # uncomment below statements to sync DMS folders
-# sudo rsync -P -e $TMP_SSH_PEM -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$DMS_CONTENT_PATH $DMS_CONTENT_PATH 
+# echo HERE:: rsync DMS
+# sudo rsync -P -e \"$TMP_SSH_PEM\" -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$DMS_CONTENT_PATH $DMS_CONTENT_PATH 
 
-# sudo rsync -P -e $TMP_SSH_PEM -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$TMP_DMS_THUMBNAILS_PATH $TMP_DMS_THUMBNAILS_PATH
+# sudo rsync -P -e \"$TMP_SSH_PEM\" -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$TMP_DMS_THUMBNAILS_PATH $TMP_DMS_THUMBNAILS_PATH
 
 # run console-setup.sh
-echo "HERE: Launching console-setup.sh"
+echo "HERE:: Launching console-setup.sh"
 cd $CHUBOE_PROP_IDEMPIERE_PATH
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
@@ -94,22 +100,25 @@ $CHUBOE_PROP_DB_PASSWORD_SU
 !
 # end of file input
 
+echo HERE:: restore database
 # restore the database
 cd $CHUBOE_PROP_IDEMPIERE_PATH/utils/
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh <<!
 
 !
 
+echo HERE:: update xmx and xms
 # remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
 sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
 # alternatively, you could set the value accordingly to either of the following:
 # sudo sed -i 's|-Xms.G -Xmx.G|-Xms2G -Xmx2G|g' /opt/idempiere-server/idempiere-server.sh
 # sudo sed -i 's|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS -Xmx2048m -Xms2048m|g' /opt/idempiere-server/idempiere-server.sh
 
+echo HERE:: run restore script
 # update the database with test/sand settings
 cd $CHUBOE_PROP_UTIL_HG_UTIL_PATH
 ./chuboe_restore_sandbox_sql.sh
 
 # start idempiere
-echo "HERE: starting iDempiere"
+echo "HERE:: starting iDempiere"
 sudo service idempiere start
