@@ -7,6 +7,10 @@
 # This script series assumes that the chuboe installation script was used to install iD on both servers
 # Be aware that you need about 10GB of free space on the drive for the below to succeed.
 
+echo #########################################################################
+echo # this script is obsolete - it is replaced chuboe_restore_all_rsync.sh  #
+echo #########################################################################
+
 source chuboe.properties
 TMP_BACKUP_FILE_NAME=id.tar.gz
 TMP_BACKUP_PATH=/tmp/id_back/
