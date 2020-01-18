@@ -11,10 +11,10 @@ source chuboe.properties
 echo HERE:: setting variables 
 TMP_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
 TMP_HOSTNAME=0.0.0.0 # this does not change - name of local machine
-TMP_SSH_PEM="" # example: "ssh -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
+TMP_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
 # make sure to chmod 400 the pem
-TMP_SSH_PEM_RSYNC="-e \"$TMP_SSH_PEM\""
+TMP_SSH_PEM_RSYNC="-e \"ssh $TMP_SSH_PEM\""
 TMP_DMS_CONTENT_PATH=/opt/DMS/DMS_Content/
 TMP_DMS_THUMBNAILS_PATH=/opt/DMS/DMS_Thumbnails/
 
@@ -34,7 +34,10 @@ eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --
 
 echo HERE:: copying over ExpDat.dmp
 # copy ExpDat.dmp goes here
-cd $CHUBOE_PROP_IDEMPIERE_PATH/data/
+cd $CHUBOE_PROP_IDEMPIERE_PATH/
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir -p data
+cd data/
+echo sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:$CHUBOE_PROP_IDEMPIERE_PATH/data/ExpDat.dmp .
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:$CHUBOE_PROP_IDEMPIERE_PATH/data/ExpDat.dmp .
 
 # uncomment below statements to sync DMS folders
