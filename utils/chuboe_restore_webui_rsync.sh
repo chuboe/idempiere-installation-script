@@ -7,12 +7,17 @@
 # You can use the chuboe_adduser_os.sh script to create idempiere pem credentials on the primary server.
 
 source chuboe.properties
+echo HERE:: setting variables
 TMP_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
 TMP_HOSTNAME=0.0.0.0 # this does not change - name of local machine
-TMP_SSH_PEM="" # example: "ssh -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
+TMP_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
+# If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
+# make sure to chmod 400 the pem
+TMP_SSH_PEM_RSYNC="-e \"ssh $TMP_SSH_PEM\""
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
 # make sure to chmod 400 the pem
 
+echo HERE:: testing for test server
 # check to see if dedicated WEBUI server - else exit
 if [[ $CHUBOE_PROP_IS_DEDICATED_WEBUI != "Y" ]]; then
     echo "Not a WEBUI environment - exiting now!" 
@@ -20,11 +25,11 @@ if [[ $CHUBOE_PROP_IS_DEDICATED_WEBUI != "Y" ]]; then
     exit 1
 fi
 
-# stop idempiere
+echo HERE:: stopping idempiere
 sudo service idempiere stop
 
-# rsync goes here
-sudo rsync --exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P -e $TMP_SSH_PEM -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH
+echo HERE:: sync idempiere folder
+eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH"
 
 # run console-setup.sh
 # NOTE: commented out below assuming configuration (including AppServer IP 0.0.0.0) is the same.
@@ -83,10 +88,12 @@ sudo rsync --exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclud
 #!
 # end of file input - uncomment the above if needed
 
+echo HERE:: update xmx and xms
 # update system configuration (like XMX, XMS, etc...)
 sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiere-server.sh
 sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
 
+echo HERE:: update login screen
 # update the login screen to show the desired hostname
 find /opt/idempiere-server/ -name version-info.zul |
 while read filename
@@ -96,5 +103,5 @@ done
 
 
 # start idempiere  
-echo "HERE: starting iDempiere"
+echo "HERE:: starting iDempiere"
 sudo service idempiere start
