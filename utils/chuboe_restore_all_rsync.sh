@@ -14,6 +14,7 @@ TMP_HOSTNAME=0.0.0.0 # this does not change - name of local machine
 TMP_SSH_PEM="" # example: "ssh -i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
 # make sure to chmod 400 the pem
+TMP_SSH_PEM_RSYNC="-e \"$TMP_SSH_PEM\""
 TMP_DMS_CONTENT_PATH=/opt/DMS/DMS_Content/
 TMP_DMS_THUMBNAILS_PATH=/opt/DMS/DMS_Thumbnails/
 
@@ -26,12 +27,10 @@ if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
 fi
 
 echo HERE:: stopping idempiere
-# stop idempiere
 sudo service idempiere stop
 
 echo HERE:: starting rsync for idempiere folder
-# rsync goes here
-sudo rsync --exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P -e \"$TMP_SSH_PEM\" -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH
+eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH"
 
 echo HERE:: copying over ExpDat.dmp
 # copy ExpDat.dmp goes here
@@ -40,9 +39,9 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $CHUBOE_PROP_IDEMPIERE_O
 
 # uncomment below statements to sync DMS folders
 # echo HERE:: rsync DMS
-# sudo rsync -P -e \"$TMP_SSH_PEM\" -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$DMS_CONTENT_PATH $DMS_CONTENT_PATH 
+# eval sudo rsync "-P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$DMS_CONTENT_PATH $DMS_CONTENT_PATH"
 
-# sudo rsync -P -e \"$TMP_SSH_PEM\" -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$TMP_DMS_THUMBNAILS_PATH $TMP_DMS_THUMBNAILS_PATH
+# eval sudo rsync "-P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$TMP_DMS_THUMBNAILS_PATH $TMP_DMS_THUMBNAILS_PATH"
 
 # run console-setup.sh
 echo "HERE:: Launching console-setup.sh"
