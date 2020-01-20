@@ -17,7 +17,7 @@ cd $MIGRATIONDIR
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
 
 > /tmp/lisFS.txt
-FOLDERLIST="i2.0 i2.0z i2.1 i2.1z i3.1 i3.1z i4.1 i4.1z i5.1 i5.1z i6.1 i6.1z i6.2 i6.2z"
+FOLDERLIST="i2.0 i2.0z i2.1 i2.1z i3.1 i3.1z i4.1 i4.1z i5.1 i5.1z i6.1 i6.1z i6.2 i6.2z i7.1 i7.1z i8.1 i8.1z"
 for FOLDER in $FOLDERLIST
 do
     if [ -d ${FOLDER}/postgresql ]
