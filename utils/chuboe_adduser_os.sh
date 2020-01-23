@@ -18,7 +18,7 @@ echo Pem name: $PEM_NAME
 sudo adduser $USER_TO_ADD --disabled-password --gecos "$USER_TO_ADD,none,none,none"
 
 # add user to sudo group
-# sudo echo "$USER_TO_ADD ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoer
+# sudo echo "$USER_TO_ADD ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
 # give new user a copy of your .bashrc
 # sudo rm /home/$USER_TO_ADD/.bashrc
