@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# it is ok to run this for a user that already exists (idempiere for example).
+#   The adduser command below fails gracefully, and all other commands will work as expected.
+
 USER_TO_ADD=$1
 INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 PEM_NAME="$USER_TO_ADD"_"$INSTALL_DATE".pem
