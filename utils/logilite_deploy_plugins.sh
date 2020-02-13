@@ -160,7 +160,6 @@ then
         echo " "
         echo " "
         echo "********************************************"
-        echo "We're Deploying: $plugins"
 
         PLUGIN_NAME=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1 | sed 's/$/_/')
         PLUGIN_NAME_WITHOUT_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1)
@@ -181,6 +180,26 @@ then
             then
                 echo "Same plugins already deployed in iDempiere, So skip that plugin."
                 continue
+            fi
+
+            # Fatching deployable plugin version & deployed plugin version as variable.
+            FATCHING_PLUGIN_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" |  cut -d '_' -f 2 | sed 's/.\{4\}$//')
+            sleep 2
+            FATCHING_DEPLOYED_PLUGIN_VERSION=$(grep -n "$PLUGIN_NAME" $IDEMPIERE_PATH/plugins-list.txt | awk -F 'ACTIVE' '{print $2}' | cut -d '_' -f 2 | awk '{$1=$1;print}') 
+            sleep 2
+            FATCHING_MILTIPLE_UNDERSCORE=$(echo "$plugins" | awk '{A=gsub(/_/,X,$0)}END {print A}')
+            sleep 2
+
+            # Compare deployable plugin(deploy-jar) & already deployed plugin.
+            # If plugin already deploy with same version or latest version then ignore those plugin in deployment.
+            if [[ $FATCHING_PLUGIN_VERSION < $FATCHING_DEPLOYED_PLUGIN_VERSION ]]; then
+                echo "$plugins plugin latest version already deployed on server"
+                continue
+            elif [[ 2 -eq $FATCHING_MILTIPLE_UNDERSCORE ]]; then
+                echo "More then one underscore not suppoted by deployment script: $plugins"
+                continue
+            else
+                echo "We're Deploying: $plugins"
             fi
         fi
 
@@ -310,8 +329,8 @@ then
     sudo rm -rf /tmp/plugins*
     sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
     
-    # wait 100 seconds for the deployment to finish before taking a backup
-    sleep 100
+    # wait 10 seconds for the deployment to finish before taking a backup
+    sleep 10
 
     # Create a backup of the iDempiere folder after deployed plugins
     cd $CHUBOE_UTIL_HG/utils/
