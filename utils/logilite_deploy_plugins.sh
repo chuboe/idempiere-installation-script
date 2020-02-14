@@ -91,7 +91,7 @@ cat /etc/*-release
 sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
 
 # Wait for a moment to generate plugins-list.txt inventory file.
-sleep 5
+sleep 10
 
 if [[ $IS_INSTALL_PLUGINS == "Y" ]]
 then
