@@ -91,7 +91,7 @@ cat /etc/*-release
 sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $IDEMPIERE_PATH/plugins-list.txt &"
 
 # Wait for a moment to generate plugins-list.txt inventory file.
-sleep 4
+sleep 5
 
 if [[ $IS_INSTALL_PLUGINS == "Y" ]]
 then
@@ -131,6 +131,25 @@ then
         exit 0
     fi
 
+    # Wait for Plugin ID.
+    function_wait() {
+        MAXITERATIONS=60
+        STATUSTEST=0
+        ITERATIONS=0
+        while [ $STATUSTEST -eq 0 ] ; do
+            sleep 2
+            tail -n 90 $UPDATE_PLUGIN_FILE | grep -q '.*osgi> Connection closed by foreign host.*' && STATUSTEST=1
+            echo -n "."
+            ITERATIONS=`expr $ITERATIONS + 1`
+            if [ $ITERATIONS -gt $MAXITERATIONS ]
+                then
+                break
+            fi
+        done
+        echo
+    }
+
+
 
     #### Array Configuration Start ####
     plugins=$(ls $PLUGINS_SCAN_PATH/ | grep .jar)
@@ -164,6 +183,7 @@ then
         PLUGIN_NAME=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1 | sed 's/$/_/')
         PLUGIN_NAME_WITHOUT_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | cut -d '_' -f 1)
         PLUGIN_NAME_WITH_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" | sed 's/.\{4\}$//')
+        UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-$PLUGIN_NAME.txt"
 
         # Checking, Same version plugin already installed or not,
         # If already installed same verseion plugin then skip and continue with next one.
@@ -203,7 +223,7 @@ then
             fi
         fi
 
-        # Check plugin already installed or,
+        # Checking  plugin already installed or not,
         # If already installed plugin with older version then update that plugin or plugin is not installed on server then it will going to install.
         PlUGINSTATUS=
         getpluginstatus() {
@@ -216,10 +236,10 @@ then
         then
             echo "Plugin $plugins exist..."
 
-            sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> /tmp/plugins-list-exist-$PLUGIN_NAME.txt &"
-            sleep 2
-            EXIST_PLUGIN_ID=$(cat /tmp/plugins-list-exist-$PLUGIN_NAME.txt | grep $PLUGIN_NAME | cut -f 1)
-            
+            EXIST_PLUGIN_ID=$(cat $IDEMPIERE_PATH/plugins-list.txt | grep $PLUGIN_NAME | cut -f 1)
+            sleep 1
+
+            # Checking logilite_plugins_startlevel.csv file exist or not.
             Startlevel_CSV="$SCRIPTPATH/logilite_plugins_startlevel.csv"
             if [ -f "$Startlevel_CSV" ]; then
                 START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $PLUGIN_NAME_WITHOUT_VERSION | cut -d ',' -f 2)
@@ -229,6 +249,7 @@ then
 
             sudo -u $IDEMPIERE_USER cp -r $PLUGINS_SCAN_PATH/$plugins $CUSTOM_PLUGINS_PATH/
             ./logilite_telnet_update.sh $CUSTOM_PLUGINS_PATH/$plugins $EXIST_PLUGIN_ID $START_LEVEL
+
             counter=$((counter + 1))
 
             echo "Plugin $plugins installed successfully."
@@ -239,21 +260,27 @@ then
         else
 
             echo "Plugin $plugins not exist..."
-
+            
+            # Installing plugin
             sudo -u $IDEMPIERE_USER cp -r $PLUGINS_SCAN_PATH/$plugins $CUSTOM_PLUGINS_PATH/
-            ./logilite_telnet_install.sh $CUSTOM_PLUGINS_PATH/$plugins
-            sleep 1
-
-            sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> /tmp/plugins-list-exist-$PLUGIN_NAME.txt &"
+            ./logilite_telnet_install.sh $CUSTOM_PLUGINS_PATH/$plugins > $UPDATE_PLUGIN_FILE
             sleep 2
-            PLUGIN_ID=$(cat /tmp/plugins-list-exist-$PLUGIN_NAME.txt | grep $PLUGIN_NAME | cut -f 1)
+            
+            # Waiting for Plugin ID.
+            function_wait
+
+            # Faching Plugin ID in variable.
+            PLUGIN_ID=$(cat $UPDATE_PLUGIN_FILE | grep "Bundle ID" | cut -d ':' -f 2 | awk '{$1=$1;print}')
+            sleep 1
             echo "Plugin $PLUGIN_ID ID of $PLUGIN_NAME"
 
+            # Checking logilite_plugins_startlevel.csv file exist or not..
             Startlevel_CSV="$SCRIPTPATH/logilite_plugins_startlevel.csv"
             if [ -f "$Startlevel_CSV" ]; then
                 START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $PLUGIN_NAME_WITHOUT_VERSION | cut -d ',' -f 2)
             fi
             
+            # Changing plugins startlevel.
             ./logilite_telnet_set_bundlelevel.sh $PLUGIN_ID $START_LEVEL
             counter=$((counter + 1))
 
@@ -301,16 +328,27 @@ then
     do
         echo " "
         echo "********************************************"
-        sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> /tmp/plugins-list-exist-"$plugunselement"-id.txt &"
-        sleep 2
-        JAR_BUNDLE_ID=$(cat /tmp/plugins-list-exist-"$plugunselement"-id.txt | grep $plugunselement | cut -f 1)
+
+        UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-"$plugunselement"-id.txt"
+        sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $UPDATE_PLUGIN_FILE &"
+        # sleep 2
+
+        # Waiting for Plugin ID.
+        function_wait
+
+        JAR_BUNDLE_ID=$(cat $UPDATE_PLUGIN_FILE | grep $plugunselement | cut -f 1)
         echo "Update/Install Plugin ID"="$JAR_BUNDLE_ID"
         ./logilite_telnet_start.sh $JAR_BUNDLE_ID
         sleep 1
         
-        sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> /tmp/plugins-list-exist-"$plugunselement"-status.txt &"
-        sleep 2
-        JAR_BUNDLE_STATUS=$(cat /tmp/plugins-list-exist-"$plugunselement"-status.txt | grep $plugunselement | cut -d " " -f 1 | cut -f 2)
+        UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-"$plugunselement"-status.txt"
+        sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $UPDATE_PLUGIN_FILE &"
+        # sleep 2
+
+        # Waiting for Plugin ID.
+        function_wait
+
+        JAR_BUNDLE_STATUS=$(cat $UPDATE_PLUGIN_FILE | grep $plugunselement | cut -d " " -f 1 | cut -f 2)
         echo "Status of $plugunselement is"="$JAR_BUNDLE_STATUS"
         echo "********************************************"
         echo " "
