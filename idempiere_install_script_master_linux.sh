@@ -321,6 +321,18 @@ else
 fi
 # }}}
 
+# Check if iDempiere already exists
+# {{{
+RESULT=$([ -d $CHUBOE_PROP_IDEMPIERE_PATH ] && echo "Y" || echo "N")
+# echo $RESULT
+if [ $RESULT == "N" ]; then
+    echo "HERE: iDempiere is not already installed - proceeding"
+else
+    echo "HERE: iDempiere is already installed - exiting now!"
+    exit 1
+fi
+# }}}
+
 # Check if you can create the chuboe folder
 # {{{
 # create a directory where chuboe related stuff will go. Including the helpful tips/hints/feedback file.
@@ -730,13 +742,13 @@ then
 	    if [ $? -eq 0 ]
 	    then
 		    cat $TEMP_DIR/pg.conf | sudo tee -a /etc/postgresql/$PGVERSION/main/postgresql.conf
-		
+
 		    echo "">>$README
 		    echo "">>$README
 		    echo "NOTE: this script uses https://www.pgconfig.org/#/tuning for postgresql tuning parameters">>$README
 		    echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
 		    echo "--> See the chuboe_utils directory for installation directions">>$README
-	    else      
+	    else
 		    echo 'HERE ERROR: Failed to curl https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB'
 	    fi
 
