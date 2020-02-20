@@ -67,6 +67,9 @@ sudo rm $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo execute the obfuscation sql script
 psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscation.sql
 
+# uncomment if you wish to review the data before the script continues
+# read -p "Press enter to continue - check the obfuscated database before continue"
+
 echo dump the obfuscated database
 pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
 
