@@ -22,6 +22,8 @@ CHUBOE_AWS_S3_BUCKET_SUB="BucketName/SubBucketName"
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 
 echo ADEMROOTDIR=$ADEMROOTDIR
+echo your backup will be available at:
+echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
 
 cd $ADEMROOTDIR/utils
 echo -------------------------------------------------------------------
@@ -50,32 +52,32 @@ else
     exit 1
 fi
 
-#drop the obfuscated database if present
+echo drop the obfuscated database if present
 echo NOTE: ignore errors on drop obfuscated database
 dropdb $ADDPG -U $USER $DATABASE_OB
-#export the existing iDempiere database
+echo export the existing iDempiere database
 pg_dump $ADDPG -U $USER $DATABASE -Fc > $EXPORT_DIR/$DATABASE_TMP_EXPORT
-#create the obfuscated database
+echo create the obfuscated database
 createdb $ADDPG -U $USER $DATABASE_OB
-#restore existing iDempiere database to obfuscated database
+echo restore existing iDempiere database to obfuscated database
 pg_restore $ADDPG -U $USER -Fc -d $DATABASE_OB $EXPORT_DIR/$DATABASE_TMP_EXPORT
-#remove old database export file
+echo remove old database export file
 sudo rm $EXPORT_DIR/$DATABASE_TMP_EXPORT
 
-#execute the obfuscation sql script
+echo execute the obfuscation sql script
 psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscation.sql
 
-#dump the obfuscated database
+echo dump the obfuscated database
 pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
 
-#drop the obfuscated database -- no longer needed
+echo drop the obfuscated database -- no longer needed
 dropdb $ADDPG -U $USER $DATABASE_OB
 
-#jar export
+echo jar export
 cd $EXPORT_DIR
 jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
 
-#add osgi plugin inventory to the jar file - useful for developers
+echo add osgi plugin inventory to the jar file - useful for developers
 /$CHUBOE_PROP_UTIL_HG_UTIL_PATH/chuboe_osgi_ss.sh > osgi_inventory.txt
 jar -uf $DATABASE_OB_JAR osgi_inventory.txt
 
@@ -91,7 +93,7 @@ echo -------------------------------------------------------------------
 echo COPY PASTE THE FOLLOWING TO UPLOAD TO S3 FROM YOUR HOME COMPUTER
 echo -------------------------------------------------------------------
 echo exit
-echo scp_its ubuntu@\$IP_ITS_2TEST_APP:$EXPORT_DIR/$DATABASE_OB_JAR \~/Downloads/.
+echo scp_its ubuntu@\$IP_YOUR_SERVER_APP:$EXPORT_DIR/$DATABASE_OB_JAR \~/Downloads/.
 echo cd \~/Downloads/
 echo aws s3 cp $DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read-write
 echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
