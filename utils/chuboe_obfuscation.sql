@@ -166,5 +166,9 @@ requestuser = '',
 requestuserpw = '' 
 ;
 
+commit;
+
 -- Recreate index that were dropped above
 CREATE INDEX ad_user_email ON ad_user USING btree (email);
+
+commit;
