@@ -67,11 +67,22 @@ sudo rm $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo execute the obfuscation sql script
 psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscation.sql
 
-# TODO: need to perform test to confirm above obfuscation.sql did not error.
-# Example: check to make sure at least ob bp name include the record id
-
 # uncomment if you wish to review the data before the script continues
 # read -p "Press enter to continue - check the obfuscated database before continue"
+
+# check to confirm the obfuscation script ran successfully
+# the -t removes the column header and the xargs trims the string
+# I cannot figure out how to get rid of the time in the result
+RecordExists=$(psql -U adempiere -d idempiere -t -c "select exists (select * from c_bpartner where name = 'bp'||c_bpartner_id)" | xargs)
+echo Did obfuscation succeed:$RecordExists
+# :0:1 extracts the first character
+if [[ ${RecordExists:0:1} == "t" ]]
+then
+    echo HERE: successful obfuscation
+else
+    echo HERE: failed obfuscation
+    exit 1
+fi
 
 echo dump the obfuscated database
 pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
