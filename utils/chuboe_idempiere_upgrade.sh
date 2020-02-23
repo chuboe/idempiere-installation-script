@@ -105,6 +105,13 @@ fi
 
 IDEMPIERESOURCEPATHDETAIL="$JENKINSURL/job/$JENKINSPROJECT/ws/${CHUBOE_PROP_JENKINS_BUILD_NUMBER}/changes"
 
+echo "***********************************"
+echo "You are about to upgrade iDempiere - you have 10 seconds to press ctrl-c to stop."
+echo "Note: Make sure you tee output to log file for future reference for example:"
+echo "./chuboe_idempiere_upgrade.sh |& tee ../log/chuboe_idempiere_upgrade_$INSTALL_DATE.log"
+echo "***********************************"
+sleep 10
+
 # show variables to the user (debug)
 echo "if you want to find for echoed values, search for HERE:"
 echo "HERE: print variables"
