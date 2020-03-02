@@ -73,7 +73,7 @@ psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscati
 # check to confirm the obfuscation script ran successfully
 # the -t removes the column header and the xargs trims the string
 # I cannot figure out how to get rid of the time in the result
-RecordExists=$(psql -U adempiere -d idempiere -t -c "select exists (select * from c_bpartner where name = 'bp'||c_bpartner_id)" | xargs)
+RecordExists=$(psql -U $USER -d $DATABASE_OB -t -c "select exists (select * from c_bpartner where name = 'bp'||c_bpartner_id)" | xargs)
 echo Did obfuscation succeed:$RecordExists
 # :0:1 extracts the first character
 if [[ ${RecordExists:0:1} == "t" ]]
