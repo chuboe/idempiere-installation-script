@@ -20,6 +20,8 @@ DATABASE_OB_EXPORT="ExpDatObfus.dmp"
 DATABASE_OB_JAR="ExpDatObfus_"`date +%Y%m%d`_`date +%H%M%S`".jar"
 CHUBOE_AWS_S3_BUCKET_SUB="BucketName/SubBucketName"
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
+# update the following to increase the backup/restore speed. Do not exceed the core count of your server.
+BACKUP_RESTORE_JOBS=1
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 echo your backup will be available at:
@@ -56,13 +58,14 @@ echo drop the obfuscated database if present
 echo NOTE: ignore errors on drop obfuscated database
 dropdb $ADDPG -U $USER $DATABASE_OB
 echo export the existing iDempiere database
-pg_dump $ADDPG -U $USER $DATABASE -Fc > $EXPORT_DIR/$DATABASE_TMP_EXPORT
+pg_dump $ADDPG -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo create the obfuscated database
 createdb $ADDPG -U $USER $DATABASE_OB
 echo restore existing iDempiere database to obfuscated database
 pg_restore $ADDPG -U $USER -Fc -d $DATABASE_OB $EXPORT_DIR/$DATABASE_TMP_EXPORT
+pg_restore $ADDPG -U $USER -Fd -j $BACKUP_RESTORE_JOBS -d $DATABASE_OB $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo remove old database export file
-sudo rm $EXPORT_DIR/$DATABASE_TMP_EXPORT
+sudo rm -r $EXPORT_DIR/$DATABASE_TMP_EXPORT
 
 echo execute the obfuscation sql script
 psql -d $DATABASE_OB -U $USER $ADDPG -f "$CHUBOE_UTIL_HG"/utils/chuboe_obfuscation.sql
@@ -99,7 +102,7 @@ echo add osgi plugin inventory to the jar file - useful for developers
 jar -uf $DATABASE_OB_JAR osgi_inventory.txt
 
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
-sudo rm $EXPORT_DIR/$DATABASE_OB_EXPORT
+sudo rm -r $EXPORT_DIR/$DATABASE_OB_EXPORT
 
 #push jar to S3 directly from this server
 #uncomment below if needed
