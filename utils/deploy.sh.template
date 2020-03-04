@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# The purpose of this script is to support automatic deployment of iDempiere artifacts:
+#     (jar/plugin, zip/packin, sql, special instructions)
+# You will typically create a dedicated YourCompany-deployable repository in the /opt directory owned you your user.
+# Inside the YourCompany-deployable directory, you will create a directory per ticket number or feature.
+# Add this file (deploy.sh.template) to your /opt/YourCompany-deployable/ directory.
+# Copy it into each ticket/feature directory, rename it to deploy.sh, and customize it as is needed to deploy each specific ticket/feature.
+# When you go to release a collection of tickets as part of a release, simply iteratre across each of the desired directories and call the ./deploy.sh file
+
 # Copy this file to your ticket folder.
 # Update it as you deem appropriate for the details of that ticket deployment.
 
