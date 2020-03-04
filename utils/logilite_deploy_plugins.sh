@@ -40,9 +40,14 @@ IDEMPIERE_USER="$CHUBOE_PROP_IDEMPIERE_OS_USER"
 IDEMPIERE_PATH="$CHUBOE_PROP_IDEMPIERE_PATH"
 CHUBOE_UTIL_HG="$CHUBOE_PROP_UTIL_HG_PATH"
 
-# Create a backup of the iDempiere folder before deployed plugins
 cd $CHUBOE_UTIL_HG/utils/
-./chuboe_hg_bindir.sh
+
+# check to see if test server
+if [[ $CHUBOE_PROP_IS_TEST_ENV == "N" ]]; then
+    echo "HERE: Not a test environment - Creating a backup of the iDempiere directory!"
+    # Create a backup of the iDempiere folder before deployed plugins
+    ./chuboe_hg_bindir.sh
+fi
 
 # process the specified options
 # the colon after the letter specifies there should be text with the option
@@ -370,9 +375,15 @@ then
     # wait 10 seconds for the deployment to finish before taking a backup
     sleep 10
 
-    # Create a backup of the iDempiere folder after deployed plugins
     cd $CHUBOE_UTIL_HG/utils/
-    ./chuboe_hg_bindir.sh
+    
+    # check to see if test server
+    # Create a backup of the iDempiere folder after deployed plugins
+    if [[ $CHUBOE_PROP_IS_TEST_ENV == "N" ]]; then
+        echo "HERE: Not a test environment - Creating a backup of the iDempiere directory!"
+        # Create a backup of the iDempiere folder before deployed plugins
+        ./chuboe_hg_bindir.sh
+    fi
 
     # Change idempiere-server folder permission to avoid any conflict.
     # CHUCK: this should not be necessary and it is potentially dangerous in that it can mask issues.
