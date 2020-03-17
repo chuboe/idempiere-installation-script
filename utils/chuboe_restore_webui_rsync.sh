@@ -12,6 +12,7 @@ TMP_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
 TMP_HOSTNAME=0.0.0.0 # this does not change - name of local machine
 TMP_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
+TMP_XMX=1G
 # make sure to chmod 400 the pem
 TMP_SSH_PEM_RSYNC="-e \"ssh $TMP_SSH_PEM\""
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
@@ -34,7 +35,6 @@ eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --
 # run console-setup.sh
 # NOTE: commented out below assuming configuration (including AppServer IP 0.0.0.0) is the same.
 # echo "HERE: Launching console-setup.sh"
-# cd $CHUBOE_PROP_IDEMPIERE_PATH
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
 #HERE are the prompts:
@@ -64,34 +64,37 @@ eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --
 #mail_admin_email
 #save_changes
 
-#not indented because of file input - uncomment the below if needed
-#sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sh console-setup.sh <<!
-#
-#
-#
-#$TMP_HOSTNAME
-#
-#
-#
-#
-#$CHUBOE_PROP_DB_HOST
-#
-#
-#
-#$CHUBOE_PROP_DB_PASSWORD_SU
-#$CHUBOE_PROP_DB_PASSWORD_SU
-#
-#
-#
-#
-#
-#!
-# end of file input - uncomment the above if needed
+#not indented because of file input
+cd $CHUBOE_PROP_IDEMPIERE_PATH
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sh console-setup.sh <<!
+
+
+
+$TMP_HOSTNAME
+
+
+
+
+$CHUBOE_PROP_DB_HOST
+
+
+
+$CHUBOE_PROP_DB_PASSWORD_SU
+$CHUBOE_PROP_DB_PASSWORD_SU
+
+
+
+
+
+!
+# end of file input
 
 echo HERE:: update xmx and xms
 # update system configuration (like XMX, XMS, etc...)
-sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiere-server.sh
-sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
+#sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiere-server.sh
+#sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
+sudo sed -i 's|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xms$TMP_XMX -Xmx$TMP_XMX -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g' /$CHUBOE_PROP_IDEMPIERE_PATH/utils/myEnvironment.sh
+
 
 echo HERE:: update login screen
 # update the login screen to show the desired hostname
