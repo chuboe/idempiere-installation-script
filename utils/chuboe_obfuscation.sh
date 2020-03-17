@@ -109,7 +109,10 @@ sudo rm -r $EXPORT_DIR/$DATABASE_OB_EXPORT
 #push jar to S3 directly from this server
 #uncomment below if needed
 #echo Push $EXPORT_DIR/$DATABASE_OB_JAR to $CHUBOE_AWS_S3_BUCKET
+#echo aws s3 cp $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read
 #aws s3 cp $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read
+#echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
+
 
 echo -------------------------------------------------------------------
 echo COPY PASTE THE FOLLOWING TO UPLOAD TO S3 FROM YOUR HOME COMPUTER
