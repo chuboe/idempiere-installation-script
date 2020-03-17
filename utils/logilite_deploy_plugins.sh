@@ -49,6 +49,7 @@ if [[ $CHUBOE_PROP_IS_TEST_ENV == "N" ]]; then
     ./chuboe_hg_bindir.sh
 fi
 
+
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
@@ -166,20 +167,22 @@ then
     i=0
     wordLen=0
     strP=0
-    array=()
+    ScanPlugInArray=()
     while [ $i -lt $strLen ]; do
         if [ $delimiter == '${str:$i:$dLen}' ]; then
-            array+=(${str:strP:$wordLen})
+            ScanPlugInArray+=(${str:strP:$wordLen})
             strP=$(( i + dLen ))
             wordLen=0
             i=$(( i + dLen ))
         fi
         i=$(( i + 1 ))
         wordLen=$(( wordLen + 1 ))
-    done
-    array+=(${str:strP:$wordLen})
+    done    
+    ScanPlugInArray+=(${str:strP:$wordLen})
 
-    for plugins in "${array[@]}"
+    echo "Scan Plug-In Jar List:" ${ScanPlugInArray[*]}
+
+    for plugins in "${ScanPlugInArray[@]}"
     do
         echo " "
         echo " "
@@ -199,13 +202,6 @@ then
                 CHECKINGPLUGINSTRING=$(grep -n "$PLUGIN_NAME_WITH_VERSION" $IDEMPIERE_PATH/plugins-list.txt)
                 CHECKING_PLUGIN=$?
             }
-            
-            checkingplugin
-            if [ $CHECKING_PLUGIN -eq 0 ];
-            then
-                echo "Same plugins already deployed in iDempiere, So skip that plugin."
-                continue
-            fi
 
             # Fatching deployable plugin version & deployed plugin version as variable.
             FATCHING_PLUGIN_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" |  cut -d '_' -f 2 | sed 's/.\{4\}$//')
@@ -215,16 +211,31 @@ then
             FATCHING_MILTIPLE_UNDERSCORE=$(echo "$plugins" | awk '{A=gsub(/_/,X,$0)}END {print A}')
             sleep 2
 
-            # Compare deployable plugin(deploy-jar) & already deployed plugin.
-            # If plugin already deploy with same version or latest version then ignore those plugin in deployment.
-            if [[ $FATCHING_PLUGIN_VERSION < $FATCHING_DEPLOYED_PLUGIN_VERSION ]]; then
-                echo "$plugins plugin latest version already deployed on server"
+            echo "Plug-In Name : $plugins"
+            echo "Scan Plug-In Version :     $FATCHING_PLUGIN_VERSION"
+
+            if [ -z "$FATCHING_DEPLOYED_PLUGIN_VERSION" ]
+            then
+                echo "Deployed Plug-In Version : Not exist "
+            else
+                echo "Deployed Plug-In Version : $FATCHING_DEPLOYED_PLUGIN_VERSION"
+            fi
+
+            checkingplugin            
+            if [ $CHECKING_PLUGIN -eq 0 ]; then
+                echo "Skip deployment as already exist : $plugins"
                 continue
-            elif [[ 2 -eq $FATCHING_MILTIPLE_UNDERSCORE ]]; then
+            fi
+
+            # Checking More then one underscore, if found then skip deployment for same Jar.
+            if [[ 2 -eq $FATCHING_MILTIPLE_UNDERSCORE ]]; then
                 echo "More then one underscore not suppoted by deployment script: $plugins"
                 continue
-            else
-                echo "We're Deploying: $plugins"
+            fi
+
+            if [ "$(printf '%s\n' "$FATCHING_PLUGIN_VERSION" "$FATCHING_DEPLOYED_PLUGIN_VERSION" | sort -V | head -n1)" = "$FATCHING_PLUGIN_VERSION" ]; then
+                echo "Skip deployment latest/higher version already deployed : $plugins"
+                continue
             fi
         fi
 
@@ -239,7 +250,7 @@ then
         getpluginstatus
         if [ $PlUGINSTATUS -eq 0 ];
         then
-            echo "Plugin $plugins exist..."
+            echo "Updating :  $plugins"
 
             EXIST_PLUGIN_ID=$(cat $IDEMPIERE_PATH/plugins-list.txt | grep $PLUGIN_NAME | cut -f 1)
             sleep 1
@@ -250,21 +261,23 @@ then
                 START_LEVEL=$(cat $SCRIPTPATH/logilite_plugins_startlevel.csv | grep $PLUGIN_NAME_WITHOUT_VERSION | cut -d ',' -f 2)
             fi
             
-            echo "Plugin $EXIST_PLUGIN_ID ID of existing $plugins"
+            echo "Plugin ID :  $EXIST_PLUGIN_ID"
 
             sudo -u $IDEMPIERE_USER cp -r $PLUGINS_SCAN_PATH/$plugins $CUSTOM_PLUGINS_PATH/
             ./logilite_telnet_update.sh $CUSTOM_PLUGINS_PATH/$plugins $EXIST_PLUGIN_ID $START_LEVEL
 
             counter=$((counter + 1))
 
-            echo "Plugin $plugins installed successfully."
+            InstallUpdatePlugInArray+=( $plugins )
+
+            echo "$plugins updated successfully."
             echo "********************************************"
             echo " "
             echo " "
 
         else
 
-            echo "Plugin $plugins not exist..."
+            echo "Installing :  $plugins"
             
             # Installing plugin
             sudo -u $IDEMPIERE_USER cp -r $PLUGINS_SCAN_PATH/$plugins $CUSTOM_PLUGINS_PATH/
@@ -277,7 +290,8 @@ then
             # Faching Plugin ID in variable.
             PLUGIN_ID=$(cat $UPDATE_PLUGIN_FILE | grep "Bundle ID" | cut -d ':' -f 2 | awk '{$1=$1;print}')
             sleep 1
-            echo "Plugin $PLUGIN_ID ID of $PLUGIN_NAME"
+            
+            echo "Plugin ID :  $PLUGIN_ID"
 
             # Checking logilite_plugins_startlevel.csv file exist or not..
             Startlevel_CSV="$SCRIPTPATH/logilite_plugins_startlevel.csv"
@@ -288,6 +302,8 @@ then
             # Changing plugins startlevel.
             ./logilite_telnet_set_bundlelevel.sh $PLUGIN_ID $START_LEVEL
             counter=$((counter + 1))
+
+            InstallUpdatePlugInArray+=( $plugins )
 
             echo "$plugins installed successfully."
             echo "********************************************"
@@ -305,59 +321,47 @@ then
     sleep 10
 fi
 
+
+# Saving install/Update plugins in file.
+UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-id.txt"
+sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $UPDATE_PLUGIN_FILE &"
+
+# Waiting for Plugin ID.
+function_wait
+
 if [[ $IS_START_PLUGINS == "Y" ]]
 then
-       
-    PLUGINS_LIST=$(ls $PLUGINS_SCAN_PATH/ | grep .jar | cut -d '_' -f 1 | sed 's/$/_/')
-    strp="$PLUGINS_LIST"
-    delimiterp=\n
-    strLenp=${#strp}
-    dLenp=${#delimiterp}
-    p=0
-    wordLenp=0
-    strPp=0
-    array=()
-    while [ $p -lt $strLenp ]; do
-        if [ $delimiterp == '${strp:$p:$dLenp}' ]; then
-            array+=(${strp:strPp:$wordLenp})
-            strPp=$(( p + dLenp ))
-            wordLenp=0
-            p=$(( p + dLenp ))
-        fi
-        p=$(( p + 1 ))
-        wordLenp=$(( wordLenp + 1 ))
-    done
-    array+=(${strp:strPp:$wordLenp})
 
-    for plugunselement in "${array[@]}"
+    # Staring only Install/Update plugins
+    for StartInstallUpdatePlugIn in "${InstallUpdatePlugInArray[@]}"
     do
         echo " "
         echo "********************************************"
-
-        UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-"$plugunselement"-id.txt"
-        sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $UPDATE_PLUGIN_FILE &"
-        # sleep 2
-
-        # Waiting for Plugin ID.
-        function_wait
-
-        JAR_BUNDLE_ID=$(cat $UPDATE_PLUGIN_FILE | grep $plugunselement | cut -f 1)
+        PLUGIN_NAME=$(echo "$StartInstallUpdatePlugIn" | cut -d '_' -f 1 | sed 's/$/_/')
+        JAR_BUNDLE_ID=$(cat $UPDATE_PLUGIN_FILE | grep $PLUGIN_NAME | cut -f 1)
         echo "Update/Install Plugin ID"="$JAR_BUNDLE_ID"
         ./logilite_telnet_start.sh $JAR_BUNDLE_ID
-        sleep 1
-        
-        UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-"$plugunselement"-status.txt"
-        sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $UPDATE_PLUGIN_FILE &"
-        # sleep 2
+        sleep 5
+    done
 
-        # Waiting for Plugin ID.
-        function_wait
 
-        JAR_BUNDLE_STATUS=$(cat $UPDATE_PLUGIN_FILE | grep $plugunselement | cut -d " " -f 1 | cut -f 2)
-        echo "Status of $plugunselement is"="$JAR_BUNDLE_STATUS"
+    # Faching plugins status
+    UPDATE_PLUGIN_FILE="/tmp/plugins-list-exist-status.txt"
+    sudo su $IDEMPIERE_USER -c "./chuboe_osgi_ss.sh &> $UPDATE_PLUGIN_FILE &"
+
+    # Waiting for Plugin ID.
+    function_wait
+
+    # Geting status of Install/Update plugins
+    for StatusInstallUpdatePlugIn in "${InstallUpdatePlugInArray[@]}"
+    do
+        PLUGIN_NAME=$(echo "$StatusInstallUpdatePlugIn" | cut -d '_' -f 1)
+        JAR_BUNDLE_STATUS=$(cat $UPDATE_PLUGIN_FILE | grep $PLUGIN_NAME | cut -d " " -f 1 | cut -f 2)
+        echo "Status of $PLUGIN_NAME is"="$JAR_BUNDLE_STATUS"
         echo "********************************************"
         echo " "
     done
+
 
 fi
 
@@ -384,7 +388,6 @@ then
         # Create a backup of the iDempiere folder before deployed plugins
         ./chuboe_hg_bindir.sh
     fi
-
     # Change idempiere-server folder permission to avoid any conflict.
     # CHUCK: this should not be necessary and it is potentially dangerous in that it can mask issues.
     #sudo chown -R $IDEMPIERE_USER:$IDEMPIERE_USER $IDEMPIERE_PATH
