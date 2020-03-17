@@ -65,7 +65,6 @@ pg_dump $ADDPG -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DA
 echo create the obfuscated database
 createdb $ADDPG -U $USER $DATABASE_OB
 echo restore existing iDempiere database to obfuscated database
-pg_restore $ADDPG -U $USER -Fc -d $DATABASE_OB $EXPORT_DIR/$DATABASE_TMP_EXPORT
 pg_restore $ADDPG -U $USER -Fd -j $BACKUP_RESTORE_JOBS -d $DATABASE_OB $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo remove old database export file
 sudo rm -r $EXPORT_DIR/$DATABASE_TMP_EXPORT
