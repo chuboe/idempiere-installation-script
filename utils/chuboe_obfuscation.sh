@@ -2,6 +2,9 @@
 #Version 1 - Chuck Boecking - created
 #Version 2 - Chuck Boecking - moved obfuscation to separate database on the same instance
 
+#Open Items
+#1. Need to include the /opt/idempiere-server/customization-jar/ directory in jar that is uploaded. This helps developers know exactly what is deployed without needing to recreate jars from code.
+
 #bring chuboe.properties into context
 source chuboe.properties
 
