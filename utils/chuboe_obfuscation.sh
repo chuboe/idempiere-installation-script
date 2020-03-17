@@ -42,6 +42,9 @@ else
     echo -------------------------------------------------------------------
     exit 1
 fi #end if dev environment check
+
+#NOTE: It is ok to comment_out/remove the next backup if it takes too much time.
+#It is not really needed.
 echo NOTE: Ignore errors related to myEnvironment.sav
 if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh
 then
