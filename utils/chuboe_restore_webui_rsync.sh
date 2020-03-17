@@ -93,8 +93,7 @@ echo HERE:: update xmx and xms
 # update system configuration (like XMX, XMS, etc...)
 #sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiere-server.sh
 #sudo sed -i 's/-Xms8G -Xmx8G/-Xms16G -Xmx16G/g' /$CHUBOE_PROP_IDEMPIERE_PATH/idempiereEnv.properties
-sudo sed -i 's|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xms$TMP_XMX -Xmx$TMP_XMX -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g' /$CHUBOE_PROP_IDEMPIERE_PATH/utils/myEnvironment.sh
-
+sudo sed -i 's|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xms'$TMP_XMX' -Xmx'$TMP_XMX' -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g' /$CHUBOE_PROP_IDEMPIERE_PATH/utils/myEnvironment.sh
 
 echo HERE:: update login screen
 # update the login screen to show the desired hostname
