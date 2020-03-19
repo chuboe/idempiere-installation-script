@@ -17,3 +17,5 @@ do
     let count--
     echo -n "."
 done
+
+echo see /tmp/ for output. execute: ls -ltr to see latest files in /tmp/

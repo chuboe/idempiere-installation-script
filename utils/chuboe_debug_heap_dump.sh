@@ -5,5 +5,7 @@ IDPID=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere
 
 echo pid=$IDPID
 
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd $IDPID GC.heap_dump |& tee /tmp/heap_dump.$IDPID.$(date +%s.%N)
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd $IDPID GC.heap_dump /tmp/heap_dump.$IDPID.$(date +%s.%N)
 top -H -b -n1 -p $IDPID |& tee /tmp/top.$IDPID.$(date +%s.%N)
+
+echo see /tmp/ for output. execute: ls -ltr to see latest files in /tmp/
