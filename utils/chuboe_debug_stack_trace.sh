@@ -3,8 +3,8 @@
 # Adaptation of https://github.com/cqsupport/jstackSeries.sh/blob/master/jstackSeries.sh
 
 source chuboe.properties
-
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER pid=`jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
+pid=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
+echo pid=$pid
 
 count=${1:-10}  # defaults to 10 times
 delay=${2:-1} # defaults to 1 second
