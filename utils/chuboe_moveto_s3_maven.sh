@@ -1,15 +1,22 @@
 #!/bin/bash
 
 #The purpose of this script is to move files from Maven to AWS S3.
-#The script keeps the S3 file path/name scheme the same so that you do not need to update the script to use S3.
-#Execute this script from your jenkins server.
-#Note: this script assumes you have already created your S3 Bucket and updated the varialbles below.
+#The script keeps the S3 file path/name scheme the same as what would come from jenkins.
+#Make sure you execute all ACTION steps below.
 
-source chuboe.properties
+#ACTION: Make sure you have created the below S3 bucket and updated this variable accordingly:
+S3_BUCKET="chuboe-jenkins"
 
-WORKSPACE="$1/" 
+#ACTION: make sure you have s3cmd installed and configured
+
+#ACTION: Make sure you source the correct file to ensure you upload to the correct s3 bucket.
+source chuboe.properties.orig
+#source chuboe.properties.core71
+#source chuboe.properties
+
+WORKSPACE="$1/"
 echo "WORKSPACE = $WORKSPACE"
-if [ "$WORKSPACE" = "/" ] 
+if [ "$WORKSPACE" = "/" ]
 then
 	echo "need workspace argument"
 	exit 1
@@ -18,7 +25,6 @@ fi
 #set current build here...
 BUILD_NUMBER=`date +"%Y%m%d%H%M%S"`
 
-S3_BUCKET="chuboe-jenkins"
 OSUSER=$(id -u -n)
 TEMP_DIR_BASE="/tmp/${OSUSER}/${S3_BUCKET}/"
 TEMP_DIR="${TEMP_DIR_BASE}/job/${CHUBOE_PROP_JENKINS_PROJECT}/ws/"
@@ -32,7 +38,7 @@ mkdir -p ${TEMP_DIR}
 P2_FILE="repository"
 P2_PATH="org.idempiere.p2/target/"
 P2_DIR="repository/"
-TEMP_P2_DIR="${TEMP_DIR}/${P2_PATH}/${P2_DIR}*zip*/" 
+TEMP_P2_DIR="${TEMP_DIR}/${P2_PATH}/${P2_DIR}*zip*/"
 mkdir -p $TEMP_P2_DIR
 cd ${WORKSPACE}${P2_PATH}
 zip ${TEMP_P2_DIR}${P2_FILE} ${P2_DIR} -r
