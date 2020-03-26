@@ -10,8 +10,8 @@ S3_BUCKET="chuboe-jenkins"
 #ACTION: make sure you have s3cmd installed and configured
 
 #ACTION: Make sure you source the correct file to ensure you upload to the correct s3 bucket.
-source chuboe.properties.orig
-#source chuboe.properties.core71
+#source chuboe.properties.orig
+source chuboe.properties.core71
 #source chuboe.properties
 
 WORKSPACE="$1/"
