@@ -25,6 +25,7 @@ CHUBOE_AWS_S3_BUCKET_SUB="BucketName/SubBucketName"
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 # update the following to increase the backup/restore speed. Do not exceed the core count of your server.
 BACKUP_RESTORE_JOBS=1
+#QUICK_AND_DIRTY="-T '*deleteme*' -T '*delme*' -T 't_*' -T ad_changelog -T ad_pinstance_log -T 'fact_acct*' -T ad_usermail -T ad_issue"
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 echo your backup will be available at:
@@ -67,7 +68,7 @@ echo remove old database export file
 echo NOTE: ignore errors on remove old database export file
 sudo rm -r $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo export the existing iDempiere database
-pg_dump $ADDPG -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
+pg_dump $ADDPG $QUICK_AND_DIRTY -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo create the obfuscated database
 createdb $ADDPG -U $USER $DATABASE_OB
 echo restore existing iDempiere database to obfuscated database
