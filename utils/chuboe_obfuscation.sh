@@ -25,7 +25,7 @@ CHUBOE_AWS_S3_BUCKET_SUB="BucketName/SubBucketName"
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 # update the following to increase the backup/restore speed. Do not exceed the core count of your server.
 BACKUP_RESTORE_JOBS=1
-#QUICK_AND_DIRTY="-T '*deleteme*' -T '*delme*' -T 't_*' -T ad_changelog -T ad_pinstance_log -T 'fact_acct*' -T ad_usermail -T ad_issue"
+#QUICK_AND_DIRTY="-T '*deleteme*' -T '*delme*' --exclude-table-data='t_*' --exclude-table-data=ad_changelog --exclude-table-data=ad_pinstance_log --exclude-table-data='fact_acct*' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue"
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 echo your backup will be available at:
