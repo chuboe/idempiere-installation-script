@@ -5,6 +5,19 @@
 #Open Items
 #1. Need to include the /opt/idempiere-server/customization-jar/ directory in jar that is uploaded. This helps developers know exactly what is deployed without needing to recreate jars from code.
 
+while getopts eq option
+do
+case "${option}"
+in
+e)  EXIT_AFTER_INITIAL_BACKUP=Y
+    echo exit after backup!!
+    ;;
+q)  QUICK_AND_DIRTY="-T '*deleteme*' -T '*delme*' --exclude-table-data='t_*' --exclude-table-data=ad_changelog --exclude-table-data=ad_pinstance_log --exclude-table-data='fact_acct*' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue"
+    echo quick and dirty!!
+    ;;
+esac
+done
+
 #bring chuboe.properties into context
 source chuboe.properties
 
@@ -25,7 +38,6 @@ CHUBOE_AWS_S3_BUCKET_SUB="BucketName/SubBucketName"
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 # update the following to increase the backup/restore speed. Do not exceed the core count of your server.
 BACKUP_RESTORE_JOBS=1
-#QUICK_AND_DIRTY="-T '*deleteme*' -T '*delme*' --exclude-table-data='t_*' --exclude-table-data=ad_changelog --exclude-table-data=ad_pinstance_log --exclude-table-data='fact_acct*' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue"
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 echo your backup will be available at:
@@ -69,6 +81,11 @@ echo NOTE: ignore errors on remove old database export file
 sudo rm -r $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo export the existing iDempiere database
 pg_dump $ADDPG $QUICK_AND_DIRTY -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
+if [[ $EXIT_AFTER_INITIAL_BACKUP = "Y" ]]; then
+    echo Exiting after initial backup!
+    exit 0
+fi
+
 echo create the obfuscated database
 createdb $ADDPG -U $USER $DATABASE_OB
 echo restore existing iDempiere database to obfuscated database
