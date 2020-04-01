@@ -12,8 +12,8 @@ in
 e)  EXIT_AFTER_INITIAL_BACKUP=Y
     echo exit after backup!!
     ;;
-q)  QUICK_AND_DIRTY="-T '*deleteme*' -T '*delme*' --exclude-table-data='t_*' --exclude-table-data=ad_changelog --exclude-table-data=ad_pinstance_log --exclude-table-data='fact_acct*' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue"
-    echo quick and dirty!!
+q)  QUICK_AND_DIRTY='-T ''*deleteme*'' -T ''*delme*'' --exclude-table-data=''t_*'' --exclude-table-data=ad_changelog --exclude-table-data=ad_attachment --exclude-table-data=ad_pinstance_log --exclude-table-data=''fact_acct*'' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue'
+    echo export quick and dirty!!
     ;;
 esac
 done
