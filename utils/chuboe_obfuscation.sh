@@ -18,6 +18,15 @@ q)  QUICK_AND_DIRTY='-T ''*deleteme*'' -T ''*delme*'' --exclude-table-data=''ad_
 esac
 done
 
+#If you use the -e and -q options, you can create a fast and small backup of an otherwise large database.
+#This scenario is advantageous when trying to populate a developer copy of the database from a production or uat server.
+#Below are the commands you can use from your remote machine (example: developer instance) to restore a local copy of the database.
+#Note: be aware the below commands will blow away the iDempiere database on what ever server you execute them from. Always keep a valid backup of important data!!!
+    # rsync -a --delete --progress chuboe@IP_OF_UAT_SERVER:/tmp/obtempout.bak/ /tmp/obtempout.bak/
+    # dropdb -U adempiere idempiere
+    # createdb -U adempiere idempiere
+    # pg_restore -d idempiere -U adempiere -Fd /tmp/obtempout.bak/
+
 #bring chuboe.properties into context
 source chuboe.properties
 
