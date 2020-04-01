@@ -10,7 +10,7 @@ do
 case "${option}"
 in
 e)  EXIT_AFTER_INITIAL_BACKUP=Y
-    echo exit after backup!!
+    echo exit after initial backup!! Be aware this data is not obfuscated!!
     ;;
 q)  QUICK_AND_DIRTY='-T ''*deleteme*'' -T ''*delme*'' --exclude-table-data=''ad_pinstance*'' --exclude-table-data=''t_*'' --exclude-table-data=r_requestupdate --exclude-table-data=r_requestaction --exclude-table-data=''chuboe_trialbalance*'' --exclude-table-data=''chuboe_validation*'' --exclude-table-data=ad_wf_process --exclude-table-data=ad_wf_activity --exclude-table-data=ad_wf_eventaudit --exclude-table-data=ad_changelog --exclude-table-data=ad_attachment --exclude-table-data=''fact_acct*'' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue'
     echo export quick and dirty!!
