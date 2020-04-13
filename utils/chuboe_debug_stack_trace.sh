@@ -4,18 +4,27 @@
 
 source chuboe.properties
 pid=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
-echo pid=$pid
+iddate=$(date +%s.%N)
 
-count=${1:-10}  # defaults to 10 times
+echo pid=$pid
+echo date=$iddate
+
+count=${1:-1}  # defaults to 1 time
 delay=${2:-1} # defaults to 1 second
 
 while [ $count -gt 0 ]
 do
-    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jstack $pid |& tee /tmp/jstack.$pid.$(date +%s.%N)
-    top -H -b -n1 -p $pid |& tee /tmp/top.$pid.$(date +%s.%N)
+    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jstack $pid |& tee /tmp/jstack.$pid.$iddate.$count
+    top -H -b -n1 -p $pid |& tee /tmp/top.$pid.$iddate.$count
     sleep $delay
     let count--
     echo -n "."
 done
 
-echo see /tmp/ for output. execute: ls -ltr to see latest files in /tmp/
+echo set file ownership to $USER
+sudo chown $USER:$USER /tmp/*$iddate*
+
+echo see /tmp/ for output. execute the following command to see latest files in /tmp/
+echo ls -ltrh /tmp/*$iddate*
+echo files created:
+ls -ltrh /tmp/*$iddate*
