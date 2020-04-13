@@ -12,8 +12,8 @@ delay=${2:-1} # defaults to 1 second
 
 while [ $count -gt 0 ]
 do
-    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd $IDPID GC.heap_dump /tmp/heap_dump.$IDPID.$IDDATE.$count
-    top -H -b -n1 -p $IDPID |& tee /tmp/heap_top.$IDPID.$IDDATE.$count
+    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd $IDPID GC.heap_dump /tmp/heap_dump.$IDPID.$IDDATE.$CHUBOE_PROP_WEBUI_IDENTIFICATION.$count
+    top -H -b -n1 -p $IDPID |& tee /tmp/heap_top.$IDPID.$IDDATE.$CHUBOE_PROP_WEBUI_IDENTIFICATION.$count
     sleep $delay
     let count--
     echo -n "."
