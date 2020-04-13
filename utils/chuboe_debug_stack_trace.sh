@@ -14,8 +14,8 @@ delay=${2:-1} # defaults to 1 second
 
 while [ $count -gt 0 ]
 do
-    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jstack $pid |& tee /tmp/jstack.$pid.$iddate.$count
-    top -H -b -n1 -p $pid |& tee /tmp/top.$pid.$iddate.$count
+    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jstack $pid |& tee /tmp/stack_trace.$pid.$iddate.$count
+    top -H -b -n1 -p $pid |& tee /tmp/stack_top.$pid.$iddate.$count
     sleep $delay
     let count--
     echo -n "."
