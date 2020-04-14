@@ -5,6 +5,28 @@
 #Open Items
 #1. Need to include the /opt/idempiere-server/customization-jar/ directory in jar that is uploaded. This helps developers know exactly what is deployed without needing to recreate jars from code.
 
+while getopts eq option
+do
+case "${option}"
+in
+e)  EXIT_AFTER_INITIAL_BACKUP=Y
+    echo exit after initial backup!! Be aware this data is not obfuscated!!
+    ;;
+q)  QUICK_AND_DIRTY='-T ''*deleteme*'' -T ''*delme*'' --exclude-table-data=''ad_pinstance*'' --exclude-table-data=''t_*'' --exclude-table-data=r_requestupdate --exclude-table-data=r_requestaction --exclude-table-data=''chuboe_trialbalance*'' --exclude-table-data=''chuboe_validation*'' --exclude-table-data=ad_wf_process --exclude-table-data=ad_wf_activity --exclude-table-data=ad_wf_eventaudit --exclude-table-data=ad_changelog --exclude-table-data=ad_attachment --exclude-table-data=''fact_acct*'' --exclude-table-data=ad_usermail --exclude-table-data=ad_issue'
+    echo export quick and dirty!!
+    ;;
+esac
+done
+
+#If you use the -e and -q options, you can create a fast and small backup of an otherwise large database.
+#This scenario is advantageous when trying to populate a developer copy of the database from a production or uat server.
+#Below are the commands you can use from your remote machine (example: developer instance) to restore a local copy of the database.
+#Note: be aware the below commands will blow away the iDempiere database on what ever server you execute them from. Always keep a valid backup of important data!!!
+    # rsync -a --delete --progress chuboe@IP_OF_UAT_SERVER:/tmp/obtempout.bak/ /tmp/obtempout.bak/
+    # dropdb -U adempiere idempiere
+    # createdb -U adempiere idempiere
+    # pg_restore -d idempiere -U adempiere -Fd /tmp/obtempout.bak/
+
 #bring chuboe.properties into context
 source chuboe.properties
 
@@ -67,7 +89,12 @@ echo remove old database export file
 echo NOTE: ignore errors on remove old database export file
 sudo rm -r $EXPORT_DIR/$DATABASE_TMP_EXPORT
 echo export the existing iDempiere database
-pg_dump $ADDPG -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
+pg_dump $ADDPG $QUICK_AND_DIRTY -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
+if [[ $EXIT_AFTER_INITIAL_BACKUP = "Y" ]]; then
+    echo Exiting after initial backup!
+    exit 0
+fi
+
 echo create the obfuscated database
 createdb $ADDPG -U $USER $DATABASE_OB
 echo restore existing iDempiere database to obfuscated database

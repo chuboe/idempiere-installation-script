@@ -2,10 +2,39 @@
 
 source chuboe.properties
 IDPID=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
+IDDATE=$(date +%s.%N)
+CHUBOE_AWS_S3_BUCKET_SUB="some-bucket/some-folder"
+CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 
 echo pid=$IDPID
+echo date=$IDDATE
 
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd $IDPID GC.heap_dump /tmp/heap_dump.$IDPID.$(date +%s.%N)
-top -H -b -n1 -p $IDPID |& tee /tmp/top.$IDPID.$(date +%s.%N)
+count=${1:-1}  # defaults to 1 time
+delay=${2:-1} # defaults to 1 second
 
-echo see /tmp/ for output. execute: ls -ltr to see latest files in /tmp/
+while [ $count -gt 0 ]
+do
+    heap_dump_file=heap_dump.$IDPID.$IDDATE.$CHUBOE_PROP_WEBUI_IDENTIFICATION.$count
+    heap_top_file=heap_top.$IDPID.$IDDATE.$CHUBOE_PROP_WEBUI_IDENTIFICATION.$count
+
+    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd $IDPID GC.heap_dump /tmp/$heap_dump_file
+    sudo chown $USER:$USER /tmp/$heap_dump_file
+    top -H -b -n1 -p $IDPID |& tee /tmp/$heap_top_file
+    sudo chown $USER:$USER /tmp/$heap_top_file
+
+    echo Push files to S3...
+    echo aws s3 cp /tmp/$heap_dump_file $CHUBOE_AWS_S3_BUCKET
+    aws s3 cp /tmp/$heap_dump_file $CHUBOE_AWS_S3_BUCKET
+    echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$heap_dump_file
+
+    echo aws s3 cp /tmp/$heap_top_file $CHUBOE_AWS_S3_BUCKET
+    aws s3 cp /tmp/$heap_top_file $CHUBOE_AWS_S3_BUCKET
+    echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$heap_top_file
+
+    sleep $delay
+    let count--
+    echo -n "."
+done
+
+echo files created:
+ls -ltrh /tmp/*$IDDATE*

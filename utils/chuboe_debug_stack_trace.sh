@@ -4,18 +4,36 @@
 
 source chuboe.properties
 pid=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
-echo pid=$pid
+iddate=$(date +%s.%N)
+CHUBOE_AWS_S3_BUCKET_SUB="some-bucket/some-folder"
+CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 
-count=${1:-10}  # defaults to 10 times
+echo pid=$pid
+echo date=$iddate
+
+count=${1:-1}  # defaults to 1 time
 delay=${2:-1} # defaults to 1 second
 
 while [ $count -gt 0 ]
 do
-    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jstack $pid |& tee /tmp/jstack.$pid.$(date +%s.%N)
-    top -H -b -n1 -p $pid |& tee /tmp/top.$pid.$(date +%s.%N)
+    stack_trace_file=stack_trace.$pid.$iddate.$CHUBOE_PROP_WEBUI_IDENTIFICATION.$count
+    stack_top_file=stack_top.$pid.$iddate.$CHUBOE_PROP_WEBUI_IDENTIFICATION.$count
+
+    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jstack $pid |& tee /tmp/$stack_trace_file
+    top -H -b -n1 -p $pid |& tee /tmp/$stack_top_file
+
+    sudo chown $USER:$USER /tmp/$stack_trace_file
+    echo aws s3 cp /tmp/$stack_trace_file $CHUBOE_AWS_S3_BUCKET
+    aws s3 cp /tmp/$stack_trace_file $CHUBOE_AWS_S3_BUCKET
+
+    sudo chown $USER:$USER /tmp/$stack_top_file
+    echo aws s3 cp /tmp/$stack_top_file $CHUBOE_AWS_S3_BUCKET
+    aws s3 cp /tmp/$stack_top_file $CHUBOE_AWS_S3_BUCKET
+
     sleep $delay
     let count--
     echo -n "."
 done
 
-echo see /tmp/ for output. execute: ls -ltr to see latest files in /tmp/
+echo files created:
+ls -ltrh /tmp/*$iddate*
