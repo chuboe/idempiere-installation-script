@@ -6,7 +6,10 @@
 source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
 
 DEPLOY_TICKET=${PWD##*/}
-echo HERE: Current directory: $DEPLOY_TICKET
+echo HERE: Current Ticket: $DEPLOY_TICKET
+DEPLOY_TICKET_DIR=${PWD}
+echo HERE: Current Directory: $DEPLOY_TICKET_DIR
+
 PACK_DIR=2Pack
 INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 
@@ -26,7 +29,7 @@ echo "************************************"
 echo "******************"
 echo "Special instructions"
 echo "******************"
-cd /opt/zito-deployable/$DEPLOY_TICKET/
+cd $DEPLOY_TICKET_DIR
 
 echo No special instructions.
 # echo "ACTION: Add your manual instuctions here..."
@@ -35,7 +38,12 @@ echo No special instructions.
 echo "******************"
 echo "Deploy jars"
 echo "******************"
-cd /opt/zito-deployable/$DEPLOY_TICKET/
+cd $DEPLOY_TICKET_DIR
+
+echo Create $CHUBOE_PROP_DEPLOY_PLUGINS_PATH folder if not already exists
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir -p $CHUBOE_PROP_DEPLOY_PLUGINS_PATH
+echo Create $CHUBOE_PROP_CUSTOM_PLUGINS_PATH folder if not already exists
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir -p $CHUBOE_PROP_CUSTOM_PLUGINS_PATH
 
 JAR_COUNT=$(ls -A *.jar | wc -l)
 echo HERE: jar count: $JAR_COUNT
@@ -57,7 +65,7 @@ fi
 echo "******************"
 echo "Deploy pack ins"
 echo "******************"
-cd /opt/zito-deployable/$DEPLOY_TICKET/
+cd $DEPLOY_TICKET_DIR
 
 # Check to see if 2pack directory present - skip if no
 PACK_RESULT=$([ -d $PACK_DIR ] && echo "Y" || echo "N")
@@ -87,7 +95,7 @@ fi
 echo "******************"
 echo "Execute sql"
 echo "******************"
-cd /opt/zito-deployable/$DEPLOY_TICKET/
+cd $DEPLOY_TICKET_DIR
 
 echo No sql today
 # psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -c "ADD_SQL_HERE"
