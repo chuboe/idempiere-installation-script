@@ -23,8 +23,8 @@ cd /tmp/$IDDATE1/
 for f in *; do mv "$f" "$CHUBOE_PROP_WEBUI_IDENTIFICATION"."$f"; done
 
 echo Push files to S3...
-echo aws s3 cp /tmp/$IDDATE1/* $CHUBOE_AWS_S3_BUCKET
-aws s3 cp /tmp/$IDDATE1/* $CHUBOE_AWS_S3_BUCKET
+echo aws s3 cp /tmp/$IDDATE1/ $CHUBOE_AWS_S3_BUCKET --recursive
+aws s3 cp /tmp/$IDDATE1/ $CHUBOE_AWS_S3_BUCKET --recursive
 
 echo files sent:
 ls -ltrh /tmp/$IDDATE1/*
