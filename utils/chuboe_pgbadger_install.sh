@@ -41,10 +41,15 @@ pgbadger --version
 ### Usage Recommendations ###
 # single command - simple test and info
 cd ~
-mkdir deleteme_pgbadger
-cd deleteme_pgbadger
+mkdir -p deleteme_pgbadger/one-time/
+cd deleteme_pgbadger/one-time/
 pgbadger /var/log/postgresql/*
+# this will produce an out.html. You can copy this file to your local machine to view the file through your browser
 
 #add the following to cron to create an ongoing report
 # 0 4 * * * /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
-
+# you can copy to your local maching using: 
+# cd ~
+# mkdir -p deleteme_pgbadger/incremental/
+# cd deleteme_pgbadger/incremental/
+# rsync -av --no-perms --no-owner --no-group $OSUSER@$YOUR_SERVER_IP:/var/reports/pgbadger/ .
