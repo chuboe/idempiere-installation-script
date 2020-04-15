@@ -1,7 +1,7 @@
 # This is not a script yet!!! It is a collection of commands to run - a work in progress.
 
-# pgbadger anazlyses postgresql logs - http://dalibo.github.io/pgbadger/
-# Note: the ubuntu version through apt-get is old (v3)
+# pgbadger anazlyses postgresql logs - https://pgbadger.darold.net/
+# Note: the ubuntu version through apt-get is old
 
 # for pgbadger to work, you need to set the appropriate log settings in postgresql.conf
 # The installation script uses https://www.pgconfig.org/#/tuning to tune your database when you install iDempiere and the database on separate machines.
