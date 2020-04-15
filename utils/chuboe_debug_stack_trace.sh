@@ -5,7 +5,7 @@
 source chuboe.properties
 pid=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
 iddate=$(date +%s.%N)
-CHUBOE_AWS_S3_BUCKET_SUB="some-bucket/some-folder"
+CHUBOE_AWS_S3_BUCKET_SUB=$CHUBOE_PROP_DEBUG_DEV_SHARE_BUCKET
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 
 echo pid=$pid
