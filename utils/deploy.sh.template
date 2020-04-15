@@ -13,7 +13,7 @@ echo HERE: Current Directory: $DEPLOY_TICKET_DIR
 PACK_DIR=2Pack
 INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 
-echo "NOTE: run as chuboe/ubuntu user (with sudo priviledges)"
+echo "NOTE: run as chuboe/ubuntu user (user with sudo priviledges)"
 echo "NOTE: Consider tee output to file example:"
 echo "./deploy.sh |& tee /tmp/output_"$DEPLOY_TICKET"_"$INSTALL_DATE".log"
 echo "  "
