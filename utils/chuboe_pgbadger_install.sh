@@ -48,7 +48,7 @@ pgbadger /var/log/postgresql/*
 
 #add the following to cron to create an ongoing report
 # 0 4 * * * /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
-# you can copy to your local maching using: 
+# you can copy the results your local maching by issuing the following commands from your local machine:
 # cd ~
 # mkdir -p deleteme_pgbadger/incremental/
 # cd deleteme_pgbadger/incremental/
