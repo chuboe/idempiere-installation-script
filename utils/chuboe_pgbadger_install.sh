@@ -19,25 +19,32 @@ sudo apt-get install make
 mkdir pgbadger_install
 cd pgbadger_install
 
-#note: you can get the most recent URL from http://sf.net/project/pgbadger
-wget http://downloads.sourceforge.net/project/pgbadger/$CURRENT_VER/pgbadger-$CURRENT_VER.tar.gz -O pgbadger-$CURRENT_VER.tar.gz
+#download from https://github.com/darold/pgbadger/releases
+#NOTE: downloaded file name is not consistent - below will change name from v11.2.tar.gz to the proper name used below
+#mv v$CURRENT_VER.tar.gz pgbadger-$CURRENT_VER.tar.gz
 
+#installation instructions - https://github.com/darold/pgbadger#installation
 tar xzf pgbadger-$CURRENT_VER.tar.gz
 cd pgbadger-$CURRENT_VER/
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL
 make && sudo make install
 
-sudo mkdir /var/reports
-sudo mkdir /var/reports/pgbadger/
-sudo chown ubuntu:ubuntu /var/reports/pgbadger/
+#change if needed
+OSUSER=ubuntu
+
+sudo mkdir -p /var/reports/pgbadger/
+sudo chown $OSUSER:$OSUSER /var/reports/pgbadger/
 
 # verify installation
 pgbadger --version
 
 ### Usage Recommendations ###
 # single command - simple test and info
-# pgbadger /var/log/postgresql/postgresql-9.3*
+cd ~
+mkdir deleteme_pgbadger
+cd deleteme_pgbadger
+pgbadger /var/log/postgresql/*
 
 #add the following to cron to create an ongoing report
-# 0 4 * * * /usr/bin/pgbadger -I -q /var/log/postgresql/postgresql.log.1 -O /var/reports/pgbadger/
+# 0 4 * * * /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
 
