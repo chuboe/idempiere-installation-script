@@ -4,7 +4,7 @@ source chuboe.properties
 
 IDDATE1=$(date +%Y%m%d)
 IDDATE2=$(date +%Y-%m-%d)
-CHUBOE_AWS_S3_BUCKET_SUB="some-bucket/some-folder"
+CHUBOE_AWS_S3_BUCKET_SUB=$CHUBOE_PROP_DEBUG_DEV_SHARE_BUCKET
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 
 echo date1=$IDDATE1
