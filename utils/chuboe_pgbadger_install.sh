@@ -53,3 +53,4 @@ pgbadger /var/log/postgresql/*
 # mkdir -p deleteme_pgbadger/incremental/
 # cd deleteme_pgbadger/incremental/
 # rsync -av --no-perms --no-owner --no-group $OSUSER@$YOUR_SERVER_IP:/var/reports/pgbadger/ .
+# you can also update apache (already installed on db server) to show the report on a special port - instructions coming...
