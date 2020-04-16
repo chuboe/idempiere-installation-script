@@ -15,10 +15,12 @@
 CURRENT_VER="11.2"
 
 sudo apt-get update
-
-sudo apt-get install make
+sudo apt-get install make libtext-csv-perl
 mkdir pgbadger_install
 cd pgbadger_install
+
+# included libtext-csv-perl just in case it is needed.
+    # this should be the same as installing the perl module: Text::CSV_XS
 
 #download from https://github.com/darold/pgbadger/releases
 #NOTE: downloaded file name is not consistent - below will change name from v11.2.tar.gz to the proper name used below
@@ -31,19 +33,16 @@ perl Makefile.PL
 make && sudo make install
 
 #change if needed
-OSUSER=ubuntu
+OSUSER=postgres
 
 sudo mkdir -p /var/reports/pgbadger/
 sudo chown $OSUSER:$OSUSER /var/reports/pgbadger/
-# note that ownership of this folder is confusing because of how pgbadger is run. 
+# note that ownership of this folder is confusing because of how pgbadger is run - see below...
 
 # verify installation
 pgbadger --version
 
 ### Ubuntu Considerations ###
-# you might need this package to process logs maintained via csv:
-    # sudo apt install libtext-csv-perl
-    # this should be the same as installing the perl module: Text::CSV_XS
 # postgresql maintains logs in two places (IMPORTANT!!!!):
     # startup logs appear here: /var/log/postgresql/*
     # the real logs appear here: /var/lib/postgresql/10/main/log/
@@ -61,7 +60,9 @@ sudo -u postgres pgbadger /var/lib/postgresql/10/main/log/*.csv
 # note that sudo does not work well with this command. It produces the following error: FATAL: logfile "/var/lib/postgresql/10/main/log/*.csv" must exist!
 # instead, you should use "sudo su" to run the below command
 /usr/local/bin/pgbadger -I -q /var/lib/postgresql/10/main/log/*.csv -O /var/reports/pgbadger/
-# 0 4 * * * /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
+
+# if you wish to run this via cron, you sould add it to /etc/crontab and run as postgres users
+# 0 4 * * * postgres /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
 # you can copy the results your local maching by issuing the following commands from your local machine:
 # cd ~
 # mkdir -p deleteme_pgbadger/incremental/
