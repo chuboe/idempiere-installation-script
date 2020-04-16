@@ -58,14 +58,18 @@ sudo -u postgres pgbadger /var/lib/postgresql/10/main/log/*.csv
 
 ##add the following to cron to create an ongoing report
 # note that sudo does not work well with this command. It produces the following error: FATAL: logfile "/var/lib/postgresql/10/main/log/*.csv" must exist!
-# instead, you should use "sudo su" to run the below command
+# instead, you should use "sudo su" to run the below command as postgres
 /usr/local/bin/pgbadger -I -q /var/lib/postgresql/10/main/log/*.csv -O /var/reports/pgbadger/
-
-# if you wish to run this via cron, you sould add it to /etc/crontab and run as postgres users
-# 0 4 * * * postgres /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
+# if you wish to run this via cron, you sould add it to /etc/crontab and run as postgres user
+# 0 4 * * * postgres /usr/local/bin/pgbadger ...from above
 # you can copy the results your local maching by issuing the following commands from your local machine:
 # cd ~
 # mkdir -p deleteme_pgbadger/incremental/
 # cd deleteme_pgbadger/incremental/
 # rsync -av --no-perms --no-owner --no-group $OSUSER@$YOUR_SERVER_IP:/var/reports/pgbadger/ .
-# you can also update apache (already installed on db server) to show the report on a special port - instructions coming...
+
+## publish report via apache from database server
+# assumes the above ongoing pgbadger report is created updated on crontab schedule
+# note that apache is already installed and configured on the database server from phppgadmin installation
+# copy config (../idempiere-installation-script/web/000-pgbadger.conf) from installation script to /etc/apache2/sites-enabled/. using sudo/root.
+# restart apache service and go to http://URL_OF_DB_SERVER:8089
