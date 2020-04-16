@@ -1,4 +1,5 @@
 # This is not a script yet!!! It is a collection of commands to run - a work in progress.
+# This also has all my hours of troubleshooting notes
 
 # pgbadger anazlyses postgresql logs - https://pgbadger.darold.net/
 # Note: the ubuntu version through apt-get is old
