@@ -34,19 +34,32 @@ OSUSER=ubuntu
 
 sudo mkdir -p /var/reports/pgbadger/
 sudo chown $OSUSER:$OSUSER /var/reports/pgbadger/
+# note that ownership of this folder is confusing because of how pgbadger is run. 
 
 # verify installation
 pgbadger --version
 
+### Ubuntu Considerations ###
+# you might need this package to process logs maintained via csv:
+    # sudo apt install libtext-csv-perl
+    # this should be the same as installing the perl module: Text::CSV_XS
+# postgresql maintains logs in two places (IMPORTANT!!!!):
+    # startup logs appear here: /var/log/postgresql/*
+    # the real logs appear here: /var/lib/postgresql/10/main/log/
+    # note that /var/lib/postgresql/10/main/log/ is owned by postgres user. Sudo does not work well in this folder.
+
 ### Usage Recommendations ###
-# single command - simple test and info
+## single command - simple test and info
 cd ~
 mkdir -p deleteme_pgbadger/one-time/
 cd deleteme_pgbadger/one-time/
-pgbadger /var/log/postgresql/*
+sudo -u postgres pgbadger /var/lib/postgresql/10/main/log/*.csv
 # this will produce an out.html. You can copy this file to your local machine to view the file through your browser
 
-#add the following to cron to create an ongoing report
+##add the following to cron to create an ongoing report
+# note that sudo does not work well with this command. It produces the following error: FATAL: logfile "/var/lib/postgresql/10/main/log/*.csv" must exist!
+# instead, you should use "sudo su" to run the below command
+/usr/local/bin/pgbadger -I -q /var/lib/postgresql/10/main/log/*.csv -O /var/reports/pgbadger/
 # 0 4 * * * /usr/local/bin/pgbadger -I -q /var/log/postgresql/* -O /var/reports/pgbadger/
 # you can copy the results your local maching by issuing the following commands from your local machine:
 # cd ~
