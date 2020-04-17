@@ -122,7 +122,6 @@ then
     awk -F= '!a[$1]++' $CHUBOE_PROP_DEFAULT_PROPERTY_PATH $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
     mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
 fi
-exit 0
 
 # read alternative flag
 while getopts "$VARIABLE_FLAG_LIST" OPTION
