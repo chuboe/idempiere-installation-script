@@ -111,14 +111,18 @@ source $SCRIPTPATH/utils/chuboe.properties
 
 #check to see if the properties file specifies an alternative properties file
 #this is the first property merge of two.
-if [[ $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH != "NONE" ]]
+if [[ $CHUBOE_PROP_DEFAULT_PROPERTY_PATH != "NONE" ]]
 then
     #load the variables
-    source $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH
+    #assume utils directory as default. Default can specify an absolute path if needed.
+    cd $SCRIPTPATH/utils/
+    echo HERE: source $CHUBOE_PROP_DEFAULT_PROPERTY_PATH
+    source $CHUBOE_PROP_DEFAULT_PROPERTY_PATH
     #merge new variables back to chuboe.properties file
-    awk -F= '!a[$1]++' $CHUBOE_PROP_ALTERNATIVE_PROPERTY_PATH $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
+    awk -F= '!a[$1]++' $CHUBOE_PROP_DEFAULT_PROPERTY_PATH $SCRIPTPATH/utils/chuboe.properties > $SCRIPTPATH/utils/chuboe.properties.tmp
     mv $SCRIPTPATH/utils/chuboe.properties.tmp $SCRIPTPATH/utils/chuboe.properties
 fi
+exit 0
 
 # read alternative flag
 while getopts "$VARIABLE_FLAG_LIST" OPTION
