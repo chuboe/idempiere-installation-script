@@ -1,5 +1,3 @@
-#NOTE:logilite is now the default 6.2 installation
-#NOTE:keeping file for reference and to support existing scripts
-#CHUBOE_PROP_JENKINS_PROJECT="logiliteID_6_2"
-#CHUBOE_PROP_JENKINS_URL="https://logilite.s3.amazonaws.com"
-#CHUBOE_PROP_JENKINS_REPO_URL="https://bitbucket.org/logilite/idempiere/"
+CHUBOE_PROP_JENKINS_PROJECT="logiliteID_6_2"
+CHUBOE_PROP_JENKINS_URL="https://logilite.s3.amazonaws.com"
+CHUBOE_PROP_JENKINS_REPO_URL="https://bitbucket.org/logilite/idempiere/"
