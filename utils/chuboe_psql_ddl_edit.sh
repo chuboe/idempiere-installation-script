@@ -12,4 +12,6 @@ export_dir="ddl_export/"
 export_file=$export_dir"ddl_"$1"_export_"`date +%Y%m%d`_`date +%H%M%S`".sql"
 echo See export file: $export_file
 
+mkdir -p $export_dir
+
 pg_dump -U $CHUBOE_PROP_DB_USERNAME -d $CHUBOE_PROP_DB_NAME -h $CHUBOE_PROP_DB_HOST -t $1 --schema-only > $export_file
