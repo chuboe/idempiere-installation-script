@@ -2,6 +2,9 @@
 
 source chuboe.properties
 
+#NOTE: you can create an array of dependent objects using this command:
+#psql -c "begin; drop materialized view chuboe_adv_search_invoice_mv cascade; rollback;" 2>&1 | grep cascades |awk 'NR>1{print $(NF)}'
+
 readarray -t ddl_array < $1
 
 #check for empty string: -z checks for null
