@@ -206,7 +206,7 @@ then
             # Fatching deployable plugin version & deployed plugin version as variable.
             FATCHING_PLUGIN_VERSION=$(ls $PLUGINS_SCAN_PATH/ | grep "$plugins" |  cut -d '_' -f 2 | sed 's/.\{4\}$//')
             sleep 2
-            FATCHING_DEPLOYED_PLUGIN_VERSION=$(grep -n "$PLUGIN_NAME" $IDEMPIERE_PATH/plugins-list.txt | awk -F 'ACTIVE' '{print $2}' | cut -d '_' -f 2 | awk '{$1=$1;print}') 
+            FATCHING_DEPLOYED_PLUGIN_VERSION=$(grep -n "$PLUGIN_NAME" $IDEMPIERE_PATH/plugins-list.txt | cut -d '_' -f 2 | awk '{$1=$1;print}')
             sleep 2
             FATCHING_MILTIPLE_UNDERSCORE=$(echo "$plugins" | awk '{A=gsub(/_/,X,$0)}END {print A}')
             sleep 2
