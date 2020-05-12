@@ -2,6 +2,7 @@
 
 # The purpose of this script is to install docker and docker compose on a new machine.
 # You can either run this file as a script or simply copy/paste commands as is needed.
+# Docker-compose is available through apt install on some versions of ubuntu (not aws). The below should get you the latest versions.
 
 # Install Docker - https://linuxize.com/post/how-to-install-and-use-docker-on-ubuntu-18-04/
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
