@@ -14,6 +14,7 @@ if [ -z "$ddl_array" ]; then
 fi
 
 export_dir="ddl_export/"
+mkdir -p $export_dir
 export_file=$export_dir"ddl_export_"`date +%Y%m%d`_`date +%H%M%S`".sql"
 echo See export file: $export_file
 
