@@ -12,6 +12,7 @@ if [ -z "$1" ]; then
 fi
 
 export_dir="ddl_dependent/"
+mkdir -p $export_dir
 export_file=$export_dir"ddl_"$1"_export_"`date +%Y%m%d`_`date +%H%M%S`".txt"
 echo $export_file
 
