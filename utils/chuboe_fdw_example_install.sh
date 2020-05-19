@@ -24,7 +24,7 @@ remote_user_password='Silly' #changeme
 #this is just one example.
 #the materialized view (_mv) is optional
 local_table_reference='chuboe_ordertest_remote_v'
-local_table_reference_mv='chuboe_ordertest_remote_mv'
+local_table_reference_mv='chuboe_ordertest_remote_mv' #materialized view optional
 remote_table_name='chuboe_ordertest_v'
 
 #create fdw
