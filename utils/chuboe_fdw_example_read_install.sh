@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #The purpose of this script is to help you create a foreign data wrapper (FDW)
-#connection to another postgresql server. Here are the details:
+#connection to another postgresql server for read purposes. 
+#Here are the details:
     #always test execution on a test server first (not production)
     #this script assumes the remote server is running iDempiere (not required)
         #could also be a webstore running on mysql
