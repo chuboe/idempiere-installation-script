@@ -37,6 +37,12 @@
 # 2.5 Support for iDempiere 5.1
 # 2.6 Support for 18.04 and iDempiere 6.2
 # 2.6.1 Added support for alternate properties file passed in as parameter
+# planned changes
+#   install s3cmd from apt (not file)
+#   install pgadmin (in addition to phppgadmin)
+#   postgresql 12
+#   openjdk 11 (from apt - not custom ppa)
+#
 #}}}
 
 # Usage help
