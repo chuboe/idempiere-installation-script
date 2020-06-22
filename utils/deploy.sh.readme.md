@@ -17,6 +17,8 @@ There are a number of files in the installation-script/utils folder beginning wi
 
 ****** Example ******
 
+The example is best viewed via a terminal
+
 ├── 51022R
 │   ├── 2Pack
 │   │   ├── 202005062200_ZitoMedia_Docsis_MTA_Request_Category.zip
