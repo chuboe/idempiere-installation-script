@@ -1,6 +1,6 @@
 # Purpose
 
-There are a number of files in the installation-script/utils folder beginning with deploy*. Their purpose is to help you deploy jars in a transparent and repeatable way.
+There are a number of files in the installation-script/utils folder beginning with deploy*. Their purpose is to help you deploy jars in a transparent, scripted and repeatable way.
 
 # Standards:
 
@@ -8,7 +8,9 @@ There are a number of files in the installation-script/utils folder beginning wi
 * Create tickets in your tool of choice (github, jira, google docs, etc..) for each enhancement/change.
 * Copy the deploy.sh.template (located in this directory) into the root directory of your deployment repository.
 * Create a folder in the deployment repo per ticket. The folder name will be the ticket number.
-* Once a ticket is closed, the folder will be moved to the repo's root/Closed folder.
+* When performing a production release, create a new ticket and folder in the deployment repo. The purpose of the ticket is to document the release.
+	* Once a ticket is released to production, the folder will be renamed to include the release name and date, and it will be moved to the repo's root/Closed folder.
+* When you close/move a ticket, append the date it was released
 * Each ticket folder has the current artifcts included.
 * All depricated artifacts for any given ticket/folder will be moved to the ticket's Old folder.
 * Folder's names - capiitalize first letter or word. Examples: 2Pack, Log
