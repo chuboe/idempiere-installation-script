@@ -6,7 +6,7 @@ There are a number of files in the installation-script/utils folder beginning wi
 
 * Create a repository dedicated to deployment artifacts (like code only for jars and deployment scripts). Example: deploy_chuboe
 * Create tickets in your tool of choice (github, jira, google docs, etc..) for each enhancement/change.
-* Copy the deploy.sh.template (located in this directory) into the root directory of your deployment repository.
+* Copy the deploy.sh.template (located in this directory) and this readme into the root directory of your deployment repository.
 * Create a folder in the deployment repo per ticket. The folder name will be the ticket number.
 * Each ticket folder has the current artifcts included.
 * All depricated artifacts for any given ticket/folder will be moved to the ticket's Old folder.
