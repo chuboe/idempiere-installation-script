@@ -15,6 +15,7 @@ There are a number of files in the installation-script/utils folder beginning wi
 * All 2Packs not already included in plugins, will be added the ticket's 2Pack folder. Adhere to the iDempiere naming stardard demonstarted here: https://wiki.idempiere.org/en/NF5.1_Automatic_External_Packin
 * When performing a production release, create a new ticket and folder in the deployment repo. The purpose of the ticket is to document the release.
 	* Once a ticket is released to production, the folder will be renamed to include the release name and date, and it will be moved to the repo's root/Closed folder.
+* If a ticket needs work after it is released to production, simply create a new root folder with the original ticket number containing the newly created deployment artifacts. When this new ticket is released, follow the same release rename/move process listed above. When the second ticket is released to production, you will have two tickets with the same ticket numnber prefix but contiaining different artifacts and different suffix.
 
 ****** Example ******
 
