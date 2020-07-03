@@ -16,7 +16,7 @@ ROOT_DIR=/opt/your-deployable-dir/
 for ix in ${!array[*]}
 do
     NEXT_TICKET=${array[$ix]}
-    echo Next Ticket = $NEXT_TICKET
+    echo "Next Ticket = $NEXT_TICKET ($((ix+1)) of ${#array[@]})"
 
     #check if next directory exists
     if [ -d  $ROOT_DIR/$NEXT_TICKET ];
