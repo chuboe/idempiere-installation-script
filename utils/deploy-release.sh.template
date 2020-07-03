@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#ACTION: look for CHANGE_ME tags and update accordingly
+
+# add each ticket to be released on a new line in the below array
+# note that order is important
+array=(
+50961R # Example ticket 1
+51503R # Example ticket 2
+NextTicket # keep adding tickets on new lines
+)
+
+#CHANGE_ME
+ROOT_DIR=/opt/your-deployable-dir/
+
+for ix in ${!array[*]}
+do
+    NEXT_TICKET=${array[$ix]}
+    echo Next Ticket = $NEXT_TICKET
+
+    #check if next directory exists
+    if [ -d  $ROOT_DIR/$NEXT_TICKET ];
+    then
+        echo cd successful - $ROOT_DIR/$NEXT_TICKET Directory exists
+    else
+        echo "ERROR: Directory $ROOT_DIR/$NEXT_TICKET does not exist"
+        read -p "Press enter to confirm skipping to next ticket!!!!!!!!!!!!"
+        continue
+        echo do not show this echo statement
+    fi
+
+    cd $ROOT_DIR/$NEXT_TICKET
+
+    #check if deploy exists
+    if [ -f deploy.sh ];
+        then
+            echo ready to deploy $NEXT_TICKET
+
+        else
+            echo copying deploy.sh for $NEXT_TICKET
+            cp ../deploy.sh.template deploy.sh
+    fi
+
+    ./deploy.sh
+
+    #note: next step removed after script is stabilized and works every time.
+    echo "ACTION: Make sure packs deployed successfully - log in as client to see all."
+    read -p "Press enter when confirmed all worked"
+done
