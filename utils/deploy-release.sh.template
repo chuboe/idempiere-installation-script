@@ -13,6 +13,12 @@ NextTicket # keep adding tickets on new lines
 #CHANGE_ME
 ROOT_DIR=/opt/your-deployable-dir/
 
+cd $ROOT_DIR
+
+#CHANGEME_ME if you need to anchor a release to a known good state
+HG_REVISION=default
+hg update -r $HG_REVISION
+
 for ix in ${!array[*]}
 do
     NEXT_TICKET=${array[$ix]}
@@ -31,6 +37,10 @@ do
 
     cd $ROOT_DIR/$NEXT_TICKET
 
+    #CHANGEME_ME if you need to anchor a ticket to a known good state.
+    #Only change this if the revision is different than specified above.
+    #hg update -r $HG_REVISION
+
     #check if deploy exists
     if [ -f deploy.sh ];
         then
@@ -47,6 +57,10 @@ do
     echo "Finished Ticket = $NEXT_TICKET ($((ix+1)) of ${#array[@]})"
     echo "ACTION: Make sure packs deployed successfully - log in as client to see all."
     read -p "Press enter when confirmed all worked"
+
+    #Update working directory back to the main revision set above.
+    #Just in case it was changed in this ticket.
+    hg update -r $HG_REVISION
 done
 
 echo Restarting iDempiere...
