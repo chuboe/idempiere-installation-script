@@ -48,3 +48,6 @@ do
     echo "ACTION: Make sure packs deployed successfully - log in as client to see all."
     read -p "Press enter when confirmed all worked"
 done
+
+echo Restarting iDempiere...
+sudo service idempiere restart
