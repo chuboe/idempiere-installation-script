@@ -44,6 +44,7 @@ do
     ./deploy.sh
 
     #note: next step removed after script is stabilized and works every time.
+    echo "Finished Ticket = $NEXT_TICKET ($((ix+1)) of ${#array[@]})"
     echo "ACTION: Make sure packs deployed successfully - log in as client to see all."
     read -p "Press enter when confirmed all worked"
 done
