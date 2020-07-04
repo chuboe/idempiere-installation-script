@@ -15,8 +15,10 @@ ROOT_DIR=/opt/your-deployable-dir/
 
 cd $ROOT_DIR
 
-#CHANGEME_ME if you need to anchor a release to a known good state
-HG_REVISION=default
+source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
+
+#CHANGEME_ME in chuboe.properties if you need to anchor a release to a known good state
+HG_REVISION=$CHUBOE_PROP_DEPLOY_RELEASE_REVISION
 hg update -r $HG_REVISION
 
 for ix in ${!array[*]}
