@@ -1,4 +1,4 @@
-CHUBOE_PROP_JENKINS_PROJECT="logiliteID_6_2"
+CHUBOE_PROP_JENKINS_PROJECT="logiliteERP_6_2"
 CHUBOE_PROP_IDEMPIERE_VERSION="6.2"
 CHUBOE_PROP_JENKINS_URL="https://logilite.s3.amazonaws.com"
 CHUBOE_PROP_JENKINS_REPO_URL="https://bitbucket.org/logilite/idempiere/"
