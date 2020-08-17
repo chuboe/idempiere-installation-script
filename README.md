@@ -6,9 +6,7 @@ All that power is of no good to you unless you can easily make use of it. This p
 To install all components of iDempiere 6.2 on a single new Ubuntu 18.04 server, simply copy and paste the below line, change the -p password, and hit enter. The script will do all the rest. After about 8 minutes, iDempiere will appear on your machine.
 
 ```
-#!bash
-
-sudo apt-get -y install mercurial; hg clone https://bitbucket.org/cboecking/idempiere-installation-script; chmod 766 idempiere-installation-script/*.sh; ./idempiere-installation-script/idempiere_install_script_master_linux.sh -P Silly -l |& tee output.txt; nano /opt/chuboe/idempiere_installer_feedback.txt
+sudo apt -y install git; git clone https://github.com/chuboe/idempiere-installation-script.git; chmod 766 idempiere-installation-script/*.sh; ./idempiere-installation-script/idempiere_install_script_master_linux.sh -P Silly -l |& tee output.txt; nano /opt/chuboe/idempiere_installer_feedback.txt
 ```
 
 You can also use this script to install components separately. You can place the WebUI and database onto different servers. By choosing the correct command options, you choose what to install. To learn more about this script and how to use it, go to [www.chuckboecking.com](https://www.chuckboecking.com/idempiere-open-source-erp-linux-installation-really-easy-2/). 
