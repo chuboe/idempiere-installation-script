@@ -204,9 +204,6 @@ REPLATION_BACKUP_NAME="ID_Backup_$INSTALL_DATE"
 REPLATION_ROLE="id_replicate_role"
 REPLATION_TRIGGER="/tmp/id_pgsql.trigger.$PGPORT"
 JENKINS_AUTHCOMMAND=$CHUBOE_PROP_JENKINS_AUTHCOMMAND
-S3CMD_VERSION="s3cmd-1.6.1"
-S3CMD_HOSTPATH="https://s3.amazonaws.com/ChuckBoecking/install/"
-S3CMD_FILENAME=$S3CMD_VERSION".tar.gz"
 
 #create array of updated parameters to later update chuboe.properties
 args=()
@@ -468,15 +465,11 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-# htop - useful process, cpu and memory graph
-# expect - used to stop idempiere - allows script to interact with telnet
-sudo apt-get --yes install unzip htop expect bc telnet
+sudo apt-get --yes install unzip htop expect bc telnet s3cmd
 # }}}
 
 # Download all files first
 # {{{
-$SCRIPTPATH/utils/downloadtestgz.sh $S3CMD_HOSTPATH $S3CMD_FILENAME $TEMP_DIR || exit 1
-
 if [[ $IS_INSTALL_DESKTOP == "Y" ]]
 then
     $SCRIPTPATH/utils/downloadtestgz.sh $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads || exit 1
@@ -500,18 +493,6 @@ then
         #exit 1 - no need to exit just because it could not find the changes file.
     fi
 fi
-# }}}
-
-# Install the latest version of s3cmd - tool to move files to an offsite AWS s3 bucket
-# {{{
-echo "HERE: Installing s3cmd"
-cd $TEMP_DIR
-tar xzf $S3CMD_FILENAME
-cd $S3CMD_VERSION/
-# python-setuptools is needed to execute setup.py
-sudo apt-get install --yes python-setuptools
-sudo python setup.py install
-echo "HERE: Finished installing s3cmd"
 # }}}
 
 # Virtualbox notes
@@ -891,9 +872,7 @@ then
 
     # install jdk and psql if $IS_INSTALL_DB == "N"
     # {{{
-    sudo add-apt-repository ppa:openjdk-r/ppa -y
-    sudo apt-get update
-    sudo apt-get install openjdk-11-jdk -y
+    sudo apt-get install $CHUBOE_PROP_JAVA_VERSION -y
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         echo "HERE: install postgresql client tools"
