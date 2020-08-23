@@ -465,7 +465,7 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop expect bc telnet s3cmd
+sudo apt-get --yes install unzip htop expect bc telnet s3cmd mercurial
 # }}}
 
 # Download all files first
