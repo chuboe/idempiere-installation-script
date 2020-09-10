@@ -3,7 +3,7 @@ iDempiere and Open Source ERP are quite possibly the biggest discontinuous chang
 All that power is of no good to you unless you can easily make use of it. This project and the [ERP Academy](http://erp-academy.chuckboecking.com) make open source ERP available to more organizations. You can provide open source ERP to your team for about $2 per user per month (the cost of hosting). This is true whether you are supporting a team of 2 or 200, 
 
 # Installation
-To install all components of iDempiere 6.2 on a single new Ubuntu 20.04 server, simply copy and paste the below line, change the -p password, and hit enter. The script will do all the rest. After about 8 minutes, iDempiere will appear on your machine.
+To install all components of iDempiere 7.1 on a single new Ubuntu 20.04 server, simply copy and paste the below line, change the -p password, and hit enter. The script will do all the rest. After about 8 minutes, iDempiere will appear on your machine.
 
 ```
 sudo apt -y upgrade; sudo apt -y update; sudo apt -y install git; git clone https://github.com/chuboe/idempiere-installation-script.git; chmod 766 idempiere-installation-script/*.sh; ./idempiere-installation-script/idempiere_install_script_master_linux.sh -P Silly -l |& tee output.txt; nano /opt/chuboe/idempiere_installer_feedback.txt
