@@ -62,5 +62,5 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -p $CHUBOE_P
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT -U $CHUBOE_PROP_DB_USERNAME -d $CHUBOE_PROP_DB_NAME -f Adempiere_pg.dmp
 
 #temporarily needed
-cd $CURR_DIR
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT -U $CHUBOE_PROP_DB_USERNAME -d $CHUBOE_PROP_DB_NAME -f chuboe_restore_version_mismatch_function.sql
+#cd $CURR_DIR
+#sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT -U $CHUBOE_PROP_DB_USERNAME -d $CHUBOE_PROP_DB_NAME -f chuboe_restore_version_mismatch_function.sql
