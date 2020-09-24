@@ -243,8 +243,8 @@ do
         l)  #launch iDempiere
             IS_LAUNCH_ID="Y";;
 
-        #D)  #install desktop development components
-        #    IS_INSTALL_DESKTOP="Y";;
+        D)  #install desktop development components
+            echo " Develompment Environment installation moved to utils/chuboe_install_devenv.sh";;
 
         j)  #jenkins project
             args+=("CHUBOE_PROP_JENKINS_PROJECT=\"$OPTARG\"")
