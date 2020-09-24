@@ -11,8 +11,8 @@
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 
-source $SCRIPTPATH/utils/chuboe.properties
-source $SCRIPTPATH/utils/chuboe.properties.logilite-7.1
+source $SCRIPTPATH/chuboe.properties
+source $SCRIPTPATH/chuboe.properties.logilite-7.1
 
 OSUSER=$(id -u -n)
 # Check if OS user exists
@@ -45,15 +45,15 @@ mkdir $OSUSER_HOME/dev
 mkdir $OSUSER_HOME/dev/downloads
 mkdir $OSUSER_HOME/dev/plugins
 
-$SCRIPTPATH/utils/downloadtestgz.sh $ECLIPSE_SOURCE_HOSTPATH $ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads || exit 1
-tar -zxvf $OSUSER_HOME/dev/downloads/$ECLIPSE_SOURCE_FILENAME -C $OSUSER_HOME/dev/
+$SCRIPTPATH/utils/downloadtestgz.sh $CHUBOE_PROP_ECLIPSE_SOURCE_HOSTPATH $CHUBOE_PROP_ECLIPSE_SOURCE_FILENAME $OSUSER_HOME/dev/downloads || exit 1
+tar -zxvf $OSUSER_HOME/dev/downloads/$CHUBOE_PROP_ECLIPSE_SOURCE_FILENAME -C $OSUSER_HOME/dev/
 
 cd $OSUSER_HOME/dev
 git clone -b $CHUBOE_PROP_JENKINS_REPO_BRANCH $CHUBOE_PROP_JENKINS_REPO_URL
 git clone -b $CHUBOE_PROP_JENKINS_REPO_BRANCH idempiere myexperiment
 
 cd myexperiment
-mvn verify -u
+mvn verify -U
 
 echo "Instructions for building iDempiere in Eclipse:" #{{{
 	echo "Open Eclipse and set ~/dev/myexperiment/ as default working directory"
