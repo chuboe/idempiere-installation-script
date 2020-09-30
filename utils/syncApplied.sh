@@ -32,10 +32,25 @@ sort -o /tmp/lisDB.txt /tmp/lisDB.txt
 
 MSGERROR=""
 APPLIED=N
-for i in `comm -13 /tmp/lisDB.txt /tmp/lisFS.txt`
+DEFAULT_FILE_COUNT=1
+comm -13 /tmp/lisDB.txt /tmp/lisFS.txt > /tmp/lisPENDING.txt
+declare -A MUTIPLE_FILE_ARRAY=()
+while read -r FILE
 do
-    SCRIPT=`find . -name "$i" -print | fgrep -v /oracle/`
-    OUTFILE=/tmp/`basename "$i" .sql`.out
+    SCRIPT=`find . -name "$FILE" -print | fgrep -v /oracle/`
+    NO_OF_FILE_COUNT=`find . -name "$FILE" -print | fgrep -v /oracle/ | wc -l`
+    if [[ -v MUTIPLE_FILE_ARRAY[$FILE] ]]; then
+        continue
+    fi
+
+    if [ "$NO_OF_FILE_COUNT" -gt "$DEFAULT_FILE_COUNT" ];
+    then
+        echo "Found same name scripts in mutiple folder: $SCRIPT"
+        SCRIPT=`echo $SCRIPT | cut -d ' ' -f 1`
+        MUTIPLE_FILE_ARRAY+=([$FILE]=1)
+    fi
+    echo "Applying $SCRIPT"
+    OUTFILE=/tmp/`basename "$FILE" .sql`.out
     sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -d $DATABASE -U $USER $ADDPG -f "$SCRIPT" 2>&1 | tee "$OUTFILE"
     if fgrep "ERROR:
 FATAL:" "$OUTFILE" > /dev/null 2>&1
@@ -44,7 +59,8 @@ FATAL:" "$OUTFILE" > /dev/null 2>&1
 **** ERROR ON FILE $OUTFILE - Please verify ****"
     fi
     APPLIED=Y
-done
+done < /tmp/lisPENDING.txt
+
 if [ x$APPLIED = xY ]
 then
     for i in processes_post_migration/postgresql/*.sql
