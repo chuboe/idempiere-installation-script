@@ -14,7 +14,7 @@ ADDPG="-h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT"
 MIGRATIONDIR=${1:-~/hgAdempiere/localosgi/migration}
 cd $MIGRATIONDIR
 
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -b -d $DATABASE -U $USER $ADDPG -q -t -c "select name from ad_migrationscript" | sed -e 's:^ ::' | grep -v '^$' | sort > /tmp/lisDB.txt
 
 > /tmp/lisFS.txt
 FOLDERLIST="i2.0 i2.0z i2.1 i2.1z i3.1 i3.1z i4.1 i4.1z i5.1 i5.1z i6.1 i6.1z i6.2 i6.2z i7.1 i7.1z i8.1 i8.1z"
@@ -51,7 +51,7 @@ do
     fi
     echo "Applying $SCRIPT"
     OUTFILE=/tmp/`basename "$FILE" .sql`.out
-    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -d $DATABASE -U $USER $ADDPG -f "$SCRIPT" 2>&1 | tee "$OUTFILE"
+    sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -b -d $DATABASE -U $USER $ADDPG -f "$SCRIPT" 2>&1 | tee "$OUTFILE"
     if fgrep "ERROR:
 FATAL:" "$OUTFILE" > /dev/null 2>&1
     then
@@ -66,7 +66,7 @@ then
     for i in processes_post_migration/postgresql/*.sql
     do
         OUTFILE=/tmp/`basename "$i" .sql`.out
-        sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -d $DATABASE -U $USER $ADDPG -f "$i" 2>&1 | tee "$OUTFILE"
+        sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -b -d $DATABASE -U $USER $ADDPG -f "$i" 2>&1 | tee "$OUTFILE"
         if fgrep "ERROR:
 FATAL:" "$OUTFILE" > /dev/null 2>&1
         then
