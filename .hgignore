@@ -1,5 +1,0 @@
-syntax: glob
-chuboe_backup
-chuboe_restore
-chuboe_temp
-log
