@@ -1,7 +1,8 @@
 CHUBOE_PROP_JENKINS_PROJECT="logiliteERP_7_1"
 CHUBOE_PROP_IDEMPIERE_VERSION="7.1"
 CHUBOE_PROP_JENKINS_URL="https://logilite.s3.amazonaws.com"
-CHUBOE_PROP_JENKINS_REPO_URL="https://bitbucket.org/logilite/idempiere/"
+CHUBOE_PROP_JENKINS_REPO_URL="https://github.com/logilite/idempiere/"
+CHUBOE_PROP_JENKINS_REPO_BRANCH="logilite-7.1"
 CHUBOE_PROP_IDEMPIERE_RELEASE="" #not needed for logilite
 CHUBOE_PROP_JENKINS_CURRENT_CHANGESET="" #action: CBO need to update
 CHUBOE_PROP_JENKINS_BUILD_NUMBER="" #set if needed
