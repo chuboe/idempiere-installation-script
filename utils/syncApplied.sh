@@ -27,6 +27,8 @@ do
         cd ../..
     fi
 done
+
+#ensure no dulicates
 sort -u -o /tmp/lisFS.txt /tmp/lisFS.txt
 sort -u -o /tmp/lisDB.txt /tmp/lisDB.txt
 
@@ -34,20 +36,19 @@ MSGERROR=""
 APPLIED=N
 DEFAULT_FILE_COUNT=1
 comm -13 /tmp/lisDB.txt /tmp/lisFS.txt > /tmp/lisPENDING.txt
-declare -A MUTIPLE_FILE_ARRAY=()
+
+#ensure no dulicates
+sort -u -o /tmp/lisPENDING.txt /tmp/lisPENDING.txt
+
 while read -r FILE
 do
     SCRIPT=`find . -name "$FILE" -print | fgrep -v /oracle/`
     NO_OF_FILE_COUNT=`find . -name "$FILE" -print | fgrep -v /oracle/ | wc -l`
-    if [[ -v MUTIPLE_FILE_ARRAY[$FILE] ]]; then
-        continue
-    fi
 
     if [ "$NO_OF_FILE_COUNT" -gt "$DEFAULT_FILE_COUNT" ];
     then
         echo "Found same name scripts in mutiple folder: $SCRIPT"
         SCRIPT=`echo $SCRIPT | cut -d ' ' -f 1`
-        MUTIPLE_FILE_ARRAY+=([$FILE]=1)
     fi
     echo "Applying $SCRIPT"
     OUTFILE=/tmp/`basename "$FILE" .sql`.out
