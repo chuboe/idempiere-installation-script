@@ -15,3 +15,10 @@ FROM     INFORMATION_SCHEMA.TABLES
 WHERE    TABLE_SCHEMA = 'adempiere'
     AND TABLE_NAME LIKE 'bi_%'
 ;
+
+---- Example of manually creating new user/role with specific permissions ----
+--CREATE ROLE someuser WITH PASSWORD 'somepassword';
+--GRANT USAGE ON SCHEMA adempiere TO someuser;
+--GRANT SELECT ON adempiere.some_table_or_view to someuser;
+--ALTER ROLE someuser SET search_path = adempiere;
+--ALTER USER someuser WITH LOGIN;
