@@ -47,9 +47,6 @@ main ()
     echo MANIFEST.MF
     MANIFEST.f | tee $CODE_SRC_BASE/META-INF/MANIFEST.MF
     echo
-    echo plugin.xml
-    plugin.f | tee $CODE_SRC_BASE/plugin.xml
-    echo
     echo .project
     project.f | tee $CODE_SRC_BASE/.project
     echo
@@ -114,25 +111,6 @@ Require-Bundle: org.adempiere.base;bundle-version="6.2.0",
  org.adempiere.base.process;bundle-version="6.2.0"
 Import-Package: org.osgi.framework;version="1.9.0"
 Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
-EOF
-}
-
-
-plugin.f ()
-{
-cat << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin>
-   <extension
-         id="$PROP_COMPANY_DOMAIN.$PROP_ENTITY_LOWER.$PROP_CODE_TYPE.$PROP_ENTITY_CAMEL"
-         name="$PROP_COMPANY_DOMAIN.$PROP_ENTITY_LOWER.$PROP_CODE_TYPE.$PROP_ENTITY_CAMEL"
-         point="org.adempiere.base.Process">
-      <process
-            class="$PROP_COMPANY_DOMAIN.$PROP_ENTITY_LOWER.$PROP_CODE_TYPE.$PROP_ENTITY_CAMEL">
-      </process>
-   </extension>
-</plugin>
 EOF
 }
 
