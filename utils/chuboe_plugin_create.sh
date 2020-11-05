@@ -79,10 +79,9 @@ EOF
 build.properties.f ()
 {
 cat << EOF
-source.. = src/
-output.. = bin/
 bin.includes = META-INF/,\
-.,\
+               .,\
+               OSGI-INF/
 EOF
 }
 
