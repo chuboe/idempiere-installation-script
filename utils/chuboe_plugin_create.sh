@@ -11,9 +11,11 @@ main ()
     CODE_SRC_BASE=$PROP_CODE_LOCATION/$PROP_COMPANY_DOMAIN.$PROP_ENTITY_LOWER.$PROP_CODE_TYPE/
     CODE_SRC_LONG=$CODE_SRC_BASE/src/$PROP_COMPANY_DOMAIN_SUFFIX/$PROP_COMPANY_NAME_LOWER/$PROP_ENTITY_LOWER/$PROP_CODE_TYPE
 
+    echo "HERE: variables"
     echo $CODE_SRC_BASE
     echo $CODE_SRC_LONG
 
+    echo "HERE: validation"
     RESULT=$([ -d $CODE_SRC_BASE ] && echo "Y" || echo "N")
     if [ $RESULT == "N" ]; then
         echo "HERE: directory does not exist - proceeding"
@@ -23,10 +25,14 @@ main ()
     fi
 
     # make project directories
+    echo "HERE: create directories"
     mkdir -p $CODE_SRC_LONG
     mkdir -p $CODE_SRC_BASE/META-INF/
     mkdir -p $CODE_SRC_BASE/OSGI-INF/
     mkdir -p $CODE_SRC_BASE/download/
+
+    # create ignore files
+    echo "HERE: create ignore files"
 
     echo build.properties
     build.properties.f | tee $CODE_SRC_BASE/build.properties
