@@ -33,6 +33,10 @@ main ()
 
     # create ignore files
     echo "HERE: create ignore files"
+    echo hgignore.f
+    hgignore.f | tee $CODE_SRC_BASE/.hgignore
+    echo gitignore.f
+    gitignore.f | tee $CODE_SRC_BASE/.gitignore
 
     echo build.properties
     build.properties.f | tee $CODE_SRC_BASE/build.properties
