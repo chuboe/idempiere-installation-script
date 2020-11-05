@@ -1,8 +1,7 @@
 #!/bin/bash
 
 #Next Steps
-    # add component definition for process
-    # add git and hg ignore
+    # add event - example: com.zito.bpartner.event
 
 main ()
 {
@@ -128,7 +127,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.adempiere.base;bundle-version="6.2.0",
  org.adempiere.plugin.utils;bundle-version="6.2.0",
  org.adempiere.base.process;bundle-version="6.2.0"
-Import-Package: org.osgi.framework;version="1.9.0"
+Import-Package: org.osgi.framework;version="1.9.0",
+ org.osgi.service.event;version="1.4.0"
 Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
 EOF
 }
@@ -166,6 +166,8 @@ cat << EOF
 </projectDescription>
 EOF
 }
+
+################################################################################
 
 process.component.f ()
 {
@@ -258,6 +260,68 @@ public class $PROP_ENTITY_CAMEL extends SvrProcess{
 	@Override
 	protected String doIt() throws Exception {
 		return "Something";
+	}
+}
+EOF
+}
+
+################################################################################
+
+event.component.f ()
+{
+cat << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}">
+   <implementation class="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}.${PROP_ENTITY_CAMEL}"/>
+   <property name="service.ranking" type="Integer" value="100"/>
+   <reference bind="bindEventManager" cardinality="1..1" interface="org.adempiere.base.event.IEventManager" name="IEventManager" policy="static" unbind="unbindEventManager"/>
+</scr:component>
+EOF
+}
+
+event.f ()
+{
+cat << EOF
+/******************************************************************************
+ * Copyright (C) $PROP_YEAR $PROP_VENDOR_NAME                                             *
+ * Product: iDempiere ERP & CRM Smart Business Solution                       *
+ * This program is free software; you can redistribute it and/or modify it    *
+ * under the terms version 2 of the GNU General Public License as published   *
+ * by the Free Software Foundation. This program is distributed in the hope   *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           *
+ * See the GNU General Public License for more details.                       *
+ * You should have received a copy of the GNU General Public License along    *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     *
+ *****************************************************************************/
+
+package $PROP_COMPANY_DOMAIN.$PROP_ENTITY_LOWER.$PROP_CODE_TYPE;
+
+import org.adempiere.base.event.AbstractEventHandler;
+import org.adempiere.base.event.IEventTopics;
+import org.compiere.model.PO;
+import org.compiere.util.Util;
+import org.osgi.service.event.Event;
+
+/**
+ *
+ * @author $PROP_VENDOR_USER
+ *
+ */
+public class $PROP_ENTITY_CAMEL extends AbstractEventHandler{
+
+	@Override
+	protected void initialize()
+	{
+		//registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MBPartner.Table_Name);
+		//registerTableEvent(IEventTopics.PO_BEFORE_NEW, MBPartner.Table_Name);
+	}
+
+	@Override
+	protected void doHandleEvent(Event event)
+	{
+
 	}
 }
 EOF
