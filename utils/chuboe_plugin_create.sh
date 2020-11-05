@@ -12,6 +12,22 @@ main ()
     CODE_SRC_LONG=$CODE_SRC_BASE/src/$PROP_COMPANY_DOMAIN_SUFFIX/$PROP_COMPANY_NAME_LOWER/$PROP_ENTITY_LOWER/$PROP_CODE_TYPE
 
     echo "HERE: variables"
+    echo PROP_VENDOR_NAME = $PROP_VENDOR_NAME
+    echo PROP_VENDOR_USER = $PROP_VENDOR_USER
+    echo PROP_COMPANY_NAME = $PROP_COMPANY_NAME
+    echo PROP_COMPANY_DOMAIN_SUFFIX = $PROP_COMPANY_DOMAIN_SUFFIX
+    echo PROP_ENTITY = $PROP_ENTITY
+    echo PROP_CODE_TYPE = $PROP_CODE_TYPE
+
+    # derived values
+    echo PROP_YEAR = $PROP_YEAR
+    echo PROP_COMPANY_DOMAIN = $PROP_COMPANY_DOMAIN
+    echo PROP_COMPANY_NAME_CAMEL = $PROP_COMPANY_NAME_CAMEL
+    echo PROP_COMPANY_NAME_LOWER = $PROP_COMPANY_NAME_LOWER
+    echo PROP_ENTITY_CAMEL = $PROP_ENTITY_CAMEL
+    echo PROP_ENTITY_LOWER = $PROP_ENTITY_LOWER
+    echo PROP_CODE_LOCATION = $PROP_CODE_LOCATION
+
     echo $CODE_SRC_BASE
     echo $CODE_SRC_LONG
 
@@ -175,8 +191,8 @@ import org.compiere.process.ProcessCall;
  * @author $PROP_VENDOR_USER
  *
  */
-public class "$PROP_ENTITY_CAMEL"Factory implements IProcessFactory {
- 
+public class ${PROP_ENTITY_CAMEL}Factory implements IProcessFactory {
+
     @Override
     public ProcessCall newProcessInstance(String className) {
         if(className.equals($PROP_ENTITY_CAMEL.class.getName())) {
@@ -184,7 +200,7 @@ public class "$PROP_ENTITY_CAMEL"Factory implements IProcessFactory {
         }
         return null;
     }
- 
+
 }
 EOF
 }
