@@ -66,7 +66,10 @@ main ()
     echo .project
     project.f | tee $CODE_SRC_BASE/.project
     echo
-    echo "$PROP_ENTITY_CAMEL"Factory
+    echo "$PROP_ENTITY_CAMEL" Component
+    process.component.f | tee "$CODE_SRC_BASE/OSGI-INF/$PROP_ENTITY_CAMEL$PROP_CODE_TYPE.xml
+    echo
+    echo "$PROP_ENTITY_CAMEL" Factory
     process.factory.f | tee "$CODE_SRC_LONG/$PROP_ENTITY_CAMEL"Factory.java
     echo
     echo $PROP_ENTITY_CAMEL
