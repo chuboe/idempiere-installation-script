@@ -22,8 +22,11 @@ main ()
         exit 1
     fi
 
+    # make project directories
     mkdir -p $CODE_SRC_LONG
     mkdir -p $CODE_SRC_BASE/META-INF/
+    mkdir -p $CODE_SRC_BASE/OSGI-INF/
+    mkdir -p $CODE_SRC_BASE/download/
 
     echo build.properties
     build.properties.f | tee $CODE_SRC_BASE/build.properties
@@ -54,7 +57,6 @@ source.. = src/
 output.. = bin/
 bin.includes = META-INF/,\
 .,\
-plugin.xml
 EOF
 }
 
