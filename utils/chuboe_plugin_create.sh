@@ -164,6 +164,20 @@ cat << EOF
 EOF
 }
 
+process.component.f ()
+{
+cat << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}Factory">
+   <implementation class="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}Factory"/>
+   <property name="service.ranking" type="Integer" value="100"/>
+   <service>
+      <provide interface="org.adempiere.base.IProcessFactory"/>
+   </service>
+</scr:component>
+EOF
+}
+
 process.factory.f ()
 {
 cat << EOF
