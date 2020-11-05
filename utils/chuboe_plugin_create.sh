@@ -67,7 +67,7 @@ main ()
     project.f | tee $CODE_SRC_BASE/.project
     echo
     echo "$PROP_ENTITY_CAMEL" Component
-    process.component.f | tee "$CODE_SRC_BASE/OSGI-INF/$PROP_ENTITY_CAMEL$PROP_CODE_TYPE.xml
+    process.component.f | tee $CODE_SRC_BASE/OSGI-INF/$PROP_ENTITY_CAMEL$PROP_CODE_TYPE.xml
     echo
     echo "$PROP_ENTITY_CAMEL" Factory
     process.factory.f | tee "$CODE_SRC_LONG/$PROP_ENTITY_CAMEL"Factory.java
@@ -171,8 +171,8 @@ process.component.f ()
 {
 cat << EOF
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}Factory">
-   <implementation class="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}Factory"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}factory">
+   <implementation class="${PROP_COMPANY_DOMAIN}.${PROP_ENTITY_LOWER}.${PROP_CODE_TYPE}.${PROP_ENTITY_CAMEL}Factory"/>
    <property name="service.ranking" type="Integer" value="100"/>
    <service>
       <provide interface="org.adempiere.base.IProcessFactory"/>
