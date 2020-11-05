@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Next Steps
+    # add component definition for process
+    # add git and hg ignore
+
 main ()
 {
     source chuboe_plugin_create.properties
