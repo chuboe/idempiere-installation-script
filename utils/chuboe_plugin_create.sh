@@ -50,6 +50,22 @@ main ()
     process.f | tee $CODE_SRC_LONG/$PROP_ENTITY_CAMEL.java
 }
 
+hgignore.f ()
+{
+cat << EOF
+syntax: glob
+bin
+EOF
+}
+
+gitignore.f ()
+{
+cat << EOF
+syntax: glob
+bin
+EOF
+}
+
 build.properties.f ()
 {
 cat << EOF
