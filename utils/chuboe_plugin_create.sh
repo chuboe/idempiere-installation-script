@@ -136,6 +136,47 @@ cat << EOF
 EOF
 }
 
+process.factory.f ()
+{
+cat << EOF
+/******************************************************************************
+ * Copyright (C) $PROP_YEAR $PROP_VENDOR_NAME                                             *
+ * Product: iDempiere ERP & CRM Smart Business Solution                       *
+ * This program is free software; you can redistribute it and/or modify it    *
+ * under the terms version 2 of the GNU General Public License as published   *
+ * by the Free Software Foundation. This program is distributed in the hope   *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           *
+ * See the GNU General Public License for more details.                       *
+ * You should have received a copy of the GNU General Public License along    *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     *
+ *****************************************************************************/
+
+package $PROP_COMPANY_DOMAIN.$PROP_ENTITY_LOWER.$PROP_CODE_TYPE;
+
+import org.adempiere.base.IProcessFactory;
+import org.compiere.process.ProcessCall;
+
+/**
+ *
+ * @author $PROP_VENDOR_USER
+ *
+ */
+public class "$PROP_ENTITY_CAMEL"Factory implements IProcessFactory {
+ 
+    @Override
+    public ProcessCall newProcessInstance(String className) {
+        if(className.equals($PROP_ENTITY_CAMEL.class.getName())) {
+            return new $PROP_ENTITY_CAMEL();
+        }
+        return null;
+    }
+ 
+}
+EOF
+}
+
 process.f ()
 {
 cat << EOF
