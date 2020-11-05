@@ -42,6 +42,7 @@ main ()
     echo
     echo "$PROP_ENTITY_CAMEL"Factory
     process.factory.f | tee "$CODE_SRC_LONG/$PROP_ENTITY_CAMEL"Factory.java
+    echo
     echo $PROP_ENTITY_CAMEL
     process.f | tee $CODE_SRC_LONG/$PROP_ENTITY_CAMEL.java
 }
