@@ -94,8 +94,10 @@ EOF
 build.properties.f ()
 {
 cat << EOF
-bin.includes = META-INF/,\
-               .,\
+output.. = bin/
+source.. = src/
+bin.includes = META-INF/,\\\
+               .,\\\
                OSGI-INF/
 EOF
 }
@@ -130,6 +132,8 @@ Require-Bundle: org.adempiere.base;bundle-version="6.2.0",
 Import-Package: org.osgi.framework;version="1.9.0",
  org.osgi.service.event;version="1.4.0"
 Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
+Service-Component: OSGI-INF/$PROP_ENTITY_CAMEL$PROP_CODE_TYPE.xml
+Bundle-ActivationPolicy: lazy
 EOF
 }
 
