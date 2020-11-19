@@ -73,6 +73,19 @@ where u.name <> 'SuperUser'
       WHERE u.C_BPartner_ID = xbp.C_BPARTNER_ID) = 'N')
 ;
 
+-- Employee
+update AD_User u
+set 
+Name='employee' || u.ad_user_id, 
+Description='employee' || u.ad_user_id
+where u.name <> 'SuperUser'
+  and ((u.c_bpartner_id is null) 
+    or (
+      SELECT xbp.ISEMPLOYEE 
+      FROM C_BPARTNER xbp 
+      WHERE u.C_BPartner_ID = xbp.C_BPARTNER_ID) = 'Y')
+;
+
 update AD_User u
 set 
 Password='password', 
