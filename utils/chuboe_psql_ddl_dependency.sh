@@ -1,5 +1,5 @@
 #create a file of dependent objects
-#use chuboe_psql_ddl_edit_array.sh to create sql backup file of dependent objects
+#use this file first, then use use chuboe_psql_ddl_edit_array.sh to create sql backup file of dependent objects
 #once you have a backup of sql, you can drop and recreate the object
 #note; you might need to recreate priviledges and refresh materialized views
 
