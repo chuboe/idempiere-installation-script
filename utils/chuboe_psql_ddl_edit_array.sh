@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#use chuboe_psql_ddl_dependency.sh first to create a list of dependencies
+#use this file to create a backup of these dependencies
+#use the following command to drop the original view after you have reviewed the backup from this script
+### drop someview cascade;
+
 source chuboe.properties
 
 #NOTE: you can create an array of dependent objects using this command:
