@@ -82,12 +82,14 @@ if [ $PACK_RESULT == "Y" ]; then
 
     # read -p "Press enter to continue"
 
-    echo "HERE: restart idempiere"
+    echo "HERE: restarting idempiere"
+    sleep 10
     sudo service idempiere restart
 
-    echo "HERE: waiting 200 seconds for packins to deploy"
-    sleep 200
+    echo "HERE: waiting 100 seconds for packins to deploy"
+    sleep 100
 
+    read -p "Press enter to continue - Confirm iDempiere restarted and pack ins where successful"
     sudo rm -r /opt/idempiere-server/migration/zip_2pack/*
 
 fi
