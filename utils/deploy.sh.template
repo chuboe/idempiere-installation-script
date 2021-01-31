@@ -83,8 +83,10 @@ if [ $PACK_RESULT == "Y" ]; then
     # read -p "Press enter to continue"
 
     echo "HERE: restarting idempiere"
-    sleep 10
-    sudo service idempiere restart
+    sleep 20 # allow plugins to finish installing from last deployment
+    sudo service idempiere stop
+    sleep 20
+    sudo service idempiere start
 
     echo "HERE: waiting 100 seconds for packins to deploy"
     sleep 100
