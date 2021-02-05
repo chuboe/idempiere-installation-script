@@ -169,6 +169,7 @@ delete from m_distributionrunline;
 delete from c_rfqline;
 delete from s_timeexpense;
 delete from s_timeexpenseline;
+delete from ad_note;
 delete from c_projectline where c_project_id not in (select c_project_id from c_acctschema_element where c_project_id is not null);
 delete from c_projecttask where c_projectphase_id not in (select pp.c_projectphase_id from c_acctschema_element ae join c_projectphase pp on ae.c_project_id = pp.c_project_id);
 delete from c_projectphase where c_project_id not in (select c_project_id from c_acctschema_element where c_project_id is not null);
