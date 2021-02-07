@@ -70,6 +70,7 @@ do
 done
 
 echo Restarting iDempiere...
-sudo service idempiere stop
 sleep 20
+sudo service idempiere stop
+sleep 60
 sudo service idempiere start
