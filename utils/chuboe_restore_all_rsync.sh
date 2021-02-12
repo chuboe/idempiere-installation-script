@@ -86,7 +86,7 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sh console-setup.sh <<!
 $TMP_HOSTNAME
 
 
-
+N
 
 $CHUBOE_PROP_DB_HOST
 

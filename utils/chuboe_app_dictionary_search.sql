@@ -1,5 +1,7 @@
--- NOTE: THIS IS OLD
--- MOVED TO UTILS FOLDER AS CHUBOE_APP_DICTIONARY_SEARCH.SQL
+-- The purpose of this query is to help you find usage of specif fields (column names)in the system. Example: Let say you want to know what impact the BP Location => isPayFrom field has on the system. This view will show you everywhere the the isPayFrom field is referenced. 
+
+-- Action: this view needs to be extended to include field overrides and client customizations
+
 Create view X_AppDictionarySearch_V as
 select ad_client_id, ad_org_id, created, createdby, updated, updatedby, 101::numeric as AD_Table_ID, ad_column_id as record_id, lower(columnsql) as code, 'Column SQL'::text as messagetext from ad_column
 union

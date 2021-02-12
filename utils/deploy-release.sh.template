@@ -19,7 +19,7 @@ source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
 
 #CHANGEME_ME in chuboe.properties if you need to anchor a release to a known good state
 HG_REVISION=${CHUBOE_PROP_DEPLOY_RELEASE_REVISION:-default} #default to default
-hg update -r $HG_REVISION
+#hg update -r $HG_REVISION
 
 for ix in ${!array[*]}
 do
@@ -57,13 +57,20 @@ do
 
     #note: next step removed after script is stabilized and works every time.
     echo "Finished Ticket = $NEXT_TICKET ($((ix+1)) of ${#array[@]})"
+    echo "*********"
+    echo "******************"
+    echo "***************************"
+    echo "************************************"
     echo "ACTION: Make sure packs deployed successfully - log in as client to see all."
     read -p "Press enter when confirmed all worked"
 
     #Update working directory back to the main revision set above.
     #Just in case it was changed in this ticket.
-    hg update -r $HG_REVISION
+    #hg update -r $HG_REVISION
 done
 
 echo Restarting iDempiere...
-sudo service idempiere restart
+sleep 20
+sudo service idempiere stop
+sleep 60
+sudo service idempiere start
