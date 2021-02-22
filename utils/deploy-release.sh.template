@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ "$TERM" = "screen" ]
+then
+    echo Confirmed inside screen or tmux to preserve session if disconnected.
+else
+    echo Exiting... not running inside screen or tumx to preserve session if disconnected.
+    exit 1
+fi
+
+
 #ACTION: look for CHANGE_ME tags and update accordingly
 
 # add each ticket to be released on a new line in the below array
