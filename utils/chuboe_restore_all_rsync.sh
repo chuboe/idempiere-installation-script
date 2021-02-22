@@ -7,6 +7,14 @@
 # You can use the chuboe_adduser_os.sh script to create idempiere pem credentials on the primary server.
 # This differs from chuboe_restore_s3cmd.sh because it also moves binaries.
 
+if [ "$TERM" = "screen" ]
+then
+    echo confirmed inside screen or tmux to preserve session if disconnected.
+else
+    echo Exiting... not running inside screen or tumx to preserve session if disconnected.
+    exit 1
+fi
+
 source chuboe.properties
 echo HERE:: setting variables 
 TMP_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
