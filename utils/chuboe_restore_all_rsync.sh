@@ -9,7 +9,7 @@
 
 if [ "$TERM" = "screen" ]
 then
-    echo confirmed inside screen or tmux to preserve session if disconnected.
+    echo Confirmed inside screen or tmux to preserve session if disconnected.
 else
     echo Exiting... not running inside screen or tumx to preserve session if disconnected.
     exit 1
