@@ -3,6 +3,8 @@
 # Version 2 Sandy Corsillo - enhanced to use s3cmd
 # Version 3 Chuck Boecking - added more variables
 # Version 4 Chuck Boecking - fixed bug where script copied multiple files to latest
+# Version 5 Chris Greene - Changed to use AWS CLI
+
 
 #Bring chuboe.properties into context
 SCRIPTNAME=$(readlink -f "$0")
@@ -75,3 +77,65 @@ echo  -------         COMPLETED iDempiere Daily Backup            ------- >> "$L
 echo  ------------------------------------------------------------------- >> "$LOGFILE"
 echo .
 exit 0
+
+
+# Below is an example AWS IAM Permission Policy that is compatible with this script. Note not all below permissions are necessary
+#{
+#    "Version": "2012-10-17",
+#    "Statement": [
+#        {
+#            "Sid": "VisualEditor0",
+#            "Effect": "Allow",
+#            "Action": [
+#                "s3:PutObject",
+#                "s3:GetObjectAcl",
+#                "s3:GetObject",
+#                "s3:ListBucketMultipartUploads",
+#                "s3:GetObjectRetention",
+#                "s3:ListBucketVersions",
+#                "s3:GetObjectTagging",
+#                "s3:ListBucket",
+#                "s3:GetObjectLegalHold",
+#                "s3:ListMultipartUploadParts"
+#            ],
+#            "Resource": [
+#                "arn:aws:s3:::*/*",
+#                "arn:aws:s3:::scrivnerbackups"
+#            ]
+#        },
+#        {
+#            "Sid": "VisualEditor1",
+#            "Effect": "Allow",
+#            "Action": [
+#                "s3:PutObject",
+#                "s3:GetObjectAcl",
+#                "s3:GetObject",
+#                "s3:ListBucketMultipartUploads",
+#                "s3:GetObjectRetention",
+#                "s3:ListBucketVersions",
+#                "s3:GetObjectTagging",
+#                "s3:ListBucket",
+#                "s3:GetObjectLegalHold",
+#                "s3:ListMultipartUploadParts"
+#            ],
+#            "Resource": [
+#                "arn:aws:s3:us-west-2:115122176300:accesspoint/programaticscrivnerbackup",
+#                "arn:aws:s3:::*/*",
+#                "arn:aws:s3:*:115122176300:storage-lens/*"
+#            ]
+#        },
+#        {
+#            "Sid": "VisualEditor2",
+#            "Effect": "Allow",
+#            "Action": [
+#                "s3:ListStorageLensConfigurations",
+#                "s3:GetAccessPoint",
+#                "s3:GetAccountPublicAccessBlock",
+#                "s3:ListAllMyBuckets",
+#                "s3:ListAccessPoints",
+#                "s3:ListJobs"
+#            ],
+#            "Resource": "*"
+#        }
+#    ]
+#}
