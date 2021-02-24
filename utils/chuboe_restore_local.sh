@@ -18,13 +18,15 @@ BACKUP_TAR="ExpDatDir_"`date +%Y%m%d`_`date +%H%M%S`".tar"
 # You may update the number of cores used from default below
 BACKUP_RESTORE_JOBS=$CHUBOE_PROP_BACKUP_RESTORE_JOBS
 
+
+
 echo LOGFILE="$LOGFILE" >> "$LOGFILE"
 echo ADEMROOTDIR="$ADEMROOTDIR" >> "$LOGFILE"
 
 cd $LOCALBACKDIR
-mkdir latest/
-rm latest/*
 
-pg_dump $ADDPG -vU $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f latest
+sudo service idempiere stop
 
-tar -cvf $BACKUP_TAR latest/*
+pg_restore $ADDPG -vU $USER $DATABASE -j $BACKUP_RESTORE_JOBS latest/
+
+sudo service idempiere start
