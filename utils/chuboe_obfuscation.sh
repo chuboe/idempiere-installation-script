@@ -45,8 +45,8 @@ DATABASE_OB_EXPORT="ExpDatObfus.dmp"
 DATABASE_OB_JAR="ExpDatObfus_"`date +%Y%m%d`_`date +%H%M%S`".jar"
 CHUBOE_AWS_S3_BUCKET_SUB=$CHUBOE_PROP_BACKUP_S3_BUCKET
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
-# update the following to increase the backup/restore speed. Do not exceed the core count of your server.
-BACKUP_RESTORE_JOBS=1
+# You may update the number of cores used from default below
+BACKUP_RESTORE_JOBS=$CHUBOE_PROP_BACKUP_RESTORE_JOBS
 
 echo ADEMROOTDIR=$ADEMROOTDIR
 echo your backup will be available at:
