@@ -1,13 +1,16 @@
 #!/bin/bash
 
+set -e
+
 #When scripting use :rv chuboe_scipting.viminfo
 
 #Bring chuboe.properties into context
 SC_SCRIPTNAME=$(readlink -f "$0")
-SC_SCRIPTPATH=$(dirname "$SCRIPTNAME")
-source $SCRIPTPATH/chuboe.properties
+SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
+SC_BASENAME=$(basename "$0")
+source $SC_SCRIPTPATH/chuboe.properties
 
-SC_LOGFILE="$CHUBOE_PROP_LOG_PATH/chuboe_CHANGME.log"
+SC_LOGFILE="$SC_SCRIPTPATH/LOGS/$SC_BASENAME."`date +%Y%m%d`_`date +%H%M%S`".log"
 SC_ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
 SC_UTIL=$CHUBOE_PROP_UTIL_PATH
 SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
@@ -38,6 +41,7 @@ done
 #Write to log to kick off 
 
 
-echo LOGFILE="$SC_LOGFILE" |& tee -a "$SC_LOGFILE"
-date |& tee -a "$SC_LOGFILE" 
-echo ADEMROOTDIR="$SC_ADEMROOTDIR" |& tee -a "$SC_LOGFILE"
+echo "Be sure to tee to a log file, for example:"
+echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
+read -p "press Enter to continue, or Ctrl+C to stop" 
+#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read
