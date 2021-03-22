@@ -96,7 +96,7 @@ if [[ $EXIT_AFTER_INITIAL_BACKUP = "Y" ]]; then
     echo sudo service idempiere stop
     echo dropdb $ADDPG -U $USER idempiere
     echo createdb $ADDPG -U $USER idempiere
-    pg_restore $ADDPG -U $USER -Fd -j $BACKUP_RESTORE_JOBS -d idempiere $EXPORT_DIR/$DATABASE_TMP_EXPORT
+    echo pg_restore $ADDPG -U $USER -Fd -j $BACKUP_RESTORE_JOBS -d idempiere $EXPORT_DIR/$DATABASE_TMP_EXPORT
     exit 0
 fi
 
