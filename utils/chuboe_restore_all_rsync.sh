@@ -118,13 +118,11 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh <<!
 !
 
 echo HERE:: update xmx and xms
-# remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
-sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
-# alternatively, you could set the value accordingly to either of the following:
-# sudo sed -i 's|-Xms.G -Xmx.G|-Xms2G -Xmx2G|g' /opt/idempiere-server/idempiere-server.sh
-# sudo sed -i 's|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS -Xmx2048m -Xms2048m|g' /opt/idempiere-server/idempiere-server.sh
-# preferred - replace the whole line in myEnvironment.sh - update the values below according to your environment
+# note that regex '.' is a single placeholder wildcard
+# note that regex '\S*' is an end-of-word wildcard
 # sudo sed -i "s|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xms2G -Xmx2G -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g" /opt/idempiere-server/utils/myEnvironment.sh
+sudo sed -i "s|\bXmx\S*|Xmx1G|g" /opt/idempiere-server/utils/myEnvironment.sh
+sudo sed -i "s|\bXms\S*|Xms1G|g" /opt/idempiere-server/utils/myEnvironment.sh
 
 echo HERE:: run restore script
 # update the database with test/sand settings
