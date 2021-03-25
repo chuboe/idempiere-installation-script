@@ -1067,7 +1067,9 @@ echo "HERE END: Launching console-setup.sh"
             then XMX=32768
         fi
         echo "XMX="$XMX
-        sudo sed -i "s|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xmx"$XMX"m -Xms"$XMX"m -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g" $INSTALLPATH/utils/myEnvironment.sh
+        #sudo sed -i "s|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xmx"$XMX"m -Xms"$XMX"m -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g" $INSTALLPATH/utils/myEnvironment.sh
+	sudo sed -i "s|\bXmx\S*|Xmx"$XMX"m|g" $INSTALLPATH/utils/myEnvironment.sh
+	sudo sed -i "s|\bXms\S*|Xms"$XMX"m|g" $INSTALLPATH/utils/myEnvironment.sh
         # use the following command to confirm the above setting took: sudo -u $IDEMPIEREUSER jps -v localhost
         echo "HERE END: lots of memory and dedicated idempiere server"
     fi
