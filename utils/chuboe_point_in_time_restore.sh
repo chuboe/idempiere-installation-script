@@ -1,6 +1,13 @@
 #!/bin/bash
 
-#restore from backup
+#Restore from point in time backup
+#The purpose of this script is to help you quick redo tests in a UAT/Test/Sandbox environment
+#First take a backup using chuboe_point_in_time_backup.sh
+#Secondly use this file to restore
+
+#Assumptions
+#This script assumes your test environments are all-in-one (iD and DB on the same server).
+#If this is not true, update the scripts accordingly
 
 #https://www.postgresql.org/docs/12/backup-file.html
 
