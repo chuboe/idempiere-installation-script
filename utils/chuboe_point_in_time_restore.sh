@@ -5,9 +5,10 @@
 #First take a backup using chuboe_point_in_time_backup.sh
 #Secondly use this file to restore
 
-#Assumptions
+#Assumptions and cautions
 #This script assumes your test environments are all-in-one (iD and DB on the same server).
 #If this is not true, update the scripts accordingly
+#Make sure you have enough hard drive space to copy both iD and DB
 
 #https://www.postgresql.org/docs/12/backup-file.html
 
