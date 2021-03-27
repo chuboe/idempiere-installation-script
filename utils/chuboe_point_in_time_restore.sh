@@ -9,6 +9,13 @@ echo Start time = $START_TIME
 
 source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
 
+# check to see if test server - else exit
+if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
+    echo "Not a test environment - exiting now!"
+    echo "Check chuboe.properties => CHUBOE_PROP_IS_TEST_ENV variable."
+    exit 1
+fi
+
 echo stopping idempiere
 sudo service idempiere stop
 
