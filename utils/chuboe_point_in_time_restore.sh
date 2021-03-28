@@ -33,6 +33,9 @@ sleep 20
 echo stopping postgresql
 sudo service postgresql stop
 
+echo sleeping for 10 to allow postgresql to stop
+sleep 10
+
 SERVICE=idempiere
 if (( $(ps -ef | grep -v grep | grep $SERVICE | wc -l) > 0 ))
 then
