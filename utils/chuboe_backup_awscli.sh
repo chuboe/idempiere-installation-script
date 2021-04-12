@@ -15,8 +15,10 @@ LOGFILE="$CHUBOE_PROP_LOG_PATH/chuboe_db_backup.log"
 ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
 CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
-LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
-S3BUCKET=$CHUBOE_PROP_BACKUP_S3_BUCKET
+LOCALBACKARCHIVEDIR="$CHUBOE_PROP_BACKUP_LOCAL_PATH/archive"
+LOCALBACKLATESTDIR="$CHUBOE_PROP_BACKUP_LOCAL_PATH/latest"
+ARCHIVEBUCKET=$CHUBOE_PROP_BACKUP_ARCHIVE_S3_BUCKET
+LATESTBUCKET=$CHUBOE_PROP_BACKUP_LATEST_S3_BUCKET
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 
 # Outstanding Features
@@ -36,26 +38,28 @@ echo  Executing RUN_DBExport.sh local backup utility. >> "$LOGFILE"
 # Note: if you get a pg_dump server mismatch error when using RDS - read this to solve:
 # http://stackoverflow.com/questions/12836312/postgresql-9-2-pg-dump-version-mismatch
 
+mkdir $LOCALBACKARCHIVEDIR
+
 if 
     echo NOTE: exporting database >> "$LOGFILE"
     sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh >> "$LOGFILE"
-    cp "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$LOCALBACKDIR"/
+    cp "$ADEMROOTDIR"/data/ExpDat????????_??????.jar "$LOCALBACKARCHIVEDIR"/
     sudo rm "$ADEMROOTDIR"/data/ExpDat????????_??????.jar
 then
     echo Prepare latest directory >> "$LOGFILE"
     echo Ignore error stating directory already exists. >> "$LOGFILE"
-    mkdir "$LOCALBACKDIR"/latest/
-    rm "$LOCALBACKDIR"/latest/*.jar
-    cd "$LOCALBACKDIR"/
+    mkdir $LOCALBACKLATESTDIR
+    rm "$LOCALBACKLATESTDIR"/*.jar
+    cd "$LOCALBACKARCHIVEDIR"/
 
     #copy most recent backup to latest folder
-    ls -t ExpDat*.jar | head -1 | awk '{print "cp " $0 " latest/"$0}' | sh
+    ls -t ExpDat*.jar | head -1 | awk '{print "cp " $0 " ../latest/"$0}' | sh
 
     echo Local Backup Succeeded.  Copying to S3 bucket. >> "$LOGFILE"
     if 
         # fully qualified path to support running from cron
-        aws s3 sync "$LOCALBACKDIR"/ s3://"$S3BUCKET"/ >> "$LOGFILE"
-        aws s3 sync "$LOCALBACKDIR"/latest/ s3://"$S3BUCKET"/latest/ --delete >> "$LOGFILE"
+        aws s3 sync "$LOCALBACKARCHIVEDIR"/ s3://"$ARCHIVEBUCKET"/ >> "$LOGFILE"
+        aws s3 sync "$LOCALBACKLATESTDIR"/ s3://"$LATESTBUCKET"/ --delete >> "$LOGFILE"
     then
         echo Copy of backup files to S3 succeeded. >> "$LOGFILE"
     else
@@ -99,8 +103,8 @@ exit 0
 #                "s3:ListMultipartUploadParts"
 #            ],
 #            "Resource": [
-#                "arn:aws:s3:::*/*",
-#                "arn:aws:s3:::scrivnerbackups"
+#                "arn:aws:s3:::CHANGETOARCHIVEBUCKET",
+#                "arn:aws:s3:::CHANGETOARCHIVEBUCKET/*"
 #            ]
 #        },
 #        {
@@ -116,12 +120,12 @@ exit 0
 #                "s3:GetObjectTagging",
 #                "s3:ListBucket",
 #                "s3:GetObjectLegalHold",
+#                "s3:DeleteObject",
 #                "s3:ListMultipartUploadParts"
 #            ],
 #            "Resource": [
-#                "arn:aws:s3:us-west-2:115122176300:accesspoint/programaticscrivnerbackup",
-#                "arn:aws:s3:::*/*",
-#                "arn:aws:s3:*:115122176300:storage-lens/*"
+#                "arn:aws:s3:::CHANGETOLATESTBUCKET/*",
+#                "arn:aws:s3:::CHANGETOLATESTBUCKET"
 #            ]
 #        },
 #        {
