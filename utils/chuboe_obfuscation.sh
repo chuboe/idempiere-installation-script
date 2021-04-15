@@ -92,6 +92,11 @@ echo export the existing iDempiere database
 pg_dump $ADDPG $QUICK_AND_DIRTY -U $USER $DATABASE -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_TMP_EXPORT
 if [[ $EXIT_AFTER_INITIAL_BACKUP = "Y" ]]; then
     echo Exiting after initial backup!
+    echo ...To use existing backup as idempiere database...
+    echo sudo service idempiere stop
+    echo dropdb $ADDPG -U $USER idempiere
+    echo createdb $ADDPG -U $USER idempiere
+    echo pg_restore $ADDPG -U $USER -Fd -j $BACKUP_RESTORE_JOBS -d idempiere $EXPORT_DIR/$DATABASE_TMP_EXPORT
     exit 0
 fi
 

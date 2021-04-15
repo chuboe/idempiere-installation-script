@@ -11,6 +11,14 @@
 # If the upgrade goes badly, you will need to have a way to restore your previous directory.
 # Said another way, always perform this upgrade on a test server before executing on a production server.
 
+if [ "$TERM" = "screen" ]
+then
+    echo Confirmed inside screen or tmux to preserve session if disconnected.
+else
+    echo Exiting... not running inside screen or tumx to preserve session if disconnected.
+    exit 1
+fi
+
 # function to help the user better understand how the script works
 usage()
 {

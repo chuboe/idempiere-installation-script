@@ -26,6 +26,7 @@ SC_USER=$CHUBOE_PROP_DB_USERNAME
 SC_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
 SC_HOSTNAME=0.0.0.0 # this does not change - name of local machine
 SC_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
+
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
 # make sure to chmod 400 the pem
 SC_SSH_PEM_RSYNC="-e \"ssh $TMP_SSH_PEM\""

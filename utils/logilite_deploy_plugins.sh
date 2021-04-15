@@ -16,6 +16,7 @@ OPTIONS:
     -R  (1) Install/Update plug-ins (2) Start plug-ins (3) No Restart iDempiere
     -m  Also installed/Update plugins, which is already installed on server.
     -D  Will not delete source jar.
+    -d  Delay for plugins with large pack ins
 EOF
 }
 
@@ -39,6 +40,7 @@ CUSTOM_PLUGINS_PATH="$CHUBOE_PROP_CUSTOM_PLUGINS_PATH"
 IDEMPIERE_USER="$CHUBOE_PROP_IDEMPIERE_OS_USER"
 IDEMPIERE_PATH="$CHUBOE_PROP_IDEMPIERE_PATH"
 CHUBOE_UTIL_HG="$CHUBOE_PROP_UTIL_HG_PATH"
+DELAY_FOR_LARGE_PACKIN=5
 
 cd $CHUBOE_UTIL_HG/utils/
 
@@ -53,7 +55,7 @@ fi
 # process the specified options
 # the colon after the letter specifies there should be text with the option
 # NOTE: include u because the script previously supported a -u OSUser
-while getopts ":hISRmD" OPTION
+while getopts ":hISRmDd:" OPTION
 do
     case $OPTION in
         h)  usage
@@ -68,6 +70,8 @@ do
         m)  SKIP_DEPLOYED_PG="N";;
 
         D)  IS_DELETE_FROM_SCAN="N";;
+
+        d)  DELAY_FOR_LARGE_PACKIN=$OPTARG;;
 
         # Option error handling.
         \?) valid=0
@@ -310,6 +314,8 @@ then
             echo " "
             echo " "
         fi
+        echo sleeping for $DELAY_FOR_LARGE_PACKIN seconds
+        sleep $DELAY_FOR_LARGE_PACKIN
     done
 fi
 
@@ -341,7 +347,8 @@ then
         JAR_BUNDLE_ID=$(cat $UPDATE_PLUGIN_FILE | grep $PLUGIN_NAME | cut -f 1)
         echo "Update/Install Plugin ID"="$JAR_BUNDLE_ID"
         ./logilite_telnet_start.sh $JAR_BUNDLE_ID
-        sleep 5
+        echo sleeping for $DELAY_FOR_LARGE_PACKIN seconds
+        sleep $DELAY_FOR_LARGE_PACKIN
     done
 
 
