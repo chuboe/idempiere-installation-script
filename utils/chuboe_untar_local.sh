@@ -2,6 +2,7 @@
 
 set -e
 
+# {{{ Context
 #Bring chuboe.properties into context
 SC_SCRIPTNAME=$(readlink -f "$0")
 SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
@@ -14,7 +15,9 @@ SC_CHUBOE_UTIL=$CHUBOE_PROP_UTIL_PATH
 SC_CHUBOE_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 SC_LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
 SC_USER=$CHUBOE_PROP_DB_USERNAME
+# }}}
 
+# {{{ Options
 # check for command line properties
 # Special thanks to https://sookocheff.com/post/bash/parsing-bash-script-arguments-with-shopts/
 # variables will be processed in the order they appear on the command line
@@ -36,11 +39,13 @@ while getopts $SC_OPTSTRING option; do
         f) SC_UNTAR_PATH=${OPTARG};; 
     esac
 done
+# }}}
 
+# {{{ Logging
 echo "Be sure to tee to a log file, for example:"
 echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
 read -p "press Enter to continue, or Ctrl+C to stop" 
-#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read
+#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
 
 cd $SC_LOCALBACKDIR
 

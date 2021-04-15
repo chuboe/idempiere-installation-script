@@ -4,6 +4,7 @@ set -e
 
 #When scripting use :rv chuboe_scipting.viminfo
 
+# {{{ Context
 #Bring chuboe.properties into context
 SC_SCRIPTNAME=$(readlink -f "$0")
 SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
@@ -25,8 +26,9 @@ SC_BACKUP_TAR="ExpDatDir_"`date +%Y%m%d`_`date +%H%M%S`".tar"
 SC_BACKUP_RESTORE_JOBS=$CHUBOE_PROP_BACKUP_RESTORE_JOBS
 SC_UNTAR="N"
 SC_UNTAR_PATH=""
+# }}}
 
-# Step #1 - set the variables in SC_OPTSTRING
+# {{{ Options
 SC_OPTSTRING="hf:"
 
 while getopts $SC_OPTSTRING option; do
@@ -42,16 +44,18 @@ while getopts $SC_OPTSTRING option; do
 	f) SC_UNTAR="Y" ; SC_UNTAR_PATH=${OPTARG} ;;
     esac
 done
+# }}}
 
+# {{{ Logging
 echo "Be sure to tee to a log file, for example:"
 echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
 read -p "press Enter to continue, or Ctrl+C to stop" 
-#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read
+#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
 
-if [ $SC_UNTAR = "Y" ]
+if [ $SC_UNTAR = "Y" ] # {{{
 then
 	echo $'\n' | $SC_SCRIPTPATH/chuboe_untar_local.sh -f $SC_UNTAR_PATH
-fi
+fi #}}}
 
 cd $SC_LOCALBACKDIR
 

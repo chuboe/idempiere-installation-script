@@ -1,52 +1,77 @@
 #!/bin/bash
-# Version 1 Chuck Boecking - created
+set -e
+# {{{ Version 1 Chuck Boecking - created
 
 # This script uses rsync to restore a sandbox server from a production primary or services server
 # This script series assumes that the chuboe installation script was used to install iD on both servers
 # This script assumes that you can ssh into the primary server via the idempiere user
 # You can use the chuboe_adduser_os.sh script to create idempiere pem credentials on the primary server.
-# This differs from chuboe_restore_s3cmd.sh because it also moves binaries.
+# This differs from chuboe_restore_s3cmd.sh because it also moves binaries.}}}
 
-source chuboe.properties
-echo HERE:: setting variables 
-TMP_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
-TMP_HOSTNAME=0.0.0.0 # this does not change - name of local machine
-TMP_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
+# {{{ Context
+#Bring chuboe.properties into context
+SC_SCRIPTNAME=$(readlink -f "$0")
+SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
+SC_BASENAME=$(basename "$0")
+source $SC_SCRIPTPATH/chuboe.properties
+
+SC_LOGFILE="$SC_SCRIPTPATH/LOGS/$SC_BASENAME."`date +%Y%m%d`_`date +%H%M%S`".log"
+SC_ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
+SC_IDEMPIERE_OS_USER=$CHUBOE_PROP_IDEMPIERE_OS_USER
+SC_UTIL=$CHUBOE_PROP_UTIL_PATH
+SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
+SC_LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
+SC_USER=$CHUBOE_PROP_DB_USERNAME
+
+SC_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
+SC_HOSTNAME=0.0.0.0 # this does not change - name of local machine
+SC_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
 # make sure to chmod 400 the pem
-TMP_SSH_PEM_RSYNC="-e \"ssh $TMP_SSH_PEM\""
-TMP_DMS_CONTENT_PATH=/opt/DMS/DMS_Content/
-TMP_DMS_THUMBNAILS_PATH=/opt/DMS/DMS_Thumbnails/
+SC_SSH_PEM_RSYNC="-e \"ssh $TMP_SSH_PEM\""
+SC_DMS_CONTENT_PATH=/opt/DMS/DMS_Content/
+SC_DMS_THUMBNAILS_PATH=/opt/DMS/DMS_Thumbnails/
+# }}}
 
-echo HERE:: testing for test server 
-# check to see if test server - else exit
+if [ "$TERM" = "screen" ] # {{{ TMUX Check
+then
+    echo Confirmed inside screen or tmux to preserve session if disconnected.
+else
+    echo Exiting... not running inside screen or tumx to preserve session if disconnected.
+    exit 1
+fi #}}}
+
+# {{{ Logging
+echo "Be sure to tee to a log file, for example:"
+echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
+read -p "press Enter to continue, or Ctrl+C to stop" 
+#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
+
+echo HERE:: testing for test server #{{{
 if [[ $CHUBOE_PROP_IS_TEST_ENV != "Y" ]]; then
     echo "Not a test environment - exiting now!"
     echo "Check chuboe.properties => CHUBOE_PROP_IS_TEST_ENV variable."
     exit 1
-fi
+fi # }}}
 
 echo HERE:: stopping idempiere
 sudo service idempiere stop
 
 echo HERE:: starting rsync for idempiere folder
-eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$CHUBOE_PROP_IDEMPIERE_PATH $CHUBOE_PROP_IDEMPIERE_PATH"
+eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_ADEMROOTDIR $SC_ADEMROOTDIR"
 
-echo HERE:: copying over ExpDat.dmp
-# copy ExpDat.dmp goes here
-cd $CHUBOE_PROP_IDEMPIERE_PATH/
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir -p data
-cd data/
-echo sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:$CHUBOE_PROP_IDEMPIERE_PATH/data/ExpDat.dmp .
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER scp $TMP_SSH_PEM $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:$CHUBOE_PROP_IDEMPIERE_PATH/data/ExpDat.dmp .
+echo HERE:: copying over pg_dump
+cd $SC_LOCALBACKDIR
+eval sudo rsync "--delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_LOCALBACKDIR/latest/ latest/"
 
-# uncomment below statements to sync DMS folders
+# uncomment below statements to sync DMS folders {{{
 # echo HERE:: rsync DMS
 # eval sudo rsync "-P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$DMS_CONTENT_PATH $DMS_CONTENT_PATH"
 
 # eval sudo rsync "-P $TMP_SSH_PEM_RSYNC -a --delete $CHUBOE_PROP_IDEMPIERE_OS_USER@$TMP_REMOTE_BACKUP_SERVER:/$TMP_DMS_THUMBNAILS_PATH $TMP_DMS_THUMBNAILS_PATH"
+# }}}
 
-# run console-setup.sh
+# {{{ run console-setup.sh
 echo "HERE:: Launching console-setup.sh"
 cd $CHUBOE_PROP_IDEMPIERE_PATH
 
@@ -100,16 +125,14 @@ $CHUBOE_PROP_DB_PASSWORD_SU
 
 
 !
-# end of file input
+# }}} end of file input
 
 echo HERE:: restore database
 # restore the database
-cd $CHUBOE_PROP_IDEMPIERE_PATH/utils/
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER ./RUN_DBRestore.sh <<!
+cd $SC_SCRIPTPATH
+echo $'\n' | chuboe_restore_local.sh
 
-!
-
-echo HERE:: update xmx and xms
+echo HERE:: update xmx and xms # {{{
 # remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
 sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
 # alternatively, you could set the value accordingly to either of the following:
@@ -117,10 +140,11 @@ sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
 # sudo sed -i 's|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS -Xmx2048m -Xms2048m|g' /opt/idempiere-server/idempiere-server.sh
 # preferred - replace the whole line in myEnvironment.sh - update the values below according to your environment
 # sudo sed -i "s|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xms2G -Xmx2G -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g" /opt/idempiere-server/utils/myEnvironment.sh
+#}}}
 
 echo HERE:: run restore script
 # update the database with test/sand settings
-cd $CHUBOE_PROP_UTIL_HG_UTIL_PATH
+cd $SC_SCRIPTPATH
 ./chuboe_restore_sandbox_sql.sh
 
 # start idempiere

@@ -1,9 +1,9 @@
 #!/bin/bash
-
 set -e
 
 #When scripting use :rv chuboe_scipting.viminfo
 
+# {{{ Context
 #Bring chuboe.properties into context
 SC_SCRIPTNAME=$(readlink -f "$0")
 SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
@@ -16,7 +16,9 @@ SC_UTIL=$CHUBOE_PROP_UTIL_PATH
 SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 SC_LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
 SC_USER=$CHUBOE_PROP_DB_USERNAME
+# }}}
 
+# {{{ Options
 # check for command line properties
 # Special thanks to https://sookocheff.com/post/bash/parsing-bash-script-arguments-with-shopts/
 # variables will be processed in the order they appear on the command line
@@ -37,11 +39,18 @@ while getopts $SC_OPTSTRING option; do
         p) echo "You didn't overwrite the stock prefix did you? I don't know what to do with ${OPTARG}";;
     esac
 done
+# }}}
 
-#Write to log to kick off 
+if [ "$TERM" = "screen" ] # {{{ TMUX Check
+then
+    echo Confirmed inside screen or tmux to preserve session if disconnected.
+else
+    echo Exiting... not running inside screen or tumx to preserve session if disconnected.
+    exit 1
+fi #}}}
 
-
+# {{{ Logging
 echo "Be sure to tee to a log file, for example:"
 echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
 read -p "press Enter to continue, or Ctrl+C to stop" 
-#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read
+#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
