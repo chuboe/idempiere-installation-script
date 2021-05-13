@@ -1,3 +1,7 @@
+# Moving forward, all cron tasks should be placed in /etc/crontab
+# Here is an example of the format. Note the only difference is the addition of the user column
+# 0 5 * * 0 chuboe cd /opt/chuboe/idempiere-installation-script/utils; ./chuboe_restore_all_rsync.sh > /tmp/id_restore`/usr/bin/date +\%Y\%m\%d_\%H\%M\%S`.log 2>&1
+
 # WARNING: edit the source file - Do not edit these settings using crontab -e
 # Uncomment the ones you want to use, and execute the following command:
 #   "crontab /opt/chuboe/idempiere-installation-script/utils/cronJobs.txt"
