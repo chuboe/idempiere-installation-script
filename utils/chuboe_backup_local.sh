@@ -52,8 +52,9 @@ read -p "press Enter to continue, or Ctrl+C to stop"
 #REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
 
 cd $SC_LOCALBACKDIR
-mkdir latest/
-rm latest/*
+mkdir -p latest/
+mkdir -p archive/
+rm -f latest/*
 
 pg_dump $SC_ADDPG -vU $SC_USER $SC_DATABASE -Fd -j $SC_BACKUP_RESTORE_JOBS -f latest
 
