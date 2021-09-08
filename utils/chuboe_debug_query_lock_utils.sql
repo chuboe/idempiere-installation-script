@@ -1,4 +1,17 @@
-CREATE VIEW adempiere.chuboe_lock_detail_v AS
+
+CREATE VIEW adempiere.chuboe_query_long_running_v AS
+select * from (select now() - query_start as duration,* from pg_stat_activity where pg_stat_activity.query <> ''::text ) as ad where duration > interval '5 minutes' order by duration;
+
+CREATE VIEW adempiere.chuboe_query_large_table_v AS
+SELECT nspname || '.' || relname AS "relation",
+    pg_size_pretty(pg_relation_size(C.oid)) AS "size"
+  FROM pg_class C
+  LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+  WHERE nspname NOT IN ('pg_catalog', 'information_schema')
+  ORDER BY pg_relation_size(C.oid) DESC
+  LIMIT 50;
+
+CREATE VIEW adempiere.chuboe_query_lock_detail_v AS
  SELECT blocked_locks.pid AS blocked_pid,
     blocked_activity.usename AS blocked_user,
     blocking_locks.pid AS blocking_pid,
@@ -11,7 +24,7 @@ CREATE VIEW adempiere.chuboe_lock_detail_v AS
      JOIN pg_stat_activity blocking_activity ON ((blocking_activity.pid = blocking_locks.pid)))
   WHERE (NOT blocked_locks.granted);
 
-CREATE VIEW adempiere.chuboe_lock_recursive_v AS
+CREATE VIEW adempiere.chuboe_query_lock_recursive_v AS
  WITH RECURSIVE c(requested, current) AS (
          VALUES ('AccessShareLock'::text,'AccessExclusiveLock'::text), ('RowShareLock'::text,'ExclusiveLock'::text), ('RowShareLock'::text,'AccessExclusiveLock'::text), ('RowExclusiveLock'::text,'ShareLock'::text), ('RowExclusiveLock'::text,'ShareRowExclusiveLock'::text), ('RowExclusiveLock'::text,'ExclusiveLock'::text), ('RowExclusiveLock'::text,'AccessExclusiveLock'::text), ('ShareUpdateExclusiveLock'::text,'ShareUpdateExclusiveLock'::text), ('ShareUpdateExclusiveLock'::text,'ShareLock'::text), ('ShareUpdateExclusiveLock'::text,'ShareRowExclusiveLock'::text), ('ShareUpdateExclusiveLock'::text,'ExclusiveLock'::text), ('ShareUpdateExclusiveLock'::text,'AccessExclusiveLock'::text), ('ShareLock'::text,'RowExclusiveLock'::text), ('ShareLock'::text,'ShareUpdateExclusiveLock'::text), ('ShareLock'::text,'ShareRowExclusiveLock'::text), ('ShareLock'::text,'ExclusiveLock'::text), ('ShareLock'::text,'AccessExclusiveLock'::text), ('ShareRowExclusiveLock'::text,'RowExclusiveLock'::text), ('ShareRowExclusiveLock'::text,'ShareUpdateExclusiveLock'::text), ('ShareRowExclusiveLock'::text,'ShareLock'::text), ('ShareRowExclusiveLock'::text,'ShareRowExclusiveLock'::text), ('ShareRowExclusiveLock'::text,'ExclusiveLock'::text), ('ShareRowExclusiveLock'::text,'AccessExclusiveLock'::text), ('ExclusiveLock'::text,'RowShareLock'::text), ('ExclusiveLock'::text,'RowExclusiveLock'::text), ('ExclusiveLock'::text,'ShareUpdateExclusiveLock'::text), ('ExclusiveLock'::text,'ShareLock'::text), ('ExclusiveLock'::text,'ShareRowExclusiveLock'::text), ('ExclusiveLock'::text,'ExclusiveLock'::text), ('ExclusiveLock'::text,'AccessExclusiveLock'::text), ('AccessExclusiveLock'::text,'AccessShareLock'::text), ('AccessExclusiveLock'::text,'RowShareLock'::text), ('AccessExclusiveLock'::text,'RowExclusiveLock'::text), ('AccessExclusiveLock'::text,'ShareUpdateExclusiveLock'::text), ('AccessExclusiveLock'::text,'ShareLock'::text), ('AccessExclusiveLock'::text,'ShareRowExclusiveLock'::text), ('AccessExclusiveLock'::text,'ExclusiveLock'::text), ('AccessExclusiveLock'::text,'AccessExclusiveLock'::text)
         ), l AS (
@@ -64,4 +77,3 @@ CREATE VIEW adempiere.chuboe_lock_recursive_v AS
     r.seq
    FROM r
   ORDER BY r.seq;
-
