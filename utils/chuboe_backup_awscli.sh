@@ -73,6 +73,7 @@ aws s3 sync "$SC_LOCALBACKLATESTDIR"/ s3://"$SC_LATESTBUCKET"/ --delete
 #            "Effect": "Allow",
 #            "Principal": {
 #                "AWS": "arn:aws:iam::5645645:user/some_user_name"
+#            },
 #            "Action": [
 #                "s3:PutObject",
 #                "s3:GetObjectAcl",
@@ -95,6 +96,7 @@ aws s3 sync "$SC_LOCALBACKLATESTDIR"/ s3://"$SC_LATESTBUCKET"/ --delete
 #            "Effect": "Allow",
 #            "Principal": {
 #                "AWS": "arn:aws:iam::5645645:user/some_user_name"
+#            },
 #            "Action": [
 #                "s3:PutObject",
 #                "s3:GetObjectAcl",
@@ -118,6 +120,7 @@ aws s3 sync "$SC_LOCALBACKLATESTDIR"/ s3://"$SC_LATESTBUCKET"/ --delete
 #            "Effect": "Allow",
 #            "Principal": {
 #                "AWS": "arn:aws:iam::5645645:user/some_user_name"
+#            },
 #            "Action": [
 #                "s3:ListStorageLensConfigurations",
 #                "s3:GetAccessPoint",
