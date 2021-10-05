@@ -67,7 +67,9 @@ aws s3 sync "$SC_LOCALBACKLATESTDIR"/ s3://"$SC_LATESTBUCKET"/ --delete
 # Below is an example AWS IAM Permission Policy that is compatible with this script. 
 # Note not all below permissions are necessary. 
 # Also note this policy combines multiple statements into a single policy. 
-# See below for a more simple example
+# Archive bucket actions allows for read and write but no update - prevents bad people from deleting backups even if server is compromised
+# Latest bucket allows for read, write and update - convenient for quickly finding the most recent backup
+# See bottom of this script for a more simple example
 #{
 #    "Version": "2012-10-17",
 #    "Statement": [
