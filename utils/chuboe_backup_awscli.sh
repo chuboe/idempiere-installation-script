@@ -64,7 +64,10 @@ aws s3 sync "$SC_LOCALBACKARCHIVEDIR"/ s3://"$SC_ARCHIVEBUCKET"/
 aws s3 sync "$SC_LOCALBACKLATESTDIR"/ s3://"$SC_LATESTBUCKET"/ --delete 
 
 # {{{ Example IAM
-# Below is an example AWS IAM Permission Policy that is compatible with this script. Note not all below permissions are necessary
+# Below is an example AWS IAM Permission Policy that is compatible with this script. 
+# Note not all below permissions are necessary. 
+# Also note this policy combines multiple statements into a single policy. 
+# See below for a more simple example
 #{
 #    "Version": "2012-10-17",
 #    "Statement": [
@@ -134,3 +137,26 @@ aws s3 sync "$SC_LOCALBACKLATESTDIR"/ s3://"$SC_LATESTBUCKET"/ --delete
 #    ]
 #}
 #}}}
+#
+# Here is a much more simple policy that allows me to share server artifacts (logs and backups) with the dev team
+#{
+#    "Version": "2012-10-17",
+#    "Id": "S3AccessPolicyChuboeObfuscatedForDev",
+#    "Statement": [
+#        {
+#            "Sid": "ChuboeObfuscatedForDev",
+#            "Effect": "Allow",
+#            "Principal": {
+#                "AWS": "arn:aws:iam::899992138235:user/specidif_user_dev_share_chuboe"
+#            },
+#            "Action": [
+#                "s3:GetObject",
+#                "s3:ListBucket"
+#            ],
+#            "Resource": [
+#                "arn:aws:s3:::chuboe-obfuscation-devname",
+#                "arn:aws:s3:::chuboe-obfuscation-devname/*"
+#            ]
+#        }
+#    ]
+#}
