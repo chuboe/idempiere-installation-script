@@ -630,7 +630,7 @@ fi
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
     echo "HERE: Installing DB because IS_INSTALL_DB == Y"
-    sudo apt-get --yes install apache2 postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql
+    sudo apt-get --yes install apache2 postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql pgtop
     # note: some instances of ubuntu will not start postgresql automatically
     sudo service postgresql start
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS_SU"';"
@@ -875,7 +875,7 @@ then
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         echo "HERE: install postgresql client tools"
-        sudo apt-get -y install postgresql-client
+        sudo apt-get -y install postgresql-client pgtop
     fi
     # }}}
 
