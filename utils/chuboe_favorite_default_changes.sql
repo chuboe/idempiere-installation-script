@@ -79,6 +79,9 @@ update PA_DashboardContent set ad_client_id = 0 where PA_DashboardContent_ID=500
 -- make it impossible to create columns from all tables by mistake
 update AD_Process_Para set ReadOnlyLogic = '1=1' where AD_Process_Para_ID=631;
 
+-- change windows to set all transaction windows to maintain
+update ad_window set WindowType='M' where WindowType='T';
+
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
 
