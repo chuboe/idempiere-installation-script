@@ -37,3 +37,5 @@ done
 
 echo files created:
 ls -ltrh /tmp/*$iddate*
+
+# see chuboe_obfuscation.sh for details on how to create dev s3 buckets
