@@ -24,3 +24,5 @@ aws s3 cp $TMP_DIR/ $CHUBOE_AWS_S3_BUCKET --recursive
 
 echo files sent:
 ls -ltrh $TMP_DIR/*
+
+# see chuboe_obfuscation.sh for details on how to create dev s3 buckets
