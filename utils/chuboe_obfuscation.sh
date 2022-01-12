@@ -167,3 +167,75 @@ echo -------         FINISHED iDempiere Obfuscation              -------
 echo -------------------------------------------------------------------
 echo .
 exit 0
+
+
+# {{{ Example IAM
+# Below is an example AWS IAM Permission Policy that is compatible with this script. 
+# Note this policy combines multiple statements into a single policy.
+# Note
+#   - dev_share_devname_custname = the name of the AIM you create to share with your dev team
+#   - dev_share_devname_custname_server = the name of the IAM on configure on you local server
+#   - chuboe-obfuscation-devname-custname = name of S3 Bucket you create to support sharing dev artifacts
+# Action: substitute in your context details. Example substitutions that make the policy applicable to your situation:
+#   - DevName => Logilite
+#   - devname => logilite
+#   - CustName => AcmeCo
+#   - custname => acmeco
+#   - the bucket name should also be added to chuboe.properties => CHUBOE_PROP_DEBUG_DEV_SHARE_BUCKET
+# Action: Create IAM - you do not need to add these users to a group. The below policy will do what is needed to control access.
+#   - dev_share_devname_custname (perform } first)
+#   - dev_share_devname_custname_server (perform substituttions first)
+# Note - there are a couple of scripts that share developer team details
+#   - chuboe_debug_heap_dump.sh
+#   - chuboe_debug_query_lock_utils.sql
+#   - chuboe_debug_send_log_db.sh
+#   - chuboe_debug_send_log_id.sh
+#   - chuboe_debug_stack_trace.sh
+#{
+#    "Version": "2012-10-17",
+#    "Id": "S3AccessPolicybfuscatedForDevNameCustName",
+#    "Statement": [
+#        {
+#            "Sid": "ObfuscatedForDevNameCustName",
+#            "Effect": "Allow",
+#            "Principal": {
+#                "AWS": "arn:aws:iam::863712138235:user/dev_share_devname_custname"
+#            },
+#            "Action": [
+#                "s3:GetObject",
+#                "s3:ListBucket"
+#            ],
+#            "Resource": [
+#                "arn:aws:s3:::chuboe-obfuscation-devname-custname",
+#                "arn:aws:s3:::chuboe-obfuscation-devname-custname/*"
+#            ]
+#        },
+#        {
+#            "Sid": "ObfuscatedForDevNameCustNameServer",
+#            "Effect": "Allow",
+#            "Principal": {
+#                "AWS": "arn:aws:iam::863712138235:user/dev_share_devname_custname_server"
+#            },
+#            "Action": [
+#                "s3:PutObject",
+#                "s3:GetObjectAcl",
+#                "s3:GetObject",
+#                "s3:ListBucketMultipartUploads",
+#                "s3:GetObjectRetention",
+#                "s3:ListBucketVersions",
+#                "s3:GetObjectTagging",
+#                "s3:ListBucket",
+#                "s3:GetObjectLegalHold",
+#                "s3:DeleteObject",
+#                "s3:ListMultipartUploadParts"
+#            ],
+#            "Resource": [
+#                "arn:aws:s3:::chuboe-obfuscation-devname-custname",
+#                "arn:aws:s3:::chuboe-obfuscation-devname-custname/*"
+#            ]
+#        }
+#    ]
+#}
+
+# end of vim fold
+#}}}
