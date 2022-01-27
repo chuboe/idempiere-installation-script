@@ -131,7 +131,7 @@ $CHUBOE_PROP_DB_PASSWORD_SU
 echo HERE:: restore database
 # restore the database
 cd $SC_SCRIPTPATH
-echo $'\n' | chuboe_restore_local.sh
+echo $'\n' | ./chuboe_restore_local.sh
 
 echo HERE:: update xmx and xms # {{{
 # remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
