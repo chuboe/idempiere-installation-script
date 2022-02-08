@@ -11,6 +11,8 @@ CREATE INDEX fact_acct_doc_chuboe_idx ON fact_acct USING btree (account_id, ad_t
 CREATE INDEX fas_pa_chuboe_idx ON fact_acct_summary USING btree (account_id, ad_org_id, dateacct, pa_reportcube_id); -- improves finReport
 CREATE INDEX chuboe_journalline_hdr_idx ON gl_journalline USING btree (gl_journal_id);
 CREATE INDEX chuboe_requpdate_req_idx ON r_requestupdate USING btree (r_request_id);
+create index chuboe_order_tax_hdr_idx on c_ordertax(c_order_id);
+create index chuboe_invoice_tax_hdr_idx on c_invoicetax(c_invoice_id);
 
 --make certain tables high volume to promote a search box when window is opened. 
 update ad_table set ishighvolume = 'Y' where ad_table_id in (217); -- doctype
