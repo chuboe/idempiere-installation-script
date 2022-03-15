@@ -1110,6 +1110,14 @@ echo "HERE END: Launching console-setup.sh"
 
     # copy the iDempiere apache2 configuration file
     sudo cp "$CHUBOE_UTIL_HG/web/$CHUBOE_PROP_IDEMPIERE_APACHE_CONFIG" /etc/apache2/sites-enabled
+
+    #create self-signed certificates if needed
+    echo "HERE: create self-signed cert if needed"
+    if [[ $CHUBOE_PROP_IDEMPIERE_APACHE_SELFSIGN == "Y" ]]
+    then
+        "$CHUBOE_UTIL_HG/utils/chuboe_selfsign_cert.sh"
+    fi
+
     # remove the apache2 default site
     sudo unlink /etc/apache2/sites-enabled/000-default.conf
 
