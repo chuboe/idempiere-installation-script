@@ -1038,7 +1038,7 @@ echo "HERE END: Launching console-setup.sh"
     # }}}
 
     #prevent the backup's annoying 30 second delay
-    sed -i "s|sleep 30|#sleep 30|" $INSTALLPATH/utils/myDBcopy.sh
+    sed -i "s|sleep 30|#sleep 30|" "$INSTALLPATH/utils/myDBcopy.sh"
 
     # if server is dedicated to iDempiere, give it more java power
     # {{{
@@ -1109,7 +1109,7 @@ echo "HERE END: Launching console-setup.sh"
     fi
 
     # copy the iDempiere apache2 configuration file
-    sudo cp $CHUBOE_UTIL_HG/web/000-webui.conf /etc/apache2/sites-enabled
+    sudo cp "$CHUBOE_UTIL_HG/web/$CHUBOE_PROP_IDEMPIERE_APACHE_CONFIG" /etc/apache2/sites-enabled
     # remove the apache2 default site
     sudo unlink /etc/apache2/sites-enabled/000-default.conf
 
