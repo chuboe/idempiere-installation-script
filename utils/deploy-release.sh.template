@@ -11,18 +11,17 @@ else
     exit 1
 fi
 
-#ACTION: look for CHANGE_ME tags and update accordingly
-
 # add each ticket to be released on a new line in the below array
 # note that order is important
+# CHANGE_ME
 array=(
 50961R # Example ticket 1 - url-to-ticket-here
 51503R # Example ticket 2 - url-to-ticket-here
 NextTicket # keep adding tickets on new lines
 )
 
-#CHANGE_ME
-ROOT_DIR=/opt/your-deployable-dir/
+#CHANGE_ME if using a different directory
+ROOT_DIR=/opt/deploy-idempiere/
 
 cd "$ROOT_DIR" || exit
 
