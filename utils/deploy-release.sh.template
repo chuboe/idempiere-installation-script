@@ -1,4 +1,7 @@
 #!/bin/bash
+#ACTION: look for CHANGE_ME tags and update accordingly
+# add each ticket to be released on a new line in the below array
+# note that order is important
 
 if [ "$TERM" = "screen" ]
 then
@@ -7,7 +10,6 @@ else
     echo Exiting... not running inside screen or tumx to preserve session if disconnected.
     exit 1
 fi
-
 
 #ACTION: look for CHANGE_ME tags and update accordingly
 
@@ -22,13 +24,7 @@ NextTicket # keep adding tickets on new lines
 #CHANGE_ME
 ROOT_DIR=/opt/your-deployable-dir/
 
-cd $ROOT_DIR
-
-source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
-
-#CHANGEME_ME in chuboe.properties if you need to anchor a release to a known good state
-HG_REVISION=${CHUBOE_PROP_DEPLOY_RELEASE_REVISION:-default} #default to default
-#hg update -r $HG_REVISION
+cd "$ROOT_DIR" || exit
 
 for ix in ${!array[*]}
 do
@@ -36,29 +32,25 @@ do
     echo "Next Ticket = $NEXT_TICKET ($((ix+1)) of ${#array[@]})"
 
     #check if next directory exists
-    if [ -d  $ROOT_DIR/$NEXT_TICKET ];
+    if [ -d  "$ROOT_DIR/$NEXT_TICKET" ];
     then
-        echo cd successful - $ROOT_DIR/$NEXT_TICKET Directory exists
+        echo "cd successful - $ROOT_DIR/$NEXT_TICKET Directory exists"
     else
         echo "ERROR: Directory $ROOT_DIR/$NEXT_TICKET does not exist"
-        read -p "Press enter to confirm skipping to next ticket!!!!!!!!!!!!"
+        read -r -p "Press enter to confirm skipping to next ticket!!!!!!!!!!!!"
         continue
-        echo do not show this echo statement
+        echo "do not show this echo statement"
     fi
 
-    cd $ROOT_DIR/$NEXT_TICKET
-
-    #CHANGEME_ME if you need to anchor a ticket to a known good state.
-    #Only change this if the revision is different than specified above.
-    #hg update -r $HG_REVISION
+    cd "$ROOT_DIR"/"$NEXT_TICKET" || exit
 
     #check if deploy exists
     if [ -f deploy.sh ];
         then
-            echo ready to deploy $NEXT_TICKET
+            echo "ready to deploy $NEXT_TICKET"
 
         else
-            echo copying deploy.sh for $NEXT_TICKET
+            echo "copying deploy.sh for $NEXT_TICKET"
             cp ../deploy.sh.template deploy.sh
     fi
 
@@ -71,7 +63,7 @@ do
     echo "***************************"
     echo "************************************"
     echo "ACTION: Make sure packs deployed successfully - log in as client to see all."
-    read -p "Press enter when confirmed all worked"
+    read -r -p "Press enter when confirmed all worked"
 
     #Update working directory back to the main revision set above.
     #Just in case it was changed in this ticket.
@@ -79,7 +71,7 @@ do
 done
 
 echo Restarting iDempiere...
-sleep 20
+sleep 30
 sudo service idempiere stop
 sleep 60
 sudo service idempiere start

@@ -15,14 +15,16 @@ fi
 source /opt/chuboe/idempiere-installation-script/utils/chuboe.properties
 
 DEPLOY_TICKET=${PWD##*/}
-echo HERE: Current Ticket: $DEPLOY_TICKET
+echo HERE: Current Ticket: "$DEPLOY_TICKET"
 DEPLOY_TICKET_DIR=${PWD}
-echo HERE: Current Directory: $DEPLOY_TICKET_DIR
+echo HERE: Current Directory: "$DEPLOY_TICKET_DIR"
 
 PACK_DIR=2Pack
+SQL_PRE_DIR=SQL_Pre
+SQL_POST_DIR=SQL_Post
 INSTALL_DATE=`date +%Y%m%d`_`date +%H%M%S`
 
-echo "NOTE: run as chuboe/ubuntu user (user with sudo priviledges)"
+echo "NOTE: run as chuboe/ubuntu user (with sudo priviledges)"
 echo "NOTE: Consider tee output to file example:"
 echo "./deploy.sh |& tee /tmp/output_"$DEPLOY_TICKET"_"$INSTALL_DATE".log"
 echo "  "
@@ -38,34 +40,59 @@ echo "************************************"
 echo "******************"
 echo "Special instructions"
 echo "******************"
-cd $DEPLOY_TICKET_DIR
+cd "$DEPLOY_TICKET_DIR" || exit
 
 echo No special instructions.
 # echo "ACTION: Add your manual instuctions here..."
 # read -p "Press enter when finished"
 
 echo "******************"
+echo "Execute pre sql"
+echo "******************"
+cd "$DEPLOY_TICKET_DIR" || exit
+
+SQL_PRE_RESULT=$([ -d $SQL_PRE_DIR ] && echo "Y" || echo "N")
+echo "HERE: Is SQL_Pre directory present: $SQL_PRE_RESULT"
+if [ "$SQL_PRE_RESULT" == "Y" ]; then
+    for sql in $(ls $SQL_PRE_DIR/*.sql);
+    do
+        echo Executing "$sql"
+        psql -d "$CHUBOE_PROP_DB_NAME" -U "$CHUBOE_PROP_DB_USERNAME" -h "$CHUBOE_PROP_DB_HOST" -f "$sql"
+    done;
+fi
+
+#you can also execute an individual command
+# psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -c "ADD_SQL_HERE"
+
+echo "******************"
 echo "Deploy jars"
 echo "******************"
-cd $DEPLOY_TICKET_DIR
+cd "$DEPLOY_TICKET_DIR" || exit
 
-echo Create $CHUBOE_PROP_DEPLOY_PLUGINS_PATH folder if not already exists
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir -p $CHUBOE_PROP_DEPLOY_PLUGINS_PATH
-echo Create $CHUBOE_PROP_CUSTOM_PLUGINS_PATH folder if not already exists
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER mkdir -p $CHUBOE_PROP_CUSTOM_PLUGINS_PATH
+echo Create "$CHUBOE_PROP_DEPLOY_PLUGINS_PATH" folder if not already exists
+sudo -u "$CHUBOE_PROP_IDEMPIERE_OS_USER" mkdir -p "$CHUBOE_PROP_DEPLOY_PLUGINS_PATH"
+echo Create "$CHUBOE_PROP_CUSTOM_PLUGINS_PATH" folder if not already exists
+sudo -u "$CHUBOE_PROP_IDEMPIERE_OS_USER" mkdir -p "$CHUBOE_PROP_CUSTOM_PLUGINS_PATH"
 
 JAR_COUNT=$(ls -A *.jar | wc -l)
-echo HERE: jar count: $JAR_COUNT
-if [ $JAR_COUNT -gt 0 ]; then
+echo HERE: jar count: "$JAR_COUNT"
+if [ "$JAR_COUNT" -gt 0 ]; then
+
+    # add startlevel if exists
+    if [ -f logilite_plugins_startlevel.csv ]
+    then
+        echo Appending start levels
+        cat logilite_plugins_startlevel.csv >> "$CHUBOE_PROP_UTIL_HG_UTIL_PATH"/logilite_plugins_startlevel.csv
+    fi
 
     echo "HERE: copy jars"
     ls -la *.jar
-    sudo -u idempiere cp *.jar $CHUBOE_PROP_DEPLOY_PLUGINS_PATH/.
+    sudo -u idempiere cp *.jar "$CHUBOE_PROP_DEPLOY_PLUGINS_PATH"/.
 
     # read -p "Press enter to continue"
 
     echo "HERE: deploy jars"
-    cd /opt/chuboe/idempiere-installation-script/utils/
+    cd /opt/chuboe/idempiere-installation-script/utils/ || exit
     ./logilite_deploy_plugins.sh -S
 
 fi
@@ -74,12 +101,12 @@ fi
 echo "******************"
 echo "Deploy pack ins"
 echo "******************"
-cd $DEPLOY_TICKET_DIR
+cd "$DEPLOY_TICKET_DIR" || exit
 
 # Check to see if 2pack directory present - skip if no
 PACK_RESULT=$([ -d $PACK_DIR ] && echo "Y" || echo "N")
-echo HERE: Is 2Pack directory present: $PACK_RESULT
-if [ $PACK_RESULT == "Y" ]; then
+echo HERE: Is 2Pack directory present: "$PACK_RESULT"
+if [ "$PACK_RESULT" == "Y" ]; then
 
     echo "HERE: 2Pack folder found"
     ls -la $PACK_DIR/*.zip
@@ -89,45 +116,55 @@ if [ $PACK_RESULT == "Y" ]; then
     sudo -u idempiere cp $PACK_DIR/* /opt/idempiere-server/migration/zip_2pack/.
 
     # read -p "Press enter to continue"
-
-    echo "HERE: restarting idempiere"
-    sleep 20 # allow plugins to finish installing from last deployment
-    sudo service idempiere stop
+    cd /opt/idempiere-server/utils/ || exit
     sleep 20
-    sudo service idempiere start
+    sudo -u idempiere ./RUN_ApplyPackInFromFolder.sh /opt/idempiere-server/migration/zip_2pack/
+    if [ $? -eq 0 ]
+    then
+        read -r -p "Press enter to confirm server started and packin successful"
+        sudo rm -r /opt/idempiere-server/migration/zip_2pack/*
+    else
+        read -r -p "Something went wrong! Check the 2Pack directory and process!"
+        sudo rm -r /opt/idempiere-server/migration/zip_2pack/*
+    fi
 
-    echo "HERE: waiting 100 seconds for packins to deploy"
-    sleep 100
+    # old code kept temporarily for reference
+    #echo "HERE: restart idempiere"
+    #sleep 22
+    #sudo service idempiere stop
+    #sleep 60
+    #sudo service idempiere start
 
-    read -p "Press enter to continue - Confirm iDempiere restarted and pack ins where successful"
-    sudo rm -r /opt/idempiere-server/migration/zip_2pack/*
+    #echo "HERE: waiting 90 seconds for packins to deploy"
+    #sleep 90
 
+    #read -p "Press enter to confirm server started and packin successful"
+    #sudo rm -r /opt/idempiere-server/migration/zip_2pack/*
 fi
 
 # read -p "Press enter to continue"
 echo "******************"
-echo "Execute sql"
+echo "Execute post sql"
 echo "******************"
-cd $DEPLOY_TICKET_DIR
+cd "$DEPLOY_TICKET_DIR" || exit
 
-echo No sql today
+SQL_POST_RESULT=$([ -d "$SQL_POST_DIR" ] && echo "Y" || echo "N")
+echo HERE: Is SQL_Post directory present: "$SQL_POST_RESULT"
+if [ "$SQL_POST_RESULT" == "Y" ]; then
+    for sql in $(ls "$SQL_POST_DIR"/*.sql);
+    do
+        echo Executing "$sql"
+        psql -d "$CHUBOE_PROP_DB_NAME" -U "$CHUBOE_PROP_DB_USERNAME" -h "$CHUBOE_PROP_DB_HOST" -f "$sql"
+    done;
+fi
+
+#you can also execute an individual command
 # psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -c "ADD_SQL_HERE"
 
-# read -p "Press enter to continue"
-echo "************************************"
-echo "Update Must Have Roles with process permission"
-echo "************************************"
-cd $DEPLOY_TICKET_DIR
-
-# no sleep if already slept
-if [ $PACK_RESULT == "N" ]; then
-    echo "HERE: waiting 30 seconds for packins from plugins to deploy"
-    # sleep ensures processes are installed in prep for next step
-    sleep 30
-fi
-
-echo "HERE: update must have role to allow execution of all processes not in menu"
-psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -f /opt/chuboe/idempiere-installation-script/utils/deploy_musthave_role_update.sql
+echo SQL - update must have role to include all processes
+echo "HERE: waiting 20 seconds for packins from plugins to deploy"
+sleep 20
+psql -d "$CHUBOE_PROP_DB_NAME" -U "$CHUBOE_PROP_DB_USERNAME" -h "$CHUBOE_PROP_DB_HOST" -f /opt/idempiere-server/utils/update_must_have_role.sql
 
 echo "************************************"
 echo "Ending deploy of $DEPLOY_TICKET"
