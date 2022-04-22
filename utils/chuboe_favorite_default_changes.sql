@@ -84,6 +84,9 @@ update AD_Process_Para set ReadOnlyLogic = '1=1' where AD_Process_Para_ID=631;
 -- change windows to set all transaction windows to maintain
 update ad_window set WindowType='M' where WindowType='T';
 
+-- default ZK Session Timeout to 3 hours
+update AD_SysConfig set value = '10800' where AD_SysConfig_ID=200137 ;
+
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
 
