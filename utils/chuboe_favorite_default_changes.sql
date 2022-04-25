@@ -85,7 +85,10 @@ update AD_Process_Para set ReadOnlyLogic = '1=1' where AD_Process_Para_ID=631;
 update ad_window set WindowType='M' where WindowType='T';
 
 -- default ZK Session Timeout to 3 hours
-update AD_SysConfig set value = '10800' where AD_SysConfig_ID=200137 ;
+update AD_SysConfig set value = '10800' where AD_SysConfig_ID=200137;
+
+-- update c_allocationline => link to header to be search instead of table/direct
+update AD_Column set AD_Reference_ID=30 where AD_Column_ID=4874;
 
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
