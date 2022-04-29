@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Summary
+#The purpose of this file is to make creating aws s3 backup up artifacts easier and more standardized
+#Update the chuboe_backup_awscli.sh file with the results of this file
+
 #references - s3
 #https://docs.aws.amazon.com/cli/latest/reference/s3api/create-bucket.html
 #https://docs.aws.amazon.com/cli/latest/reference/s3api/put-object-lock-configuration.html
@@ -42,6 +46,7 @@ then
 fi
 
 #create policy for writing to buckets
+echo "creating policy named: $POLICY_WRITER_NAME"
 aws iam create-policy \
     --policy-name "$POLICY_WRITER_NAME" \
     --policy-document \
@@ -74,6 +79,7 @@ aws iam create-policy \
 | tee $POLICY_WRITER_NAME
 
 #create policy for development team reading from buckets
+echo "creating policy named: $POLICY_DEVELOPER_NAME"
 aws iam create-policy \
     --policy-name "$POLICY_DEVELOPER_NAME" \
     --policy-document \
@@ -103,12 +109,14 @@ exit 0
 
 
 #create bucket latest
+echo "creating bucket named: $BUCKET_NAME_LATEST"
 aws s3api create-bucket --bucket $BUCKET_NAME_LATEST --region $REGION
 aws s3api put-public-access-block \
     --bucket $BUCKET_NAME_LATEST \
     --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
 #create bucket archive
+echo "creating bucket named: $BUCKET_NAME_ARCHIVE"
 aws s3api create-bucket --bucket $BUCKET_NAME_ARCHIVE --region $REGION --object-lock-enabled-for-bucket
 aws s3api put-object-lock-configuration \
 	--bucket $BUCKET_NAME_ARCHIVE \
@@ -118,6 +126,7 @@ aws s3api put-public-access-block \
     --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
 #create bucket obfuscate
+echo "creating bucket named: $BUCKET_NAME_OBFUSCATE"
 aws s3api create-bucket --bucket $BUCKET_NAME_OBFUSCATE --region $REGION
 aws s3api put-public-access-block \
     --bucket $BUCKET_NAME_OBFUSCATE \
