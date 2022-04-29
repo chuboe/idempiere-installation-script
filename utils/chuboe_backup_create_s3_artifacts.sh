@@ -69,8 +69,11 @@ aws iam create-policy \
                 "s3:DeleteObject"
             ],
             "Resource": [
+                "arn:aws:s3:::'$BUCKET_NAME_LATEST'",
                 "arn:aws:s3:::'$BUCKET_NAME_LATEST'/*",
+                "arn:aws:s3:::'$BUCKET_NAME_ARCHIVE'",
                 "arn:aws:s3:::'$BUCKET_NAME_ARCHIVE'/*",
+                "arn:aws:s3:::'$BUCKET_NAME_OBFUSCATE'",
                 "arn:aws:s3:::'$BUCKET_NAME_OBFUSCATE'/*"
             ]
         }
@@ -93,6 +96,7 @@ aws iam create-policy \
                 "s3:ListBucket"
             ],
             "Resource": [
+                "arn:aws:s3:::'$BUCKET_NAME_OBFUSCATE'",
                 "arn:aws:s3:::'$BUCKET_NAME_OBFUSCATE'/*"
             ]
         }
