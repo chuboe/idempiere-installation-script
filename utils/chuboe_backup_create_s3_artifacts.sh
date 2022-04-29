@@ -108,6 +108,12 @@ exit 0
 #create iam for development team reader
 
 
+#assign policy to backup writer
+
+
+#assign policy to development team
+
+
 #create bucket latest
 echo "creating bucket named: $BUCKET_NAME_LATEST"
 aws s3api create-bucket --bucket $BUCKET_NAME_LATEST --region $REGION
