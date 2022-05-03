@@ -104,7 +104,6 @@ aws iam create-policy \
 }' \
 | tee $POLICY_DEVELOPER_NAME
 
-exit 0
 
 #create iam for backup writer
 
