@@ -71,7 +71,7 @@ sudo service idempiere start
 #This code will extract out the restore instructions from a pg_dump that used the -df option
 #The below statements remove the instructions that populate the tables
 
-#pg_restore -l  -Fd /home/zito-catch/catch/db_full/ | sed '/MATERIALIZED VIEW DATA/d' > ~/delme/restore_ordered.lst
+#pg_restore -l  -Fd /home/chuboe-catch/catch/db_full/ | sed '/MATERIALIZED VIEW DATA/d' > ~/delme/restore_ordered.lst
 #sed -i '/TABLE DATA adempiere.*deleteme.*/d' ~/delme/restore_ordered.lst
 #sed -i '/TABLE DATA adempiere.*delme.*/d' ~/delme/restore_ordered.lst
 #sed -i '/TABLE DATA adempiere ad_pinstance.*/d' ~/delme/restore_ordered.lst
@@ -92,5 +92,5 @@ sudo service idempiere start
 #sed -i '/TABLE DATA adempiere dms_association .*/d' ~/delme/restore_ordered.lst
 #sed -i '/TABLE DATA adempiere dms_content .*/d' ~/delme/restore_ordered.lst
 
-#pg_restore -L ~/delme/restore_ordered.lst -v -U adempiere -d idempiere -Fd -j 3 /home/zito-catch/catch/db_full/
+#pg_restore -L ~/delme/restore_ordered.lst -v -U adempiere -d idempiere -Fd -j 3 /home/chuboe-catch/catch/db_full/
 # )))
