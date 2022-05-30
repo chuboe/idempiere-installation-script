@@ -38,19 +38,15 @@ DATABASE=$CHUBOE_PROP_DB_NAME
 IDEMPIEREUSER=$CHUBOE_PROP_IDEMPIERE_OS_USER
 USER=$CHUBOE_PROP_DB_USERNAME
 ADDPG="-h $CHUBOE_PROP_DB_HOST -p $CHUBOE_PROP_DB_PORT"
-EXPORT_DIR="/tmp/"
+EXPORT_DIR="/opt/chuboe/idempiere-installation-script/chuboe_backup/"
 DATABASE_OB="obfus"
-DATABASE_TMP_EXPORT="obtempout.bak"
-DATABASE_OB_EXPORT="ExpDatObfus.dmp"
+DATABASE_TMP_EXPORT="obfuscate_tmp"
+DATABASE_OB_EXPORT="obfuscate_complete"
 DATABASE_OB_JAR="ExpDatObfus_"`date +%Y%m%d`_`date +%H%M%S`".jar"
 CHUBOE_AWS_S3_BUCKET_SUB=$CHUBOE_PROP_BACKUP_S3_BUCKET
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
 # You may update the number of cores used from default below
 BACKUP_RESTORE_JOBS=$CHUBOE_PROP_BACKUP_RESTORE_JOBS
-
-echo ADEMROOTDIR=$ADEMROOTDIR
-echo your backup will be available at:
-echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
 
 cd $ADEMROOTDIR/utils
 echo -------------------------------------------------------------------
@@ -67,20 +63,6 @@ else
     echo -------------------------------------------------------------------
     exit 1
 fi #end if dev environment check
-
-#NOTE: It is ok to comment_out/remove the next backup if it takes too much time.
-#It is not really needed.
-echo NOTE: Ignore errors related to myEnvironment.sav
-if sudo -u $IDEMPIEREUSER "$ADEMROOTDIR"/utils/RUN_DBExport.sh
-then
-    echo Local Backup Succeeded. 
-else
-    echo -------------------------------------------------------------------
-    echo -------          Local iDempiere Backup FAILED!             -------
-    echo -------------------------------------------------------------------
-    echo  .
-    exit 1
-fi
 
 echo drop the obfuscated database if present
 echo NOTE: ignore errors on drop obfuscated database
@@ -128,27 +110,23 @@ else
 fi
 
 echo dump the obfuscated database
-pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
+#pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
+pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_OB_EXPORT
 
 echo drop the obfuscated database -- no longer needed
 dropdb $ADDPG -U $USER $DATABASE_OB
 
-echo jar export
 cd $EXPORT_DIR
-jar cvfM $DATABASE_OB_JAR $DATABASE_OB_EXPORT
-
 echo add osgi plugin inventory to the jar file - useful for developers
 /$CHUBOE_PROP_UTIL_HG_UTIL_PATH/chuboe_osgi_ss.sh > osgi_inventory.txt
-jar -uf $DATABASE_OB_JAR osgi_inventory.txt
 
 echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
-sudo rm -r $EXPORT_DIR/$DATABASE_OB_EXPORT
 
 #push jar to S3 directly from this server
 #uncomment below if needed
 #echo Push $EXPORT_DIR/$DATABASE_OB_JAR to $CHUBOE_AWS_S3_BUCKET
-echo aws s3 cp $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET 
-aws s3 cp $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET 
+echo aws s3 sync --delete  $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET
+aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET
 #echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
 
 echo -------------------------------------------------------------------
@@ -170,7 +148,7 @@ exit 0
 
 
 # {{{ Example IAM
-# Below is an example AWS IAM Permission Policy that is compatible with this script. 
+# Below is an example AWS IAM Permission Policy that is compatible with this script.
 # Note this policy combines multiple statements into a single policy.
 # Note
 #   - dev_share_devname_custname = the name of the AIM you create to share with your dev team
