@@ -2,7 +2,7 @@
 
 source chuboe.properties
 IDPID=`sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER jcmd | grep "[0-9]* /opt/idempiere-server" -o | grep "[0-9]*" -o`
-IDDATE=$(date +%s.%N)
+IDDATE=`date +%Y%m%d`_`date +%s.%N`
 echo Date = "$IDDATE"
 CHUBOE_AWS_S3_BUCKET_SUB=$CHUBOE_PROP_DEBUG_DEV_SHARE_BUCKET
 CHUBOE_AWS_S3_BUCKET=s3://$CHUBOE_AWS_S3_BUCKET_SUB/
