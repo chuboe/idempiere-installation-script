@@ -15,4 +15,8 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere
 sudo mkdir -p /opt/idempiere-attach/
 sudo mkdir -p /opt/idempiere-archive/
 sudo mkdir -p /opt/idempiere-image/
+sudo mkdir -p /opt/DMS_Content/
+sudo mkdir -p /opt/DMS_Content/
+sudo mkdir -p /opt/DMS_Thumbnails/
 sudo chown -R idempiere:idempiere /opt/idempiere*
+sudo chown -R idempiere:idempiere /opt/DMS*
