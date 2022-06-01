@@ -16,7 +16,6 @@ sudo mkdir -p /opt/idempiere-attach/
 sudo mkdir -p /opt/idempiere-archive/
 sudo mkdir -p /opt/idempiere-image/
 sudo mkdir -p /opt/DMS_Content/
-sudo mkdir -p /opt/DMS_Content/
 sudo mkdir -p /opt/DMS_Thumbnails/
 sudo chown -R idempiere:idempiere /opt/idempiere*
 sudo chown -R idempiere:idempiere /opt/DMS*
