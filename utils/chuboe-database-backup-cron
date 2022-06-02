@@ -1,48 +1,48 @@
 # sudo copy this file into the /etc/cron.d/. directory.
 # uncomment the desired lines below.
 # Here is an example of the format. Note the only difference is the addition of the user column
-# chuboe 0 5 * * 0 chuboe cd /opt/chuboe/idempiere-installation-script/utils; ./chuboe_restore_all_rsync.sh > /tmp/id_restore`/usr/bin/date +\%Y\%m\%d_\%H\%M\%S`.log 2>&1
+# 0 5 * * 0 chuboe cd /opt/chuboe/idempiere-installation-script/utils; ./chuboe_restore_all_rsync.sh > /tmp/id_restore`/usr/bin/date +\%Y\%m\%d_\%H\%M\%S`.log 2>&1
 
 # This file contains many of the cron jobs you will need to support iDempiere.
 
 # Only keep last 20 backups - delete others. 
 # Note: while this ensures you do not build up lots of backups (hogging space), this does not ensure the backups are valid
-# chuboe 20 07 * * * cd /opt/chuboe/idempiere-installation-script/chuboe_backup/archive/; ls -1tr  Exp* | head -n -20 | xargs -d  '\n' rm -f -- > /dev/null 2>&1
+# 20 07 * * * chuboe cd /opt/chuboe/idempiere-installation-script/chuboe_backup/archive/; ls -1tr  Exp* | head -n -20 | xargs -d  '\n' rm -f -- > /dev/null 2>&1
 
 # only keep last 40 log files - delete others.
-# chuboe 20 07 * * * cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -40 | xargs -d  '\n' sudo rm -f -- > /dev/null 2>&1
+# 20 07 * * * chuboe cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -40 | xargs -d  '\n' sudo rm -f -- > /dev/null 2>&1
 
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
 # Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
-# chuboe 30 07 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_backup_s3cmd.sh  > /dev/null 2>&1
+# 30 07 * * * chuboe /opt/chuboe/idempiere-installation-script/utils/chuboe_backup_s3cmd.sh  > /dev/null 2>&1
 
 # Perform local backup at 7:30AM UTC every day.
-# chuboe 30 07 * * * cd /opt/chuboe/idempiere-installation-script/utils/ && echo $'\n' | ./chuboe_backup_local.sh > /dev/null 2>&1
+# 30 07 * * * chuboe cd /opt/chuboe/idempiere-installation-script/utils/ && echo $'\n' | ./chuboe_backup_local.sh > /dev/null 2>&1
 
 # Perform an offsite restore at 8:30AM UTC every day. (DANGEROUS!!!!)
 #   This will drop your existing database and replace it with the offsite backup!!
 #   Only run this on a test or backup server.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
 # Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
-# chuboe 30 08 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_restore_s3cmd.sh
+# 30 08 * * * chuboe /opt/chuboe/idempiere-installation-script/utils/chuboe_restore_s3cmd.sh
 
 # Upgrade your iDempiere every Saturday
 # This process is not heavily tested. 
 # Please run on a test environment before deploying to production.
 # Runs at 8:30 UTC every Saturday.
-# chuboe 30 08 * * 6 /opt/chuboe/idempiere-installation-script/utils/chuboe_idempiere_upgrade.sh &>> /opt/idempiere-server/log/chuboe_iD_upgrade.log
+# 30 08 * * 6 chuboe /opt/chuboe/idempiere-installation-script/utils/chuboe_idempiere_upgrade.sh &>> /opt/idempiere-server/log/chuboe_iD_upgrade.log
 
 # Upgrade your Ubuntu OS every Saturday
 # This process is not heavily tested.
 # Runs at 8:30 UTC every Saturday.
-# chuboe 30 08 * * 6 sudo /opt/chuboe/idempiere-installation-script/utils/chuboe_ubuntu_upgrade.sh &>> /opt/idempiere-server/log/chuboe_ubuntu_upgrade.log
+# 30 08 * * 6 chuboe sudo /opt/chuboe/idempiere-installation-script/utils/chuboe_ubuntu_upgrade.sh &>> /opt/idempiere-server/log/chuboe_ubuntu_upgrade.log
 
 # Perform an offsite backup of your iDempeire directory at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
-# chuboe 30 07 * * * /opt/chuboe/idempiere-installation-script/utils/chuboe_hg_bindir.sh
+# 30 07 * * * chuboe /opt/chuboe/idempiere-installation-script/utils/chuboe_hg_bindir.sh
 
 # Periodic reboot - only if needed
-# chuboe 0 0 * * * /sbin/shutdown -r now
+# 0 0 * * * chuboe /sbin/shutdown -r now
 # http://serverfault.com/questions/155239/how-can-i-schedule-a-reboot-in-linux
 # http://unix.stackexchange.com/questions/64280/what-is-the-difference-between-reboot-init-6-and-shutdown-r-now
