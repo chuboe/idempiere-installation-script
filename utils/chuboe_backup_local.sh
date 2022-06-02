@@ -49,7 +49,9 @@ done
 echo "Be sure to tee to a log file, for example:"
 echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
 read -p "press Enter to continue, or Ctrl+C to stop" 
-#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
+#REMEMBER when calling these scripts from other scripts use the following to bypass the read prompt
+#echo $'\n' | ./chuboe_backup_local.sh 
+#}}}
 
 cd $SC_LOCALBACKDIR
 mkdir -p latest/
