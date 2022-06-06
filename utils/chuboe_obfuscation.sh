@@ -110,13 +110,14 @@ else
 fi
 
 echo dump the obfuscated database
+sudo rm -r $EXPORT_DIR/$DATABASE_OB_EXPORT
 #pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB > $EXPORT_DIR/$DATABASE_OB_EXPORT
 pg_dump $ADDPG --no-owner -U $USER $DATABASE_OB -Fd -j $BACKUP_RESTORE_JOBS -f $EXPORT_DIR/$DATABASE_OB_EXPORT
 
 echo drop the obfuscated database -- no longer needed
 dropdb $ADDPG -U $USER $DATABASE_OB
 
-cd $EXPORT_DIR
+cd $EXPORT_DIR/$DATABASE_OB_EXPORT
 echo add osgi plugin inventory to the jar file - useful for developers
 /$CHUBOE_PROP_UTIL_HG_UTIL_PATH/chuboe_osgi_ss.sh > osgi_inventory.txt
 
@@ -125,8 +126,8 @@ echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
 #push jar to S3 directly from this server
 #uncomment below if needed
 #echo Push $EXPORT_DIR/$DATABASE_OB_JAR to $CHUBOE_AWS_S3_BUCKET
-echo aws s3 sync --delete  $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET
-aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET
+echo aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_EXPORT $CHUBOE_AWS_S3_BUCKET
+aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_EXPORT $CHUBOE_AWS_S3_BUCKET
 #echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
 
 echo -------------------------------------------------------------------
