@@ -131,17 +131,6 @@ aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_EXPORT $CHUBOE_AWS_S3_BUCKET
 #echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
 
 echo -------------------------------------------------------------------
-echo COPY PASTE THE FOLLOWING TO UPLOAD TO S3 FROM YOUR HOME COMPUTER
-echo -------------------------------------------------------------------
-echo exit
-echo scp ubuntu@\$IP_YOUR_SERVER_APP:$EXPORT_DIR/$DATABASE_OB_JAR \~/Downloads/.
-echo cd \~/Downloads/
-echo aws s3 cp $DATABASE_OB_JAR $CHUBOE_AWS_S3_BUCKET --acl public-read-write
-echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
-
-
-
-echo -------------------------------------------------------------------
 echo -------         FINISHED iDempiere Obfuscation              -------
 echo -------------------------------------------------------------------
 echo .
