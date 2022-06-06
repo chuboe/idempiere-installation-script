@@ -125,7 +125,6 @@ echo NOTE: you can find the exported database here: $EXPORT_DIR/$DATABASE_OB_JAR
 
 #push jar to S3 directly from this server
 #uncomment below if needed
-#echo Push $EXPORT_DIR/$DATABASE_OB_JAR to $CHUBOE_AWS_S3_BUCKET
 echo aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_EXPORT $CHUBOE_AWS_S3_BUCKET
 aws s3 sync --delete $EXPORT_DIR/$DATABASE_OB_EXPORT $CHUBOE_AWS_S3_BUCKET
 #echo https://s3.amazonaws.com/$CHUBOE_AWS_S3_BUCKET_SUB/$DATABASE_OB_JAR
