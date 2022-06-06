@@ -71,26 +71,27 @@ sudo service idempiere start
 #This code will extract out the restore instructions from a pg_dump that used the -df option
 #The below statements remove the instructions that populate the tables
 
-#pg_restore -l  -Fd /home/chuboe-catch/catch/db_full/ | sed '/MATERIALIZED VIEW DATA/d' > ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere.*deleteme.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere.*delme.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_pinstance.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere t_.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere r_requestupdate.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere r_requestaction.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere chuboe_trialbalance.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere chuboe_validation.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_wf_process.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_wf_activity.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_wf_eventaudit.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_changelog.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_attachment.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere fact_acct_s.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere fact_acct.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_usermail.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere ad_issue.*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere dms_association .*/d' ~/delme/restore_ordered.lst
-#sed -i '/TABLE DATA adempiere dms_content .*/d' ~/delme/restore_ordered.lst
+#cd /opt/chuboe/idempiere-installation-script/chuboe_backup/
+#pg_restore -l  -Fd latest/ | sed '/MATERIALIZED VIEW DATA/d' > restore_ordered.lst
+#sed -i '/TABLE DATA adempiere.*deleteme.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere.*delme.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_pinstance.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere t_.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere r_requestupdate.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere r_requestaction.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere chuboe_trialbalance.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere chuboe_validation.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_wf_process.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_wf_activity.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_wf_eventaudit.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_changelog.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_attachment.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere fact_acct_s.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere fact_acct.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_usermail.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere ad_issue.*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere dms_association .*/d' restore_ordered.lst
+#sed -i '/TABLE DATA adempiere dms_content .*/d' restore_ordered.lst
 
-#pg_restore -L ~/delme/restore_ordered.lst -v -U adempiere -d idempiere -Fd -j 3 /home/chuboe-catch/catch/db_full/
+#pg_restore -L restore_ordered.lst -v -U adempiere -d idempiere -Fd -j 3 latest/
 # )))
