@@ -12,6 +12,9 @@
 # only keep last 40 log files - delete others.
 # 20 07 * * * ubuntu cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -40 | xargs -d  '\n' sudo rm -f -- > /dev/null 2>&1
 
+# push logs to remote location for perminant storate
+# 20 08 * * * ubuntu aws s3 sync /opt/idempiere-server/log s3://somebucket/somedir/ > /dev/null 2>&1
+
 # Perform an offsite backup at 7:30AM UTC every day.
 # Please note the time of your server. AWS defaults to UTC (Central Standard Time  is UTC-6)
 # Note that if s3cmd does not work in cron, issue 'which s3cmd' and update the below script to call it using the full path.
