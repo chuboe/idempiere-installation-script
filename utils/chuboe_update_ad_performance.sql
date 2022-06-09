@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS chuboe_perfmax_bigtables;
 ---- show all identifiers that are foreign keys (compound foreign keys)
 ---- look at home => Activities (Document Status) performance
 ---- Add more here...
+---- Review logs in pgbadger
 
 --Update all views to use Search instead of Table or Table Direct. The reason is that no view should ever present a user with dropdown since all fields are read only. You can run this query as often as you wish since new views will default to Table references.
 update ad_column
