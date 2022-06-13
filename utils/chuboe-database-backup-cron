@@ -1,6 +1,7 @@
 # sudo copy this file into the /etc/cron.d/. directory.
 # uncomment the desired lines below.
 # Here is an example of the format. Note the only difference is the addition of the user column
+# Note: is is also ok to use /usr/bin/tee when you need a different user to write to a file. Example: echo "idempiere stuff" | sudo -u idempiere /usr/bin/tee /opt/idempiere-server/somefile.txt
 # 0 5 * * 0 ubuntu cd /opt/chuboe/idempiere-installation-script/utils; ./chuboe_restore_all_rsync.sh > /tmp/id_restore`/usr/bin/date +\%Y\%m\%d_\%H\%M\%S`.log 2>&1
 
 # This file contains many of the cron jobs you will need to support iDempiere.
