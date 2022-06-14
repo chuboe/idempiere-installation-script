@@ -109,9 +109,67 @@ where ad_client_id <> 0;
 update ad_clientinfo set IsConfirmOnDocClose='Y' where ad_client_id <> 0;
 update ad_clientinfo set IsConfirmOnDocVoid='Y' where ad_client_id <> 0;
 
-
 -- update system
 update ad_system set IsAllowStatistics='N', IsAutoErrorReport='N' where AD_System_ID=0;
+
+-- update logos to show pristine
+insert into ad_sysconfig
+values (
+    nextid(50009,'N'),
+    0,
+    0,
+    now(),
+    now(),
+    100,
+    100,
+    'Y',
+    'ZK_LOGO_LARGE',
+    'https://raw.githubusercontent.com/chuboe/idempiere-installation-script/master/web/Login-Do-Not.png',
+    '',
+    'U',
+    'S',
+    generate_uuid()
+)
+;
+
+insert into ad_sysconfig
+values (
+    nextid(50009,'N'),
+    0,
+    0,
+    now(),
+    now(),
+    100,
+    100,
+    'Y',
+    'ZK_LOGO_SMALL',
+    'https://raw.githubusercontent.com/chuboe/idempiere-installation-script/master/web/Top-Left-Do-Not.png',
+    '',
+    'U',
+    'S',
+    generate_uuid()
+)
+;
+
+insert into ad_sysconfig
+values (
+    nextid(50009,'N'),
+    0,
+    0,
+    now(),
+    now(),
+    100,
+    100,
+    'Y',
+    'ZK_BROWSER_ICON',
+    'https://raw.githubusercontent.com/chuboe/idempiere-installation-script/master/web/Fav-Do-Not.png',
+    '',
+    'U',
+    'S',
+    generate_uuid()
+)
+;
+
 
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
