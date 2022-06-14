@@ -13,7 +13,7 @@ fi
 # update SQL in restored database that might be specific to this server
 
 # update system logos - you can also set them to something else like 'http://cdn6.bigcommerce.com/s-d8bzk61/images/stencil/200x100/products/1988/2724/safetyglassesusa_2267_30575914__24175.1448998397.jpg'
-sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set isactive = 'N' where upper(name) like 'ZK_LOGO%'"
+sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set isactive = 'N' where upper(name) like 'ZK_LOGO%' or upper(name) like 'ZK_BROWSER_ICON%'"
 
 # backup email to delme table
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "create table delme_client_backup as select * from ad_client"
