@@ -13,6 +13,92 @@ delete from ad_changelog;
 --delete from chuboe_trialbalance_detail;
 --delete from chuboe_trialbalance_hdr;
 
+-- Update fields marked as encrypted or secure
+----select distinct
+----'update '||t.tablename||' set '||c.columnname||' = ''111'';'
+----from ad_field f
+----join ad_column c on f.ad_column_id = c.ad_column_id
+----join ad_table t on c.ad_table_id = t.ad_table_id
+----where (c.IsSecure='Y' or f.IsEncrypted='Y')
+----and t.isview='N'
+----and lower(c.columnname) not like '%_id'
+----and c.columnname <> 'IsNoExpire'
+----and c.columnname <> 'IsNoPasswordReset'
+----;
+update AD_Client set RequestUser = '111';
+update AD_Client set RequestUserPW = '111';
+update AD_Client set SMTPHost = '111';
+update AD_StorageProvider set Folder = '111';
+update AD_StorageProvider set Password = '111';
+update AD_StorageProvider set URL = '111';
+update AD_StorageProvider set UserName = '111';
+update AD_System set DBAddress = '111';
+update AD_System set DBInstance = '111';
+update AD_System set EncryptionKey = '111';
+update AD_System set LDAPDomain = '111';
+update AD_System set LDAPHost = '111';
+update AD_System set Password = '111';
+update AD_System set SupportEMail = '111';
+update AD_System set UserName = '111';
+update AD_User set Answer = '111';
+update AD_User set EMailUser = '111';
+update AD_User set EMailUserPW = '111';
+update AD_User set LDAPUser = '111';
+update AD_User set Password = '111';
+update AD_User set Salt = '111';
+update AD_User set SecurityQuestion = '111';
+update AD_User set UserPIN = '111';
+update APP_Application set Password = '111';
+update C_AddressValidationCfg set HostAddress = '111';
+update C_AddressValidationCfg set ProxyAddress = '111';
+update C_AddressValidationCfg set ProxyLogon = '111';
+update C_AddressValidationCfg set ProxyPassword = '111';
+update C_AddressValidation set ConnectionKey = '111';
+update C_AddressValidation set ConnectionPassword = '111';
+update C_BankAccount_Processor set Password = '111';
+update C_BankAccount_Processor set Password1 = '111';
+update C_BankStatementLoader set HostAddress = '111';
+update C_BankStatementLoader set Password = '111';
+update C_BankStatementLoader set PIN = '111';
+update C_BankStatementLoader set ProxyAddress = '111';
+update C_BankStatementLoader set ProxyLogon = '111';
+update C_BankStatementLoader set ProxyPassword = '111';
+update C_BP_BankAccount set AccountNo = '111';
+update C_BP_ShippingAcct set DutiesShipperAccount = '111';
+update C_BP_ShippingAcct set ShipperAccount = '111';
+update C_BP_ShippingAcct set ShipperMeter = '111';
+update C_PaymentProcessor set CC_LocalRespDir = '111';
+update C_PaymentProcessor set CC_Password = '111';
+update C_PaymentProcessor set CC_Port = '111';
+update C_PaymentProcessor set CC_PrivateKey = '111';
+update C_PaymentProcessor set CC_PrivateKeyPass = '111';
+update C_PaymentProcessor set CC_PublicKey = '111';
+update C_PaymentProcessor set CC_RemoteDir = '111';
+update C_PaymentProcessor set CC_RemoteRespDir = '111';
+update C_PaymentProcessor set CC_RemoteRespDir_DLC = '111';
+update C_PaymentProcessor set HostAddress = '111';
+update C_PaymentProcessor set ProxyAddress = '111';
+update C_PaymentProcessor set ProxyLogon = '111';
+update C_PaymentProcessor set ProxyPassword = '111';
+update C_Payment set CreditCardVV = '111';
+update EXP_Processor set Account = '111';
+update EXP_Processor set Host = '111';
+update EXP_Processor set PasswordInfo = '111';
+update IMP_Processor set Account = '111';
+update IMP_Processor set Host = '111';
+update IMP_Processor set PasswordInfo = '111';
+update LSG_SMSProcessor set Password = '111';
+update LTX_Indexing_Conf set Password = '111';
+update M_InOut set DateAcct = '111';
+update M_ShippingProcessorCfg set HostAddress = '111';
+update M_ShippingProcessorCfg set ProxyAddress = '111';
+update M_ShippingProcessorCfg set ProxyLogon = '111';
+update M_ShippingProcessorCfg set ProxyPassword = '111';
+update M_ShippingProcessor set ConnectionKey = '111';
+update M_ShippingProcessor set ConnectionPassword = '111';
+update M_ShippingTransaction set ShipperAccount = '111';
+update W_Store set WStoreUserPW = '111';
+
 -- Drop the following indexes to make the updates faster. They will be recreated at the end of the script
 drop INDEX ad_user_email;
 
