@@ -9,6 +9,10 @@
 -- There is no need for changelog to be included in the obfuscated database
 delete from ad_changelog;
 
+-- List of custom tables (search ChangeMe - fields that might need to be uncommented)
+--delete from chuboe_trialbalance_detail;
+--delete from chuboe_trialbalance_hdr;
+
 -- Drop the following indexes to make the updates faster. They will be recreated at the end of the script
 drop INDEX ad_user_email;
 
@@ -17,6 +21,8 @@ update C_BPartner bp
 set 
 value = 'bp' || bp.c_bpartner_id, 
 name = 'bp' || bp.c_bpartner_id, 
+--chuboe_name_first = '', --ChangeMe
+--chuboe_name_last = '', --ChangeMe
 description = null, 
 name2 = null, 
 taxId = null, 
