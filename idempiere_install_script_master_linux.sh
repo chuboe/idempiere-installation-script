@@ -662,7 +662,10 @@ then
         sudo sed -i "$ a\archive_command = 'cd .' # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
             # Note: the above commmand is needed so that the archive command returns successfully. Otherwise, you will get a log full of errors
         sudo sed -i "$ a\max_wal_senders = 5 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
-        sudo sed -i "$ a\wal_keep_segments = 48 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
+        #sudo sed -i "$ a\wal_keep_segments = 48 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
+	    # Note: wal_keep_segments was depricated in version 14
+	sudo sed -i "$ a\wal_keep_size = 250 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
+	    # Note: size in MB according to 'select * from pg_settings where name = 'wal_keep_size''
         sudo sed -i "$ a\hot_standby = on # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
         echo "NOTE: more detail about hot_standby logging overhead see: http://www.fuzzy.cz/en/articles/demonstrating-hot-standby-overhead/">>$README
 
