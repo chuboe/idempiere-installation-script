@@ -12,6 +12,9 @@
 # only keep last 40 log files - delete others.
 # 20 07 * * * ubuntu cd /opt/idempiere-server/log/; ls -1tr  *.log | head -n -40 | xargs -d  '\n' sudo rm -f -- > /dev/null 2>&1
 
+# track changed files in idempiere binaries
+# 30 07 * * * ubuntu cd /opt/chuboe/idempiere-installation-script/utils/; ./chuboe_hg_bindir.sh > /dev/null 2>&1
+
 # push logs to remote location for perminant storate
 # 20 08 * * * ubuntu /usr/bin/aws s3 sync /opt/idempiere-server/log/ s3://custname-idempiere-obfuscate/services/log/ > /dev/null 2>&1
 
