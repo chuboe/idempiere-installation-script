@@ -34,7 +34,7 @@ select c.ad_column_id
 --Create list of big tables
 CREATE TABLE chuboe_perfmax_bigtables AS
 SELECT
- relname AS objectname, reltuples AS entries, pg_size_pretty(relpages::bigint*8*1024) AS size
+ relname AS objectname, reltuples AS entries, pg_size_pretty(relpages::bigint*8*1024) AS size, relpages::bigint as size_ugly
 FROM pg_class
  WHERE reltuples >= 55
 and relkind = 'r';
