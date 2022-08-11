@@ -174,6 +174,7 @@ delete from c_projectline where c_project_id not in (select c_project_id from c_
 delete from c_projecttask where c_projectphase_id not in (select pp.c_projectphase_id from c_acctschema_element ae join c_projectphase pp on ae.c_project_id = pp.c_project_id);
 delete from c_projectphase where c_project_id not in (select c_project_id from c_acctschema_element where c_project_id is not null);
 delete from c_project where c_project_id not in (select c_project_id from c_acctschema_element where c_project_id is not null);
+delete from s_resourceassignment;
 --update AD_Sequence set currentnext=startno where isTableID='N';
 
 --delete from ChuBoe_Replenish_Action;
