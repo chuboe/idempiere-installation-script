@@ -21,6 +21,8 @@ sudo apt install -y docker-ce
 # docker container run hello-world
 
 # Install Docker Compose - https://linuxize.com/post/how-to-install-and-use-docker-compose-on-ubuntu-18-04/
-sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+COMPOSE_URL="https://github.com/docker/compose/releases/download/v2.9.0/docker-compose-$(uname -s)-$(uname -m)"
+COMPOSE_URL_LOWER="${COMPOSE_URL,,}"
+sudo curl -L $COMPOSE_URL_LOWER -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-# docker-compose --version
+docker-compose --version
