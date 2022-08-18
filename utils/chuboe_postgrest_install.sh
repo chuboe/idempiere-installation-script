@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# seach on 'changeme' below to know what to update before you execute this script.
+
 # assumes you have already installed idempiere
 ## postgresql already exists
 ## idempiere db already exists
@@ -27,7 +29,7 @@ echo 'db-uri = "postgres://postrest_auth:changememememe@localhost:5432/idempiere
 echo 'db-schemas = "adempiere"' | sudo tee -a idempiere-rest.conf
 echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 
-# run using tmux or &
+# run in a tmux session or by appending " &" to the end of the below command
 # ./postgrest idempiere-rest.con
 
 # perform a test using curl
