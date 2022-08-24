@@ -150,4 +150,4 @@ cd $SC_SCRIPTPATH
 
 # start idempiere
 echo "HERE:: starting iDempiere"
-sudo service idempiere start
+sudo service idempiere restart
