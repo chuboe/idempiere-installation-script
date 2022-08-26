@@ -170,6 +170,9 @@ values (
 )
 ;
 
+--update Payment Selection window => Create From button => Payment Rule param field to default to nothing
+update AD_Process_Para set DefaultValue='' where AD_Process_Para_ID=212;
+
 
 -- update passwords from default
 -- update ad_user set password = password||'SomeValueHere' where password is not null and ad_client_id in (11,0);
