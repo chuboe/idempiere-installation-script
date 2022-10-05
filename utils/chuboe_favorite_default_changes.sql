@@ -6,6 +6,9 @@
 -- Add Created and Updated fields to Table, Column, Window, Tab, Field
 -- Need to remember to add Charge as default Accounting Dimension for new customers
 
+-- system config changes
+update ad_sysconfig set value = '3' where name = 'START_VALUE_BPLOCATION_NAME';
+
 -- performance indexes
 CREATE INDEX fact_acct_doc_chuboe_idx ON fact_acct USING btree (account_id, ad_table_id, record_id); -- improves BSD
 CREATE INDEX fas_pa_chuboe_idx ON fact_acct_summary USING btree (account_id, ad_org_id, dateacct, pa_reportcube_id); -- improves finReport
