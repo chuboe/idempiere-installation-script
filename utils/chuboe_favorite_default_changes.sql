@@ -58,7 +58,7 @@ update ad_column set seqnoselection = 99 where ad_column_id in
 select ad_column_id from ad_column where isselectioncolumn = 'Y' and (seqnoselection is null or seqnoselection = 0)
 );
 
-update ad_column set IsSelectionColumn='Y' where ColumnName in ('M_Product_Id','C_Charge_ID');
+update ad_column set IsSelectionColumn='Y' where ColumnName in ('M_Product_Id','C_Charge_ID','C_BPartner_ID');
 
 -- Default Window, Tab and Field => Tab subtab => Create fields process => From to today's date since this is the most common scenario
 update AD_Process_Para set DefaultValue = '@#Date@' where AD_Process_Para_ID=200077;
