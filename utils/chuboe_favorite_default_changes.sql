@@ -63,6 +63,9 @@ update ad_column set IsSelectionColumn='Y' where ColumnName in ('M_Product_Id','
 -- Default Window, Tab and Field => Tab subtab => Create fields process => From to today's date since this is the most common scenario
 update AD_Process_Para set DefaultValue = '@#Date@' where AD_Process_Para_ID=200077;
 
+-- Default Table and Column => Column subtab => Synchronize Columns process => Date From parameter to today's date since this is the most common scenario
+update AD_Process_Para set DefaultValue = '@#Date@' where AD_Process_Para_ID=200381;
+
 -- Track changes on all tables
 update ad_table set ischangelog = 'Y'; -- note this field is not respected; however, it does default to the column.
 update ad_column set isallowlogging = 'Y';
