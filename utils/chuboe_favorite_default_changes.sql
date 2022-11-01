@@ -66,6 +66,11 @@ update AD_Process_Para set DefaultValue = '@#Date@' where AD_Process_Para_ID=200
 -- Default Table and Column => Column subtab => Synchronize Columns process => Date From parameter to today's date since this is the most common scenario
 update AD_Process_Para set DefaultValue = '@#Date@' where AD_Process_Para_ID=200381;
 
+-- Payments into Batch window, do not allow the bank account field to be edited after save
+update AD_Column
+set IsUpdateable='N'
+where AD_Column_ID=208412;
+
 -- Track changes on all tables
 update ad_table set ischangelog = 'Y'; -- note this field is not respected; however, it does default to the column.
 update ad_column set isallowlogging = 'Y';
