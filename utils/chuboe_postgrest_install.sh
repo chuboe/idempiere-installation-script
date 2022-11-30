@@ -35,3 +35,6 @@ echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 # perform a test using curl
 # changeme: set your url as is needed from localhost
 # curl http://localhost:3000/c_paymentterm
+
+# How to import json data into excel
+# https://raw-labs.com/blog/retrieving-json-data-from-a-rest-api-in-excel-with-power-query/
