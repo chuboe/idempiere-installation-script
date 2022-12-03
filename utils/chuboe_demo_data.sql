@@ -15,6 +15,9 @@ CREATE OR REPLACE FUNCTION chuboe_demo_client () RETURNS numeric AS $$
 SELECT 11::numeric --change if updating a different client
 $$ LANGUAGE sql;
 
+--sample update/replace statement if needed
+--update ad_role set name = replace(name,'GWorld','YourWorld') where ad_client_id = XX and name like '%GWorld%';
+
 --update client
 update ad_client
 set value = chuboe_demo_name(),
