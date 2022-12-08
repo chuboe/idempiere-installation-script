@@ -110,6 +110,10 @@ INSERT INTO AD_StorageProvider (AD_StorageProvider_ID,AD_Client_ID,AD_Org_ID,Cre
 INSERT INTO AD_StorageProvider (AD_StorageProvider_ID,AD_Client_ID,AD_Org_ID,Created,CreatedBy,Updated,UpdatedBy,IsActive,Name,Method,Folder,AD_StorageProvider_UU) VALUES (nextid(200033, 'N'),0,0,TO_TIMESTAMP('2022-05-31 21:35:30','YYYY-MM-DD HH24:MI:SS'),100,TO_TIMESTAMP('2022-05-31 21:35:30','YYYY-MM-DD HH24:MI:SS'),100,'Y','dms-content','FileSystem','/opt/DMS_Content','19ab1c28-3cd7-46db-b614-2cd8c8238cc7');
 INSERT INTO AD_StorageProvider (AD_StorageProvider_ID,AD_Client_ID,AD_Org_ID,Created,CreatedBy,Updated,UpdatedBy,IsActive,Name,Method,Folder,AD_StorageProvider_UU) VALUES (nextid(200033, 'N'),0,0,TO_TIMESTAMP('2022-05-31 21:35:30','YYYY-MM-DD HH24:MI:SS'),100,TO_TIMESTAMP('2022-05-31 21:35:30','YYYY-MM-DD HH24:MI:SS'),100,'Y','dms-thumbnail','FileSystem','/opt/DMS_Thumbnails','19ab1c28-3cd7-46db-b614-2cd8c8238cc8');
 
+--Info window
+update AD_InfoColumn set DefaultValue=null where AD_InfoColumn_ID=200036;
+update AD_InfoColumn set DefaultValue=null where AD_InfoColumn_ID=200037;
+
 -- update storage providers
 -- you can run this query as many times as is needed as you create clients
 update ad_clientinfo
