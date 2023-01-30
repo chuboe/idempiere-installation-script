@@ -26,3 +26,8 @@ sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere
 
 # Prepend the browser tab with "TEST"
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER psql -h $CHUBOE_PROP_DB_HOST -d idempiere -U adempiere -c "update AD_SysConfig set value = '$CHUBOE_PROP_TEST_ENV_PREFIX'||value||'$CHUBOE_PROP_TEST_ENV_SUFFIX' where upper(name) = 'ZK_BROWSER_TITLE'"
+
+# If you wish to delete all entries in DMS as part of the restore:
+#delete from DMS_Association
+#delete from dms_version
+#delete from DMS_Content
