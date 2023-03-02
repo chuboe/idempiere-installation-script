@@ -8,6 +8,7 @@
 
 -- system config changes
 update ad_sysconfig set value = '3' where name = 'START_VALUE_BPLOCATION_NAME';
+update ad_sysconfig set value = '5' where name = 'USER_LOCKING_MAX_LOGIN_ATTEMPT';
 
 -- performance indexes
 CREATE INDEX chuboe_fact_acct_doc_idx ON fact_acct USING btree (account_id, ad_table_id, record_id); -- improves BSD
