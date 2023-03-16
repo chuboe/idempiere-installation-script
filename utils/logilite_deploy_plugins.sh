@@ -143,7 +143,7 @@ then
 
     # Wait for Plugin ID.
     function_wait() {
-        MAXITERATIONS=60
+        MAXITERATIONS=6
         STATUSTEST=0
         ITERATIONS=0
         while [ $STATUSTEST -eq 0 ] ; do
