@@ -19,30 +19,34 @@ table_list="/tmp/delme_table_statement.sql"
 view_list_out="/tmp/delme_view_statement.out"
 table_list_out="/tmp/delme_table_statement.out"
 
-db_host=$CHUBOE_PROP_DB_HOST
+#db_host=$CHUBOE_PROP_DB_HOST
+echo "*************************************"
+echo "DATABASE HOST - $CHUBOE_PROP_DB_HOST "
+echo "DATABASE NAME - $CHUBOE_PROP_DB_NAME "
+echo "*************************************"
 
 echo $sql_view
-psql -d idempiere -U adempiere -h $db_host -c "$sql_view" > $view_list
+psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -c "$sql_view" > $view_list
 cat $view_list
 echo '**********'
 echo '**********'
 read -p "Dangerous!!! Review the above list of views! Press enter if you wish to drop all of them. Otherwise, press ctrl+c to abort."
 echo
 echo
-grep 'drop view' $view_list | psql -d idempiere -U adempiere -h $db_host &> $view_list_out
+grep 'drop view' $view_list | psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST &> $view_list_out
 echo cat $view_list_out to see results.
 echo
 echo
 
 echo $sql_table
-psql -d idempiere -U adempiere -h $db_host -c "$sql_table" > $table_list
+psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST -c "$sql_table" > $table_list
 cat $table_list
 echo '**********'
 echo '**********'
 read -p "Dangerous!!! Review the above list of tables! Press enter if you wish to drop all of them. Otherwise, press ctrl+c to abort."
 echo
 echo
-grep 'drop table' $table_list | psql -d idempiere -U adempiere -h $db_host &> $table_list_out
+grep 'drop table' $table_list | psql -d $CHUBOE_PROP_DB_NAME -U $CHUBOE_PROP_DB_USERNAME -h $CHUBOE_PROP_DB_HOST &> $table_list_out
 echo cat $table_list_out to see results.
 echo
 echo
