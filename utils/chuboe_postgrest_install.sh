@@ -27,12 +27,16 @@ psql -h localhost -U adempiere -d idempiere -c "create role postrest_auth noinhe
 psql -h localhost -U adempiere -d idempiere -c "grant postrest_web_anon to postrest_auth"
 
 # changeme: change password from changememememe
-echo 'db-uri = "postgres://postrest_auth:'$PASSWORD_PR'@localhost:5432/idempiere"' | sudo tee -a idempiere-rest.conf
+echo 'db-uri = "postgres://postrest_auth:'$PASSWORD_PR'@localhost:5432/idempiere"' | sudo tee idempiere-rest.conf
 echo 'db-schemas = "adempiere"' | sudo tee -a idempiere-rest.conf
 echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 
+echo ''
+echo 'Read the end the file for instructions to launch postgrest'
+
 # run in a tmux session or by appending " &" to the end of the below command
-# ./postgrest idempiere-rest.con
+# cd /usr/local/bin/
+# ./postgrest idempiere-rest.conf
 
 # perform a test using curl
 # changeme: set your url as is needed from localhost
