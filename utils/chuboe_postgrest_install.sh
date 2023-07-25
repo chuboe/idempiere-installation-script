@@ -11,8 +11,8 @@
 # Download postgREST
 cd /usr/local/bin/
 # current version: https://github.com/PostgREST/postgrest/releases/latest
-CURRENT_VERSION="v9.0.1"
-sudo wget https://github.com/PostgREST/postgrest/releases/download/v9.0.1/postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
+CURRENT_VERSION="v11.1.0"
+sudo wget https://github.com/PostgREST/postgrest/releases/download/$CURRENT_VERSION/postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
 sudo tar xJf postgrest-v9.0.1-linux-static-x64.tar.xz
 
 # changeme: change password
