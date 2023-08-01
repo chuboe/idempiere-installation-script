@@ -60,10 +60,14 @@ sudo service idempiere stop
 
 echo HERE:: starting rsync for idempiere folder
 eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_ADEMROOTDIR $SC_ADEMROOTDIR"
+# example rsync.net changes... starting with "server-name"
+#... --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:server-name/backup/id-all/ $SC_ADEMROOTDIR 
 
 echo HERE:: copying over pg_dump
 cd $SC_LOCALBACKDIR
 eval sudo rsync "--delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_LOCALBACKDIR/latest/ latest/"
+# example rsync.net changes... starting with "server-name"
+#... --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:server-name/backup/chuboe-id-backup-latest/ latest/
 
 # uncomment below statements to sync DMS folders {{{
 # echo HERE:: rsync DMS
