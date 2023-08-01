@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# note: this is a copy paste reference - not recommended to run as a script
+
 sudo apt update
 sudo apt install -y ufw
 #sudo ufw status
