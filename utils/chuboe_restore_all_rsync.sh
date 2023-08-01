@@ -17,7 +17,7 @@ source $SC_SCRIPTPATH/chuboe.properties
 
 SC_LOGFILE="$SC_SCRIPTPATH/LOGS/$SC_BASENAME."`date +%Y%m%d`_`date +%H%M%S`".log"
 SC_ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
-SC_IDEMPIERE_OS_USER=$CHUBOE_PROP_IDEMPIERE_OS_USER #use dexxxx for rsync.net account
+SC_IDEMPIERE_OS_USER=$CHUBOE_PROP_IDEMPIERE_OS_USER # use dexxxx for rsync.net account
 SC_UTIL=$CHUBOE_PROP_UTIL_PATH
 SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 SC_LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
@@ -29,7 +29,7 @@ SC_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_
 
 # If using AWS or a pem key, be sure to copy the pem to the restore computer /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/ directory
 # make sure to chmod 400 the pem
-SC_SSH_PEM_RSYNC="-e \"ssh $SC_SSH_PEM\""
+SC_SSH_PEM_RSYNC="-e \"ssh $SC_SSH_PEM\"" # make this an empty string for rsync.net account
 SC_DMS_CONTENT_PATH=/opt/DMS/DMS_Content/
 SC_DMS_THUMBNAILS_PATH=/opt/DMS/DMS_Thumbnails/
 # }}}
