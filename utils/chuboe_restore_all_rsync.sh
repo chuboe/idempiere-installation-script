@@ -23,7 +23,7 @@ SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 SC_LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
 SC_USER=$CHUBOE_PROP_DB_USERNAME
 
-SC_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server
+SC_REMOTE_BACKUP_SERVER=CHANGE_ME # CHANGE_ME to the ip of the primary server or rsync.net account
 SC_HOSTNAME=0.0.0.0 # this does not change - name of local machine
 SC_SSH_PEM="" # example: "-i /home/$CHUBOE_PROP_IDEMPIERE_OS_USER/.ssh/YOUR_PEM_NAME.pem" # CHANGE_ME to point to the idempiere user pem on this server
 
