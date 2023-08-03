@@ -17,7 +17,8 @@ source $SC_SCRIPTPATH/chuboe.properties
 
 SC_LOGFILE="$SC_SCRIPTPATH/LOGS/$SC_BASENAME."`date +%Y%m%d`_`date +%H%M%S`".log"
 SC_ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
-SC_IDEMPIERE_OS_USER=$CHUBOE_PROP_IDEMPIERE_OS_USER # use dexxxx for rsync.net account
+SC_IDEMPIERE_OS_USER=$CHUBOE_PROP_IDEMPIERE_OS_USER
+SC_RSYNC_USER=$CHUBOE_PROP_IDEMPIERE_OS_USER # use dexxxx for rsync.net account
 SC_UTIL=$CHUBOE_PROP_UTIL_PATH
 SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
 SC_LOCALBACKDIR=$CHUBOE_PROP_BACKUP_LOCAL_PATH
@@ -59,15 +60,15 @@ echo HERE:: stopping idempiere
 sudo service idempiere stop
 
 echo HERE:: starting rsync for idempiere folder
-eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_ADEMROOTDIR $SC_ADEMROOTDIR"
+eval sudo rsync "--exclude "/.hg/" --exclude "/migration/" --exclude "/data/" --exclude "/log/" --delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_RSYNC_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_ADEMROOTDIR $SC_ADEMROOTDIR"
 # example rsync.net changes... starting with "server-name"
-#... --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:server-name/backup/id-all/ $SC_ADEMROOTDIR 
+#... --delete $SC_RSYNC_USER@$SC_REMOTE_BACKUP_SERVER:server-name/backup/id-all/ $SC_ADEMROOTDIR 
 
 echo HERE:: copying over pg_dump
 cd $SC_LOCALBACKDIR
-eval sudo rsync "--delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_LOCALBACKDIR/latest/ latest/"
+eval sudo rsync "--delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_RSYNC_USER@$SC_REMOTE_BACKUP_SERVER:/$SC_LOCALBACKDIR/latest/ latest/"
 # example rsync.net changes... starting with "server-name"
-#... --delete $SC_IDEMPIERE_OS_USER@$SC_REMOTE_BACKUP_SERVER:server-name/backup/chuboe-id-backup-latest/ latest/
+#... --delete $SC_RSYNC_USER@$SC_REMOTE_BACKUP_SERVER:server-name/backup/chuboe-id-backup-latest/ latest/
 
 # uncomment below statements to sync DMS folders {{{
 # echo HERE:: rsync DMS
@@ -78,6 +79,7 @@ eval sudo rsync "--delete-excluded -P $SC_SSH_PEM_RSYNC -a --delete $SC_IDEMPIER
 
 # {{{ run console-setup.sh
 echo "HERE:: Launching console-setup.sh"
+sudo chown -R $SC_IDEMPIERE_OS_USER:$SC_IDEMPIERE_OS_USER $SC_ADEMROOTDIR
 cd $CHUBOE_PROP_IDEMPIERE_PATH
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
