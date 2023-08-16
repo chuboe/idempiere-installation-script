@@ -68,3 +68,7 @@ echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
 # "press enter" only needed if performing something destructive where you want to user to think before progressing
 read -p "press Enter to continue, or Ctrl+C to stop" 
 #If calling this script from another script, use "echo $'\n' | #####.sh" to bypass read }}}
+
+# {{{ Add your code here!!!
+# add something great...
+#}}}
