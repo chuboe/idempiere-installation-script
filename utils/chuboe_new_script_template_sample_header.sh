@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+#Note: the above set -e means: Exit immediately if a command exits with a non-zero status.
+    #remove if not desired
 
 #When scripting use :rv chuboe_scipting.viminfo
 
@@ -41,6 +43,7 @@ while getopts $SC_OPTSTRING option; do
 done
 # }}}
 
+#https://linuxhandbook.com/if-else-bash/
 if [ "$TERM" = "screen" ] # {{{ TMUX Check
 then
     echo Confirmed inside screen or tmux to preserve session if disconnected.
