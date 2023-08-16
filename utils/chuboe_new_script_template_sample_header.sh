@@ -6,13 +6,18 @@ set -e
 #When scripting use :rv chuboe_scipting.viminfo
 
 # {{{ Context
-#Bring chuboe.properties into context
+# load the script name and path into variables
 SC_SCRIPTNAME=$(readlink -f "$0")
 SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
 SC_BASENAME=$(basename "$0")
+
+# Bring chuboe.properties into context
 source $SC_SCRIPTPATH/chuboe.properties
 
+# logging
 SC_LOGFILE="$SC_SCRIPTPATH/LOGS/$SC_BASENAME."`date +%Y%m%d`_`date +%H%M%S`".log"
+
+# only needed if writing a script for idempiere management - otherwise, delete/comment
 SC_ADEMROOTDIR=$CHUBOE_PROP_IDEMPIERE_PATH
 SC_UTIL=$CHUBOE_PROP_UTIL_PATH
 SC_UTIL_HG=$CHUBOE_PROP_UTIL_HG_PATH
@@ -45,7 +50,8 @@ while getopts $SC_OPTSTRING option; do
 done
 # }}}
 
-#https://linuxhandbook.com/if-else-bash/
+# example of a conditional statement => https://linuxhandbook.com/if-else-bash/
+# tmux/screen check only needed if performing something that needs to remain alive when accidentally disconnected from a remote server
 if [ "$TERM" = "screen" ] # {{{ TMUX Check
 then
     echo Confirmed inside screen or tmux to preserve session if disconnected.
@@ -55,7 +61,8 @@ else
 fi #}}}
 
 # {{{ Logging
-echo "Be sure to tee to a log file, for example:"
+echo "consider logging output to a log file, for example:"
 echo "$SC_SCRIPTNAME |& tee $SC_LOGFILE"
+# "press enter" only needed if performing something destructive where you want to user to think before progressing
 read -p "press Enter to continue, or Ctrl+C to stop" 
-#REMEMBER when calling these scripts from other scripts use "echo $'\n' | #####.sh" to bypass read }}}
+#If calling this script from another script, use "echo $'\n' | #####.sh" to bypass read }}}
