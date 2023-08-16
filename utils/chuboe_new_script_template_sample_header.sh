@@ -4,7 +4,8 @@
 #remove if not desired
 set -e
 
-#When scripting use :rv chuboe_scipting.viminfo
+# use below if you need to use vim on a machine that is not already configured the way you like it
+# When scripting use :rv chuboe_scipting.viminfo
 
 # {{{ Context
 # load the script name and path into variables
