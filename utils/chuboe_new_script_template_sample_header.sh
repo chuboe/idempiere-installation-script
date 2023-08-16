@@ -39,6 +39,7 @@ while getopts $SC_OPTSTRING option; do
             ;;
 
         # below is an example of a parameter that takes as argument (note the colon after to p:)
+        # change or delete as you deem appropriate
         p) echo "You didn't overwrite the stock prefix did you? I don't know what to do with ${OPTARG}";;
     esac
 done
