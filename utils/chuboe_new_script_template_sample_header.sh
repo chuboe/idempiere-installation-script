@@ -1,7 +1,8 @@
 #!/bin/bash
+
+#Note: set -e means: Exit immediately if a command exits with a non-zero status.
+#remove if not desired
 set -e
-#Note: the above set -e means: Exit immediately if a command exits with a non-zero status.
-    #remove if not desired
 
 #When scripting use :rv chuboe_scipting.viminfo
 
