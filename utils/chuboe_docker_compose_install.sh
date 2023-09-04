@@ -6,9 +6,9 @@
 
 # If you are installing docker inside LXD, you need to issue the following from your host.
 # the below commands assume your LXD/LXC instance is named docker3
-lxc config set docker3 security.nesting=true
-lxc config set docker3 security.syscalls.intercept.mknod=true
-lxc config set docker3 security.syscalls.intercept.setxattr=true
+lxc config set YourInstanceName security.nesting=true
+lxc config set YourInstanceName security.syscalls.intercept.mknod=true
+lxc config set YourInstanceName security.syscalls.intercept.setxattr=true
 
 # Install Docker - https://docs.docker.com/engine/install/ubuntu/
 sudo apt-get install ca-certificates curl gnupg
