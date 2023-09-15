@@ -469,7 +469,7 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop expect bc telnet mercurial
+sudo apt-get --yes install unzip htop expect bc telnet mercurial gpg curl
 # }}}
 
 # Download all files first
