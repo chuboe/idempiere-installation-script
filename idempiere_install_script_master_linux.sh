@@ -458,7 +458,10 @@ sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
 sudo $SCRIPTPATH/utils/setHostName.sh
 
 # added needed repos
+sudo apt --yes update
+sudo apt --yes install gpg curl
 # postgresql - example: used to install version 15 before officially supported on ubuntu 22.04
+
 curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql.gpg > /dev/null
 echo deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main | sudo tee -a /etc/apt/sources.list.d/postgresql.list
 
