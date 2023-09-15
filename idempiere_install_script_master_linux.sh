@@ -457,6 +457,11 @@ fi
 sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
 sudo $SCRIPTPATH/utils/setHostName.sh
 
+# added needed repos
+# postgresql - example: used to install version 15 before officially supported on ubuntu 22.04
+curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql.gpg > /dev/null
+echo deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main | sudo tee -a /etc/apt/sources.list.d/postgresql.list
+
 # update apt package manager
 sudo apt-get --yes update
 
@@ -464,7 +469,7 @@ sudo apt-get --yes update
 sudo updatedb
 
 # install useful utilities
-sudo apt-get --yes install unzip htop expect bc telnet s3cmd mercurial
+sudo apt-get --yes install unzip htop expect bc telnet mercurial
 # }}}
 
 # Download all files first
@@ -630,7 +635,7 @@ fi
 if [[ $IS_INSTALL_DB == "Y" ]]
 then
     echo "HERE: Installing DB because IS_INSTALL_DB == Y"
-    sudo apt-get --yes install apache2 postgresql postgresql-contrib phppgadmin libaprutil1-dbd-pgsql pgtop
+    sudo apt-get --yes install apache2 postgresql-$PGVERSION postgresql-contrib phppgadmin libaprutil1-dbd-pgsql pgtop
     # note: some instances of ubuntu will not start postgresql automatically
     sudo service postgresql start
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '"$DBPASS_SU"';"
@@ -878,7 +883,7 @@ then
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         echo "HERE: install postgresql client tools"
-        sudo apt-get -y install postgresql-client pgtop
+        sudo apt-get -y install postgresql-client-$PGVERSION pgtop
     fi
     # }}}
 
