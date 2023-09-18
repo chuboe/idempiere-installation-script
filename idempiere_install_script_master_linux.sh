@@ -472,7 +472,8 @@ fi
 if [[ $IS_COMPRESS_MEMORY == "Y" ]]
 then
     echo "HERE: compress memory using zram"
-    sudo apt install -y zram-tools
+    sudo apt-get --yes update
+    sudo apt-get install --yes zram-tools
     echo -e "ALGO=zstd\nPERCENT=90" | sudo tee -a /etc/default/zramswap
     sudo service zramswap reload
 fi
@@ -483,8 +484,8 @@ sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
 sudo $SCRIPTPATH/utils/setHostName.sh
 
 # added needed repos
-sudo apt --yes update
-sudo apt --yes install gpg curl
+sudo apt-get --yes update
+sudo apt-get --yes install gpg curl
 # postgresql - example: used to install version 15 before officially supported on ubuntu 22.04
 
 curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql.gpg > /dev/null
