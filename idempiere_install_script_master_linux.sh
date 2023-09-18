@@ -452,6 +452,20 @@ fi
 
 # Ubuntu prep
 # {{{
+# check for utf-8 locale
+CHUBOE_LOCALE_CHECK=$(locale)
+if [[ $CHUBOE_LOCALE_CHECK =~ "UTF-8" ]]; then
+    echo "HERE: UTF-8 present!"
+else
+    echo "HERE: UTF-8 not present - changing locales!"
+    sudo rm /etc/default/locale
+    sudo rm /etc/locale.gen
+    echo "locales locales/locales_to_be_generated multiselect C.UTF-8 UTF-8" | sudo debconf-set-selections
+    echo "locales locales/default_environment_locale select C.UTF-8" | sudo debconf-set-selections
+    sudo dpkg-reconfigure --frontend=noninteractive locales
+    # locale command will show current locales
+fi
+
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
 # If you are not running in AWS VPC, you can comment these lines out.
 sudo chmod +x $SCRIPTPATH/utils/setHostName.sh
