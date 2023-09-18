@@ -109,7 +109,7 @@ EOF
 SCRIPTNAME=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPTNAME")
 
-VARIABLE_FLAG_LIST=":hsp:e:iP:lDj:J:b:v:a:r:Iu:"
+VARIABLE_FLAG_LIST=":hsp:e:iP:lDj:J:b:v:a:r:Iu:c"
 
 cp $SCRIPTPATH/utils/chuboe.properties.orig $SCRIPTPATH/utils/chuboe.properties
 source $SCRIPTPATH/utils/chuboe.properties
@@ -270,6 +270,9 @@ do
 
         I)  #do not initialize database
             IS_INITIALIZE_DB="N";;
+
+        c)  #create zram compressed memory
+            IS_COMPRESS_MEMORY="Y";;
 
         # Option error handling.
 
@@ -464,6 +467,14 @@ else
     echo "locales locales/default_environment_locale select C.UTF-8" | sudo debconf-set-selections
     sudo dpkg-reconfigure --frontend=noninteractive locales
     # locale command will show current locales
+fi
+
+if [[ $IS_COMPRESS_MEMORY == "Y" ]]
+then
+    echo "HERE: compress memory using zram"
+    sudo apt install -y zram-tools
+    echo -e "ALGO=zstd\nPERCENT=90" | sudo tee -a /etc/default/zramswap
+    sudo service zramswap reload
 fi
 
 # update the hosts file for ubuntu in AWS VPC - see the script for more details.
