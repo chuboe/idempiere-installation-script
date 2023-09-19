@@ -1211,6 +1211,7 @@ then
     sudo cp $CHUBOE_UTIL_HG/$INITDNAME /etc/init.d/
     sudo chmod +x /etc/init.d/$INITDNAME
     # remove dependency on postgres if not installed on this machine
+    # Need to migrate to systemd. Reference: https://www.youtube.com/watch?v=2gyKkgguyxE
     if [[ $IS_INSTALL_DB == "N" ]]
     then
         sudo sed -i "s|# Required-Start:	postgresql|# Required-Start:|" /etc/init.d/$INITDNAME
