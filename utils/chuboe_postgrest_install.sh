@@ -37,6 +37,7 @@ echo 'Read the end the file for instructions to launch postgrest'
 # run in a tmux session or by appending " &" to the end of the below command
 # cd /usr/local/bin/
 # ./postgrest idempiere-rest.conf
+# See also for adding as a systemd service: https://postgrest.org/en/stable/integrations/systemd.html
 
 # perform a test using curl
 # changeme: set your url as is needed from localhost
