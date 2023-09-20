@@ -69,34 +69,28 @@ OPTIONS:
     -P  DB password
     -l  Launch iDempiere as service
     -v  Specify iDempiere version - defaults to 6.2
+    -D  Install development enviornment (depricated - moved to utils/chuboe_install_devenv.sh)
     -J  Specify Jenkins URL - See chuboe.properties.orig for default
     -j  Specify Jenkins project name - See chuboe.properties.orig for default
     -b  Specify Jenkins build number - See chuboe.properties.orig for default
     -a  Specify an alternate properties file
     -r  Add Hot_Standby Replication - a parameter of "Master" indicates the db will be a Master. A parameter for a URL should point to a master and therefore will make this db a Backup
+    -c  Compress memory using zram - helps you run iDempiere with less RAM. Uses CPU cycles to compress in-memory cache.
 
 Outstanding actions:
-* Add a -t flag to allow for giving a server a specific name
-     - update the $PS1 command prompt with new name
-     - append the tag to the end of the database name: i.e. -t dev-01 would create idempiere-dev-01
-     - test all scripts to make sure they work with the different datbase name
+* Add a -t flag to allow for setting the host name (sudo hostnamectl...)
 * Create flag or convention to change username and passwords for system generated entries (i.e. MaxSuperUser and MaxSystem)
      - add this information to the idempiere feedback file
-* Review the output formatting of the idempiere feedback file - make sure it is consistent and looks good.
-* Create option to specify password during installation - as opposed to as a command line option
-* When Replication is turned on, created and set archive files to appropriate place.
+     - This is currently accomplished in the utils/chuboe_favorite_default_changes.sh
+* When Replication is turned on, created and set wal archive files to appropriate place.
     * create an option to move archive to remove drive as well. This is more important than the actual data drive. This drive should be fast.
-* Create drive options for WAL. Move logs to different location - not on DB or WAL drive. Can be local system drive.
-* Create a parameter file that contains the IP of the db server for use in other scripts - like backup
 * Attachments
     - Create /opt/idempiere-attachments folder chown idempiere user/group
     - Create record in iDempiere (as system client) to enable using the above folder (sql) (Attachment Storage clientInfo)
-    - Create drive option/flag for attachments to store off the actual server
-* Enable PG_Statements by default when installing the DB alone
+    	- currently handled in utils/chuboe_favorite_default_changes.sh
 * Add ability to read idempiereEnv.properties
     - ACTION=$(grep -i 'SOME_PROPERTY' $PATH_TO_FILE  | cut -f2 -d'=')
     - source: http://www.linuxquestions.org/questions/linux-newbie-8/reading-a-property-file-through-shell-script-906482/
-* Create /opt/idempiere-attachment/ and /opt-idempiere-archive/ folders so that users can have an easy place to store external files.
 
 EOF
 }
