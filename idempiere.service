@@ -1,6 +1,6 @@
 [Unit]
 Description=iDempiere Open Source ERP System
-After=multi-user.target
+After=multi-user.target postgresql
 
 [Service]
 Type=forking
