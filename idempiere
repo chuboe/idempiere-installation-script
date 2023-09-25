@@ -61,6 +61,8 @@ start () {
 
     sudo su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
     RETVAL=$?
+    sudo mv /opt/idempiere-server/idempiere.pid /var/run/.
+    sudo chown root:root /var/run/idempiere.pid
     if [ $RETVAL -eq 0 ] ; then
         # wait for server to be confirmed as started in logfile
         STATUSTEST=0
