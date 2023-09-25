@@ -1109,7 +1109,7 @@ echo "HERE END: Launching console-setup.sh"
     #write idempiere.pid
     # {{{
     echo "HERE: update idempiere-server.sh to write idempiere.pid"
-    sudo sed -i "s|org.adempiere.server.application|org.adempiere.server.application & echo $! > idempiere.pid|g" $INSTALLPATH/idempiere-server.sh
+    sudo sed -i "s|org.adempiere.server.application|org.adempiere.server.application & echo \$! > idempiere.pid|g" $INSTALLPATH/idempiere-server.sh
     # }}}
 
     #update ownership and write privileges after installation is complete
