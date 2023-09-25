@@ -1214,7 +1214,7 @@ then
     # Need to migrate to systemd. Reference: https://www.youtube.com/watch?v=2gyKkgguyxE
     if [[ $IS_INSTALL_DB == "N" ]]
     then
-        #TODO: need to handle postgresql dependency
+        echo "TODO: need to handle postgresql dependency"
 	#sudo sed -i "s|# Required-Start:	postgresql|# Required-Start:|" /etc/init.d/$INITDNAME
         #sudo sed -i "s|# Required-Stop:	postgresql|# Required-Stop:|" /etc/init.d/$INITDNAME
     fi
