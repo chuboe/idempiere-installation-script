@@ -1212,13 +1212,13 @@ then
     sudo chmod +x /etc/init.d/$INITDNAME
     # remove dependency on postgres if not installed on this machine
     # Need to migrate to systemd. Reference: https://www.youtube.com/watch?v=2gyKkgguyxE
+    sudo cp $CHUBOE_UTIL_HG/idempiere.service /etc/systemd/system/$INITDNAME.service
     if [[ $IS_INSTALL_DB == "N" ]]
     then
-        echo "TODO: need to handle postgresql dependency"
-	#sudo sed -i "s|# Required-Start:	postgresql|# Required-Start:|" /etc/init.d/$INITDNAME
-        #sudo sed -i "s|# Required-Stop:	postgresql|# Required-Stop:|" /etc/init.d/$INITDNAME
+	sudo sed -i "s| postgresql||" /etc/systemd/system/$INITDNAME.service
+        #TODO: review below to remove all init.d dependencies
+	#sudo sed -i "s|# Required-Stop:	postgresql|# Required-Stop:|" /etc/init.d/$INITDNAME
     fi
-    sudo cp $CHUBOE_UTIL_HG/idempiere.service /etc/systemd/system/$INITDNAME.service
     sudo systemctl daemon-reload
     sudo systemctl enable $INITDNAME
     sudo systemctl start $INITDNAME
