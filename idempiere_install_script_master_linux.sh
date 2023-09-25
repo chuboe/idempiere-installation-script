@@ -1208,11 +1208,16 @@ then
     # Need to migrate to systemd. Reference: https://www.youtube.com/watch?v=2gyKkgguyxE
     if [[ $IS_INSTALL_DB == "N" ]]
     then
-        sudo sed -i "s|# Required-Start:	postgresql|# Required-Start:|" /etc/init.d/$INITDNAME
-        sudo sed -i "s|# Required-Stop:	postgresql|# Required-Stop:|" /etc/init.d/$INITDNAME
+        #TODO: need to handle postgresql dependency
+	#sudo sed -i "s|# Required-Start:	postgresql|# Required-Start:|" /etc/init.d/$INITDNAME
+        #sudo sed -i "s|# Required-Stop:	postgresql|# Required-Stop:|" /etc/init.d/$INITDNAME
     fi
-    sudo update-rc.d $INITDNAME defaults
-    sudo /etc/init.d/$INITDNAME start
+    sudo cp $CHUBOE_UTIL_HG/idempiere.service /etc/systemd/system/$INITDNAME.service
+    sudo systemctl daemon-reload
+    sudo systemctl enable $INITDNAME
+    sudo systemctl start $INITDNAME
+    #sudo update-rc.d $INITDNAME defaults
+    #sudo /etc/init.d/$INITDNAME start
     echo "HERE END: IS_LAUNCH_ID == Y"
 fi
 # }}}
