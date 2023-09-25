@@ -1,0 +1,14 @@
+[Unit]
+Description=iDempiere Open Source ERP System
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/etc/init.d/idempiere start
+ExecStop=/etc/init.d/idempiere stop
+PIDFile=/var/run/idempiere.pid
+LimitNOFILE=10000
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target
