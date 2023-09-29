@@ -784,7 +784,7 @@ then
     fi
     # }}}
 
-    # start postgresql after all changes and before installing phppgadmin
+    # start postgresql after all changes
     echo "HERE: starting postgresql"
     sudo service postgresql start
 
