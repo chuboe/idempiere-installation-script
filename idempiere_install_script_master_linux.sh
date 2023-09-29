@@ -37,12 +37,6 @@
 # 2.5 Support for iDempiere 5.1
 # 2.6 Support for 18.04 and iDempiere 6.2
 # 2.6.1 Added support for alternate properties file passed in as parameter
-# planned changes
-#   install s3cmd from apt (not file)
-#   install pgadmin (in addition to phppgadmin)
-#   postgresql 12
-#   openjdk 11 (from apt - not custom ppa)
-#
 #}}}
 
 # Usage help
@@ -670,7 +664,6 @@ then
     echo "">>$README
     echo "">>$README
     echo "PostgreSQL installed.">>$README
-    echo "The script installed the phppgadmin tool to help you administer your database.">>$README
     echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users.">>$README
     sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
     sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
@@ -792,23 +785,8 @@ then
     # }}}
 
     # start postgresql after all changes and before installing phppgadmin
+    echo "HERE: starting postgresql"
     sudo service postgresql start
-
-    # copy the phppgadmin apache2 configuration file that puts phppgadmin on port 8083
-    sudo cp $SCRIPTPATH/web/000-phppgadmin.conf /etc/apache2/sites-enabled
-    # remove the apache2 default site
-    sudo unlink /etc/apache2/sites-enabled/000-default.conf
-    # make apache listen on port 8083
-    sudo sed -i '$ a\Listen 8083' /etc/apache2/ports.conf
-    # remove phpphadmin's conf file - we will be using the above one instead
-    sudo rm /etc/apache2/conf-enabled/phppgadmin.conf
-
-    sudo service apache2 restart
-
-    echo "">>$README
-    echo "">>$README
-    echo "SECURITY NOTICE: phppgadmin has been installed on port 8083.">>$README
-    echo "Make sure this port is blocked from external traffic as a security measure.">>$README
 
     echo "HERE END: Installing DB because IS_INSTALL_DB == Y"
 
