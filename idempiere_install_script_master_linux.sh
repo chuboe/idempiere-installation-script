@@ -1117,11 +1117,7 @@ echo "HERE END: Launching console-setup.sh"
 
     echo "HERE: configure apache to present webui on port 80 - reverse proxy"
     # {{{
-    # install apache2 if missed during db/phpgadmin
-    if [[ $IS_INSTALL_DB == "N" ]]
-    then
-        sudo apt-get install -y apache2
-    fi
+    sudo apt-get install -y apache2
 
     # copy the iDempiere apache2 configuration file
     sudo cp "$CHUBOE_UTIL_HG/web/$CHUBOE_PROP_IDEMPIERE_APACHE_CONFIG" /etc/apache2/sites-enabled
