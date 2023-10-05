@@ -17,7 +17,7 @@ CREATE INDEX IF NOT EXISTS chuboe_journalline_hdr_idx ON gl_journalline USING bt
 CREATE INDEX IF NOT EXISTS chuboe_requpdate_req_idx ON r_requestupdate USING btree (r_request_id);
 create index IF NOT EXISTS chuboe_order_tax_hdr_idx on c_ordertax(c_order_id);
 create index IF NOT EXISTS chuboe_invoice_tax_hdr_idx on c_invoicetax(c_invoice_id);
-create index IF NOT EXISTS chuboe_allocationline_hdr_idx on c_allocationline_hdr(c_allocationhdr_id);
+create index IF NOT EXISTS chuboe_allocationline_hdr_idx on c_allocationline(c_allocationhdr_id);
 CREATE INDEX IF NOT EXISTS chuboe_c_invoiceline_inoutline_id ON c_invoiceline USING btree (m_inoutline_id );
 
 --make certain tables high volume to promote a search box when window is opened. 
