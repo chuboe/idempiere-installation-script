@@ -11,7 +11,7 @@
 # Download postgREST
 cd /usr/local/bin/
 # current version: https://github.com/PostgREST/postgrest/releases/latest
-CURRENT_VERSION="v11.1.0"
+CURRENT_VERSION="v11.2.1"
 PASSWORD_PR="changememememe"
 PASSWORD_PRQ="'$PASSWORD_PR'"
 sudo wget https://github.com/PostgREST/postgrest/releases/download/$CURRENT_VERSION/postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
