@@ -74,6 +74,10 @@ echo 'Read the end the file for instructions to launch postgrest'
 # if you wish to grant select on all sequences so that you do not need to individually assign:
 #     grant usage, select ON ALL SEQUENCES IN SCHEMA adempiere TO postrest_web_anon;
 # you can test reading and writing to this table with postgrest_auth with the above psql commands.
+# to post a new record via the api to this table:
+#    curl http://localhost:3000/todos -X POST -H "Content-Type: application/json" -d '{"task": "do great things"}'
+# to read the results:
+#    curl http://localhost:3000/todos
 
 # Below is a summary view that you can use to demonstrate api access at a higher level
 # At the bottom, there exists a grant statement that makes the view available to postegrest
