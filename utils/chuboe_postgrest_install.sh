@@ -70,7 +70,7 @@ echo 'Read the end the file for instructions to launch postgrest'
 #     create table todos (id serial primary key, done boolean not null default false, task text not null, due timestamptz);
 #     grant select on todos to postrest_web_anon;
 #     grant insert on todos to postrest_web_anon;
-#     insert into api.todos (task) values ('finish tutorial 0'), ('pat self on back');
+#     insert into todos (task) values ('finish tutorial 0'), ('pat self on back');
 # you can test reading and writing to this table with postgrest_auth with the above psql commands.
 
 # Below is a summary view that you can use to demonstrate api access at a higher level
