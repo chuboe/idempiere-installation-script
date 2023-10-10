@@ -36,7 +36,7 @@ echo "*:*:*:postrest_auth:$PASSWORD_PR" | tee -a ~/.pgpass
 chmod 600 ~/.pgpass
 
 # log in via psql using postgrest_auth
-#    psql -U postgrest_auth -d idempiere
+#    psql -U postrest_auth -d idempiere
 # then, use "set role postrest_web_anon" to allow postgrest_auth to interact with tables
 #    set role postrest_web_anon;
 # then, use set serach_path to prevent needing to use the adempiere. prefix.
