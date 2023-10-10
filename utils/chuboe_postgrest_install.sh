@@ -31,12 +31,22 @@ echo 'db-uri = "postgres://postrest_auth:'$PASSWORD_PR'@localhost:5432/idempiere
 echo 'db-schemas = "adempiere"' | sudo tee -a idempiere-rest.conf
 echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 
+# update ~/.pgpass for convenience
+echo "*:*:*:postrest_auth:$PASSWORD_PR" | tee -a ~/.pgpass
+chmod 600 ~/.pgpass
+
+# log in via psql using postgrest_auth
+#    psql -U postgrest_auth -d idempiere
+# then, use "set role postrest_web_anon" to allow postgrest_auth to interact with tables
+#    set role postrest_web_anon;
+# then, use set serach_path to prevent needing to use the adempiere. prefix.
+#    set search_path = adempiere;
+
 echo ''
 echo 'Read the end the file for instructions to launch postgrest'
 
 # run in a tmux session or by appending " &" to the end of the below command
-# cd /usr/local/bin/
-# ./postgrest idempiere-rest.conf
+# /usr/local/bin/postgrest /usr/local/bin/idempiere-rest.conf
 # See also for adding as a systemd service: https://postgrest.org/en/stable/integrations/systemd.html
 
 # perform a test using curl
@@ -45,6 +55,23 @@ echo 'Read the end the file for instructions to launch postgrest'
 
 # How to import json data into excel
 # https://raw-labs.com/blog/retrieving-json-data-from-a-rest-api-in-excel-with-power-query/
+
+# If you wish to remove:
+# Issue the followng statements using psql as adempiere
+#    revoke select ON c_paymentterm from postrest_web_anon;
+#    revoke usage on schema adempiere from postrest_web_anon;
+#    drop role postrest_web_anon;
+#    drop role postrest_auth;
+# Issue the following command;
+#    sudo rm /usr/local/bin/postgrest
+
+# https://postgrest.org/en/v11.2/tutorials/tut0.html
+# if you wish to create a simple table to test writing data, issue the following statements as adempiere:
+#     create table todos (id serial primary key, done boolean not null default false, task text not null, due timestamptz);
+#     grant select on todos to postrest_web_anon;
+#     grant insert on todos to postrest_web_anon;
+#     insert into api.todos (task) values ('finish tutorial 0'), ('pat self on back');
+# you can test reading and writing to this table with postgrest_auth with the above psql commands.
 
 # Below is a summary view that you can use to demonstrate api access at a higher level
 # At the bottom, there exists a grant statement that makes the view available to postegrest
