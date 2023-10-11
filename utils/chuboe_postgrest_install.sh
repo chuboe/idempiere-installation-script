@@ -46,8 +46,13 @@ echo ''
 echo 'Read the end the file for instructions to launch postgrest'
 
 # run in a tmux session or by appending " &" to the end of the below command
-# /usr/local/bin/postgrest /usr/local/bin/idempiere-rest.conf
-# See also for adding as a systemd service: https://postgrest.org/en/stable/integrations/systemd.html
+#     /usr/local/bin/postgrest /usr/local/bin/idempiere-rest.conf
+# To install as service, copy this file with sudo to /etc/systemd/system/postgrest.service
+#    https://github.com/chuboe/idempiere-installation-script/blob/master/service/postgrest.service
+# Issue the follow commands:
+#    sudo systemctl daemon-reload
+#    sudo systemctl start postgrest
+#    sudo systemctl status postgrest # confirm service started
 
 # perform a test using curl
 # changeme: set your url as is needed from localhost
@@ -79,6 +84,8 @@ echo 'Read the end the file for instructions to launch postgrest'
 #    curl http://localhost:3000/todos -X POST -H "Content-Type: application/json" -d '{"task": "do great things"}'
 # to read the results:
 #    curl http://localhost:3000/todos
+# to update the record (note - assumes above record created with id=1):
+#    curl "http://localhost:3000/todos?id=eq.1" -X PATCH -H "Content-Type: application/json" -d '{"task": "do more great things"}'
 
 # Below is a summary view that you can use to demonstrate api access at a higher level
 # At the bottom, there exists a grant statement that makes the view available to postegrest
