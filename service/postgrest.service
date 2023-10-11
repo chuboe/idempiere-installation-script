@@ -1,0 +1,11 @@
+# https://postgrest.org/en/stable/integrations/systemd.html
+[Unit]
+Description=REST API for any PostgreSQL database
+After=postgresql.service
+
+[Service]
+ExecStart=/usr/local/bin/postgrest /usr/local/bin/idempiere-rest.conf
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
