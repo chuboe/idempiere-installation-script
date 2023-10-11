@@ -70,6 +70,7 @@ echo 'Read the end the file for instructions to launch postgrest'
 #     create table todos (id serial primary key, done boolean not null default false, task text not null, due timestamptz);
 #     grant select on todos to postrest_web_anon;
 #     grant insert on todos to postrest_web_anon;
+#     grant update on todos to postrest_web_anon;
 #     insert into todos (task) values ('finish tutorial 0'), ('pat self on back');
 # if you wish to grant select on all sequences so that you do not need to individually assign:
 #     grant usage, select ON ALL SEQUENCES IN SCHEMA adempiere TO postrest_web_anon;
