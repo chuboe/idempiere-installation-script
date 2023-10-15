@@ -50,8 +50,11 @@ echo 'Read the end the file for instructions to launch postgrest'
 # To install as service, copy this file with sudo to /etc/systemd/system/postgrest.service
 #    https://github.com/chuboe/idempiere-installation-script/blob/master/service/postgrest.service
 # Issue the follow commands:
+#    cd /etc/systemd/system/
+#    sudo wget https://raw.githubusercontent.com/chuboe/idempiere-installation-script/master/service/postgrest.service
 #    sudo systemctl daemon-reload
 #    sudo systemctl start postgrest
+#    sudo systemctl enable postgrest
 #    sudo systemctl status postgrest # confirm service started
 
 # perform a test using curl
