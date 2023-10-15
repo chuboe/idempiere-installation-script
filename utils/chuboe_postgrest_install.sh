@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # seach on 'changeme' below to know what to update before you execute this script.
+# See for example: https://github.com/chuboe/idempiere-installation-script/tree/master/apps/PostgrestTimesheet
 
 # assumes you have already installed idempiere
 ## postgresql already exists
