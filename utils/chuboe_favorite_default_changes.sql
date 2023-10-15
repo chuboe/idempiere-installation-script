@@ -91,6 +91,9 @@ and ad_table_id not in
 (select ad_table_id from ad_table where lower(tablename) in ('c_order', 'c_invoice', 'gl_journal', 'm_inout', 'm_requisition', 'm_inventory', 'm_movement')
 );
 
+-- default processed to N in columns where there is no default value - currently the processed checkbox defaults to null
+update ad_column set defaultvalue = 'N' where AD_Element_ID=1047 and defaultvalue is null;
+
 -- Make Request Calendar show for all clients
 update PA_DashboardContent set ad_client_id = 0 where PA_DashboardContent_ID=50004;
 
