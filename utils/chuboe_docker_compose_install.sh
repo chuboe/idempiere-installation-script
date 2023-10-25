@@ -11,7 +11,7 @@ lxc config set YourInstanceName security.syscalls.intercept.mknod=true
 lxc config set YourInstanceName security.syscalls.intercept.setxattr=true
 
 # Install Docker - https://docs.docker.com/engine/install/ubuntu/
-sudo apt-get install ca-certificates curl gnupg
+sudo apt-get install -y ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
