@@ -5,6 +5,7 @@ CREATE ROLE biaccess;
 GRANT USAGE ON SCHEMA adempiere TO biaccess;
 ALTER USER biaccess WITH PASSWORD 'SOMEPASSWORD897';
 ALTER USER biaccess WITH LOGIN;
+ALTER ROLE biaccess SET search_path TO adempiere;
 
 -- Step 2: execute the view in chuboe_bi_init_views.sql file
 
