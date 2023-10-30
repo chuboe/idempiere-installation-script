@@ -4,11 +4,10 @@
 # You can either run this file as a script or simply copy/paste commands as is needed.
 # Docker-compose is available through apt install on some versions of ubuntu (not aws). The below should get you the latest versions.
 
-# If you are installing docker inside LXD, you need to issue the following from your host.
-# the below commands assume your LXD/LXC instance is named docker3
-lxc config set YourInstanceName security.nesting=true
-lxc config set YourInstanceName security.syscalls.intercept.mknod=true
-lxc config set YourInstanceName security.syscalls.intercept.setxattr=true
+# If you are installing docker inside LXD, you need to issue the following from your host (if not already in your lxd profile - gui2).
+#lxc config set YourInstanceName security.nesting=true
+#lxc config set YourInstanceName security.syscalls.intercept.mknod=true
+#lxc config set YourInstanceName security.syscalls.intercept.setxattr=true
 
 # Install Docker - https://docs.docker.com/engine/install/ubuntu/
 sudo apt-get install -y ca-certificates curl gnupg
