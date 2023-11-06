@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# the "set -e" tells the script to stop on the first failed line.
+# this is important for this script because the below fallocate line will fail if the swap already exists.
+# this is a cheap error check
+set -e
+
 # use this function as a way to exit if assumptions are not met or error conditions are found
 function graceful_exit
 {
@@ -69,6 +74,7 @@ done
 # {{{ Create swap - reference: https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04
 
 # check if swap already exists; if yes, exit
+# done - see above comment about "set -e"
 
 # create swap file
 sudo fallocate -l $TOTAL_MEMORY_W_LABEL /swapfile
