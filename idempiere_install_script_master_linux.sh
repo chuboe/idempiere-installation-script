@@ -476,9 +476,15 @@ sudo apt-get --yes update
 sudo apt-get --yes install gpg curl
 # postgresql - example: used to install version 15 before officially supported on ubuntu 22.04
 
-#temp uncomment for debian
-#curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql.gpg > /dev/null
-#echo deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main | sudo tee -a /etc/apt/sources.list.d/postgresql.list
+# if ubuntu, add postgresql apt repo to install postgresql 15
+if grep -iq "ubuntu" /etc/os-release
+then
+    echo "HERE: found ubuntu: setting postgresql apt repo"
+    curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql.gpg > /dev/null
+    echo deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main | sudo tee -a /etc/apt/sources.list.d/postgresql.list
+else
+    echo "HERE: no ubuntu found - assuming debian"
+fi
 
 # update apt package manager
 sudo apt-get --yes update
