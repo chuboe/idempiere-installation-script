@@ -2,7 +2,7 @@
 
 -- Action: this view needs to be extended to include field overrides and client customizations
 
-Create view X_AppDictionarySearch_V as
+Create view chuboe_AppDictionarySearch_V as
 select ad_client_id, ad_org_id, created, createdby, updated, updatedby, 101::numeric as AD_Table_ID, ad_column_id as record_id, lower(columnsql) as code, 'Column SQL'::text as messagetext from ad_column
 union
 select ad_client_id, ad_org_id, created, createdby, updated, updatedby, 101 as AD_Table_ID, ad_column_id as record_id, lower(defaultvalue) as code, 'Column Default Logic' as messagetext from ad_column
