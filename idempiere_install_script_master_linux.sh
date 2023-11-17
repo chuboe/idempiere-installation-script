@@ -1234,5 +1234,10 @@ SET_PROP_TARGET_PROPERTY=$1
 SET_PROP_REPLACEMENT_VALUE=$2
 sed -i "s/\($SET_PROP_TARGET_PROPERTY *= *\).*/\1$SET_PROP_REPLACEMENT_VALUE/" $CHUBOE_UTIL_HG_PROP_FILE
 }
+
+#example of how to read a variable without sourcing the who file
+# https://github.com/chuboe/idempiere-installation-script/blob/master/utils/chuboe_new_script_template_sample_header.sh
+# see SC_OS variable
+
 # }}}
 
