@@ -19,6 +19,10 @@ function graceful_exit
 
 
 # {{{ Context
+# load os details into variables
+SC_OS=$(. /etc/os-release && echo "$ID")
+SC_OS_CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
+
 # load the script name and path into variables
 SC_SCRIPTNAME=$(readlink -f "$0")
 SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
