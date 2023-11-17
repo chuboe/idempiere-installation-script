@@ -21,9 +21,11 @@ echo \
 sudo apt update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo usermod -aG docker $USER # add your user to docker group
-exit
-#reconnect to server where you installed docker and run the hello world example container
-docker run hello-world
+
+# Next Steps:
+  # exit current shell
+  # reconnect to server where you installed docker and run the hello world example container
+    # docker run hello-world
 
 # sudo service docker status
 # docker -v
