@@ -140,12 +140,8 @@ cd $SC_SCRIPTPATH
 echo $'\n' | ./chuboe_restore_local.sh
 
 echo HERE:: update xmx and xms # {{{
-# remove any xmx or xms from command line - note that '.' is a single placeholder wildcard
-sudo sed -i 's|-Xms.G -Xmx.G||g' /opt/idempiere-server/idempiere-server.sh
-# alternatively, you could set the value accordingly to either of the following:
-# sudo sed -i 's|-Xms.G -Xmx.G|-Xms2G -Xmx2G|g' /opt/idempiere-server/idempiere-server.sh
-# sudo sed -i 's|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS|\$IDEMPIERE_JAVA_OPTIONS \$VMOPTS -Xmx2048m -Xms2048m|g' /opt/idempiere-server/idempiere-server.sh
-# preferred - replace the whole line in myEnvironment.sh - update the values below according to your environment
+# The below sed statement replaces the whole line in myEnvironment.sh - update the Xmx values below according to your test environment
+#   uncomment and update the below line if your test environment is smaller than your production environment
 # sudo sed -i "s|IDEMPIERE_JAVA_OPTIONS=.*|IDEMPIERE_JAVA_OPTIONS=\"-Xms2G -Xmx2G -DIDEMPIERE_HOME=\$IDEMPIERE_HOME\"|g" /opt/idempiere-server/utils/myEnvironment.sh
 #}}}
 
