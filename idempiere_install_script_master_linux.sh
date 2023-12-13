@@ -756,9 +756,21 @@ then
         AVAIL_MEMORY=${AVAIL_MEMORY%.*} # remove decimal
         echo "available memory in MB="$AVAIL_MEMORY
 
+        #calculate number of processors
+        AVAIL_CPU=$(nproc --all)
+
+        #Drive type - assumes SSD
+        DRIVE_TYPE="SSD"
+
+        #OS Type - assume unix
+        OS_TYPE="unix"
+
+        #architecture - assumes 64 bit
+        ARCH_TYPE="x86-64"
+
         #Key Concept: how to pipe content with sudo priviledge - the >> operator does not keep sudo priviledges
         #call on https://github.com/sebastianwebber/pgconfig-api webservice to get optimized pg parameters
-        curl 'https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB' >> $TEMP_DIR/pg.conf
+        curl 'https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB&cpus='$AVAIL_CPU'&drive_type='$DRIVE_TYPE'&arch='$ARCH_TYPE'&os_type='$OS_TYPE >> $TEMP_DIR/pg.conf
 	    if [ $? -eq 0 ]
 	    then
 		    cat $TEMP_DIR/pg.conf | sudo tee -a /etc/postgresql/$PGVERSION/main/postgresql.conf
@@ -769,7 +781,7 @@ then
 		    echo "NOTE: pgbadger is a good tool for analyzing postgresql logs">>$README
 		    echo "--> See the chuboe_utils directory for installation directions">>$README
 	    else
-		    echo 'HERE ERROR: Failed to curl https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB'
+		    echo 'HERE ERROR: https://api.pgconfig.org/v1/tuning/get-config?environment_name=OLTP&format=conf&include_pgbadger=true&log_format=csvlog&max_connections=100&pg_version='$PGVERSION'&total_ram='$AVAIL_MEMORY'MB&cpus='$AVAIL_CPU'&drive_type='$DRIVE_TYPE'&arch='$ARCH_TYPE'&os_type='$OS_TYPE
 	    fi
 
         # sudo sed -i "$ a\random_page_cost = 2.0 # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
