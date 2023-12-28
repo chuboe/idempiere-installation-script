@@ -984,6 +984,9 @@ then
 
     echo "HERE: Launching console-setup.sh"
     # {{{
+    # todo: udpate this section to use /opt/idempiere-server/silent-setup-alt.sh
+    # reference: https://wiki.idempiere.org/en/Installing_from_Installers#Silent
+
 cd $INSTALLPATH
 
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
