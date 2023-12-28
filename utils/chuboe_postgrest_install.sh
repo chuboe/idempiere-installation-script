@@ -12,7 +12,7 @@
 # Download postgREST
 cd /usr/local/bin/
 # current version: https://github.com/PostgREST/postgrest/releases/latest
-CURRENT_VERSION="v11.2.1"
+CURRENT_VERSION="v12.0.2"
 PASSWORD_PR="changememememe"
 PASSWORD_PRQ="'$PASSWORD_PR'"
 sudo wget https://github.com/PostgREST/postgrest/releases/download/$CURRENT_VERSION/postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
@@ -20,16 +20,18 @@ sudo tar xJf postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
 
 # changeme: change password
 # changeme if needed: localhost (if located on a different server than the idempiere app server)
+psql -h localhost -U adempiere -d idempiere -c "create schema api"
 psql -h localhost -U adempiere -d idempiere -c "create role postrest_web_anon nologin"
-psql -h localhost -U adempiere -d idempiere -c "grant usage on schema adempiere to postrest_web_anon"
-psql -h localhost -U adempiere -d idempiere -c "grant select on adempiere.c_paymentterm to postrest_web_anon"
-
+psql -h localhost -U adempiere -d idempiere -c "create table adempiere.chuboe_todo (id uuid primary key default uuid_generate_v4(), done boolean not null default false, task text not null, due timestamptz)"
+psql -h localhost -U adempiere -d idempiere -c "create view api.todo as select * from adempiere.chuboe_todo"
+psql -h localhost -U adempiere -d idempiere -c "grant usage on schema api to postrest_web_anon"
+psql -h localhost -U adempiere -d idempiere -c "grant all on api.todo to postrest_web_anon" #note: this includes insert, update and delete
 psql -h localhost -U adempiere -d idempiere -c "create role postrest_auth noinherit login password $PASSWORD_PRQ"
 psql -h localhost -U adempiere -d idempiere -c "grant postrest_web_anon to postrest_auth"
 
 # changeme: change password from changememememe
 echo 'db-uri = "postgres://postrest_auth:'$PASSWORD_PR'@localhost:5432/idempiere"' | sudo tee idempiere-rest.conf
-echo 'db-schemas = "adempiere"' | sudo tee -a idempiere-rest.conf
+echo 'db-schemas = "api"' | sudo tee -a idempiere-rest.conf
 echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 
 # update ~/.pgpass for convenience
@@ -40,8 +42,8 @@ chmod 600 ~/.pgpass
 #    psql -U postrest_auth -d idempiere
 # then, use "set role postrest_web_anon" to allow postgrest_auth to interact with tables
 #    set role postrest_web_anon;
-# then, use set serach_path to prevent needing to use the adempiere. prefix.
-#    set search_path = adempiere;
+# then, use set serach_path to prevent needing to use the api. prefix.
+#    set search_path = api;
 
 echo ''
 echo 'Read the end the file for instructions to launch postgrest'
@@ -67,10 +69,11 @@ echo 'Read the end the file for instructions to launch postgrest'
 
 # If you wish to remove:
 # Issue the followng statements using psql as adempiere
-#    revoke select ON c_paymentterm from postrest_web_anon;
-#    revoke usage on schema adempiere from postrest_web_anon;
+#    revoke select ON todo from postrest_web_anon;
+#    revoke usage on schema api from postrest_web_anon;
 #    drop role postrest_web_anon;
 #    drop role postrest_auth;
+# Stop postgrest
 # Issue the following command;
 #    sudo rm /usr/local/bin/postgrest
 
