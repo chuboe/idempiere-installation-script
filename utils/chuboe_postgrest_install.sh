@@ -23,6 +23,7 @@ sudo tar xJf postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
 psql -h localhost -U adempiere -d idempiere -c "create schema api"
 psql -h localhost -U adempiere -d idempiere -c "create role postrest_web_anon nologin"
 psql -h localhost -U adempiere -d idempiere -c "create table adempiere.chuboe_todo (id uuid primary key default uuid_generate_v4(), done boolean not null default false, task text not null, due timestamptz)"
+psql -h localhost -U adempiere -d idempiere -c "insert into adempiere.chuboe_todo (task) values ('read first todo')"
 psql -h localhost -U adempiere -d idempiere -c "create view api.todo as select * from adempiere.chuboe_todo"
 psql -h localhost -U adempiere -d idempiere -c "grant usage on schema api to postrest_web_anon"
 psql -h localhost -U adempiere -d idempiere -c "grant all on api.todo to postrest_web_anon" #note: this includes insert, update and delete
@@ -38,16 +39,33 @@ echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 echo "*:*:*:postrest_auth:$PASSWORD_PR" | tee -a ~/.pgpass
 chmod 600 ~/.pgpass
 
-# log in via psql using postgrest_auth
-#    psql -U postrest_auth -d idempiere
-# then, use "set role postrest_web_anon" to allow postgrest_auth to interact with tables
-#    set role postrest_web_anon;
-# then, use set serach_path to prevent needing to use the api. prefix.
-#    set search_path = api;
+echo '** instructions to role use with psqli **'
+echo 'log in via psql using postgrest_auth'
+echo '    psql -U postrest_auth -d idempiere'
+echo 'then, use "set role postrest_web_anon" to allow postgrest_auth to interact with tables'
+echo '    set role postrest_web_anon;'
+echo 'then, use set serach_path to prevent needing to use the api. prefix.'
+echo '    set search_path = api;'
 
 echo ''
-echo 'Read the end the file for instructions to launch postgrest'
+echo '**Hints**'
+echo 'For quick run and test: /usr/local/bin/postgrest /usr/local/bin/idempiere-rest.conf'
+echo 'use ctrl+c to kill process - see comments for how to install as service'
+echo ''
+echo 'First read: curl http://localhost:3000/todo'
+echo 'First insert: see comments - issues with single and double quotes with echo'
+      # curl http://localhost:3000/todo -X POST -H "Content-Type: application/json" -d '{"task": "do great things"}'
+echo 'First update: see comments - copy your uuid from above read and update accordingly'
+      # curl http://localhost:3000/todo?id=eq.3abdcd60-be25-4091-a75c-55ddd2e883bb -X PATCH -H "Content-Type: application/json" -d '{"task": "do more great things"}'
 
+echo ''
+echo '**Read the end the file for more detailed instructions**'
+
+# Notes:
+#   By using uuid, you do not need to give permissions to sequences
+#   If you do need to give permissions to sequences: grant usage, select ON ALL SEQUENCES IN SCHEMA adempiere TO postrest_web_anon;
+
+# install and run service
 # run in a tmux session or by appending " &" to the end of the below command
 #     /usr/local/bin/postgrest /usr/local/bin/idempiere-rest.conf
 # To install as service, copy this file with sudo to /etc/systemd/system/postgrest.service
@@ -59,10 +77,6 @@ echo 'Read the end the file for instructions to launch postgrest'
 #    sudo systemctl start postgrest
 #    sudo systemctl enable postgrest
 #    sudo systemctl status postgrest # confirm service started
-
-# perform a test using curl
-# changeme: set your url as is needed from localhost
-# curl http://localhost:3000/c_paymentterm
 
 # How to import json data into excel
 # https://raw-labs.com/blog/retrieving-json-data-from-a-rest-api-in-excel-with-power-query/
