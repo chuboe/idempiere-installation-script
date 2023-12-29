@@ -39,6 +39,7 @@ echo 'db-anon-role = "postrest_web_anon"' | sudo tee -a idempiere-rest.conf
 echo "*:*:*:postrest_auth:$PASSWORD_PR" | tee -a ~/.pgpass
 chmod 600 ~/.pgpass
 
+echo ''
 echo '** instructions to role use with psqli **'
 echo 'log in via psql using postgrest_auth'
 echo '    psql -U postrest_auth -d idempiere'
