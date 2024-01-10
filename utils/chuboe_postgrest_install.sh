@@ -83,6 +83,17 @@ echo '**Read the end the file for more detailed instructions**'
 # How to import json data into excel
 # https://raw-labs.com/blog/retrieving-json-data-from-a-rest-api-in-excel-with-power-query/
 
+# https://supabase.com/docs/guides/api/quickstart?database-method=sql
+# -- Turn on security
+# alter table adempiere.chuboe_todo
+# enable row level security;
+# -- Allow anonymous access
+# create policy "Allow anonymous access"
+#   on adempiere.chuboe_todo
+#   for select
+#   to postrest_web_anon
+#   using (true);
+
 # If you wish to remove:
 # Issue the followng statements using psql as adempiere
 #    revoke select ON todo from postrest_web_anon;
