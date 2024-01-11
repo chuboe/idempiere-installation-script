@@ -295,6 +295,9 @@ then
             # Faching Plugin ID in variable.
             PLUGIN_ID=$(cat $UPDATE_PLUGIN_FILE | grep "Bundle ID" | cut -d ':' -f 2 | awk '{$1=$1;print}')
 
+            # the following if statement was added to help resolve a deployment issue
+            # this change did not help that situation
+            # keeping just in case the plugin_id is empty from the above statements
             if [ -z "$PLUGIN_ID"]
             then
                 PLUGIN_ID=$(cat $UPDATE_PLUGIN_FILE | grep "BundleId" | grep -o -E '[0-9]+')
