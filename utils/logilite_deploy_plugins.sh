@@ -290,11 +290,19 @@ then
             
             # Waiting for Plugin ID.
             function_wait
+            echo "first step"
 
             # Faching Plugin ID in variable.
             PLUGIN_ID=$(cat $UPDATE_PLUGIN_FILE | grep "Bundle ID" | cut -d ':' -f 2 | awk '{$1=$1;print}')
+
+            if [ -z "$PLUGIN_ID"]
+            then
+                PLUGIN_ID=$(cat $UPDATE_PLUGIN_FILE | grep "BundleId" | grep -o -E '[0-9]+')
+                echo "second step"
+            fi
+
             sleep 1
-            
+
             echo "Plugin ID :  $PLUGIN_ID"
 
             # Checking logilite_plugins_startlevel.csv file exist or not..
