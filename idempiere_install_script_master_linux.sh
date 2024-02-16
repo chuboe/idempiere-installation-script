@@ -672,8 +672,8 @@ then
     echo "">>$README
     echo "PostgreSQL installed.">>$README
     echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users.">>$README
-    sudo sed -i '$ a\host   all     all     0.0.0.0/0       md5' /etc/postgresql/$PGVERSION/main/pg_hba.conf
-    sudo sed -i 's/local   all             all                                     peer/local   all             all                                     md5/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
+    sudo sed -i '$ a\host   all     all     0.0.0.0/0       scram-sha-256' /etc/postgresql/$PGVERSION/main/pg_hba.conf
+    sudo sed -i 's/local   all             all                                     peer/local   all             all                                     scram-sha-256/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
     sudo sed -i '$ a\listen_addresses = '"'"'*'"'"' # chuboe '$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
 
     # IS_Replication
@@ -682,7 +682,7 @@ then
     then
         echo "HERE: Is Replication = Y"
         # the following is true for both the master and the backup. PostgreSQL is smart enough to know to use the appropriate settings
-        sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       md5" /etc/postgresql/$PGVERSION/main/pg_hba.conf
+        sudo sed -i "$ a\host    replication     $REPLATION_ROLE        0.0.0.0/0       scram-sha-256" /etc/postgresql/$PGVERSION/main/pg_hba.conf
         echo "SECURITY NOTICE: Using a different Role for replication is a more safe option. It allows you to easily cut off replication in the case of a security breach.">>$README
         echo "SECURITY NOTICE: 0.0.0.0/0 should be changed to the subnet of the BACKUP servers to enhance security.">>$README
         sudo sed -i "$ a\wal_level = hot_standby # chuboe "$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
