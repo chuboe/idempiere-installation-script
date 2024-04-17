@@ -992,6 +992,7 @@ cd $INSTALLPATH
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
 #HERE are the prompts:
 #jdk
+#JavaOptions (new for 11) - not yet added below
 #idempiere_home
 #keystore_password - if run a second time, the lines beginning with dashes do not get asked again
 #- common_name
