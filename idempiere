@@ -59,6 +59,12 @@ start () {
         sudo -u $IDEMPIEREUSER mkdir $IDEMPIERE_LOG
     fi
 
+    # look for statement that writes idempiere.pid. if not found, add it. Note: idempiere.server.sh gets reset during upgrades to new builds
+    if ! grep -q idempiere.pid $IDEMPIERE_HOME/idempiere-server.sh; then 
+        # idempiere.pid not found
+        sed -i "s|org.adempiere.server.application|org.adempiere.server.application \& echo \$! > idempiere.pid|g" $IDEMPIERE_HOME/idempiere-server.sh
+    fi
+
     sudo su $IDEMPIEREUSER -c "cd $IDEMPIERE_HOME;$IDEMPIERE_HOME/idempiere-server.sh &> $LOGFILE &"
     RETVAL=$?
     if [ $RETVAL -eq 0 ] ; then
