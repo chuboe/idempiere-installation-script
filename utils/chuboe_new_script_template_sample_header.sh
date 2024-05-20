@@ -76,7 +76,8 @@ done
 
 # example of a conditional statement => https://linuxhandbook.com/if-else-bash/
 # tmux/screen check only needed if performing something that needs to remain alive when accidentally disconnected from a remote server
-if [[ "$TERM" = "screen" ]] # {{{ TMUX Check
+TERM_CHECK=${TERM:0:4} #grab the first 4 char of variable
+if [[ "$TERM_CHECK" = "scre" ]] || [[ "$TERM_CHECK" = "tmux" ]] # {{{ TMUX Check
 then
     echo Confirmed inside screen or tmux to preserve session if disconnected.
 else
