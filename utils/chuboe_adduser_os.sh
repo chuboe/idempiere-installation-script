@@ -52,6 +52,8 @@ rm -r $TEMP_DIR
 
 # Uncomment if you want to generate a gpg key as well
 # You can also simply copy and paste this command as well.
+# If you want a passphrase, you 1) remove the below no-protection line and 2) add the following in its place: Passphrase: your_passphrase
+# Consider adding an email since gpg keys are commonly referred to by its email
 #sudo -u $USER_TO_ADD gpg --batch --gen-key <<EOF
 #Key-Type: 1
 #Key-Length: 4096
@@ -60,7 +62,7 @@ rm -r $TEMP_DIR
 #Name-Real: $USER_TO_ADD
 #Name-Email: none
 #Expire-Date: 0
-#Passphrase: your_passphrase
+#%no-protection
 #%commit
 #EOF
 
