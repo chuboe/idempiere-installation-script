@@ -50,6 +50,20 @@ mkdir -p $PEM_LOCATION
 mv $TEMP_DIR/$PEM_NAME $PEM_LOCATION
 rm -r $TEMP_DIR
 
+# Uncomment if you want to generate a gpg key as well
+# You can also simply copy and paste this command as well.
+#sudo -u $USER_TO_ADD gpg --batch --gen-key <<EOF
+#Key-Type: 1
+#Key-Length: 4096
+#Subkey-Type: 1
+#Subkey-Length: 4096
+#Name-Real: $USER_TO_ADD
+#Name-Email: none
+#Expire-Date: 0
+#Passphrase: your_passphrase
+#%commit
+#EOF
+
 echo ***************************************************
 echo You can find the pem in $PEM_LOCATION
 echo ***************************************************
