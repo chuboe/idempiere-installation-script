@@ -992,7 +992,7 @@ cd $INSTALLPATH
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
 #HERE are the prompts:
 #jdk
-#JavaOptions (new for 11) - not yet added below
+#JavaOptions (new for 11) - need to set this value based on below xmx calculation when needed
 #idempiere_home
 #keystore_password - if run a second time, the lines beginning with dashes do not get asked again
 #- common_name
@@ -1020,6 +1020,7 @@ cd $INSTALLPATH
 
 #not indented because of file input
 sh console-setup.sh <<!
+
 
 
 
@@ -1106,7 +1107,7 @@ echo "HERE END: Launching console-setup.sh"
         echo "HERE END: lots of memory and dedicated idempiere server"
     fi
     # }}}
-    
+
     #write idempiere.pid
     # {{{
     echo "HERE: update idempiere-server.sh to write idempiere.pid - note: moved to idempiere service script"
