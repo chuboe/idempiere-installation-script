@@ -12,7 +12,7 @@
 # Download postgREST
 cd /usr/local/bin/
 # current version: https://github.com/PostgREST/postgrest/releases/latest
-CURRENT_VERSION="v12.0.2"
+CURRENT_VERSION="v12.2.0"
 PASSWORD_PR="changememememe"
 PASSWORD_PRQ="'$PASSWORD_PR'"
 sudo wget https://github.com/PostgREST/postgrest/releases/download/$CURRENT_VERSION/postgrest-$CURRENT_VERSION-linux-static-x64.tar.xz
