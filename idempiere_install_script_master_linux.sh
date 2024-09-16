@@ -673,6 +673,7 @@ then
     echo "PostgreSQL installed.">>$README
     echo "SECURITY NOTICE: Make sure your database is protected by a firewall that prevents direct connection from anonymous users.">>$README
     sudo sed -i '$ a\host   all     all     0.0.0.0/0       scram-sha-256' /etc/postgresql/$PGVERSION/main/pg_hba.conf
+    sudo sed -i '$ a\host   all     all     ::/0       scram-sha-256' /etc/postgresql/$PGVERSION/main/pg_hba.conf
     sudo sed -i 's/local   all             all                                     peer/local   all             all                                     scram-sha-256/' /etc/postgresql/$PGVERSION/main/pg_hba.conf
     sudo sed -i '$ a\listen_addresses = '"'"'*'"'"' # chuboe '$INSTALL_DATE /etc/postgresql/$PGVERSION/main/postgresql.conf
 
