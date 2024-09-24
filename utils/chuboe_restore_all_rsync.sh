@@ -85,6 +85,7 @@ cd $CHUBOE_PROP_IDEMPIERE_PATH
 #FYI each line represents an input. Each blank line takes the console-setup.sh default.
 #HERE are the prompts:
 #jdk
+#java options - new for id11
 #idempiere_home
 #keystore_password - if run a second time, the lines beginning with dashes do not get asked again
 #- common_name
@@ -112,6 +113,7 @@ cd $CHUBOE_PROP_IDEMPIERE_PATH
 
 #not indented because of file input
 sudo -u $CHUBOE_PROP_IDEMPIERE_OS_USER sh console-setup.sh <<!
+
 
 
 
