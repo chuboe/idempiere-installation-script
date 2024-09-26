@@ -1,6 +1,14 @@
 #!/bin/bash
 #
 
+if [ "$TERM" = "screen" ]
+then
+    echo Confirmed inside screen or tmux to preserve session if disconnected.
+else
+    echo Exiting... not running inside screen or tumx to preserve session if disconnected.
+    exit 1
+fi
+
 usage()
 {
 cat << EOF
@@ -148,7 +156,7 @@ then
         ITERATIONS=0
         while [ $STATUSTEST -eq 0 ] ; do
             sleep 2
-            tail -n 90 $UPDATE_PLUGIN_FILE | grep -q '.*osgi> Connection closed by foreign host.*' && STATUSTEST=1
+            tail -n 90 $UPDATE_PLUGIN_FILE | grep -q '.*Connection closed by foreign host.*' && STATUSTEST=1
             echo -n "."
             ITERATIONS=`expr $ITERATIONS + 1`
             if [ $ITERATIONS -gt $MAXITERATIONS ]
