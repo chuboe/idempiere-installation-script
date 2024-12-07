@@ -17,7 +17,6 @@ function graceful_exit
       exit 1
 }
 
-
 # {{{ Context
 # load os details into variables
 SC_OS=$(. /etc/os-release && echo "$ID")
@@ -29,6 +28,11 @@ SC_SCRIPTPATH=$(dirname "$SC_SCRIPTNAME")
 SC_BASENAME=$(basename "$0")
 
 cd $SC_SCRIPTPATH || graceful_exit "could not cd to desired path"
+
+## Alternate for future reference - get the directory where the script is located
+#SC_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+## Change to the script's directory
+#cd "$SC_SCRIPT_DIR" || graceful_exit "could not cd to desired path"
 
 # logging
 mkdir -p $SC_SCRIPTPATH/LOGS/
